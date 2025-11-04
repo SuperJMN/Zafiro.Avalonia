@@ -79,11 +79,11 @@
             <Style Selector="^ /template/ Button">
                 <Setter Property="Background" Value="Transparent" />
             </Style>
-            <Style Selector="^[Orientation=Vertical]">
+<Style Selector="^[Orientation=Vertical]">
                 <Setter Property="Template">
                     <ControlTemplate>
                         <ListBox ItemContainerTheme="{StaticResource SectionListItem}" Background="{TemplateBinding Background}" SelectedItem="{TemplateBinding SelectedSection, Mode=TwoWay}"
-                                 ItemsSource="{TemplateBinding FilteredSections}">
+                                 ItemsSource="{TemplateBinding GroupedItems}">
                             <ListBox.DataTemplates>
                                 <DataTemplate DataType="sections:ICommandSection">
                                     <EnhancedButton HorizontalAlignment="Stretch" Command="{Binding Command}" Padding="0">
@@ -95,6 +95,11 @@
                                 </DataTemplate>
                                 <DataTemplate DataType="sections:ISectionSeparator">
                                     <Separator Padding="0" Margin="0" />
+                                </DataTemplate>
+                                <DataTemplate DataType="sections:ISectionGroupHeader">
+                                    <TextBlock Margin="{Binding $parent[SectionStrip].ItemPadding}"
+                                               FontWeight="Bold"
+                                               Text="{Binding Title}" />
                                 </DataTemplate>
                             </ListBox.DataTemplates>
                             <ListBox.ItemsPanel>

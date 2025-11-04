@@ -3,6 +3,8 @@ using Avalonia.Controls.Primitives;
 using Avalonia.Data;
 using Avalonia.Layout;
 using DynamicData;
+using ReactiveUI;
+using System.Reactive;
 using Zafiro.Reactive;
 using Zafiro.UI.Navigation.Sections;
 
@@ -39,6 +41,9 @@ public class SectionStrip : TemplatedControl
     public static readonly DirectProperty<SectionStrip, IEnumerable<ISection>> FilteredSectionsProperty = AvaloniaProperty.RegisterDirect<SectionStrip, IEnumerable<ISection>>(
         nameof(FilteredSections), o => o.FilteredSections, (o, v) => o.FilteredSections = v);
 
+    public static readonly DirectProperty<SectionStrip, IEnumerable<ISection>> GroupedItemsProperty = AvaloniaProperty.RegisterDirect<SectionStrip, IEnumerable<ISection>>(
+        nameof(GroupedItems), o => o.GroupedItems, (o, v) => o.GroupedItems = v);
+
     public static readonly StyledProperty<Thickness> IconMarginProperty = AvaloniaProperty.Register<SectionStrip, Thickness>(
         nameof(IconMargin));
 
@@ -48,6 +53,7 @@ public class SectionStrip : TemplatedControl
     private readonly CompositeDisposable disposable = new();
 
     private IEnumerable<ISection> filteredSections;
+    private IEnumerable<ISection> groupedItems = Array.Empty<ISection>();
 
     public SectionStrip()
     {
@@ -60,6 +66,55 @@ public class SectionStrip : TemplatedControl
             .DisposeWith(disposable);
 
         FilteredSections = sectionSorter.Sections;
+
+        // Rebuild grouped items whenever Sections changes or any section changes visibility/sort
+        this.WhenAnyValue(x => x.Sections)
+            .WhereNotNull()
+            .Select(list =>
+                list.OfType<ReactiveObject>()
+                    .Select(ro => ro.Changed.Select(_ => Unit.Default))
+                    .Merge()
+                    .StartWith(Unit.Default))
+            .Switch()
+            .Subscribe(_ => RebuildGroupedItems())
+            .DisposeWith(disposable);
+    }
+
+    private void RebuildGroupedItems()
+    {
+        var source = Sections?.ToList() ?? new List<ISection>();
+        var output = new List<ISection>();
+        var buffer = new List<ISection>();
+        ISectionGroupHeader? currentHeader = null;
+
+        void Flush()
+        {
+            var ordered = buffer.Where(s => s.IsVisible).OrderBy(s => s.SortOrder).ToList();
+            output.AddRange(ordered);
+            buffer.Clear();
+        }
+
+        foreach (var item in source)
+        {
+            if (item is ISectionGroupHeader header)
+            {
+                // Flush previous group
+                Flush();
+                // Add header if visible
+                if (header.IsVisible)
+                {
+                    output.Add(header);
+                }
+                currentHeader = header;
+                continue;
+            }
+
+            // Collect items under current group (or default group)
+            buffer.Add(item);
+        }
+
+        Flush();
+        GroupedItems = output;
     }
 
     public Thickness IconMargin
@@ -68,11 +123,17 @@ public class SectionStrip : TemplatedControl
         set => SetValue(IconMarginProperty, value);
     }
 
-    public IEnumerable<ISection> FilteredSections
-    {
-        get => filteredSections;
-        private set => SetAndRaise(FilteredSectionsProperty, ref filteredSections, value);
-    }
+public IEnumerable<ISection> FilteredSections
+{
+    get => filteredSections;
+    private set => SetAndRaise(FilteredSectionsProperty, ref filteredSections, value);
+}
+
+public IEnumerable<ISection> GroupedItems
+{
+    get => groupedItems;
+    private set => SetAndRaise(GroupedItemsProperty, ref groupedItems, value);
+}
 
     public IEnumerable<ISection>? Sections
     {
