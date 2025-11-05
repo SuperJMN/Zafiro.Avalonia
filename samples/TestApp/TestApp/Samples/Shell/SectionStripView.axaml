@@ -16,7 +16,7 @@
                         <ContentSectionDesign Name="Section2" FriendlyName="Section 2" Icon="{Icon fa-wallet}" />
                         <ContentSectionDesign Name="Section3" FriendlyName="Section 3" Icon="{Icon fa-wallet}" />
                         <ContentSectionDesign Name="Section4" FriendlyName="Section 4" Icon="{Icon fa-wallet}" />
-                        <ContentSectionDesign Name="Section5" FriendlyName="Sectioncilla 5 3 3 3 3 3 3 3 3 3 3 23 " Icon="{Icon fa-wallet}" IsPrimary="False" />
+                        <ContentSectionDesign Name="Section5" FriendlyName="Sectioncilla 5 3 3 3 3 3 3 3 3 3 3 23 " Icon="{Icon fa-wallet}" />
                     </generic:List>
                 </SectionStrip.Sections>
             </SectionStrip>
