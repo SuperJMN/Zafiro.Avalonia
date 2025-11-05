@@ -15,7 +15,6 @@ public partial class ContentSectionDesign : ReactiveObject, IContentSection
         //     .BindTo(this, x => x.SortOrder);
     }
 
-    public bool IsPrimary { get; set; } = true;
     public string Name { get; set; }
     public string FriendlyName { get; set; }
     public bool IsVisible { get; set; } = true;

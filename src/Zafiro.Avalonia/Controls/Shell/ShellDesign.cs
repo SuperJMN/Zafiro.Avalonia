@@ -22,8 +22,7 @@ public class ShellDesign : IShell
     [
         new ContentSectionDesign { Name = "Hi Test section 1. Very long for the testing", Icon = new Icon() { Source = "fa-wallet", }, Content = Observable.Return<object>("Test") },
         new ContentSectionDesign { Name = "Test section 2", Icon = new Icon() { Source = "fa-gear" } },
-        new ContentSectionDesign { Name = "Test section 3", Icon = new Icon() { Source = "fa-user" } },
-        new CommandSectionDesign { Name = "Test section 3", Icon = new Icon() { Source = "fa-user" } },
+        new ContentSectionDesign { Name = "Test section 3", Icon = new Icon() { Source = "fa-user" } }
     ];
 
     public IContentSection SelectedSection { get; set; }
