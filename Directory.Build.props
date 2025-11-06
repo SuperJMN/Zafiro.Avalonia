@@ -4,4 +4,7 @@
     <UseLocalZafiroReferences Condition="'$(UseLocalZafiroReferences)' == ''">true</UseLocalZafiroReferences>
     <UseLocalZafiroReferences Condition="'$(Configuration)' == 'Release'">false</UseLocalZafiroReferences>
   </PropertyGroup>
+  <ItemGroup Condition="'$(MSBuildProjectName)' != 'Zafiro.Avalonia.Generators'">
+    <Using Include="System.Reactive.Disposables.Fluent" />
+  </ItemGroup>
 </Project>

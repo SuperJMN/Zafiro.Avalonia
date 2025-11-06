@@ -2,71 +2,70 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
 
 namespace Zafiro.Avalonia.Generators;
 
 [Generator]
-public class NamingConventionViewLocatorGenerator : ISourceGenerator
+public class NamingConventionViewLocatorGenerator : IIncrementalGenerator
 {
-    public void Initialize(GeneratorInitializationContext context)
+    public void Initialize(IncrementalGeneratorInitializationContext context)
     {
-    }
-
-    public void Execute(GeneratorExecutionContext context)
-    {
-        var pairs = FindPairs(context);
-
-        // Resolve locator to avoid hardcoding its namespace
-        var (locatorFqn, locatorNs) = ResolveLocator(context.Compilation, "NamingConventionGeneratedViewLocator");
-
-        var sb = new StringBuilder();
-        sb.AppendLine($"namespace {locatorNs};");
-        sb.AppendLine();
-        sb.AppendLine("file static class NamingConventionGeneratedViewLocator_GlobalRegistrations");
-        sb.AppendLine("{");
-        sb.AppendLine("    [global::System.Runtime.CompilerServices.ModuleInitializer]");
-        sb.AppendLine("    internal static void Initialize()");
-        sb.AppendLine("    {");
-        foreach (var pair in pairs)
+        context.RegisterSourceOutput(context.CompilationProvider, static (spc, compilation) =>
         {
-            sb.AppendLine($"        {locatorFqn}.RegisterGlobal<{pair.vm}, {pair.view}>();");
-        }
+            var pairs = FindPairs(compilation, spc);
 
-        sb.AppendLine("    }");
-        sb.AppendLine("}");
+            var (locatorFqn, locatorNs) = ResolveLocator(compilation, "NamingConventionGeneratedViewLocator");
 
-        context.AddSource("NamingConventionGeneratedViewLocator.GlobalRegistrations.g.cs", SourceText.From(sb.ToString(), Encoding.UTF8));
+            var sb = new StringBuilder();
+            sb.AppendLine($"namespace {locatorNs};");
+            sb.AppendLine();
+            sb.AppendLine("file static class NamingConventionGeneratedViewLocator_GlobalRegistrations");
+            sb.AppendLine("{");
+            sb.AppendLine("    [global::System.Runtime.CompilerServices.ModuleInitializer]");
+            sb.AppendLine("    internal static void Initialize()");
+            sb.AppendLine("    {");
+            foreach (var pair in pairs)
+            {
+                sb.AppendLine($"        {locatorFqn}.RegisterGlobal<{pair.vm}, {pair.view}>();");
+            }
+
+            sb.AppendLine("    }");
+            sb.AppendLine("}");
+
+            spc.AddSource("NamingConventionGeneratedViewLocator.GlobalRegistrations.g.cs", SourceText.From(sb.ToString(), Encoding.UTF8));
+        });
     }
 
-    private static IEnumerable<(string vm, string view)> FindPairs(GeneratorExecutionContext context)
+    private static List<(string vm, string view)> FindPairs(Compilation compilation, SourceProductionContext context)
     {
-        var compilation = context.Compilation;
         var controlType = compilation.GetTypeByMetadataName("Avalonia.Controls.Control");
         if (controlType is null)
         {
-            yield break;
+            return new List<(string vm, string view)>();
         }
 
         var pairs = new List<(string vm, string view)>();
-        foreach (var (vmSymbol, viewSymbol) in EnumerateCandidates(compilation, controlType))
+        foreach (var (vmSymbol, viewSymbol) in EnumerateCandidates(compilation, controlType, context.CancellationToken))
         {
             var vmName = vmSymbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
             var viewName = viewSymbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
             pairs.Add((vmName, viewName));
         }
 
-        foreach (var group in pairs.GroupBy(p => p.vm))
-        {
-            yield return group.First();
-        }
+        return pairs.GroupBy(p => p.vm)
+            .Select(group => group.First())
+            .ToList();
     }
 
-    private static IEnumerable<(INamedTypeSymbol vm, INamedTypeSymbol view)> EnumerateCandidates(Compilation compilation, INamedTypeSymbol controlType)
+    private static IEnumerable<(INamedTypeSymbol vm, INamedTypeSymbol view)> EnumerateCandidates(Compilation compilation, INamedTypeSymbol controlType, CancellationToken cancellationToken)
     {
-        foreach (var vm in EnumerateAllTypes(compilation.GlobalNamespace))
+        foreach (var vm in EnumerateAllTypes(compilation.GlobalNamespace, cancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             if (vm.TypeKind != TypeKind.Class)
                 continue;
 
@@ -98,38 +97,40 @@ public class NamingConventionViewLocatorGenerator : ISourceGenerator
 
     private static bool IsDerivedFrom(INamedTypeSymbol type, INamedTypeSymbol baseType)
     {
-        for (var t = type; t != null; t = t.BaseType)
+        for (var current = type; current != null; current = current.BaseType)
         {
-            if (SymbolEqualityComparer.Default.Equals(t, baseType))
+            if (SymbolEqualityComparer.Default.Equals(current, baseType))
                 return true;
         }
 
         return false;
     }
 
-    private static IEnumerable<INamedTypeSymbol> EnumerateAllTypes(INamespaceSymbol ns)
+    private static IEnumerable<INamedTypeSymbol> EnumerateAllTypes(INamespaceSymbol ns, CancellationToken cancellationToken)
     {
         foreach (var type in ns.GetTypeMembers())
         {
+            cancellationToken.ThrowIfCancellationRequested();
             yield return type;
 
-            foreach (var nested in EnumerateNestedTypes(type))
+            foreach (var nested in EnumerateNestedTypes(type, cancellationToken))
                 yield return nested;
         }
 
         foreach (var sub in ns.GetNamespaceMembers())
         {
-            foreach (var t in EnumerateAllTypes(sub))
+            foreach (var t in EnumerateAllTypes(sub, cancellationToken))
                 yield return t;
         }
     }
 
-    private static IEnumerable<INamedTypeSymbol> EnumerateNestedTypes(INamedTypeSymbol type)
+    private static IEnumerable<INamedTypeSymbol> EnumerateNestedTypes(INamedTypeSymbol type, CancellationToken cancellationToken)
     {
         foreach (var nested in type.GetTypeMembers())
         {
+            cancellationToken.ThrowIfCancellationRequested();
             yield return nested;
-            foreach (var deeper in EnumerateNestedTypes(nested))
+            foreach (var deeper in EnumerateNestedTypes(nested, cancellationToken))
                 yield return deeper;
         }
     }

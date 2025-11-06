@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Xml.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
@@ -9,48 +11,53 @@ using Microsoft.CodeAnalysis.Text;
 namespace Zafiro.Avalonia.Generators;
 
 [Generator]
-public class DataTypeViewLocatorGenerator : ISourceGenerator
+public class DataTypeViewLocatorGenerator : IIncrementalGenerator
 {
-    public void Initialize(GeneratorInitializationContext context)
+    public void Initialize(IncrementalGeneratorInitializationContext context)
     {
-    }
+        var axamlFiles = context.AdditionalTextsProvider
+            .Where(static text => text.Path.EndsWith(".axaml", StringComparison.OrdinalIgnoreCase))
+            .Select((text, token) => (text.Path, Content: text.GetText(token)?.ToString()))
+            .Collect();
 
-    public void Execute(GeneratorExecutionContext context)
-    {
-        var pairs = FindPairs(context);
+        var pipeline = context.CompilationProvider.Combine(axamlFiles);
 
-        // Resolve target locator symbol to avoid hardcoding its namespace
-        var (locatorFqn, locatorNs) = ResolveLocator(context.Compilation, "DataTypeViewLocator");
-
-        var sb = new StringBuilder();
-        sb.AppendLine($"namespace {locatorNs};");
-        sb.AppendLine();
-        sb.AppendLine("file static class DataTypeViewLocator_GlobalRegistrations");
-        sb.AppendLine("{");
-        sb.AppendLine("    [global::System.Runtime.CompilerServices.ModuleInitializer]");
-        sb.AppendLine("    internal static void Initialize()");
-        sb.AppendLine("    {");
-        foreach (var pair in pairs)
+        context.RegisterSourceOutput(pipeline, static (spc, source) =>
         {
-            sb.AppendLine($"        {locatorFqn}.RegisterGlobal<global::{pair.viewModel}, global::{pair.view}>();");
-        }
+            var (compilation, axamls) = source;
+            var pairs = FindPairs(compilation, axamls, spc);
 
-        sb.AppendLine("    }");
-        sb.AppendLine("}");
+            var (locatorFqn, locatorNs) = ResolveLocator(compilation, "DataTypeViewLocator");
 
-        context.AddSource("DataTypeViewLocator.GlobalRegistrations.g.cs", SourceText.From(sb.ToString(), Encoding.UTF8));
+            var sb = new StringBuilder();
+            sb.AppendLine($"namespace {locatorNs};");
+            sb.AppendLine();
+            sb.AppendLine("file static class DataTypeViewLocator_GlobalRegistrations");
+            sb.AppendLine("{");
+            sb.AppendLine("    [global::System.Runtime.CompilerServices.ModuleInitializer]");
+            sb.AppendLine("    internal static void Initialize()");
+            sb.AppendLine("    {");
+            foreach (var pair in pairs)
+            {
+                sb.AppendLine($"        {locatorFqn}.RegisterGlobal<global::{pair.viewModel}, global::{pair.view}>();");
+            }
+
+            sb.AppendLine("    }");
+            sb.AppendLine("}");
+
+            spc.AddSource("DataTypeViewLocator.GlobalRegistrations.g.cs", SourceText.From(sb.ToString(), Encoding.UTF8));
+        });
     }
 
-    private static IEnumerable<(string viewModel, string view)> FindPairs(GeneratorExecutionContext context)
+    private static List<(string viewModel, string view)> FindPairs(Compilation compilation, ImmutableArray<(string Path, string? Content)> axamls, SourceProductionContext context)
     {
-        var compilation = context.Compilation;
-        var axamls = context.AdditionalFiles.Where(f => f.Path.EndsWith(".axaml", StringComparison.OrdinalIgnoreCase));
-        var pairs = new List<(string viewModel, string view)>();
+        var rawPairs = new List<(string viewModel, string view)>();
 
         foreach (var file in axamls)
         {
-            var text = file.GetText(context.CancellationToken);
-            if (text is null)
+            context.CancellationToken.ThrowIfCancellationRequested();
+
+            if (string.IsNullOrWhiteSpace(file.Content))
             {
                 continue;
             }
@@ -58,7 +65,7 @@ public class DataTypeViewLocatorGenerator : ISourceGenerator
             XDocument doc;
             try
             {
-                doc = XDocument.Parse(text.ToString());
+                doc = XDocument.Parse(file.Content);
             }
             catch
             {
@@ -88,16 +95,13 @@ public class DataTypeViewLocatorGenerator : ISourceGenerator
                 continue;
             }
 
-            // Resolve the symbol of the x:DataType
             var vmSymbol = compilation.GetTypeByMetadataName(vmFullNameFromXaml);
-            string chosenVmFullName = vmFullNameFromXaml;
+            var chosenVmFullName = vmFullNameFromXaml;
 
             if (vmSymbol is INamedTypeSymbol named && named.TypeKind == TypeKind.Interface)
             {
-                // Identify the view identifier (SomeView -> Some)
                 var viewId = GetViewIdentifier(classAttr);
 
-                // Find implementations of the interface
                 var impls = EnumerateAllTypes(compilation.GlobalNamespace)
                     .OfType<INamedTypeSymbol>()
                     .Where(t => t.TypeKind == TypeKind.Class && !t.IsAbstract && Implements(t, named))
@@ -106,7 +110,6 @@ public class DataTypeViewLocatorGenerator : ISourceGenerator
 
                 if (impls.Count > 0)
                 {
-                    // Prefer the implementation whose identifier matches the view identifier (SomeViewModel -> Some)
                     var matching = impls.FirstOrDefault(t => GetViewModelIdentifier(t.Name).Equals(viewId, StringComparison.Ordinal));
 
                     var chosen = matching ?? impls.First();
@@ -138,7 +141,6 @@ public class DataTypeViewLocatorGenerator : ISourceGenerator
                 }
                 else
                 {
-                    // No implementations found: keep interface as-is, but warn
                     var descriptorNone = new DiagnosticDescriptor(
                         id: "ZAV0004",
                         title: "No implementations found for interface",
@@ -150,14 +152,14 @@ public class DataTypeViewLocatorGenerator : ISourceGenerator
                 }
             }
 
-            pairs.Add((chosenVmFullName, classAttr));
+            rawPairs.Add((chosenVmFullName, classAttr));
         }
 
-        // Group by ViewModel and choose a single View when multiple Views share the same VM
-        var groups = pairs.GroupBy(p => p.viewModel);
-        foreach (var group in groups)
+        var normalized = new List<(string viewModel, string view)>();
+        foreach (var group in rawPairs.GroupBy(p => p.viewModel))
         {
-            // Prefer view whose simple name matches the ViewModel simple name without the "ViewModel" suffix, plus "View".
+            context.CancellationToken.ThrowIfCancellationRequested();
+
             var vmFull = group.Key;
             var vmSimple = vmFull.Split('.').Last();
             var baseName = vmSimple.EndsWith("ViewModel", StringComparison.Ordinal)
@@ -168,12 +170,10 @@ public class DataTypeViewLocatorGenerator : ISourceGenerator
             var chosen = group.FirstOrDefault(p => p.view.Split('.').Last() == desiredViewSimple);
             if (string.IsNullOrEmpty(chosen.view))
             {
-                // Fallback: keep previous behavior (first)
                 chosen = group.First();
             }
 
-            var multiple = group.Skip(1).Any();
-            if (multiple)
+            if (group.Skip(1).Any())
             {
                 var descriptor = new DiagnosticDescriptor(
                     id: "ZAV0001",
@@ -185,8 +185,10 @@ public class DataTypeViewLocatorGenerator : ISourceGenerator
                 context.ReportDiagnostic(Diagnostic.Create(descriptor, Location.None));
             }
 
-            yield return chosen;
+            normalized.Add(chosen);
         }
+
+        return normalized;
     }
 
     private static bool Implements(INamedTypeSymbol type, INamedTypeSymbol @interface)
