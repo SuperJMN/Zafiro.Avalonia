@@ -1,4 +1,3 @@
-using System.Diagnostics.CodeAnalysis;
 using System.Reactive;
 using System.Reactive.Disposables;
 using Avalonia.Input;
@@ -36,7 +35,6 @@ public class ScrollToTargetBehavior : AttachedToVisualTreeBehavior<InputElement>
         return obj.GetValue(TargetIdProperty);
     }
 
-    [DynamicDependency(DynamicallyAccessedMemberTypes.All, typeof(DisposableMixins))]
     protected override IDisposable OnAttachedToVisualTreeOverride()
     {
         if (AssociatedObject is null)
