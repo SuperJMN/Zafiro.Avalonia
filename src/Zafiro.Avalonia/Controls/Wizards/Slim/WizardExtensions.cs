@@ -10,10 +10,11 @@ namespace Zafiro.Avalonia.Controls.Wizards.Slim;
 
 public static class WizardExtensions
 {
-    public static async Task<Maybe<T>> Navigate<T>(this ISlimWizard<T> wizard, INavigator navigator)
+    public static async Task<Maybe<T>> Navigate<T>(this ISlimWizard<T> wizard, INavigator navigator, Func<ISlimWizard<T>, INavigator, Task<bool>>? cancel = null)
     {
         var tcs = new TaskCompletionSource<Maybe<T>>();
         var disposable = new CompositeDisposable();
+        var cancelHandler = cancel ?? DefaultCancel<T>;
 
         await navigator.Go(() =>
         {
@@ -32,7 +33,7 @@ public static class WizardExtensions
                 .Subscribe()
                 .DisposeWith(disposable);
 
-            return ApplicationUtils.ExecuteOnUIThread(() => CreateUserControl(wizard, navigator, tcs));
+            return ApplicationUtils.ExecuteOnUIThread(() => CreateUserControl(wizard, navigator, tcs, cancelHandler));
         });
 
         var navigateResult = await tcs.Task;
@@ -40,7 +41,7 @@ public static class WizardExtensions
         return navigateResult;
     }
 
-    private static UserControl CreateUserControl<T>(ISlimWizard<T> wizard, INavigator navigator, TaskCompletionSource<Maybe<T>> tcs)
+    private static UserControl CreateUserControl<T>(ISlimWizard<T> wizard, INavigator navigator, TaskCompletionSource<Maybe<T>> tcs, Func<ISlimWizard<T>, INavigator, Task<bool>> cancel)
     {
         return new UserControl
         {
@@ -48,10 +49,16 @@ public static class WizardExtensions
             {
                 Wizard = wizard, Cancel = ReactiveCommand.CreateFromTask(async () =>
                 {
-                    await navigator.GoBack();
-                    tcs.SetResult(Maybe<T>.None);
+                    var shouldClose = await cancel(wizard, navigator);
+                    if (shouldClose)
+                    {
+                        await navigator.GoBack();
+                        tcs.TrySetResult(Maybe<T>.None);
+                    }
                 }).Enhance()
             }
         };
     }
+
+    private static Task<bool> DefaultCancel<T>(ISlimWizard<T> _, INavigator navigator) => Task.FromResult(true);
 }
