@@ -52,6 +52,7 @@ public static class WizardExtensions
                     var shouldClose = await cancel(wizard, navigator);
                     if (shouldClose)
                     {
+                        await navigator.GoBack();
                         tcs.TrySetResult(Maybe<T>.None);
                     }
                 }).Enhance()
@@ -59,9 +60,5 @@ public static class WizardExtensions
         };
     }
 
-    private static async Task<bool> DefaultCancel<T>(ISlimWizard<T> _, INavigator navigator)
-    {
-        var result = await navigator.GoBack();
-        return result.IsSuccess;
-    }
+    private static Task<bool> DefaultCancel<T>(ISlimWizard<T> _, INavigator navigator) => Task.FromResult(true);
 }
