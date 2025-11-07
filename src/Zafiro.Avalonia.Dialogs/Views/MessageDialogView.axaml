@@ -3,13 +3,13 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:views="clr-namespace:Zafiro.Avalonia.Dialogs.Views"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="Zafiro.Avalonia.Dialogs.Views.MessageDialogView"
-             x:DataType="views:MessageDialogViewModel"
-             x:CompileBindings="True">
-  <TextBlock TextAlignment="Center" 
-             VerticalAlignment="Center" 
-             MaxWidth="400" 
-             TextWrapping="Wrap" 
-             Text="{Binding Message}" />
+             mc:Ignorable="d"
+             d:DesignWidth="800"
+             d:DesignHeight="450"
+             x:Class="Zafiro.Avalonia.Dialogs.Views.MessageDialogView">
+  <TextBlock TextAlignment="Center"
+             VerticalAlignment="Center"
+             MaxWidth="400"
+             TextWrapping="Wrap"
+             Text="{Binding Text, RelativeSource={RelativeSource AncestorType=views:MessageDialogView}}" />
 </UserControl>

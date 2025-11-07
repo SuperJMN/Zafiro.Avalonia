@@ -118,7 +118,12 @@ public static class DialogExtensions
     {
         var result = false;
 
-        var show = await dialogService.Show(new MessageDialogViewModel(text), title, closeable =>
+        var content = new MessageDialogView
+        {
+            Text = text
+        };
+
+        var show = await dialogService.Show(content, title, closeable =>
         {
             List<IOption> options =
             [
@@ -181,9 +186,12 @@ public static class DialogExtensions
         string text,
         string okText = "OK")
     {
-        var messageDialogViewModel = new MessageDialogViewModel(text);
+        var messageDialogView = new MessageDialogView
+        {
+            Text = text
+        };
 
-        return dialogService.Show(messageDialogViewModel, title, closeable =>
+        return dialogService.Show(messageDialogView, title, closeable =>
         {
             IEnhancedCommand command = ReactiveCommand.Create(closeable.Close, Observable.Return(true)).Enhance();
             Settings settings = new Settings()
