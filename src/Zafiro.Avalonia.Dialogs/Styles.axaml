@@ -1,15 +1,6 @@
 <Styles
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns="https://github.com/avaloniaui"
-    xmlns:misc="clr-namespace:Zafiro.Avalonia.Misc;assembly=Zafiro.Avalonia">
-
-    <Styles.Resources>
-        <ResourceDictionary>
-            <misc:ApplicationDataTemplatesRegistration
-                x:Key="ZafiroDialogsDataTemplatesRegistration"
-                Source="avares://Zafiro.Avalonia.Dialogs/DataTemplates.axaml" />
-        </ResourceDictionary>
-    </Styles.Resources>
+    xmlns="https://github.com/avaloniaui">
 
     <StyleInclude Source="avares://Zafiro.Avalonia/Styles.axaml" />
     <StyleInclude Source="avares://Zafiro.Avalonia.Dialogs/Views/DialogControl.axaml" />
