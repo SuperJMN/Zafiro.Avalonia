@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Reactive.Linq;
 using System.Windows.Input;
-using Avalonia.ReactiveUI;
 using ReactiveUI;
 using ReactiveUI.SourceGenerators;
+using Zafiro.Avalonia;
 using Zafiro.UI.Shell.Utils;
 
 namespace TestApp.Samples.Drag;

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
@@ -7,19 +7,20 @@
         <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
         <CompilerGeneratedFilesOutputPath>$(BaseIntermediateOutputPath)Generated</CompilerGeneratedFilesOutputPath>
     </PropertyGroup>
-    <Import Project="..\Common.props"/>
+    <Import Project="..\Common.props" />
     <ItemGroup>
-        <PackageReference Include="Avalonia"/>
-        <PackageReference Include="Avalonia.Controls.DataGrid"/>
-        <PackageReference Include="CSharpFunctionalExtensions"/>
-        <PackageReference Include="Deadpikle.AvaloniaProgressRing"/>
-        <PackageReference Include="FluentAvaloniaUI"/>
-        <PackageReference Include="JetBrains.Annotations"/>
-        <PackageReference Include="Projektanker.Icons.Avalonia"/>
-        <PackageReference Include="ReactiveProperty"/>
-        <PackageReference Include="Svg.Controls.Skia.Avalonia"/>
-        <PackageReference Include="System.Linq.Async"/>
-        <PackageReference Include="Xaml.Behaviors.Avalonia"/>
+        <PackageReference Include="Avalonia" />
+        <PackageReference Include="Avalonia.Controls.DataGrid" />
+        <PackageReference Include="CSharpFunctionalExtensions" />
+        <PackageReference Include="Deadpikle.AvaloniaProgressRing" />
+        <PackageReference Include="FluentAvaloniaUI" />
+        <PackageReference Include="JetBrains.Annotations" />
+        <PackageReference Include="Projektanker.Icons.Avalonia" />
+        <PackageReference Include="ReactiveProperty" />
+        <PackageReference Include="ReactiveUI.Avalonia" />
+        <PackageReference Include="Svg.Controls.Skia.Avalonia" />
+        <PackageReference Include="System.Linq.Async" />
+        <PackageReference Include="Xaml.Behaviors.Avalonia" />
         <PackageReference Include="ReactiveUI.SourceGenerators">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -27,16 +28,16 @@
     </ItemGroup>
 
     <ItemGroup>
-        <AdditionalFiles Include="**/*.axaml"/>
+        <AdditionalFiles Include="**/*.axaml" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(UseLocalZafiroReferences)' == 'true'">
-        <ProjectReference Include="..\..\libs\Zafiro\src\Zafiro.UI\Zafiro.UI.csproj"/>
-        <ProjectReference Include="..\..\libs\Zafiro\src\Zafiro\Zafiro.csproj"/>
+        <ProjectReference Include="..\..\libs\Zafiro\src\Zafiro.UI\Zafiro.UI.csproj" />
+        <ProjectReference Include="..\..\libs\Zafiro\src\Zafiro\Zafiro.csproj" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(UseLocalZafiroReferences)' == 'false'">
-        <PackageReference Include="Zafiro.UI"/>
-        <PackageReference Include="Zafiro"/>
+        <PackageReference Include="Zafiro.UI" />
+        <PackageReference Include="Zafiro" />
     </ItemGroup>
 </Project>

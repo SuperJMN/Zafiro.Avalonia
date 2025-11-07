@@ -32,14 +32,16 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Other files", "Other files", "{5C17C740-EF9B-4539-92BB-43CE92250490}"
 	ProjectSection(SolutionItems) = preProject
 		azure-pipelines.yml = azure-pipelines.yml
-		Directory.Packages.props = Directory.Packages.props
 		src\Common.props = src\Common.props
+		Directory.Packages.props = Directory.Packages.props
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Other Files", "Other Files", "{B04CCE9E-1D68-4156-B622-C33451058975}"
 	ProjectSection(SolutionItems) = preProject
 		libs\Zafiro\Directory.Packages.props = libs\Zafiro\Directory.Packages.props
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zafiro.FileSystem", "libs\Zafiro\src\Zafiro.FileSystem\Zafiro.FileSystem.csproj", "{CD39DE6C-DBF5-4A7A-7457-64D1E39F67F6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -67,6 +69,10 @@ Global
 		{ACAFB523-C9C0-47BA-9870-7148DE5C0835}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ACAFB523-C9C0-47BA-9870-7148DE5C0835}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ACAFB523-C9C0-47BA-9870-7148DE5C0835}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D2993F32-C840-4A28-BBC4-986DF7299073}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D2993F32-C840-4A28-BBC4-986DF7299073}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D2993F32-C840-4A28-BBC4-986DF7299073}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D2993F32-C840-4A28-BBC4-986DF7299073}.Release|Any CPU.Build.0 = Release|Any CPU
 		{CAABEB4C-9AFC-4DDB-A7A3-D3E22EA2FEA8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{CAABEB4C-9AFC-4DDB-A7A3-D3E22EA2FEA8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CAABEB4C-9AFC-4DDB-A7A3-D3E22EA2FEA8}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -83,10 +89,10 @@ Global
 		{E4EA3AF2-1531-470C-B19B-A7F5BDABD97B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E4EA3AF2-1531-470C-B19B-A7F5BDABD97B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E4EA3AF2-1531-470C-B19B-A7F5BDABD97B}.Release|Any CPU.Build.0 = Release|Any CPU
-																{D2993F32-C840-4A28-BBC4-986DF7299073}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-																{D2993F32-C840-4A28-BBC4-986DF7299073}.Debug|Any CPU.Build.0 = Debug|Any CPU
-																{D2993F32-C840-4A28-BBC4-986DF7299073}.Release|Any CPU.ActiveCfg = Release|Any CPU
-																{D2993F32-C840-4A28-BBC4-986DF7299073}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CD39DE6C-DBF5-4A7A-7457-64D1E39F67F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CD39DE6C-DBF5-4A7A-7457-64D1E39F67F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CD39DE6C-DBF5-4A7A-7457-64D1E39F67F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CD39DE6C-DBF5-4A7A-7457-64D1E39F67F6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -100,6 +106,7 @@ Global
 		{D3F322B1-ABDF-44F7-AC8E-80B222454D77} = {63B0828E-EB42-44BA-A379-B79CAA87D2A2}
 		{E4EA3AF2-1531-470C-B19B-A7F5BDABD97B} = {63B0828E-EB42-44BA-A379-B79CAA87D2A2}
 		{B04CCE9E-1D68-4156-B622-C33451058975} = {63B0828E-EB42-44BA-A379-B79CAA87D2A2}
+		{CD39DE6C-DBF5-4A7A-7457-64D1E39F67F6} = {63B0828E-EB42-44BA-A379-B79CAA87D2A2}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E64CD420-15B1-487C-9806-41EBE6DC15A4}
