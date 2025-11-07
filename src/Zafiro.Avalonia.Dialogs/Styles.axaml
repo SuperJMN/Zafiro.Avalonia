@@ -2,6 +2,14 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns="https://github.com/avaloniaui">
 
+    <Styles.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceInclude Source="avares://Zafiro.Avalonia.Dialogs/DataTemplates.axaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Styles.Resources>
+
     <StyleInclude Source="avares://Zafiro.Avalonia/Styles.axaml" />
     <StyleInclude Source="avares://Zafiro.Avalonia.Dialogs/Views/DialogControl.axaml" />
     <StyleInclude Source="avares://Zafiro.Avalonia.Dialogs/Views/DialogViewContainer.axaml" />
