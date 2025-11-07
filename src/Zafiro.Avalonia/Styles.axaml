@@ -1,11 +1,12 @@
 <Styles xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns="https://github.com/avaloniaui">
+        xmlns="https://github.com/avaloniaui"
+        xmlns:misc="clr-namespace:Zafiro.Avalonia.Misc">
 
     <Styles.Resources>
         <ResourceDictionary>
-            <DataTemplates>
-                <DataTemplateInclude Source="DataTemplates.axaml" />
-            </DataTemplates>
+            <misc:ApplicationDataTemplatesRegistration
+                x:Key="ZafiroCoreDataTemplatesRegistration"
+                Source="avares://Zafiro.Avalonia/DataTemplates.axaml" />
 
             <ResourceDictionary.MergedDictionaries>
                 <ResourceInclude Source="Styles/Common.axaml" />
