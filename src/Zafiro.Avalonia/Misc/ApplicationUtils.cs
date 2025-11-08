@@ -93,11 +93,25 @@ public static class ApplicationUtils
                 break;
         }
 
-        mainView.Loaded += async (_, _) =>
+        var dataContextTask = createDataContext(mainView);
+        if (dataContextTask.IsCompleted)
         {
-            var dataContext = await createDataContext(mainView);
-            dataContextTarget.DataContext = dataContext;
-        };
+            dataContextTarget.DataContext = dataContextTask.GetAwaiter().GetResult();
+            return;
+        }
+
+        _ = AssignDataContext(dataContextTask, dataContextTarget);
+
+        static Task AssignDataContext(Task<object> source, StyledElement target)
+        {
+            async Task Run()
+            {
+                var dataContext = await source.ConfigureAwait(false);
+                await Dispatcher.UIThread.InvokeAsync(() => target.DataContext = dataContext);
+            }
+
+            return Run();
+        }
     }
 
     public static Task<T> ExecuteOnUIThreadAsync<T>(this Func<Task<T>> func)
