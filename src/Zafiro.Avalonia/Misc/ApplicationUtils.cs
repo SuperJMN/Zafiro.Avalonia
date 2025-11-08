@@ -76,6 +76,7 @@ public static class ApplicationUtils
         Func<Window>? createApplicationWindow)
     {
         var mainView = createMainView();
+        var dataContextTarget = mainView;
         switch (application.ApplicationLifetime)
         {
             case IClassicDesktopStyleApplicationLifetime desktop:
@@ -83,6 +84,7 @@ public static class ApplicationUtils
                 var window = createApplicationWindow?.Invoke() ?? new Window();
                 window.Content = mainView;
                 desktop.MainWindow = window;
+                dataContextTarget = window;
                 break;
             }
             case ISingleViewApplicationLifetime singleViewPlatform:
@@ -93,7 +95,7 @@ public static class ApplicationUtils
         mainView.Loaded += async (_, _) =>
         {
             var dataContext = await createDataContext(mainView);
-            mainView.DataContext = dataContext;
+            dataContextTarget.DataContext = dataContext;
         };
     }
 
