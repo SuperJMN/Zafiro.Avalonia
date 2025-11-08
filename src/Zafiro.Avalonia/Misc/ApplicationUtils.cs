@@ -1,4 +1,5 @@
-﻿using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia;
+using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Controls.Platform;
 using Avalonia.Input.Platform;
 using Avalonia.Threading;
@@ -76,6 +77,7 @@ public static class ApplicationUtils
         Func<Window>? createApplicationWindow)
     {
         var mainView = createMainView();
+        StyledElement dataContextTarget = mainView;
         switch (application.ApplicationLifetime)
         {
             case IClassicDesktopStyleApplicationLifetime desktop:
@@ -83,6 +85,7 @@ public static class ApplicationUtils
                 var window = createApplicationWindow?.Invoke() ?? new Window();
                 window.Content = mainView;
                 desktop.MainWindow = window;
+                dataContextTarget = window;
                 break;
             }
             case ISingleViewApplicationLifetime singleViewPlatform:
@@ -90,11 +93,25 @@ public static class ApplicationUtils
                 break;
         }
 
-        mainView.Loaded += async (_, _) =>
+        var dataContextTask = createDataContext(mainView);
+        if (dataContextTask.IsCompleted)
         {
-            var dataContext = await createDataContext(mainView);
-            mainView.DataContext = dataContext;
-        };
+            dataContextTarget.DataContext = dataContextTask.GetAwaiter().GetResult();
+            return;
+        }
+
+        _ = AssignDataContext(dataContextTask, dataContextTarget);
+
+        static Task AssignDataContext(Task<object> source, StyledElement target)
+        {
+            async Task Run()
+            {
+                var dataContext = await source.ConfigureAwait(false);
+                await Dispatcher.UIThread.InvokeAsync(() => target.DataContext = dataContext);
+            }
+
+            return Run();
+        }
     }
 
     public static Task<T> ExecuteOnUIThreadAsync<T>(this Func<Task<T>> func)
