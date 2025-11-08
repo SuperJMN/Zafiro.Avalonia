@@ -1,4 +1,5 @@
-﻿using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia;
+using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Controls.Platform;
 using Avalonia.Input.Platform;
 using Avalonia.Threading;
@@ -76,7 +77,7 @@ public static class ApplicationUtils
         Func<Window>? createApplicationWindow)
     {
         var mainView = createMainView();
-        var dataContextTarget = mainView;
+        StyledElement dataContextTarget = mainView;
         switch (application.ApplicationLifetime)
         {
             case IClassicDesktopStyleApplicationLifetime desktop:
