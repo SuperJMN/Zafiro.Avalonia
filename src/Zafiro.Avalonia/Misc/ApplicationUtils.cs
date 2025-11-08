@@ -1,4 +1,5 @@
-﻿using Avalonia.Controls.ApplicationLifetimes;
+﻿using Avalonia;
+using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Controls.Platform;
 using Avalonia.Input.Platform;
 using Avalonia.Threading;
@@ -61,21 +62,8 @@ public static class ApplicationUtils
         Func<Control, object> createDataContext,
         Func<Window>? createApplicationWindow = default)
     {
-        ConnectImpl(application, createMainView, control => Task.FromResult(createDataContext(control)), createApplicationWindow);
-    }
-
-    public static void Connect(this Application application,
-        Func<Control> createMainView,
-        Func<Control, Task<object>> createDataContext,
-        Func<Window>? createApplicationWindow = default)
-        => ConnectImpl(application, createMainView, createDataContext, createApplicationWindow);
-
-    private static void ConnectImpl(Application application,
-        Func<Control> createMainView,
-        Func<Control, Task<object>> createDataContext,
-        Func<Window>? createApplicationWindow)
-    {
         var mainView = createMainView();
+        StyledElement dataContextTarget = mainView;
         switch (application.ApplicationLifetime)
         {
             case IClassicDesktopStyleApplicationLifetime desktop:
@@ -83,6 +71,7 @@ public static class ApplicationUtils
                 var window = createApplicationWindow?.Invoke() ?? new Window();
                 window.Content = mainView;
                 desktop.MainWindow = window;
+                dataContextTarget = window;
                 break;
             }
             case ISingleViewApplicationLifetime singleViewPlatform:
@@ -90,11 +79,7 @@ public static class ApplicationUtils
                 break;
         }
 
-        mainView.Loaded += async (_, _) =>
-        {
-            var dataContext = await createDataContext(mainView);
-            mainView.DataContext = dataContext;
-        };
+        dataContextTarget.DataContext = createDataContext(mainView);
     }
 
     public static Task<T> ExecuteOnUIThreadAsync<T>(this Func<Task<T>> func)
@@ -128,10 +113,4 @@ public static class ApplicationUtils
             Dispatcher.UIThread.Invoke(func);
         }
     }
-
-#if DEBUG
-    public static bool IsDebug => true;
-#else
-    public static bool IsDebug => false;
-#endif
 }
