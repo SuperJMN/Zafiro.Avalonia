@@ -1,6 +1,6 @@
 using System.Reactive.Disposables;
 using Avalonia.Xaml.Interactivity;
-using Zafiro.Progress;
+using Zafiro.ProgressReporting;
 using Zafiro.UI.Jobs.Execution;
 
 namespace Zafiro.Avalonia.Behaviors;
@@ -42,7 +42,7 @@ public class ProgressBarExecutionBehavior : DisposingBehavior<ProgressBar>
                     AssociatedObject.IsVisible = true;
                 }
 
-                if (progress is ProportionalProgress ratioProgress)
+                if (progress is Proportional ratioProgress)
                 {
                     AssociatedObject.IsIndeterminate = false;
                     AssociatedObject.Maximum = 1;

@@ -2,10 +2,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:avalonia="https://github.com/projektanker/icons.avalonia"
              xmlns:slimDataGrid="clr-namespace:TestApp.Samples.SlimDataGrid"
              xmlns:c="clr-namespace:Zafiro.Avalonia.Controls;assembly=Zafiro.Avalonia"
-             xmlns:misc="clr-namespace:Zafiro.Avalonia.Misc;assembly=Zafiro.Avalonia"
              mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="450"
              x:Class="TestApp.Samples.SlimDataGrid.SlimDataGridView"
              x:DataType="slimDataGrid:SlimDataGridViewModel">
@@ -94,8 +92,8 @@
                         </Column.HeaderTemplate>
                         <Column.CellTemplate>
                             <DataTemplate>
-                                <EnhancedButton HorizontalAlignment="Center" avalonia:Attached.Icon="fa-solid fa-arrow-up-right-from-square" CommandParameter="http://www.youtube.com"
-                                                Command="{Binding Source={x:Static misc:Commands.Instance}, Path=LaunchUri}" />
+                                <!-- <EnhancedButton HorizontalAlignment="Center" avalonia:Attached.Icon="fa-solid fa-arrow-up-right-from-square" CommandParameter="http://www.youtube.com" -->
+                                <!--                 Command="{Binding Source={StaticResource DefaultCommands}, Path=LaunchUri}" /> -->
                             </DataTemplate>
                         </Column.CellTemplate>
                     </Column>
