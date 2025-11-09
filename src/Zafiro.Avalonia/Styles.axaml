@@ -53,6 +53,7 @@
     <StyleInclude Source="Controls/Loading.axaml" />
     <StyleInclude Source="Controls/ReactiveButton.axaml" />
     <StyleInclude Source="Controls/ReactiveIconButton.axaml" />
+    <StyleInclude Source="Controls/ProgressPresenter.axaml" />
     <StyleInclude Source="Controls/Shell/ShellView.axaml" />
     <StyleInclude Source="Controls/BulletList.axaml" />
     <StyleInclude Source="Controls/Shell/ShellSplitView.axaml" />
