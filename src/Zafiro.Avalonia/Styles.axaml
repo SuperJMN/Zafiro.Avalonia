@@ -64,5 +64,6 @@
     <StyleInclude Source="Controls/ResponsivePresenter.axaml" />
     <StyleInclude Source="Controls/SectionStrip.axaml" />
     <StyleInclude Source="Controls/EnhancedButton.axaml" />
+    <StyleInclude Source="Controls/ProgressControl.axaml" />
 
 </Styles>

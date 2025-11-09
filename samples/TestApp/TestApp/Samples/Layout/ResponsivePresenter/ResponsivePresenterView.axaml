@@ -4,7 +4,6 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:c="clr-namespace:Zafiro.Avalonia.Controls;assembly=Zafiro.Avalonia"
              xmlns:rp="clr-namespace:TestApp.Samples.Layout.ResponsivePresenterSample"
-             xmlns:misc="clr-namespace:Zafiro.Avalonia.Misc;assembly=Zafiro.Avalonia"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="TestApp.Samples.Layout.ResponsivePresenterSample.ResponsivePresenterView"
              x:DataType="rp:ResponsivePresenterViewModel">
@@ -63,12 +62,12 @@
                                     <TextBlock HorizontalAlignment="Center" Text="{Binding}" />
                                 </DataTemplate>
                             </Column.HeaderTemplate>
-                            <Column.CellTemplate>
-                                <DataTemplate>
-                                    <EnhancedButton HorizontalAlignment="Center" Content="Open" CommandParameter="http://www.youtube.com"
-                                                    Command="{Binding Source={x:Static misc:Commands.Instance}, Path=LaunchUri}" />
-                                </DataTemplate>
-                            </Column.CellTemplate>
+                            <!-- <Column.CellTemplate> -->
+                            <!--     <DataTemplate> -->
+                            <!--         <EnhancedButton HorizontalAlignment="Center" Content="Open" CommandParameter="http://www.youtube.com" -->
+                            <!--                         Command="{Binding LaunchUriCommand}" /> -->
+                            <!--     </DataTemplate> -->
+                            <!-- </Column.CellTemplate> -->
                         </Column>
                     </SlimDataGrid.Columns>
                 </SlimDataGrid>

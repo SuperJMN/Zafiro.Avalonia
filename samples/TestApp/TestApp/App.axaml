@@ -4,6 +4,9 @@
              xmlns:misc="clr-namespace:Zafiro.Avalonia.Misc;assembly=Zafiro.Avalonia"
              x:Class="TestApp.App"
              RequestedThemeVariant="Default">
+    <Application.Resources>
+        <!-- <DefaultCommands x:Key="DefaultCommands" /> -->
+    </Application.Resources>
 
     <Application.Styles>
         <FluentTheme>

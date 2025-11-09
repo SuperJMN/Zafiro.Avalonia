@@ -25,12 +25,4 @@ public class App : Application
 
         base.OnFrameworkInitializationCompleted();
     }
-
-    // private static MainViewModel MainViewModel(Control view)
-    // {
-    //     var topLevel = TopLevel.GetTopLevel(view)!;
-    //     var avaloniaFilePicker = new AvaloniaFileSystemPicker(topLevel.StorageProvider);
-    //     INotificationService notificationService = new NotificationService(new WindowNotificationManager(topLevel));
-    //     return new MainViewModel(DialogService.Create(), avaloniaFilePicker, notificationService);
-    // }
 }

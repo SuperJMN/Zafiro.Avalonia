@@ -1,0 +1,107 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:c="clr-namespace:Zafiro.Avalonia.Controls"
+        xmlns:progressReporting="clr-namespace:Zafiro.ProgressReporting;assembly=Zafiro">
+
+    <Styles.Resources>
+        <ControlTheme TargetType="c:ProgressControl" x:Key="{x:Type c:ProgressControl}">
+            <Setter Property="Padding" Value="12" />
+            <Setter Property="CompletedContent" Value="Completed" />
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <Border Padding="{TemplateBinding Padding}" Background="{TemplateBinding Background}">
+
+                        <Border.Styles>
+                            <Style Selector="ProgressBar">
+                                <Setter Property="Height" Value="20" />
+                            </Style>
+                            <Style Selector="StackPanel">
+                                <Setter Property="Spacing" Value="5" />
+                            </Style>
+                        </Border.Styles>
+
+                        <ContentControl Content="{Binding $parent[c:ProgressControl].Progress}">
+                            <ContentControl.DataTemplates>
+                                <DataTemplate DataType="{x:Type progressReporting:NotStarted}">
+                                    <StackPanel Spacing="6">
+                                        <TextBlock Text="{Binding $parent[c:ProgressControl].NotStartedContent}" />
+                                        <ProgressBar IsIndeterminate="True" />
+                                    </StackPanel>
+                                </DataTemplate>
+
+                                <DataTemplate DataType="{x:Type progressReporting:Unknown}">
+                                    <StackPanel Spacing="6">
+                                        <TextBlock Text="{Binding $parent[c:ProgressControl].UnknownContent}" />
+                                        <ProgressBar IsIndeterminate="True" />
+                                    </StackPanel>
+                                </DataTemplate>
+
+                                <DataTemplate DataType="{x:Type progressReporting:Completed}">
+                                    <TextBlock Text="{Binding $parent[c:ProgressControl].CompletedContent}" />
+                                </DataTemplate>
+
+                                <DataTemplate DataType="{x:Type progressReporting:Proportional}">
+                                    <StackPanel Spacing="6">
+                                        <ProgressBar ShowProgressText="True" Minimum="0" Maximum="1" Value="{Binding Ratio}" />
+                                    </StackPanel>
+                                </DataTemplate>
+
+                                <DataTemplate x:DataType="{x:Type progressReporting:Absolute}">
+                                    <StackPanel>
+                                        <TextBlock HorizontalAlignment="Center">
+                                            <TextBlock.Text>
+                                                <MultiBinding StringFormat="{}{0} of {1}">
+                                                    <Binding Path="Current" />
+                                                    <Binding Path="Total" />
+                                                </MultiBinding>
+                                            </TextBlock.Text>
+                                        </TextBlock>
+                                        <ProgressBar ShowProgressText="True" Minimum="0" Maximum="{Binding Total}" Value="{Binding Current}" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ContentControl.DataTemplates>
+                        </ContentControl>
+                    </Border>
+                </ControlTemplate>
+            </Setter>
+
+        </ControlTheme>
+    </Styles.Resources>
+
+    <Design.PreviewWith>
+        <StackPanel>
+            <Card Header="Absolute">
+                <c:ProgressControl>
+                    <c:ProgressControl.Progress>
+                        <progressReporting:Absolute>
+                            <x:Arguments>
+                                <x:Double>50</x:Double>
+                                <x:Double>1000</x:Double>
+                            </x:Arguments>
+                        </progressReporting:Absolute>
+                    </c:ProgressControl.Progress>
+                </c:ProgressControl>
+            </Card>
+            <Card Header="Proportional">
+                <c:ProgressControl>
+                    <c:ProgressControl.Progress>
+                        <progressReporting:Proportional>
+                            <x:Arguments>
+                                <x:Double>0.3</x:Double>
+                            </x:Arguments>
+                        </progressReporting:Proportional>
+                    </c:ProgressControl.Progress>
+                </c:ProgressControl>
+            </Card>
+            <Card Header="Unknown">
+                <c:ProgressControl Progress="{x:Static progressReporting:Unknown.Instance}" />
+            </Card>
+            <Card Header="Completed">
+                <c:ProgressControl Progress="{x:Static progressReporting:Completed.Instance}" />
+            </Card>
+            <Card Header="Not Started">
+                <c:ProgressControl Progress="{x:Static progressReporting:NotStarted.Instance}" />
+            </Card>
+        </StackPanel>
+    </Design.PreviewWith>
+</Styles>

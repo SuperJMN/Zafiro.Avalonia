@@ -8,31 +8,17 @@ namespace Zafiro.Avalonia.Services;
 [PublicAPI]
 public class NotificationService : INotificationService
 {
-    public static INotificationService Instance = GetNotificationService();
-    private readonly IManagedNotificationManager managedNotification;
+    private readonly Lazy<IManagedNotificationManager> manager;
 
-    public NotificationService(IManagedNotificationManager managedNotification)
+    public NotificationService(Func<IManagedNotificationManager> factory)
     {
-        this.managedNotification = managedNotification;
+        manager = new Lazy<IManagedNotificationManager>(factory);
     }
 
     public Task Show(string message, Maybe<string> title)
     {
-        Action action = () => managedNotification.Show(new Notification(title.GetValueOrDefault(), message));
+        Action action = () => manager.Value.Show(new Notification(title.GetValueOrDefault(), message));
         action.ExecuteOnUIThread();
         return Task.CompletedTask;
-    }
-
-    private static INotificationService GetNotificationService()
-    {
-        if (Design.IsDesignMode)
-        {
-            return new DummyNotificationService();
-        }
-
-        return new NotificationService(new WindowNotificationManager(ApplicationUtils.TopLevel().GetValueOrThrow("Cannot get Top Level for the Notification Service"))
-        {
-            Position = NotificationPosition.BottomRight,
-        });
     }
 }
