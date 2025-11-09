@@ -8,16 +8,16 @@ namespace Zafiro.Avalonia.Services;
 [PublicAPI]
 public class NotificationService : INotificationService
 {
-    private readonly Func<IManagedNotificationManager> factory;
+    private readonly Lazy<IManagedNotificationManager> manager;
 
     public NotificationService(Func<IManagedNotificationManager> factory)
     {
-        this.factory = factory;
+        manager = new Lazy<IManagedNotificationManager>(factory);
     }
 
     public Task Show(string message, Maybe<string> title)
     {
-        Action action = () => factory().Show(new Notification(title.GetValueOrDefault(), message));
+        Action action = () => manager.Value.Show(new Notification(title.GetValueOrDefault(), message));
         action.ExecuteOnUIThread();
         return Task.CompletedTask;
     }
