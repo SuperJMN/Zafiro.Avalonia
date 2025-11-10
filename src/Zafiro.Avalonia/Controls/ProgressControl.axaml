@@ -7,6 +7,20 @@
         <ControlTheme TargetType="c:ProgressControl" x:Key="{x:Type c:ProgressControl}">
             <Setter Property="Padding" Value="12" />
             <Setter Property="CompletedContent" Value="Completed" />
+            <Setter Property="CurrentTemplate">
+                <Setter.Value>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding .}" />
+                    </DataTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="TotalTemplate">
+                <Setter.Value>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding .}" />
+                    </DataTemplate>
+                </Setter.Value>
+            </Setter>
             <Setter Property="Template">
                 <ControlTemplate>
                     <Border Padding="{TemplateBinding Padding}" Background="{TemplateBinding Background}">
@@ -48,14 +62,13 @@
 
                                 <DataTemplate x:DataType="{x:Type progressReporting:Absolute}">
                                     <StackPanel>
-                                        <TextBlock HorizontalAlignment="Center">
-                                            <TextBlock.Text>
-                                                <MultiBinding StringFormat="{}{0} of {1}">
-                                                    <Binding Path="Current" />
-                                                    <Binding Path="Total" />
-                                                </MultiBinding>
-                                            </TextBlock.Text>
-                                        </TextBlock>
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="4">
+                                            <ContentControl Content="{Binding Current}"
+                                                            ContentTemplate="{Binding $parent[c:ProgressControl].CurrentTemplate}" />
+                                            <TextBlock Text="of" />
+                                            <ContentControl Content="{Binding Total}"
+                                                            ContentTemplate="{Binding $parent[c:ProgressControl].TotalTemplate}" />
+                                        </StackPanel>
                                         <ProgressBar ShowProgressText="True" Minimum="0" Maximum="{Binding Total}" Value="{Binding Current}" />
                                     </StackPanel>
                                 </DataTemplate>
