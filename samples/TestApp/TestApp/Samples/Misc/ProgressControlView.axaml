@@ -1,0 +1,52 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:c="clr-namespace:Zafiro.Avalonia.Controls;assembly=Zafiro.Avalonia"
+             xmlns:progressReporting="clr-namespace:Zafiro.ProgressReporting;assembly=Zafiro"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="TestApp.Samples.Misc.ProgressControlView">
+
+    <UserControl.Styles>
+        <StyleInclude Source="/Samples/SampleStyles.axaml" />
+    </UserControl.Styles>
+
+    <UserControl.Resources>
+        <BytesToHumanConverter x:Key="BytesToHuman" />
+
+        <DataTemplate x:Key="ByteSizeTemplate">
+            <TextBlock Text="{Binding ., Converter={StaticResource BytesToHuman}, ConverterParameter=2}" />
+        </DataTemplate>
+    </UserControl.Resources>
+
+    <c:HeaderedContainer Header="ProgressControl with DataTemplates for Absolute (bytes example)">
+        <StackPanel Spacing="12">
+            <Card Header="Default rendering (no templates)">
+                <c:ProgressControl>
+                    <c:ProgressControl.Progress>
+                        <progressReporting:Absolute>
+                            <x:Arguments>
+                                <x:Double>1536000</x:Double>
+                                <x:Double>7340032</x:Double>
+                            </x:Arguments>
+                        </progressReporting:Absolute>
+                    </c:ProgressControl.Progress>
+                </c:ProgressControl>
+            </Card>
+
+            <Card Header="Custom rendering (ByteSize template)">
+                <c:ProgressControl CurrentTemplate="{StaticResource ByteSizeTemplate}"
+                                   TotalTemplate="{StaticResource ByteSizeTemplate}">
+                    <c:ProgressControl.Progress>
+                        <progressReporting:Absolute>
+                            <x:Arguments>
+                                <x:Double>1536000</x:Double>
+                                <x:Double>7340032</x:Double>
+                            </x:Arguments>
+                        </progressReporting:Absolute>
+                    </c:ProgressControl.Progress>
+                </c:ProgressControl>
+            </Card>
+        </StackPanel>
+    </c:HeaderedContainer>
+</UserControl>
