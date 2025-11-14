@@ -54,8 +54,15 @@ public class TrueCenterPanel : Panel
         double neededHeight = new double[] { leftSize.Height, centerSize.Height, rightSize.Height }.Max();
         double finalHeight = Math.Min(neededHeight, availableSize.Height);
 
-        // Pedimos todo el ancho que haya
-        return new Size(availableSize.Width, finalHeight);
+        double neededWidth = centerChild != null
+            ? centerSize.Width + 2 * side
+            : leftSize.Width + rightSize.Width;
+
+        double finalWidth = double.IsInfinity(availableSize.Width)
+            ? neededWidth
+            : Math.Min(neededWidth, availableSize.Width);
+
+        return new Size(finalWidth, finalHeight);
     }
 
     protected override Size ArrangeOverride(Size finalSize)
