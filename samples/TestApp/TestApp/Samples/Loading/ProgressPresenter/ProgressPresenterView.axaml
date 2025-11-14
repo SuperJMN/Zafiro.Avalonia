@@ -1,0 +1,71 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:controls="clr-namespace:Zafiro.Avalonia.Controls;assembly=Zafiro.Avalonia"
+             xmlns:loading="clr-namespace:TestApp.Samples.Loading.ProgressPresenter"
+             mc:Ignorable="d"
+             x:Class="TestApp.Samples.Loading.ProgressPresenter.ProgressPresenterView"
+             x:DataType="loading:ProgressPresenterViewModel"
+             d:DesignWidth="900"
+             d:DesignHeight="600">
+
+    <Design.DataContext>
+        <loading:ProgressPresenterViewModel />
+    </Design.DataContext>
+
+    <HeaderedContainer Header="ProgressPresenter adapts to every IProgress implementation">
+        <Grid ColumnDefinitions="2* 3*" RowDefinitions="Auto,*" ColumnSpacing="20" RowSpacing="12">
+            <StackPanel Spacing="12">
+                <TextBlock Text="Select the progress representation" FontWeight="Bold" />
+                <ComboBox ItemsSource="{Binding Options}"
+                          SelectedItem="{Binding SelectedOption, Mode=TwoWay}">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate x:DataType="loading:ProgressOption">
+                            <TextBlock Text="{Binding Name}" />
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+
+                <TextBlock Text="Customize the labels" FontWeight="Bold" Margin="0,12,0,0" />
+                <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto" ColumnSpacing="8" RowSpacing="6">
+                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Percentage label" VerticalAlignment="Center" />
+                    <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding PercentageLabel, Mode=TwoWay}" />
+
+                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Current label" VerticalAlignment="Center" />
+                    <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding CurrentLabel, Mode=TwoWay}" />
+
+                    <TextBlock Grid.Row="2" Grid.Column="0" Text="Total label" VerticalAlignment="Center" />
+                    <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding TotalLabel, Mode=TwoWay}" />
+
+                    <TextBlock Grid.Row="3" Grid.Column="0" Text="Unit" VerticalAlignment="Center" />
+                    <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding UnitLabel, Mode=TwoWay}" />
+
+                    <TextBlock Grid.Row="4" Grid.Column="0" Text="Not started" VerticalAlignment="Center" />
+                    <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding NotStartedLabel, Mode=TwoWay}" />
+
+                    <TextBlock Grid.Row="5" Grid.Column="0" Text="Unknown" VerticalAlignment="Center" />
+                    <TextBox Grid.Row="5" Grid.Column="1" Text="{Binding UnknownLabel, Mode=TwoWay}" />
+
+                    <TextBlock Grid.Row="6" Grid.Column="0" Text="Completed" VerticalAlignment="Center" />
+                    <TextBox Grid.Row="6" Grid.Column="1" Text="{Binding CompletedLabel, Mode=TwoWay}" />
+                </Grid>
+            </StackPanel>
+
+            <Border Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" Padding="12" Background="{DynamicResource ThemeControlMidBrush}" CornerRadius="8">
+                <StackPanel Spacing="12">
+                    <TextBlock Text="Preview" FontWeight="Bold" />
+                    <controls:ProgressPresenter Progress="{Binding SelectedProgress}"
+                                                PercentageLabel="{Binding PercentageLabel}"
+                                                CurrentLabel="{Binding CurrentLabel}"
+                                                TotalLabel="{Binding TotalLabel}"
+                                                UnitLabel="{Binding UnitLabel}"
+                                                NotStartedLabel="{Binding NotStartedLabel}"
+                                                UnknownLabel="{Binding UnknownLabel}"
+                                                CompletedLabel="{Binding CompletedLabel}" />
+                    <TextBlock Text="{Binding SelectedOption.Name, FallbackValue=Select an option}" />
+                </StackPanel>
+            </Border>
+        </Grid>
+    </HeaderedContainer>
+</UserControl>

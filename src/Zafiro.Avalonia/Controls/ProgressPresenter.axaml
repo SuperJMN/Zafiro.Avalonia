@@ -1,0 +1,73 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:c="clr-namespace:Zafiro.Avalonia.Controls"
+        xmlns:progress="clr-namespace:Zafiro.Progress;assembly=Zafiro">
+
+    <Styles.Resources>
+        <ControlTheme TargetType="c:ProgressPresenter" x:Key="{x:Type c:ProgressPresenter}">
+            <Setter Property="Padding" Value="12" />
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <Border Padding="{TemplateBinding Padding}" Background="{TemplateBinding Background}">
+                        <ContentControl Content="{Binding $parent[c:ProgressPresenter].Progress}">
+                            <ContentControl.DataTemplates>
+                                <DataTemplate DataType="{x:Type progress:NotStarted}">
+                                    <TextBlock Text="{Binding $parent[c:ProgressPresenter].NotStartedLabel}" />
+                                </DataTemplate>
+
+                                <DataTemplate DataType="{x:Type progress:Unknown}">
+                                    <StackPanel Spacing="6">
+                                        <TextBlock Text="{Binding $parent[c:ProgressPresenter].UnknownLabel}" />
+                                        <ProgressBar IsIndeterminate="True" />
+                                    </StackPanel>
+                                </DataTemplate>
+
+                                <DataTemplate DataType="{x:Type progress:Completed}">
+                                    <TextBlock Text="{Binding $parent[c:ProgressPresenter].CompletedLabel}" />
+                                </DataTemplate>
+
+                                <DataTemplate DataType="{x:Type progress:ProportionalProgress}">
+                                    <StackPanel Spacing="6">
+                                        <StackPanel Spacing="2">
+                                            <TextBlock Text="{Binding $parent[c:ProgressPresenter].PercentageLabel}" />
+                                            <TextBlock Text="{Binding $parent[c:ProgressPresenter].ProgressRatio, StringFormat={}{0:P0}}" />
+                                        </StackPanel>
+                                        <ProgressBar Minimum="0" Maximum="1" Value="{Binding $parent[c:ProgressPresenter].ProgressRatio}" />
+                                    </StackPanel>
+                                </DataTemplate>
+
+                                <DataTemplate DataType="{x:Type progress:ProgressWithCurrentAndTotal`1}">
+                                    <StackPanel Spacing="6">
+                                        <StackPanel Spacing="2">
+                                            <StackPanel Orientation="Horizontal" Spacing="4">
+                                                <TextBlock Text="{Binding $parent[c:ProgressPresenter].CurrentLabel}" />
+                                                <TextBlock Text=":" />
+                                                <TextBlock Text="{Binding Current}" />
+                                                <TextBlock Text="{Binding $parent[c:ProgressPresenter].UnitLabel}" />
+                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal" Spacing="4">
+                                                <TextBlock Text="{Binding $parent[c:ProgressPresenter].TotalLabel}" />
+                                                <TextBlock Text=":" />
+                                                <TextBlock Text="{Binding Total}" />
+                                                <TextBlock Text="{Binding $parent[c:ProgressPresenter].UnitLabel}" />
+                                            </StackPanel>
+                                        </StackPanel>
+                                        <StackPanel Spacing="2">
+                                            <TextBlock Text="{Binding $parent[c:ProgressPresenter].PercentageLabel}" />
+                                            <TextBlock Text="{Binding $parent[c:ProgressPresenter].ProgressRatio, StringFormat={}{0:P0}}" />
+                                            <ProgressBar Minimum="0" Maximum="1" Value="{Binding $parent[c:ProgressPresenter].ProgressRatio}" />
+                                        </StackPanel>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ContentControl.DataTemplates>
+                        </ContentControl>
+                    </Border>
+                </ControlTemplate>
+            </Setter>
+        </ControlTheme>
+    </Styles.Resources>
+
+    <Design.PreviewWith>
+        <c:ProgressPresenter Progress="{x:Static progress:Unknown.Instance}" />
+    </Design.PreviewWith>
+</Styles>
