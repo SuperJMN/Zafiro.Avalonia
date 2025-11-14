@@ -23,25 +23,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestApp.Browser", "samples\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestApp.Android", "samples\TestApp\TestApp.Android\TestApp.Android.csproj", "{29CBCEF5-CE95-448F-B4B9-CED49813AA75}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libs", "Libs", "{63B0828E-EB42-44BA-A379-B79CAA87D2A2}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zafiro", "libs\Zafiro\src\Zafiro\Zafiro.csproj", "{D3F322B1-ABDF-44F7-AC8E-80B222454D77}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zafiro.UI", "libs\Zafiro\src\Zafiro.UI\Zafiro.UI.csproj", "{E4EA3AF2-1531-470C-B19B-A7F5BDABD97B}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Other files", "Other files", "{5C17C740-EF9B-4539-92BB-43CE92250490}"
 	ProjectSection(SolutionItems) = preProject
 		azure-pipelines.yml = azure-pipelines.yml
 		src\Common.props = src\Common.props
 		Directory.Packages.props = Directory.Packages.props
 	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Other Files", "Other Files", "{B04CCE9E-1D68-4156-B622-C33451058975}"
-	ProjectSection(SolutionItems) = preProject
-		libs\Zafiro\Directory.Packages.props = libs\Zafiro\Directory.Packages.props
-	EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zafiro.FileSystem", "libs\Zafiro\src\Zafiro.FileSystem\Zafiro.FileSystem.csproj", "{CD39DE6C-DBF5-4A7A-7457-64D1E39F67F6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -81,18 +68,6 @@ Global
 		{29CBCEF5-CE95-448F-B4B9-CED49813AA75}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{29CBCEF5-CE95-448F-B4B9-CED49813AA75}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{29CBCEF5-CE95-448F-B4B9-CED49813AA75}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D3F322B1-ABDF-44F7-AC8E-80B222454D77}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D3F322B1-ABDF-44F7-AC8E-80B222454D77}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D3F322B1-ABDF-44F7-AC8E-80B222454D77}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D3F322B1-ABDF-44F7-AC8E-80B222454D77}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E4EA3AF2-1531-470C-B19B-A7F5BDABD97B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E4EA3AF2-1531-470C-B19B-A7F5BDABD97B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E4EA3AF2-1531-470C-B19B-A7F5BDABD97B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E4EA3AF2-1531-470C-B19B-A7F5BDABD97B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CD39DE6C-DBF5-4A7A-7457-64D1E39F67F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CD39DE6C-DBF5-4A7A-7457-64D1E39F67F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CD39DE6C-DBF5-4A7A-7457-64D1E39F67F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CD39DE6C-DBF5-4A7A-7457-64D1E39F67F6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -103,10 +78,6 @@ Global
 		{41A6E3E0-9492-4B68-B308-40F2A7ED0623} = {022A4D50-4916-4866-833D-89E8A1C3E90B}
 		{CAABEB4C-9AFC-4DDB-A7A3-D3E22EA2FEA8} = {41A6E3E0-9492-4B68-B308-40F2A7ED0623}
 		{29CBCEF5-CE95-448F-B4B9-CED49813AA75} = {41A6E3E0-9492-4B68-B308-40F2A7ED0623}
-		{D3F322B1-ABDF-44F7-AC8E-80B222454D77} = {63B0828E-EB42-44BA-A379-B79CAA87D2A2}
-		{E4EA3AF2-1531-470C-B19B-A7F5BDABD97B} = {63B0828E-EB42-44BA-A379-B79CAA87D2A2}
-		{B04CCE9E-1D68-4156-B622-C33451058975} = {63B0828E-EB42-44BA-A379-B79CAA87D2A2}
-		{CD39DE6C-DBF5-4A7A-7457-64D1E39F67F6} = {63B0828E-EB42-44BA-A379-B79CAA87D2A2}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E64CD420-15B1-487C-9806-41EBE6DC15A4}
