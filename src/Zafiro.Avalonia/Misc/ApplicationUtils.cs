@@ -1,6 +1,6 @@
-﻿using Avalonia;
-using Avalonia.Controls.ApplicationLifetimes;
+﻿using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Controls.Platform;
+using Avalonia.Controls.Primitives;
 using Avalonia.Input.Platform;
 using Avalonia.Threading;
 using CSharpFunctionalExtensions;
@@ -34,27 +34,37 @@ public static class ApplicationUtils
 
     public static Maybe<TopLevel> TopLevel()
     {
-        return CurrentView().Bind(cv => global::Avalonia.Controls.TopLevel.GetTopLevel(cv).AsMaybe());
+        return CurrentContent().Bind(cv => global::Avalonia.Controls.TopLevel.GetTopLevel(cv).AsMaybe());
+    }
+
+    public static Maybe<Control> CurrentContent()
+    {
+        return MainWindow().Select(ContentControl (window) => window).Or(MainView().Select(visual => (ContentControl)visual)).Map(visual => (Control)visual.Content);
+    }
+
+    public static Maybe<AdornerLayer> CurrentAdornerLayer()
+    {
+        return CurrentContent().Map(arg => AdornerLayer.GetAdornerLayer(arg));
+    }
+
+    public static Maybe<Visual> MainView()
+    {
+        if (Application.Current?.ApplicationLifetime is ISingleViewApplicationLifetime singleView)
+        {
+            return singleView.MainView;
+        }
+
+        return Maybe<Visual>.None;
     }
 
     public static Maybe<Window> MainWindow()
-    {
-        return CurrentView().Bind(visual => (visual as Window).AsMaybe());
-    }
-
-    public static Maybe<Visual> CurrentView()
     {
         if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktopLifetime)
         {
             return desktopLifetime.MainWindow;
         }
 
-        if (Application.Current?.ApplicationLifetime is ISingleViewApplicationLifetime singleView)
-        {
-            return singleView.MainView;
-        }
-
-        throw new NotSupportedException("Unsupported application lifetime type.");
+        return Maybe<Window>.None;
     }
 
     public static void Connect(this Application application,

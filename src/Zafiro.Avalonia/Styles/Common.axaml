@@ -1,95 +1,119 @@
-<ResourceDictionary xmlns="https://github.com/avaloniaui"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-    <ResourceDictionary.ThemeDictionaries>
-        <ResourceDictionary x:Key="Light">
-            <Color x:Key="SoftBackground">#F9F9F9</Color>
-            <Color x:Key="SoftBackgroundDarker">#F4F4F4</Color>
-            <Color x:Key="SoftBorder">#ECECEC</Color>
-            <Color x:Key="SoftBackgroundLists">#F3F3F3</Color>
-            <Color x:Key="Accent">#F0000000</Color>
+    <Styles.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.ThemeDictionaries>
+                <ResourceDictionary x:Key="Light">
+                    <Color x:Key="SoftBackground">#F9F9F9</Color>
+                    <Color x:Key="SoftBackgroundDarker">#F4F4F4</Color>
+                    <Color x:Key="SoftBorder">#ECECEC</Color>
+                    <Color x:Key="SoftBackgroundLists">#F3F3F3</Color>
+                    <Color x:Key="Accent">#F0000000</Color>
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="Dark">
+                    <Color x:Key="SoftBackground">#171717</Color>
+                    <Color x:Key="SoftBackgroundDarker">#1F1F1F</Color>
+                    <Color x:Key="SoftBorder">#4E4E4E</Color>
+                    <Color x:Key="SoftBackgroundLists">#202020</Color>
+                    <Color x:Key="Accent">#F0FFFFFF</Color>
+                </ResourceDictionary>
+            </ResourceDictionary.ThemeDictionaries>
+
+            <SolidColorBrush x:Key="CardBorder" Color="{DynamicResource SystemChromeHighColor}" />
+            <SolidColorBrush x:Key="CardBackground" Color="{DynamicResource SystemChromeMediumLowColor}" />
+            <Thickness x:Key="CardBorderThickness">1</Thickness>
+            <CornerRadius x:Key="CardCornerRadius">10</CornerRadius>
+            <BrushShadeConverter x:Key="ShadeNormal" />
+            <BrushShadeConverter x:Key="ShadeHover" DeltaLightness="0.06" />
+            <BrushShadeConverter x:Key="ShadePressed" DeltaLightness="-0.06" />
+            <BrushShadeConverter x:Key="ShadeBorder" DeltaLightness="-0.12" SaturationScale="0.9" Alpha="0.95" />
+            <BrushShadeConverter x:Key="ShadeDisabledBg" Alpha="0.55" />
+            <AutoForegroundConverter x:Key="AutoForeground" FallbackBackground="{DynamicResource SystemRegionColor}" />
+
+            <ControlTheme x:Key="InlineHeaderedContentControl" TargetType="HeaderedContentControl">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate>
+                            <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="{TemplateBinding BorderThickness}">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition SharedSizeGroup="Header" Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Label VerticalAlignment="Center" TextElement.FontWeight="Bold" DockPanel.Dock="Left"
+                                           Padding="0" Target="{Binding #ContentPresenter}" Margin="0 0 8 0"
+                                           Content="{TemplateBinding Header}"
+                                           ContentTemplate="{TemplateBinding ContentTemplate}" />
+                                    <ContentPresenter Grid.Column="1" x:Name="ContentPresenter"
+                                                      Content="{TemplateBinding Content}" />
+                                </Grid>
+                            </Border>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </ControlTheme>
+
+            <ControlTheme x:Key="InlinePaddedHeaderedContentControl" TargetType="HeaderedContentControl">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate>
+                            <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="{TemplateBinding BorderThickness}">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition SharedSizeGroup="Header" Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Label x:Name="Header" VerticalAlignment="Center" DockPanel.Dock="Left"
+                                           Padding="0" Target="{Binding #ContentPresenter}" Margin="6 0 8 0"
+                                           Content="{TemplateBinding Header}"
+                                           ContentTemplate="{TemplateBinding HeaderTemplate}" />
+                                    <ContentPresenter Grid.Column="1" x:Name="ContentPresenter"
+                                                      Content="{TemplateBinding Content}" />
+                                </Grid>
+                            </Border>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </ControlTheme>
+
+            <ControlTheme x:Key="{x:Type HeaderedContentControl}" TargetType="HeaderedContentControl">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate>
+                            <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="{TemplateBinding BorderThickness}">
+                                <Grid RowDefinitions="Auto *">
+                                    <Label Padding="0" VerticalAlignment="Center" TextElement.FontWeight="Bold" DockPanel.Dock="Left"
+                                           Target="{Binding #ContentPresenter}"
+                                           Content="{TemplateBinding Header}" ContentTemplate="{TemplateBinding ContentTemplate}" />
+                                    <ContentPresenter Grid.Row="1" Margin="0 4 0 0" x:Name="ContentPresenter" Content="{TemplateBinding Content}" />
+                                </Grid>
+                            </Border>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </ControlTheme>
+
+
         </ResourceDictionary>
-        <ResourceDictionary x:Key="Dark">
-            <Color x:Key="SoftBackground">#171717</Color>
-            <Color x:Key="SoftBackgroundDarker">#1F1F1F</Color>
-            <Color x:Key="SoftBorder">#4E4E4E</Color>
-            <Color x:Key="SoftBackgroundLists">#202020</Color>
-            <Color x:Key="Accent">#F0FFFFFF</Color>
-        </ResourceDictionary>
-    </ResourceDictionary.ThemeDictionaries>
+    </Styles.Resources>
 
-    <BrushShadeConverter x:Key="ShadeNormal" />
-    <BrushShadeConverter x:Key="ShadeHover" DeltaLightness="0.06" />
-    <BrushShadeConverter x:Key="ShadePressed" DeltaLightness="-0.06" />
-    <BrushShadeConverter x:Key="ShadeBorder" DeltaLightness="-0.12" SaturationScale="0.9" Alpha="0.95" />
-    <BrushShadeConverter x:Key="ShadeDisabledBg" Alpha="0.55" />
-    <AutoForegroundConverter x:Key="AutoForeground" FallbackBackground="{DynamicResource SystemRegionColor}" />
+    <Style Selector="OverlayBorder.Card">
+        <Setter Property="CornerRadius" Value="{StaticResource CardCornerRadius}" />
+        <Setter Property="Background" Value="{StaticResource CardBackground}" />
+        <Setter Property="BorderBrush" Value="{StaticResource CardBorder}" />
+        <Setter Property="BorderThickness" Value="{StaticResource CardBorderThickness}" />
+    </Style>
 
-    <ControlTheme x:Key="InlineHeaderedContentControl" TargetType="HeaderedContentControl">
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate>
-                    <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition SharedSizeGroup="Header" Width="Auto" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
-                            <Label VerticalAlignment="Center" TextElement.FontWeight="Bold" DockPanel.Dock="Left"
-                                   Padding="0" Target="{Binding #ContentPresenter}" Margin="0 0 8 0"
-                                   Content="{TemplateBinding Header}"
-                                   ContentTemplate="{TemplateBinding ContentTemplate}" />
-                            <ContentPresenter Grid.Column="1" x:Name="ContentPresenter"
-                                              Content="{TemplateBinding Content}" />
-                        </Grid>
-                    </Border>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </ControlTheme>
-
-    <ControlTheme x:Key="InlinePaddedHeaderedContentControl" TargetType="HeaderedContentControl">
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate>
-                    <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition SharedSizeGroup="Header" Width="Auto" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
-                            <Label x:Name="Header" VerticalAlignment="Center" DockPanel.Dock="Left"
-                                   Padding="0" Target="{Binding #ContentPresenter}" Margin="6 0 8 0"
-                                   Content="{TemplateBinding Header}"
-                                   ContentTemplate="{TemplateBinding HeaderTemplate}" />
-                            <ContentPresenter Grid.Column="1" x:Name="ContentPresenter"
-                                              Content="{TemplateBinding Content}" />
-                        </Grid>
-                    </Border>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </ControlTheme>
-
-    <ControlTheme x:Key="{x:Type HeaderedContentControl}" TargetType="HeaderedContentControl">
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate>
-                    <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}">
-                        <Grid RowDefinitions="Auto *">
-                            <Label Padding="0" VerticalAlignment="Center" TextElement.FontWeight="Bold" DockPanel.Dock="Left"
-                                   Target="{Binding #ContentPresenter}"
-                                   Content="{TemplateBinding Header}" ContentTemplate="{TemplateBinding ContentTemplate}" />
-                            <ContentPresenter Grid.Row="1" Margin="0 4 0 0" x:Name="ContentPresenter" Content="{TemplateBinding Content}" />
-                        </Grid>
-                    </Border>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </ControlTheme>
+    <Style Selector="Border.Card">
+        <Setter Property="CornerRadius" Value="{StaticResource CardCornerRadius}" />
+        <Setter Property="Background" Value="{StaticResource CardBackground}" />
+        <Setter Property="BorderBrush" Value="{StaticResource CardBorder}" />
+        <Setter Property="BorderThickness" Value="{StaticResource CardBorderThickness}" />
+    </Style>
 
     <Design.PreviewWith>
         <StackPanel>
@@ -104,4 +128,4 @@
         </StackPanel>
     </Design.PreviewWith>
 
-</ResourceDictionary>
+</Styles>

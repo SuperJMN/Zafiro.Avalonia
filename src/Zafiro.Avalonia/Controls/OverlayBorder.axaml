@@ -99,7 +99,7 @@
                            VerticalAlignment="Center" />
             </OverlayBorder>
 
-            <OverlayBorder Theme="{StaticResource CardOverlayBorder}">
+            <OverlayBorder Classes="Card">
                 THIS IS CARD-LIKE BORDER
             </OverlayBorder>
 
