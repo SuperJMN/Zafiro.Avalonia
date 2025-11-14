@@ -7,7 +7,6 @@ using Microsoft.Extensions.DependencyInjection;
 using TestApp.Samples.Navigation;
 using TestApp.Shell;
 using Zafiro.Avalonia.Dialogs;
-using Zafiro.Avalonia.Dialogs.Implementations;
 using Zafiro.Avalonia.Misc;
 using Zafiro.Avalonia.Services;
 using Zafiro.UI;
@@ -25,7 +24,8 @@ public static class CompositionRoot
 
         services.AddSingleton<IShell, Zafiro.UI.Shell.Shell>();
         services.AddSingleton(new ShellProperties("Avalonia.Zafiro Tookit", navigatorObj => CreateHeaderFromNavigator(navigatorObj)));
-        services.AddSingleton<IDialog>(new AdornerDialog(() => ApplicationUtils.CurrentAdornerLayer().GetValueOrThrow("AdornerLayer not ready for AdornerDialog")));
+        services.AddSingleton(DialogService.Create());
+        //services.AddSingleton<IDialog>(new AdornerDialog(() => ApplicationUtils.CurrentAdornerLayer().GetValueOrThrow("AdornerLayer not ready for AdornerDialog")));
 
         services.AddSingleton<INotificationService>(new NotificationService(() =>
         {
