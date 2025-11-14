@@ -27,7 +27,7 @@
                             HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
                             VerticalAlignment="Stretch"
                             HorizontalAlignment="Stretch"
-                            Command="{Binding $parent[IconButton].Command}">
+                            Command="{TemplateBinding Command}">
                         <Button.Content>
                             <DockPanel HorizontalSpacing="8" HorizontalAlignment="{Binding $parent[IconButton].HorizontalContentAlignment}">
                                 <ContentPresenter
@@ -37,7 +37,7 @@
                                     Content="{TemplateBinding Icon}" />
                                 <ContentPresenter x:Name="MainContent"
                                                   IsVisible="{Binding !!$parent[IconButton].Content}"
-                                                  Content="{Binding $parent[IconButton].Content}"
+                                                  Content="{TemplateBinding Content}"
                                                   VerticalAlignment="Center" />
                             </DockPanel>
                         </Button.Content>

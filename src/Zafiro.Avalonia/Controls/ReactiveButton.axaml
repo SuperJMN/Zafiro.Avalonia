@@ -21,15 +21,16 @@
                             Foreground="{TemplateBinding Foreground}"
                             VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
                             HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
-                            Command="{Binding $parent[controls:ReactiveButton].Command}">
+                            Command="{TemplateBinding Command}">
                         <Button.Content>
                             <StackPanel Orientation="Horizontal" Spacing="6">
                                 <Viewbox StretchDirection="DownOnly" Height="{Binding #MainContent.Bounds.Height}">
-                                    <c:ProgressRing Foreground="{TemplateBinding Foreground}" IsVisible="{Binding $parent[controls:ReactiveButton].Command.IsExecuting^}" />
+                                    <c:ProgressRing Foreground="{TemplateBinding Foreground}"
+                                                    IsVisible="{Binding Command.IsExecuting^, RelativeSource={RelativeSource TemplatedParent}}" />
                                 </Viewbox>
                                 <ContentPresenter x:Name="MainContent" TextBlock.TextTrimming="CharacterEllipsis" panels:TrueCenterPanel.Dock="Center" Foreground="{TemplateBinding Foreground}"
                                                   VerticalContentAlignment="Center" VerticalAlignment="Center"
-                                                  Content="{Binding $parent[controls:ReactiveButton].Content}" />
+                                                  Content="{TemplateBinding Content}" />
                             </StackPanel>
                         </Button.Content>
                     </Button>
@@ -56,14 +57,14 @@
                             Padding="0"
                             HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
                             HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
-                            Command="{Binding $parent[controls:ReactiveButton].Command}">
+                            Command="{TemplateBinding Command}">
                         <Button.Content>
                             <Panel>
                                 <ContentPresenter Padding="{TemplateBinding Padding}" x:Name="ContentPresenter" TextBlock.TextTrimming="CharacterEllipsis" panels:TrueCenterPanel.Dock="Center" Foreground="{TemplateBinding Foreground}"
                                                   VerticalContentAlignment="Center" VerticalAlignment="Center"
-                                                  Content="{Binding $parent[controls:ReactiveButton].Content}" />
+                                                  Content="{TemplateBinding Content}" />
                                 <ProgressBar x:Name="ProgressBar"
-                                             IsVisible="{Binding $parent[controls:ReactiveButton].Command.IsExecuting^}"
+                                             IsVisible="{Binding Command.IsExecuting^, RelativeSource={RelativeSource TemplatedParent}}"
                                              VerticalAlignment="Bottom" HorizontalAlignment="Center" IsIndeterminate="True" />
                             </Panel>
                         </Button.Content>
@@ -91,11 +92,11 @@
                             HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
                             HorizontalAlignment="{TemplateBinding HorizontalAlignment}">
                         <Button.Content>
-                            <Loading IsLoading="{Binding $parent[ReactiveButton].Command.IsExecuting^}">
+                            <Loading IsLoading="{Binding Command.IsExecuting^, RelativeSource={RelativeSource TemplatedParent}}">
                                 <ContentPresenter x:Name="MainContent" TextBlock.TextTrimming="CharacterEllipsis" TrueCenterPanel.Dock="Center" Foreground="{TemplateBinding Foreground}"
                                                   VerticalContentAlignment="Stretch" VerticalAlignment="Stretch"
                                                   HorizontalAlignment="Stretch"
-                                                  Content="{Binding $parent[ReactiveButton].Content}" />
+                                                  Content="{TemplateBinding Content}" />
                             </Loading>
                         </Button.Content>
                     </Button>

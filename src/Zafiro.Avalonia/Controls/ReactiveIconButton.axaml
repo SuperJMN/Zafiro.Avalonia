@@ -35,11 +35,11 @@
                             HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
                             VerticalAlignment="Stretch"
                             HorizontalAlignment="Stretch"
-                            Command="{Binding $parent[ReactiveIconButton].Command}">
+                            Command="{TemplateBinding Command}">
                         <Button.Content>
                             <DockPanel HorizontalSpacing="8" HorizontalAlignment="{Binding $parent[ReactiveIconButton].HorizontalContentAlignment}">
                                 <c:ProgressRing Height="{Binding $self.(IconOptions.Size)}"
-                                                IsVisible="{Binding $parent[ReactiveIconButton].Command.IsExecuting^}"
+                                                IsVisible="{Binding Command.IsExecuting^, RelativeSource={RelativeSource TemplatedParent}}"
                                                 Foreground="{TemplateBinding Foreground}" />
                                 <ContentPresenter
                                     Height="{Binding #MainContent.Bounds.Height}"
@@ -48,7 +48,7 @@
                                     Content="{TemplateBinding Icon}" />
                                 <ContentPresenter x:Name="MainContent"
                                                   IsVisible="{Binding !!$parent[ReactiveIconButton].Content}"
-                                                  Content="{Binding $parent[ReactiveIconButton].Content}"
+                                                  Content="{TemplateBinding Content}"
                                                   VerticalAlignment="Center" />
                             </DockPanel>
                         </Button.Content>
