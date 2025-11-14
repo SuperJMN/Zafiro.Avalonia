@@ -3,7 +3,6 @@
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
     <CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
     <AvaloniaVersion>11.3.8</AvaloniaVersion>
-      <ZafiroVersion>40.0.0</ZafiroVersion>
   </PropertyGroup>
   <ItemGroup>
     <PackageVersion Include="Avalonia" Version="$(AvaloniaVersion)" />
@@ -12,7 +11,6 @@
     <PackageVersion Include="Avalonia.Controls.DataGrid" Version="$(AvaloniaVersion)" />
     <PackageVersion Include="Avalonia.Controls.PanAndZoom" Version="11.3.0" />
     <PackageVersion Include="Avalonia.Desktop" Version="$(AvaloniaVersion)" />
-    <PackageVersion Include="Avalonia.Diagnostics" Version="$(AvaloniaVersion)" />
     <PackageVersion Include="Avalonia.Fonts.Inter" Version="$(AvaloniaVersion)" />
     <PackageVersion Include="Avalonia.iOS" Version="$(AvaloniaVersion)" />
     <PackageVersion Include="Avalonia.ReactiveUI" Version="11.3.8" />
@@ -49,8 +47,6 @@
     <PackageVersion Include="xunit.runner.visualstudio" Version="2.5.3" />
     <PackageVersion Include="Zafiro.Deployment" Version="23.0.0" />
     <PackageVersion Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.4188" />
-    <PackageVersion Include="Zafiro" Version="$(ZafiroVersion)" />
-    <PackageVersion Include="Zafiro.UI" Version="$(ZafiroVersion)" />
-    <PackageVersion Include="Zafiro.FileSystem.Actions" Version="$(ZafiroVersion)" />
+      <PackageVersion Include="Zafiro.UI" Version="41.2.0"/>
   </ItemGroup>
 </Project>
