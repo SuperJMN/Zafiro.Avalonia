@@ -45,6 +45,7 @@
         <ControlTheme TargetType="EnhancedButton" x:Key="{x:Type EnhancedButton}">
             <Setter Property="Spacing" Value="8" />
             <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="VerticalAlignment" Value="Top" />
             <Setter Property="Padding" Value="8" />
             <Setter Property="BorderThickness" Value="1" />
             <Setter Property="CornerRadius" Value="6" />
