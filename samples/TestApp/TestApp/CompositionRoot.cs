@@ -25,6 +25,7 @@ public static class CompositionRoot
         services.AddSingleton<IShell, Zafiro.UI.Shell.Shell>();
         services.AddSingleton(new ShellProperties("Avalonia.Zafiro Tookit", navigatorObj => CreateHeaderFromNavigator(navigatorObj)));
         services.AddSingleton(DialogService.Create());
+        //services.AddSingleton<IDialog>(new AdornerDialog(() => ApplicationUtils.CurrentAdornerLayer().GetValueOrThrow("AdornerLayer not ready for AdornerDialog")));
 
         services.AddSingleton<INotificationService>(new NotificationService(() =>
         {

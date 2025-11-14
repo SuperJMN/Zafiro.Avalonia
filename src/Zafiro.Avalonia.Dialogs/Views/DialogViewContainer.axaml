@@ -39,7 +39,7 @@
             <ControlTemplate>
                 <Panel>
                     <Border Background="Black" Opacity="0.4" />
-                    <Border Classes="Card" VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <OverlayBorder Classes="Card" VerticalAlignment="Center" HorizontalAlignment="Center">
                         <DockPanel>
                             <Panel DockPanel.Dock="Top">
                                 <TextBlock VerticalAlignment="Center" FontWeight="Bold" TextAlignment="Center" Text="{TemplateBinding Title}" />
@@ -50,7 +50,7 @@
                             </Panel>
                             <ContentPresenter Content="{TemplateBinding Content}" />
                         </DockPanel>
-                    </Border>
+                    </OverlayBorder>
                 </Panel>
             </ControlTemplate>
         </Setter>
