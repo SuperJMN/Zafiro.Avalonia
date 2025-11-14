@@ -1,0 +1,63 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:Zafiro.Avalonia.Controls">
+    <Styles.Resources>
+        <DataTemplate x:Key="DefaultTagTemplate">
+            <Border Margin="2" Padding="4" Background="{DynamicResource ThemeBackgroundBrush}" CornerRadius="4">
+                <StackPanel Orientation="Horizontal" Spacing="4" VerticalAlignment="Center">
+                    <TextBlock Text="{Binding}" />
+                    <Button Content="✕"
+                            Command="{Binding $parent[controls:TagSelector].RemoveTagCommand}"
+                            CommandParameter="{Binding}" />
+                </StackPanel>
+            </Border>
+        </DataTemplate>
+    </Styles.Resources>
+    <Style Selector="controls|TagSelector">
+        <Setter Property="TagTemplate" Value="{StaticResource DefaultTagTemplate}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="controls:TagSelector">
+                    <Border BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            Padding="{TemplateBinding Padding}">
+                        <Grid>
+                            <ListBox x:Name="PART_SelectedItems" SelectionMode="Single" BorderThickness="0">
+                                <ListBox.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel x:Name="PART_Panel" />
+                                    </ItemsPanelTemplate>
+                                </ListBox.ItemsPanel>
+                            </ListBox>
+                            <Popup x:Name="PART_Popup" IsLightDismissEnabled="True" PlacementMode="Bottom">
+                                <Border Background="{DynamicResource ThemeBackgroundBrush}"
+                                        BorderBrush="{DynamicResource ThemeBorderLowBrush}"
+                                        BorderThickness="1">
+                                    <ListBox x:Name="PART_Suggestions" />
+                                </Border>
+                            </Popup>
+                        </Grid>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style Selector="controls|TagSelector TextBox">
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="Margin" Value="0" />
+        <Setter Property="MinWidth" Value="0" />
+    </Style>
+    <Style Selector="controls|TagSelector TextBox /template/ Border#PART_BorderElement">
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+        <Setter Property="Background" Value="Transparent" />
+    </Style>
+    <Style Selector="controls|TagSelector TextBox:focus /template/ Border#PART_BorderElement">
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+        <Setter Property="Background" Value="Transparent" />
+    </Style>
+</Styles>
