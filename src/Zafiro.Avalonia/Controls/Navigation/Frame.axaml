@@ -31,7 +31,7 @@
                     </DockPanel>
                 </ControlTemplate>
             </Setter>
-            <Style Selector="^ /template/ Button#BackButton">
+            <Style Selector="^ /template/ EnhancedButton#BackButton">
                 <Setter Property="Height" Value="40" />
             </Style>
         </ControlTheme>

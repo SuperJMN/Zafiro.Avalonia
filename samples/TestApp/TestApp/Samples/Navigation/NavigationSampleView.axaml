@@ -3,7 +3,6 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:navigation="clr-namespace:TestApp.Samples.Navigation"
-             xmlns:c="clr-namespace:Zafiro.Avalonia.Controls;assembly=Zafiro.Avalonia"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="TestApp.Samples.Navigation.NavigationSampleView" x:DataType="navigation:NavigationSampleViewModel">
 
@@ -11,7 +10,7 @@
         <StyleInclude Source="/Samples/SampleStyles.axaml" />
     </UserControl.Styles>
 
-    <c:HeaderedContainer Header="You can navigate to other pages using INavigator ">
+    <HeaderedContainer Header="You can navigate to other pages using INavigator ">
         <EnhancedButton Content="Go to another page" Command="{Binding Navigate}" />
-    </c:HeaderedContainer>
+    </HeaderedContainer>
 </UserControl>
