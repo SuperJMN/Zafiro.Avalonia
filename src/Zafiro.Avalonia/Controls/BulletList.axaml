@@ -1,6 +1,5 @@
 <Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:av="https://github.com/projektanker/icons.avalonia"
         xmlns:controls="clr-namespace:Zafiro.Avalonia.Controls">
     <Design.PreviewWith>
         <controls:BulletList>
@@ -11,7 +10,7 @@
 
             <controls:BulletList.Header>
                 <DockPanel>
-                    <av:Icon Foreground="Orange" Margin="0 0 8 0" Value="fa-triangle-exclamation" />
+                    <PathIcon Data="{StaticResource ErrorIcon}" Foreground="Orange" Margin="0 0 8 0" />
                     <TextBlock FontWeight="Bold" Text="Important Security Tips:" />
                 </DockPanel>
             </controls:BulletList.Header>

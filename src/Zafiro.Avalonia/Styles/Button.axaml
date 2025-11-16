@@ -1,7 +1,6 @@
 ﻿<Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:styles="clr-namespace:Zafiro.Avalonia.Styles"
-        xmlns:ui="clr-namespace:Zafiro.UI;assembly=Zafiro.UI">
+        xmlns:styles="clr-namespace:Zafiro.Avalonia.Styles">
 
     <Style Selector=":is(Control).Expand">
         <Setter Property="HorizontalAlignment" Value="Stretch" />
@@ -75,7 +74,7 @@
             </Setter>
             <Setter Property="Content">
                 <Template>
-                    <ui:Icon Source="fa-exclamation" />
+                    <PathIcon Data="{StaticResource ErrorIcon}" />
                 </Template>
             </Setter>
             <Style Selector="^:pointerover /template/ ContentPresenter#PART_ContentPresenter">
