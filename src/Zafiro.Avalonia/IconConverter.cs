@@ -13,6 +13,7 @@ public class IconConverter : IIconConverter
         }
 
         var parts = source.Split(new[] { ':' }, 2);
+        string errorMessage;
 
         if (parts.Length == 2)
         {
@@ -23,6 +24,12 @@ public class IconConverter : IIconConverter
             {
                 return provider.Create(icon, valueWithoutPrefix);
             }
+
+            errorMessage = $"[Icon provider '{prefix}' is not registered for '{source}']";
+        }
+        else
+        {
+            errorMessage = $"[No icon provider found for '{source}' and no default provider is configured]";
         }
 
         var defaultProvider = Icons.IconControlProviderRegistry.DefaultProvider;
@@ -31,6 +38,11 @@ public class IconConverter : IIconConverter
             return defaultProvider.Create(icon, source);
         }
 
-        return null;
+        // Surface a descriptive error in the UI instead of failing silently
+        // so consumers can quickly identify misconfigured or missing icon providers.
+        return new TextBlock
+        {
+            Text = errorMessage
+        };
     }
 }
