@@ -12,11 +12,14 @@ namespace Zafiro.Avalonia.Icons
     /// </summary>
     public class PathStringIconProvider : IIconProvider
     {
-        private readonly string prefix;
-        private readonly Dictionary<string, IconModel> cache = new();
-
         // Default ViewBox for icons
         private static readonly ViewBoxModel DefaultViewBox = new(0, 0, 24, 24);
+        private readonly Dictionary<string, IconModel> cache = new();
+        private readonly string prefix;
+
+        public PathStringIconProvider() : this("path")
+        {
+        }
 
         public PathStringIconProvider(string prefix)
         {

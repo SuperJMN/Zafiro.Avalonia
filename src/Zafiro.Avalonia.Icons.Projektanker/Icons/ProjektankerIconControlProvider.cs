@@ -1,4 +1,5 @@
 using Avalonia.Controls;
+using Zafiro.UI;
 using ProjektankerIcon = Projektanker.Icons.Avalonia.Icon;
 
 namespace Zafiro.Avalonia.Icons;
@@ -13,7 +14,7 @@ public class ProjektankerIconControlProvider : IIconControlProvider
     // to be used as the default provider, but it must be non-empty.
     public string Prefix => "projektanker";
 
-    public Control? Create(Zafiro.UI.IIcon icon, string valueWithoutPrefix)
+    public Control? Create(IIcon icon, string valueWithoutPrefix)
     {
         var source = icon.Source;
         if (string.IsNullOrWhiteSpace(source))

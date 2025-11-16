@@ -31,7 +31,8 @@
         <ProjectReference Include="../../../src/Zafiro.Avalonia.DataViz/Zafiro.Avalonia.DataViz.csproj" />
         <ProjectReference Include="../../../src/Zafiro.Avalonia.Dialogs/Zafiro.Avalonia.Dialogs.csproj" />
         <ProjectReference Include="../../../src/Zafiro.Avalonia/Zafiro.Avalonia.csproj" />
-        <ProjectReference Include="../../../src/Zafiro.Avalonia.Projektanker/Zafiro.Avalonia.Projektanker.csproj" />
+        <ProjectReference Include="../../../src/Zafiro.Avalonia.Icons.Projektanker/Zafiro.Avalonia.Icons.Projektanker.csproj"/>
+        <ProjectReference Include="../../../src/Zafiro.Avalonia.Icons.Svg/Zafiro.Avalonia.Icons.Svg.csproj"/>
         <!-- Run the source generator locally as an Analyzer during in-repo builds -->
         <ProjectReference Include="../../../src/Zafiro.Avalonia.Generators/Zafiro.Avalonia.Generators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
     </ItemGroup>

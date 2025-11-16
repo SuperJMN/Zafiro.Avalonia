@@ -8,12 +8,6 @@ public static class IconControlProviderRegistry
 {
     static readonly Dictionary<string, IIconControlProvider> providers = new(StringComparer.OrdinalIgnoreCase);
 
-    static IconControlProviderRegistry()
-    {
-        // Default registration for the built-in SVG provider.
-        Register(new SvgIconControlProvider());
-    }
-
     public static IIconControlProvider? DefaultProvider { get; private set; }
 
     public static IconControlProviderRegistryHandle Register(IIconControlProvider provider, bool asDefault = false)

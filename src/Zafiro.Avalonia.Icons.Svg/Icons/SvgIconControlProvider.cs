@@ -1,3 +1,7 @@
+using Avalonia;
+using Avalonia.Controls;
+using Zafiro.UI;
+
 namespace Zafiro.Avalonia.Icons;
 
 /// <summary>
@@ -10,7 +14,7 @@ public class SvgIconControlProvider : IIconControlProvider
 {
     public string Prefix => "svg";
 
-    public Control? Create(Zafiro.UI.IIcon icon, string valueWithoutPrefix)
+    public Control? Create(IIcon icon, string valueWithoutPrefix)
     {
         if (string.IsNullOrWhiteSpace(valueWithoutPrefix))
         {

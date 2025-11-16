@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <Import Project="..\Common.props"/>
+
+    <ItemGroup>
+        <PackageReference Include="Avalonia"/>
+        <PackageReference Include="Projektanker.Icons.Avalonia"/>
+        <PackageReference Include="Projektanker.Icons.Avalonia.FontAwesome"/>
+        <PackageReference Include="Projektanker.Icons.Avalonia.MaterialDesign"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Zafiro.Avalonia\Zafiro.Avalonia.csproj"/>
+    </ItemGroup>
+</Project>
