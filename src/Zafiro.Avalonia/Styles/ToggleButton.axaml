@@ -1,6 +1,6 @@
 <Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:avalonia="https://github.com/projektanker/icons.avalonia">
+        xmlns:ui="clr-namespace:Zafiro.UI;assembly=Zafiro.UI">
     <Design.PreviewWith>
         <Border Padding="20">
             <!-- Add Controls for Previewer Here -->
@@ -27,7 +27,11 @@
         </ControlTheme>
         
         <ControlTheme x:Key="HamburguerMenuToggleButton" TargetType="ToggleButton" BasedOn="{StaticResource TransparentToggleButton}">
-            <Setter Property="avalonia:Attached.Icon" Value="mdi-menu" />
+            <Setter Property="Content">
+                <Template>
+                    <ui:Icon Source="mdi-menu" />
+                </Template>
+            </Setter>
             <Setter Property="FontSize" Value="25" />
         </ControlTheme>
         

@@ -4,7 +4,7 @@
         xmlns:behaviors="clr-namespace:Zafiro.Avalonia.Behaviors"
         xmlns:shell="clr-namespace:Zafiro.Avalonia.Controls.Shell"
         xmlns:misc="clr-namespace:Zafiro.Avalonia.Misc"
-        xmlns:p="https://github.com/projektanker/icons.avalonia">
+        xmlns:ui="clr-namespace:Zafiro.UI;assembly=Zafiro.UI">
     <Design.PreviewWith>
         <DockPanel>
             <DockPanel.Resources>
@@ -45,7 +45,11 @@
     <Styles.Resources>
 
         <ControlTheme x:Key="HamburguerMenuToggleButton" TargetType="ToggleButton" BasedOn="{StaticResource TransparentToggleButton}">
-            <Setter Property="p:Attached.Icon" Value="mdi-menu" />
+            <Setter Property="Content">
+                <Template>
+                    <ui:Icon Source="mdi-menu" />
+                </Template>
+            </Setter>
             <Setter Property="FontSize" Value="25" />
         </ControlTheme>
 
@@ -59,7 +63,7 @@
             <Setter Property="ToggleButtonTheme" Value="{StaticResource HamburguerMenuToggleButton}" />
             <Setter Property="ToggleButtonContent">
                 <Template>
-                    <p:Icon Value="mdi-menu" />
+                    <ui:Icon Source="mdi-menu" />
                 </Template>
             </Setter>
 

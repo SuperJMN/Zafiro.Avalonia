@@ -1,3 +1,4 @@
+using Avalonia;
 using Avalonia.Media;
 using Projektanker.Icons.Avalonia;
 using Projektanker.Icons.Avalonia.Models;
@@ -44,7 +45,8 @@ namespace Zafiro.Avalonia.Icons
         private IconModel CreateIconFromPathString(string iconName)
         {
             // Look for the path string in resources
-            if (Application.Current?.TryFindResource(iconName, null, out var resource) != true)
+            var app = Application.Current;
+            if (app?.Resources.TryGetResource(iconName, null, out var resource) != true)
             {
                 throw new KeyNotFoundException($"Resource '{iconName}' not found in application resources");
             }
@@ -72,7 +74,8 @@ namespace Zafiro.Avalonia.Icons
         private ViewBoxModel? TryGetCustomViewBox(string iconName)
         {
             // Try to find a custom ViewBox in resources
-            if (Application.Current?.TryFindResource($"{iconName}_viewbox", null, out var viewBoxResource) == true &&
+            var app = Application.Current;
+            if (app?.Resources.TryGetResource($"{iconName}_viewbox", null, out var viewBoxResource) == true &&
                 viewBoxResource is string viewBoxString)
             {
                 try
