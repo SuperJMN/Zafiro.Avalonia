@@ -22,7 +22,6 @@
                         <ContentSectionDesign Name="Section1" FriendlyName="Section 1" Icon="{Icon fa-wallet}" />
                         <ContentSectionDesign Name="Section2" IsVisible="False" FriendlyName="Section 2" Icon="{Icon fa-wallet}" />
                         <ContentSectionDesign Name="Section3" FriendlyName="Section 3" Icon="{Icon fa-wallet}" />
-                        <sections:SectionSeparator />
                         <ContentSectionDesign Name="Section4" FriendlyName="Section 4" Icon="{Icon fa-wallet}" />
                         <ContentSectionDesign Name="Section5" FriendlyName="Section 5" Icon="{Icon fa-wallet}" />
                     </generic:List>
@@ -35,13 +34,11 @@
 
         <ControlTheme x:Key="SectionListItem" TargetType="ListBoxItem" x:DataType="sections:ISection"
                       BasedOn="{StaticResource {x:Type ListBoxItem}}">
-            <Setter Property="IsEnabled"
-                    Value="{Binding Converter={x:Static ShellConverters.IsActivatable}}" />
             <Setter Property="Padding" Value="0" />
             <Setter Property="Focusable" Value="False" />
         </ControlTheme>
 
-        <DataTemplate x:Key="VerticalItem" DataType="sections:INamedSection">
+        <DataTemplate x:Key="VerticalItem" DataType="sections:ISection">
             <Grid Margin="{Binding $parent[SectionStrip].ItemPadding}" ColumnSpacing="{Binding $parent[SectionStrip].HorizontalIconLabelSpacing}"
                   RowSpacing="{Binding $parent[SectionStrip].VerticalIconLabelSpacing}">
                 <Grid.RowDefinitions>
@@ -57,7 +54,7 @@
             </Grid>
         </DataTemplate>
 
-        <DataTemplate x:Key="HorizontalItem" DataType="sections:INamedSection">
+        <DataTemplate x:Key="HorizontalItem" DataType="sections:ISection">
             <DockPanel Margin="{Binding $parent[SectionStrip].ItemPadding}" HorizontalSpacing="{Binding $parent[SectionStrip].HorizontalIconLabelSpacing}">
                 <Viewbox Height="{Binding $parent[SectionStrip].IconSize}" Width="{Binding $self.Width}">
                     <ContentControl Margin="{Binding $parent[SectionStrip].IconMargin}" Content="{Binding Icon}" />
@@ -82,11 +79,8 @@
                         <ListBox ItemContainerTheme="{StaticResource SectionListItem}" Background="{TemplateBinding Background}" SelectedItem="{TemplateBinding SelectedSection, Mode=TwoWay}"
                                  ItemsSource="{TemplateBinding FilteredSections}">
                             <ListBox.DataTemplates>
-                                <DataTemplate DataType="sections:IContentSection">
+                                <DataTemplate DataType="sections:ISection">
                                     <ContentControl Content="{Binding}" ContentTemplate="{StaticResource HorizontalItem}" />
-                                </DataTemplate>
-                                <DataTemplate DataType="sections:ISectionSeparator">
-                                    <Separator Padding="0" Margin="0" />
                                 </DataTemplate>
                             </ListBox.DataTemplates>
                         </ListBox>
@@ -98,7 +92,7 @@
                     <ControlTemplate>
                         <DockPanel>
                             <DockPanel.DataTemplates>
-                                <DataTemplate DataType="sections:IContentSection">
+                                <DataTemplate DataType="sections:ISection">
                                     <ContentControl Content="{Binding}" ContentTemplate="{StaticResource VerticalItem}" />
                                 </DataTemplate>
                             </DockPanel.DataTemplates>

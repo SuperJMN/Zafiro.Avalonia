@@ -53,7 +53,7 @@ public class SectionStrip : TemplatedControl
     {
         var sectionChanges = this.WhenAnyValue(strip => strip.Sections)
             .WhereNotNull()
-            .Select(sections => sections.OfType<INamedSection>().ToObservableChangeSetIfPossible(section => section.Name))
+            .Select(sections => sections.ToObservableChangeSetIfPossible(section => section.Name))
             .Switch();
 
         var sectionSorter = new SectionSorter(sectionChanges)
