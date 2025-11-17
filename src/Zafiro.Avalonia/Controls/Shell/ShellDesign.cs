@@ -1,4 +1,3 @@
-using System.Reactive.Linq;
 using CSharpFunctionalExtensions;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
@@ -25,7 +24,7 @@ public class ShellDesign : IShell
         new ContentSectionDesign { Name = "Test section 3", Icon = new Icon() { Source = "fa-user" } }
     ];
 
-    public IContentSection SelectedSection { get; set; }
+    public ISection SelectedSection { get; set; }
 
     public INavigator Navigator { get; } = new Navigator(new ServiceCollection().BuildServiceProvider(), Maybe<ILogger>.None, null);
 }

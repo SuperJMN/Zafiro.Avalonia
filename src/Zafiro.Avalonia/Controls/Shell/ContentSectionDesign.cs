@@ -3,7 +3,7 @@ using Zafiro.UI.Navigation.Sections;
 
 namespace Zafiro.Avalonia.Controls.Shell;
 
-public partial class ContentSectionDesign : ReactiveObject, IContentSection
+public partial class ContentSectionDesign : ReactiveObject, ISection
 {
     [Reactive] private object? icon;
     [Reactive] private int sortOrder;
@@ -19,5 +19,4 @@ public partial class ContentSectionDesign : ReactiveObject, IContentSection
     public string FriendlyName { get; set; }
     public bool IsVisible { get; set; } = true;
     public IObservable<object> Content { get; set; }
-    public Type RootType { get; } = typeof(object);
 }

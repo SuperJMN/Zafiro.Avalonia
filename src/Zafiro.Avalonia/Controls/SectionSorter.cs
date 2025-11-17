@@ -10,21 +10,21 @@ public sealed class SectionSorter : IDisposable
 {
     private readonly CompositeDisposable disposable = new();
 
-    public SectionSorter(IObservable<IChangeSet<INamedSection, string>> sectionChanges)
+    public SectionSorter(IObservable<IChangeSet<ISection, string>> sectionChanges)
     {
         sectionChanges
             .AutoRefresh(w => w.IsVisible)
             .AutoRefresh(w => w.SortOrder)
             .Filter(s => s.IsVisible)
             .DisposeMany()
-            .SortAndBind(out var filtered, SortExpressionComparer<INamedSection>.Ascending(w => w.SortOrder))
+            .SortAndBind(out var filtered, SortExpressionComparer<ISection>.Ascending(w => w.SortOrder))
             .Subscribe()
             .DisposeWith(disposable);
 
         Sections = filtered;
     }
 
-    public ReadOnlyObservableCollection<INamedSection> Sections { get; }
+    public ReadOnlyObservableCollection<ISection> Sections { get; }
 
     public void Dispose()
     {
