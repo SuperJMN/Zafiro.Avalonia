@@ -1,7 +1,18 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
+    <!-- Generic delete/trash icon used in various controls -->
     <StreamGeometry x:Key="Delete">M 11 1.99998 C 9.35497 1.99998 7.99998 3.35497 7.99998 4.99998 L 7.99998 6 L 4.00002 6 A 1 1 0 0 0 3 7.00002 A 1 1 0 0 0 4.00002 7.99998 L 4.99998 7.99998 L 4.99998 18 C 4.99998 20.1973 6.80273 22 9 22 L 15 22 C 17.1973 22 19 20.1973 19 18 L 19 7.99998 L 20 7.99998 A 1 1 0 0 0 21 7.00002 A 1 1 0 0 0 20 6 L 16 6 L 16 4.99998 C 16 3.35499 14.645 1.99998 13 1.99998 L 11 1.99998 z M 11 4.00002 L 13 4.00002 C 13.5642 4.00002 14 4.43583 14 4.99998 L 14 6 L 12 6 L 10 6 L 10 4.99998 C 10 4.43585 10.4359 4.00002 11 4.00002 z M 7.00002 7.99998 L 9 7.99998 L 12 7.99998 L 15 7.99998 L 17 7.99998 L 17 18 C 17 19.1165 16.1165 20 15 20 L 9 20 C 7.88358 20 7.00002 19.1165 7.00002 18 L 7.00002 7.99998 z</StreamGeometry>
+
+    <!-- Simple circular error icon with exclamation mark -->
+    <StreamGeometry x:Key="ErrorIcon">M 12 2 C 6.48 2 2 6.48 2 12 C 2 17.52 6.48 22 12 22 C 17.52 22 22 17.52 22 12 C 22 6.48 17.52 2 12 2 Z M 13 17 H 11 V 15 H 13 Z M 13 13 H 11 V 7 H 13 Z</StreamGeometry>
+
+    <!-- Simple hamburger menu icon (three horizontal bars) -->
+    <StreamGeometry x:Key="MenuIcon">M 3 6 H 21 V 8 H 3 Z M 3 11 H 21 V 13 H 3 Z M 3 16 H 21 V 18 H 3 Z</StreamGeometry>
+
+    <!-- Simple wallet icon used in previews and default UI elements -->
+    <StreamGeometry x:Key="WalletIcon">M 4 7 H 20 C 21.1046 7 22 7.89543 22 9 V 17 C 22 18.1046 21.1046 19 20 19 H 4 C 2.89543 19 2 18.1046 2 17 V 9 C 2 7.89543 2.89543 7 4 7 Z M 14 11 H 20 V 15 H 14 C 12.8954 15 12 14.1046 12 13 C 12 11.8954 12.8954 11 14 11 Z</StreamGeometry>
+
     <DrawingImage x:Key="BackArrow">
         <DrawingGroup>
             <GeometryDrawing Brush="Transparent" Geometry="F1M0,0L800,0L800,800L0,800z" />
@@ -14,7 +25,7 @@
             </DrawingGroup>
         </DrawingGroup>
     </DrawingImage>
-    
+
     <Design.PreviewWith>
         <WrapPanel>
             <PathIcon Data="{StaticResource Delete}" />

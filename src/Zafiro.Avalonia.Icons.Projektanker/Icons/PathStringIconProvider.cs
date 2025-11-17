@@ -1,3 +1,5 @@
+using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Media;
 using Projektanker.Icons.Avalonia;
 using Projektanker.Icons.Avalonia.Models;
@@ -10,11 +12,14 @@ namespace Zafiro.Avalonia.Icons
     /// </summary>
     public class PathStringIconProvider : IIconProvider
     {
-        private readonly string prefix;
-        private readonly Dictionary<string, IconModel> cache = new();
-
         // Default ViewBox for icons
         private static readonly ViewBoxModel DefaultViewBox = new(0, 0, 24, 24);
+        private readonly Dictionary<string, IconModel> cache = new();
+        private readonly string prefix;
+
+        public PathStringIconProvider() : this("path")
+        {
+        }
 
         public PathStringIconProvider(string prefix)
         {
@@ -43,8 +48,9 @@ namespace Zafiro.Avalonia.Icons
 
         private IconModel CreateIconFromPathString(string iconName)
         {
-            // Look for the path string in resources
-            if (Application.Current?.TryFindResource(iconName, null, out var resource) != true)
+            // Look for the path string in resources (searching the full resource hierarchy)
+            if (Application.Current is not IResourceHost host ||
+                !ResourceNodeExtensions.TryFindResource(host, iconName, out var resource))
             {
                 throw new KeyNotFoundException($"Resource '{iconName}' not found in application resources");
             }
@@ -71,8 +77,9 @@ namespace Zafiro.Avalonia.Icons
 
         private ViewBoxModel? TryGetCustomViewBox(string iconName)
         {
-            // Try to find a custom ViewBox in resources
-            if (Application.Current?.TryFindResource($"{iconName}_viewbox", null, out var viewBoxResource) == true &&
+            // Try to find a custom ViewBox in resources (searching the full resource hierarchy)
+            if (Application.Current is IResourceHost host &&
+                ResourceNodeExtensions.TryFindResource(host, $"{iconName}_viewbox", out var viewBoxResource) &&
                 viewBoxResource is string viewBoxString)
             {
                 try

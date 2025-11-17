@@ -16,10 +16,8 @@
         <PackageReference Include="Deadpikle.AvaloniaProgressRing" />
         <PackageReference Include="FluentAvaloniaUI" />
         <PackageReference Include="JetBrains.Annotations" />
-        <PackageReference Include="Projektanker.Icons.Avalonia" />
         <PackageReference Include="ReactiveProperty" />
         <PackageReference Include="ReactiveUI.Avalonia" />
-        <PackageReference Include="Svg.Controls.Skia.Avalonia" />
         <PackageReference Include="System.Linq.Async" />
         <PackageReference Include="Xaml.Behaviors.Avalonia" />
         <PackageReference Include="Zafiro.UI"/>

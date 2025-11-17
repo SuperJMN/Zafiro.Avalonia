@@ -30,6 +30,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Other files", "Other files"
 		Directory.Packages.props = Directory.Packages.props
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zafiro.Avalonia.Icons.Projektanker", "src\Zafiro.Avalonia.Icons.Projektanker\Zafiro.Avalonia.Icons.Projektanker.csproj", "{7AB81EA9-F3F5-4732-BD23-9805747CEB34}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zafiro.Avalonia.Icons.Svg", "src\Zafiro.Avalonia.Icons.Svg\Zafiro.Avalonia.Icons.Svg.csproj", "{0654A361-009C-4E76-BD70-37D76A9A47A7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -68,6 +72,14 @@ Global
 		{29CBCEF5-CE95-448F-B4B9-CED49813AA75}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{29CBCEF5-CE95-448F-B4B9-CED49813AA75}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{29CBCEF5-CE95-448F-B4B9-CED49813AA75}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7AB81EA9-F3F5-4732-BD23-9805747CEB34}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7AB81EA9-F3F5-4732-BD23-9805747CEB34}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7AB81EA9-F3F5-4732-BD23-9805747CEB34}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7AB81EA9-F3F5-4732-BD23-9805747CEB34}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0654A361-009C-4E76-BD70-37D76A9A47A7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0654A361-009C-4E76-BD70-37D76A9A47A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0654A361-009C-4E76-BD70-37D76A9A47A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0654A361-009C-4E76-BD70-37D76A9A47A7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

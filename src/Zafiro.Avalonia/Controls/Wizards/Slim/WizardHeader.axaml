@@ -1,6 +1,5 @@
 <Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:avalonia="https://github.com/projektanker/icons.avalonia"
         xmlns:classic="clr-namespace:Zafiro.Avalonia.Controls.Wizards.Slim"
         xmlns:panels="clr-namespace:Zafiro.Avalonia.Controls.Panels">
 
@@ -24,7 +23,7 @@
                                             Command="{Binding $parent[SlimWizardControl].Wizard.Back}">
                                 <Button.Content>
                                     <DockPanel>
-                                        <avalonia:Icon Value="fa-angle-left" />
+                                        <Image Source="{StaticResource BackArrow}" Height="16" Margin="0,0,4,0" />
                                         <TextBlock>Back</TextBlock>
                                     </DockPanel>
                                 </Button.Content>

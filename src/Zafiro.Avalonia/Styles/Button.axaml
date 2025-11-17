@@ -1,6 +1,5 @@
 ﻿<Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:pt="https://github.com/projektanker/icons.avalonia"
         xmlns:styles="clr-namespace:Zafiro.Avalonia.Styles">
 
     <Style Selector=":is(Control).Expand">
@@ -75,7 +74,7 @@
             </Setter>
             <Setter Property="Content">
                 <Template>
-                    <pt:Icon FontSize="10" Foreground="{DynamicResource SystemAltHighColor}" Value="fa-exclamation" />
+                    <PathIcon Data="{StaticResource ErrorIcon}" />
                 </Template>
             </Setter>
             <Style Selector="^:pointerover /template/ ContentPresenter#PART_ContentPresenter">
