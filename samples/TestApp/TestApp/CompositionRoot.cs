@@ -6,6 +6,7 @@ using Avalonia.Controls.Notifications;
 using Microsoft.Extensions.DependencyInjection;
 using TestApp.Samples.Navigation;
 using TestApp.Shell;
+using Zafiro.Avalonia;
 using Zafiro.Avalonia.Dialogs;
 using Zafiro.Avalonia.Misc;
 using Zafiro.Avalonia.Services;
@@ -38,6 +39,10 @@ public static class CompositionRoot
         services.AddTransient<TargetViewModel>();
 
         var serviceProvider = services.BuildServiceProvider();
+
+        Commands.Instance = new Commands(
+            serviceProvider.GetRequiredService<INotificationService>(),
+            LauncherService.Instance);
 
         return serviceProvider.GetRequiredService<MainViewModel>();
     }
