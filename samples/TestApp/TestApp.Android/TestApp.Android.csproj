@@ -1,3 +1,5 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <OutputType>Exe</OutputType>
@@ -9,10 +11,9 @@
         <ApplicationVersion>1</ApplicationVersion>
         <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
         <AndroidPackageFormat>apk</AndroidPackageFormat>
-        <AndroidEnableProfiledAot>False</AndroidEnableProfiledAot>
+        <AndroidEnableProfiledAot>false</AndroidEnableProfiledAot>
         <IsPackable>False</IsPackable>
     </PropertyGroup>
-
     <!-- Release build settings -->
     <PropertyGroup Condition="'$(Configuration)' == 'Release'">
         <!-- Safer linking for app code to avoid trimming reflection: -->
@@ -23,14 +24,12 @@
         <!-- Reduce ICU size -->
         <InvariantGlobalization>true</InvariantGlobalization>
     </PropertyGroup>
-
     <ItemGroup>
         <AndroidResource Include="Icon.png">
             <Link>Resources/drawable/Icon.png</Link>
         </AndroidResource>
         <AndroidLinkerDescriptor Include="linker.xml" />
     </ItemGroup>
-
     <ItemGroup>
         <PackageReference Include="Avalonia.Android"/>
         <PackageReference Include="Xamarin.AndroidX.Core.SplashScreen"/>
@@ -41,7 +40,6 @@
         <PackageReference Include="Xaml.Behaviors.Interactions.Draggable"/>
         <PackageReference Include="Xaml.Behaviors.Interactions.Events"/>
     </ItemGroup>
-
     <!-- Force-include Behaviors assemblies for Release/AOT -->
     <ItemGroup>
         <TrimmerRootAssembly Include="Xaml.Behaviors.Interactions.DragAndDrop">
@@ -54,8 +52,6 @@
             <RootMode>All</RootMode>
         </TrimmerRootAssembly>
     </ItemGroup>
-
-
     <ItemGroup>
         <ProjectReference Include="../TestApp/TestApp.csproj"/>
     </ItemGroup>

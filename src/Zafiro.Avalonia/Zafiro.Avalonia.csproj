@@ -13,7 +13,6 @@
     <PackageReference Include="Avalonia"/>
     <PackageReference Include="Avalonia.Controls.DataGrid"/>
     <PackageReference Include="CSharpFunctionalExtensions"/>
-    <PackageReference Include="Deadpikle.AvaloniaProgressRing"/>
     <PackageReference Include="FluentAvaloniaUI"/>
     <PackageReference Include="JetBrains.Annotations"/>
     <PackageReference Include="ReactiveProperty"/>
@@ -24,7 +23,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <ProjectReference Include="../../../Zafiro/src/Zafiro.UI/Zafiro.UI.csproj"/>
+    <PackageReference Include="Zafiro.UI"/>
   </ItemGroup>
   <ItemGroup>
     <AdditionalFiles Include="**/*.axaml"/>
