@@ -1,8 +1,9 @@
 using Zafiro.Avalonia.Controls.Diagrams;
+using Zafiro.DataAnalysis.Graphs;
 
 namespace TestApp.Samples.Flow;
 
-public class FlowEdge : IHaveFromTo
+public class FlowEdge : IEdge<object>, IHaveFromTo
 {
     public FlowEdge(FlowNode from, FlowNode to)
     {
