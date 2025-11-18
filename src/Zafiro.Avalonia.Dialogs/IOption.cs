@@ -25,28 +25,27 @@ public interface IOption
 public enum OptionRole
 {
     /// <summary>
-    /// Acción principal (ej. “OK”, “Guardar”, “Aceptar”…)
+    /// Primary action (e.g., "OK", "Save", "Accept").
     /// </summary>
     Primary,
 
     /// <summary>
-    /// Acción secundaria, complementaria a la principal (ej. “Opciones avanzadas”, “Más info”…)
+    /// Secondary action that complements the primary one (e.g., "Advanced options", "More info").
     /// </summary>
     Secondary,
 
     /// <summary>
-    /// Acción de cancelar o cerrar (ej. “Cancelar”, “Cerrar”...)
+    /// Cancel or close action (e.g., "Cancel", "Close").
     /// </summary>
     Cancel,
 
     /// <summary>
-    /// Acción destructiva (ej. “Eliminar”, “Borrar”)
+    /// Destructive action (e.g., "Delete", "Remove").
     /// </summary>
     Destructive,
 
     /// <summary>
-    /// Acción informativa, ayuda, o simplemente no tan central 
-    /// (ej. “Ayuda”, “Leer más”, “Ver documentación”)
+    /// Informational or help action that is less central (e.g., "Help", "Read more", "View documentation").
     /// </summary>
     Info
 }

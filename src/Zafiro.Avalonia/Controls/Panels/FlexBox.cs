@@ -262,7 +262,7 @@ public class FlexBox : Panel
 
     protected override Size MeasureOverride(Size availableSize)
     {
-        // Ignorar hijos invisibles en el cálculo del layout
+        // Ignore invisible children when calculating the layout
         var orderedChildren = Children.Where(c => c.IsVisible).OrderBy(GetOrder).ToList();
 
         // CSS faithful measurement with proper intrinsic sizing
@@ -295,7 +295,7 @@ public class FlexBox : Panel
 
     protected override Size ArrangeOverride(Size finalSize)
     {
-        // Ignorar hijos invisibles en el cálculo del layout
+        // Ignore invisible children when calculating the layout
         var orderedChildren = Children.Where(c => c.IsVisible).OrderBy(GetOrder).ToList();
         if (!orderedChildren.Any()) return finalSize;
 

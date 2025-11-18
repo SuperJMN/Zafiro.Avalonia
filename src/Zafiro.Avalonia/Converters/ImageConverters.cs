@@ -11,10 +11,10 @@ public class ImageConverters
     public static Bitmap LoadBitmapFromBytes(byte[] imageData)
     {
         if (imageData == null || imageData.Length == 0)
-            throw new ArgumentException("El array de bytes no puede estar vacío.", nameof(imageData));
+            throw new ArgumentException("The byte array cannot be empty.", nameof(imageData));
 
-        using var stream = new MemoryStream(imageData); // El Stream solo vive durante este bloque
-        return new Bitmap(stream); // Bitmap copia los datos y ya no necesita el Stream
+        using var stream = new MemoryStream(imageData); // The stream only lives inside this block
+        return new Bitmap(stream); // Bitmap copies the data and no longer needs the stream
     }
     
     public static readonly FuncValueConverter<Uri, Bitmap?> UriToBitmap = new(uri =>

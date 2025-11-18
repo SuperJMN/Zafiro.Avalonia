@@ -25,13 +25,13 @@ public class StackedDesktopDialog : IDialog
             var closeable = new DialogCloseable(completionSource, true);
             var options = optionsFactory(closeable).ToList();
 
-            // Crea una instancia de contexto para el diálogo actual
+            // Create a context instance for the current dialog
             var dialogContext = new DialogContext(viewModel, title, options, completionSource);
 
-            // Añade el diálogo a la pila
+            // Push the dialog onto the stack
             DialogStack.Push(dialogContext);
 
-            // Si no hay ventana de diálogo, crea una nueva
+            // If there is no dialog window yet, create a new one
             if (dialogWindow == null)
             {
                 dialogWindow = new Window
@@ -45,7 +45,7 @@ public class StackedDesktopDialog : IDialog
                     MinHeight = 300
                 };
 
-                // Maneja el evento de cierre de la ventana para completar todos los diálogos pendientes
+                // Handle the window close event to complete every pending dialog
                 dialogWindow.Closed += (sender, args) =>
                 {
                     while (DialogStack.Count > 0)
@@ -57,19 +57,19 @@ public class StackedDesktopDialog : IDialog
                     dialogWindow = null;
                 };
 
-                // Actualiza el contenido con el diálogo actual
+                // Update the content with the current dialog
                 UpdateDialogContent(dialogContext);
 
-                // Muestra la ventana de diálogo
+                // Show the dialog window
                 dialogWindow.Show(mainWindow);
             }
             else
             {
-                // Si ya hay una ventana de diálogo, actualiza su contenido
+                // If a dialog window already exists, just update its content
                 UpdateDialogContent(dialogContext);
             }
 
-            // Espera a que se complete el diálogo actual
+            // Wait until the current dialog completes
             return completionSource.Task;
         });
 
@@ -129,16 +129,16 @@ public class StackedDesktopDialog : IDialog
         {
             Dispatcher.UIThread.Post(() =>
             {
-                // Completa el diálogo actual con el resultado correspondiente
+                // Complete the current dialog with the corresponding result
                 completionSource.TrySetResult(result);
 
-                // Quita el diálogo actual de la pila
+                // Remove the current dialog from the stack
                 if (DialogStack.Count > 0)
                 {
                     DialogStack.Pop();
                 }
 
-                // Si hay más diálogos en la pila, muestra el siguiente
+                // If there are more dialogs on the stack, show the next one
                 if (DialogStack.Count > 0)
                 {
                     var nextDialog = DialogStack.Peek();
@@ -146,7 +146,7 @@ public class StackedDesktopDialog : IDialog
                 }
                 else
                 {
-                    // Si no hay más diálogos, cierra la ventana
+                    // If there are no more dialogs, close the window
                     dialogWindow?.Close();
                     dialogWindow = null;
                 }
@@ -157,16 +157,16 @@ public class StackedDesktopDialog : IDialog
         {
             Dispatcher.UIThread.Post(() =>
             {
-                // Completa el diálogo actual con resultado falso (cancelado/descartado)
+                // Complete the current dialog with a false result (cancelled/dismissed)
                 completionSource.TrySetResult(false);
 
-                // Quita el diálogo actual de la pila
+                // Remove the current dialog from the stack
                 if (DialogStack.Count > 0)
                 {
                     DialogStack.Pop();
                 }
 
-                // Si hay más diálogos en la pila, muestra el siguiente
+                // If there are more dialogs on the stack, show the next one
                 if (DialogStack.Count > 0)
                 {
                     var nextDialog = DialogStack.Peek();
@@ -174,7 +174,7 @@ public class StackedDesktopDialog : IDialog
                 }
                 else
                 {
-                    // Si no hay más diálogos, cierra la ventana
+                    // If there are no more dialogs, close the window
                     dialogWindow?.Close();
                     dialogWindow = null;
                 }

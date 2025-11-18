@@ -14,7 +14,7 @@ variables:
     value: '1'
 
 steps:
-  # Checkout completo + submódulos
+  # Full checkout + submodules
   - checkout: self
     submodules: true
     fetchDepth: 0
@@ -32,7 +32,7 @@ steps:
       dotnetdeployer --version
     displayName: Install DotnetDeployer.Tool
   
-  # Empaquetado + publicación NuGet + release GitHub (real en master, dry-run en el resto)
+  # NuGet packaging + publishing + GitHub release (real on master, dry-run elsewhere)
   - pwsh: |
       $branch   = '$(Build.SourceBranch)'
       $isMaster = $branch -eq 'refs/heads/master'

@@ -11,7 +11,7 @@ namespace Zafiro.Avalonia.Dialogs;
 
 public static class DialogExtensions
 {
-    // Compatibilidad: API clásica con título como string
+    // Compatibility: classic API with title as string
     public static Task<bool> Show(this IDialog dialogService,
         object viewModel,
         string title,
@@ -24,7 +24,7 @@ public static class DialogExtensions
         return dialogService.Show(viewModel, Observable.Return(title), closeable => optionsFactory(closeable));
     }
 
-    // Nueva sobrecarga: títulos reactivos
+    // New overload: reactive titles
     public static Task<bool> Show(this IDialog dialogService,
         object viewModel,
         IObservable<string> title,
@@ -38,7 +38,7 @@ public static class DialogExtensions
         return dialogService.Show(viewModel, title, optionsFactory);
     }
 
-    // Conveniencia: ViewModels que exponen título
+    // Convenience: ViewModels that expose a title
     public static Task<bool> Show(this IDialog dialogService,
         IHaveTitle viewModel,
         Func<ICloseable, IOption[]> optionsFactory)

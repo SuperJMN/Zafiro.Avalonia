@@ -51,40 +51,40 @@ public class DendrogramLinesControl : Control
             return;
         }
 
-        // Definir el margen interno basado en el grosor de la línea
+        // Define the inner margin based on the line thickness
         var margin = LineThickness / 2;
 
-        // Ajustar el área de dibujo disponible
+        // Adjust the available drawing area
         var availableWidth = Bounds.Width - 2 * margin;
         var availableHeight = Bounds.Height - 2 * margin;
 
-        // Definir un diccionario para almacenar las posiciones de las hojas
+        // Prepare a dictionary to store the leaf positions
         var leafPositions = new Dictionary<ICluster, double>();
         var leafClusters = GetLeaves(Cluster).ToList();
 
         var leafCount = leafClusters.Count;
         var leafSpacing = leafCount > 1 ? availableWidth / (leafCount - 1) : availableWidth;
 
-        // Asignar posiciones X a las hojas, ajustando por el margen
+        // Assign X positions to the leaves, accounting for the margin
         for (var i = 0; i < leafClusters.Count; i++)
         {
             var x = margin + (leafCount > 1 ? i * leafSpacing : availableWidth / 2);
             leafPositions[leafClusters[i]] = x;
         }
 
-        // Calcular la altura máxima basada en MergeDistance
+        // Calculate the maximum height based on MergeDistance
         var maxDistance = GetMaxMergeDistance(Cluster);
 
-        // Crear una geometría para dibujar el dendrograma
+        // Create a geometry to draw the dendrogram
         var geometry = new StreamGeometry();
 
         using (var ctx = geometry.Open())
         {
-            // Dibujar las líneas del dendrograma
+            // Draw the dendrogram lines
             DrawClusterLines(ctx, Cluster, leafPositions, margin, availableHeight, maxDistance);
         }
 
-        // Dibujar la geometría resultante
+        // Draw the resulting geometry
         var pen = new Pen(LineBrush, LineThickness)
         {
             LineJoin = PenLineJoin.Miter,
@@ -97,7 +97,7 @@ public class DendrogramLinesControl : Control
     {
         if (cluster.Left != null && cluster.Right != null)
         {
-            // Calcular posiciones
+            // Calculate positions
             var leftX = GetClusterX(cluster.Left, leafPositions);
             var rightX = GetClusterX(cluster.Right, leafPositions);
             var centerX = (leftX + rightX) / 2;
@@ -106,42 +106,42 @@ public class DendrogramLinesControl : Control
             var leftY = margin + (1 - cluster.Left.MergeDistance / maxDistance) * availableHeight;
             var rightY = margin + (1 - cluster.Right.MergeDistance / maxDistance) * availableHeight;
 
-            // Construir el camino del dendrograma
-            // Comenzar en el punto izquierdo inferior
+            // Build the dendrogram path
+            // Start at the lower left point
             ctx.BeginFigure(new Point(leftX, leftY), false);
 
-            // Línea vertical izquierda hacia arriba
+            // Left vertical line going up
             ctx.LineTo(new Point(leftX, clusterY));
 
-            // Línea horizontal superior desde leftX hasta rightX
+            // Top horizontal line from leftX to rightX
             ctx.LineTo(new Point(rightX, clusterY));
 
-            // Línea vertical derecha hacia abajo
+            // Right vertical line going down
             ctx.LineTo(new Point(rightX, rightY));
 
-            // Dibujar recursivamente los subárboles
+            // Draw the subtrees recursively
             DrawClusterLines(ctx, cluster.Left, leafPositions, margin, availableHeight, maxDistance);
             DrawClusterLines(ctx, cluster.Right, leafPositions, margin, availableHeight, maxDistance);
         }
         else if (cluster.Left == null && cluster.Right == null)
         {
-            // Es una hoja, no hace falta dibujar nada
+            // It is a leaf; there is nothing to draw
         }
         else
         {
-            // Manejo de posibles nodos con un solo hijo
+            // Handle nodes that might have only one child
             var child = cluster.Left ?? cluster.Right!;
             var childX = GetClusterX(child, leafPositions);
             var childY = margin + (1 - child.MergeDistance / maxDistance) * availableHeight;
             var clusterY = margin + (1 - cluster.MergeDistance / maxDistance) * availableHeight;
 
-            // Comenzar en el punto hijo
+            // Start at the child point
             ctx.BeginFigure(new Point(childX, childY), false);
 
-            // Línea vertical hacia arriba
+            // Vertical line going up
             ctx.LineTo(new Point(childX, clusterY));
 
-            // Dibujar recursivamente el subárbol
+            // Draw the subtree recursively
             DrawClusterLines(ctx, child, leafPositions, margin, availableHeight, maxDistance);
         }
     }
@@ -150,11 +150,11 @@ public class DendrogramLinesControl : Control
     {
         if (cluster.Left == null && cluster.Right == null)
         {
-            // Es una hoja
+            // It is a leaf
             return leafPositions[cluster];
         }
 
-        // Es un nodo interno
+        // It is an internal node
         var leftX = cluster.Left != null ? GetClusterX(cluster.Left, leafPositions) : 0;
         var rightX = cluster.Right != null ? GetClusterX(cluster.Right, leafPositions) : Bounds.Width;
         return (leftX + rightX) / 2;

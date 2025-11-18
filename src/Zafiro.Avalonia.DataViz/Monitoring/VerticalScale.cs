@@ -22,7 +22,7 @@ public class VerticalScale : Control
         nameof(XSpacing));
 
     public static readonly StyledProperty<double> LineIntervalProperty = AvaloniaProperty.Register<VerticalScale, double>(
-        nameof(LineInterval), 10); // Intervalo predeterminado de 10 unidades
+        nameof(LineInterval), 10); // Default interval of 10 units
 
     public static readonly StyledProperty<double> StrokeThicknessProperty = AvaloniaProperty.Register<VerticalScale, double>(
         nameof(StrokeThickness), 1d);
@@ -126,33 +126,33 @@ public class VerticalScale : Control
         var height = Bounds.Height;
         var width = Bounds.Width;
 
-        // Obtener el factor de escalado efectivo
+        // Get the effective scaling factor
         var effectiveScale = GetEffectiveScale();
         var scaleX = effectiveScale.X;
         var scaleY = effectiveScale.Y;
 
-        // Ajustar el grosor de las líneas y el tamaño de la fuente
-        double adjustedStrokeThickness = StrokeThickness / scaleY; // Mantener un grosor constante de 1 unidad
+        // Adjust the line thickness and font size
+        double adjustedStrokeThickness = StrokeThickness / scaleY; // Keep a constant thickness of 1 unit
 
-        // Dibuja la línea cero
+        // Draw the zero line
         var zeroY = TransformY(0, minValue, maxValue, height);
         var middlePen = new Pen(ZeroStroke, adjustedStrokeThickness);
         context.DrawLine(middlePen, new Point(0, zeroY), new Point(width, zeroY));
 
-        // Configura el intervalo y el estilo de las líneas horizontales
+        // Configure the interval and style for the horizontal lines
         var interval = LineInterval;
         var linePen = new Pen(Stroke, adjustedStrokeThickness, dashStyle: DashStyle.Dash);
 
-        // Calcula el rango de valores para las líneas
+        // Calculate the range of values for the lines
         double startValue = Math.Floor(minValue / interval) * interval;
         double endValue = Math.Ceiling(maxValue / interval) * interval;
 
-        // Dibuja las líneas horizontales y las etiquetas
+        // Draw the horizontal lines and labels
         for (double value = startValue; value <= endValue; value += interval)
         {
             var y = TransformY(value, minValue, maxValue, height);
 
-            // Dibuja la línea horizontal
+            // Draw the horizontal line
             if (value != 0)
             {
                 context.DrawLine(linePen, new Point(0, y), new Point(width, y));
@@ -170,7 +170,7 @@ public class VerticalScale : Control
         var scaleX = Math.Sqrt(matrix.M11 * matrix.M11 + matrix.M12 * matrix.M12);
         var scaleY = Math.Sqrt(matrix.M21 * matrix.M21 + matrix.M22 * matrix.M22);
 
-        // Evitar divisiones por cero
+        // Avoid division by zero
         scaleX = scaleX == 0 ? 1 : scaleX;
         scaleY = scaleY == 0 ? 1 : scaleY;
 
@@ -179,7 +179,7 @@ public class VerticalScale : Control
 
     private double TransformY(double value, double minValue, double maxValue, double height)
     {
-        // Invertimos el eje Y para que los valores mayores estén en la parte superior
+        // Invert the Y axis so larger values stay at the top
         double range = maxValue - minValue;
         if (range == 0)
         {

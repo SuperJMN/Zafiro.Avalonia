@@ -55,14 +55,14 @@ public class DragDeltaBehavior : AttachedToVisualTreeBehavior<Control>
             return disposables;
         }
 
-        // Usamos el primer ancestro que sea un Visual como sistema de coordenadas estable
+        // Use the first ancestor that is a Visual as the stable coordinate system
         var container = AssociatedObject.FindAncestorOfType<Visual>();
         if (container is null)
         {
             return disposables;
         }
 
-        // Observables básicos
+        // Basic observables
         var pointerPressed = AssociatedObject
             .OnEvent(InputElement.PointerPressedEvent, RoutingStrategy)
             .Select(e => e.EventArgs.GetCurrentPoint(container))
