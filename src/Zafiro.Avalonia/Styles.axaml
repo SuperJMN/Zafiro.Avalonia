@@ -4,6 +4,7 @@
     <Styles.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
+                <ResourceInclude Source="Controls/Flow/FlowEditor.axaml" />
                 <ResourceInclude Source="Controls/StringEditor/StringEditorControl.axaml" />
                 <ResourceInclude Source="Controls/MasterDetailsNavigator.axaml" />
                 <ResourceInclude Source="Controls/Info.axaml" />

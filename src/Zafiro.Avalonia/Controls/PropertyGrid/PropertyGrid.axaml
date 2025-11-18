@@ -1,0 +1,50 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:viewModels="clr-namespace:Zafiro.Avalonia.Controls.PropertyGrid.ViewModels"
+             xmlns:propertyGrid="clr-namespace:Zafiro.Avalonia.Controls.PropertyGrid"
+             mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="450"
+             x:Class="Zafiro.Avalonia.Controls.PropertyGrid.PropertyGrid">
+
+    <UserControl.Resources>
+        <DataTemplate x:Key="StringEditor" DataType="viewModels:IPropertyItem">
+            <TextBox Text="{Binding Value}" />
+        </DataTemplate>
+        <DataTemplate x:Key="BoolEditor" DataType="viewModels:IPropertyItem">
+            <CheckBox IsChecked="{Binding Value}" />
+        </DataTemplate>
+        <!-- Fallback -->
+        <DataTemplate x:Key="DefaultEditor" DataType="viewModels:IPropertyItem">
+            <TextBox Text="{Binding Value}" />
+        </DataTemplate>
+
+        <propertyGrid:PropertyEditorSelector x:Key="EditorSelector">
+            <propertyGrid:PropertyEditorSelector.Editors>
+                <DataTemplate x:Key="System.String" DataType="viewModels:IPropertyItem">
+                    <TextBox Text="{Binding Value}" />
+                </DataTemplate>
+                <DataTemplate x:Key="System.Boolean" DataType="viewModels:IPropertyItem">
+                    <CheckBox IsChecked="{Binding Value}" />
+                </DataTemplate>
+                <DataTemplate x:Key="System.Int32" DataType="viewModels:IPropertyItem">
+                    <NumericUpDown Value="{Binding Value}" FormatString="0" />
+                </DataTemplate>
+                <DataTemplate x:Key="System.Double" DataType="viewModels:IPropertyItem">
+                    <NumericUpDown Value="{Binding Value}" />
+                </DataTemplate>
+            </propertyGrid:PropertyEditorSelector.Editors>
+        </propertyGrid:PropertyEditorSelector>
+    </UserControl.Resources>
+
+    <ItemsControl x:Name="Items" ItemsSource="{Binding Properties}">
+        <ItemsControl.ItemTemplate>
+            <DataTemplate>
+                <DockPanel Margin="4">
+                    <TextBlock Text="{Binding Name}" Width="120" VerticalAlignment="Center" DockPanel.Dock="Left" />
+                    <ContentControl Content="{Binding}" ContentTemplate="{StaticResource EditorSelector}" />
+                </DockPanel>
+            </DataTemplate>
+        </ItemsControl.ItemTemplate>
+    </ItemsControl>
+</UserControl>

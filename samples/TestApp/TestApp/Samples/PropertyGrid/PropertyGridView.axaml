@@ -1,0 +1,34 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:propertyGrid="clr-namespace:TestApp.Samples.PropertyGrid"
+             xmlns:controls="clr-namespace:Zafiro.Avalonia.Controls.PropertyGrid;assembly=Zafiro.Avalonia"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="TestApp.Samples.PropertyGrid.PropertyGridView"
+             x:DataType="propertyGrid:PropertyGridSampleViewModel">
+
+    <Grid ColumnDefinitions="*, 4, 300">
+        <ListBox ItemsSource="{Binding People}"
+                 SelectionMode="Multiple"
+                 SelectedItems="{Binding SelectedPeople}">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal" Spacing="10">
+                        <TextBlock Text="{Binding Name}" FontWeight="Bold" />
+                        <TextBlock Text="{Binding Role, StringFormat='({0})'}" FontStyle="Italic" />
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+
+        <GridSplitter Grid.Column="1" Background="Gray" ResizeDirection="Columns" />
+
+        <Border Grid.Column="2" BorderBrush="Gray" BorderThickness="1,0,0,0" Padding="10">
+            <DockPanel>
+                <TextBlock Text="Properties" DockPanel.Dock="Top" FontWeight="Bold" Margin="0,0,0,10" />
+                <controls:PropertyGrid SelectedObjects="{Binding SelectedPeople}" />
+            </DockPanel>
+        </Border>
+    </Grid>
+</UserControl>
