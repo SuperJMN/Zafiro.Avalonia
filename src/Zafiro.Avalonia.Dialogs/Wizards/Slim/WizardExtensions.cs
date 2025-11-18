@@ -35,7 +35,19 @@ public static class WizardExtensions
             ];
         };
 
-        var showAndGetResult = await dialog.ShowAndGetResult(wizard, title, optionsFactory, x => x.Finished.FirstAsync().ToTask());
+        // Título del diálogo:
+        // - Se usa el TitleObservable de la página actual construido por el Slim wizard builder.
+        // - Si por cualquier motivo la página no implementa IPage (no debería pasar en SlimWizard),
+        //   se usa el título global pasado al método como fallback.
+        var dialogTitle = wizard
+            .WhenAnyValue(slimWizard => slimWizard.CurrentPage)
+            .Select(page => page is IPage p
+                ? p.TitleObservable
+                : Observable.Return(title))
+            .Switch()
+            .DistinctUntilChanged();
+
+        var showAndGetResult = await dialog.ShowAndGetResult(wizard, dialogTitle, optionsFactory, x => x.Finished.FirstAsync().ToTask());
 
         disposables.Dispose();
 

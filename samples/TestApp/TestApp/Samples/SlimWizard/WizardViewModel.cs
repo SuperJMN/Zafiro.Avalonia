@@ -57,8 +57,11 @@ public class WizardViewModel : IDisposable
     private static SlimWizard<(int result, string)> CreateWizard()
     {
         var withCompletionFinalStep = WizardBuilder
+            // Page1ViewModel implementa IHaveTitle: si no se pasa título, se usa su Title reactivo
             .StartWith(() => new Page1ViewModel(), "Page 1").NextWith(model => model.ReturnSomeInt.Enhance("Next"))
-            .Then(number => new Page2ViewModel(number), "Page 2").Next((vm, number) => (result: number, vm.Text!)).WhenValid()
+            // Page2ViewModel también implementa IHaveTitle, así que su Title se usa por defecto
+            .Then(number => new Page2ViewModel(number)).Next((vm, number) => (result: number, vm.Text!)).WhenValid()
+            // Última página con título estático explícito
             .Then(_ => new Page3ViewModel(), "Completed!").Next((_, val) => val, "Close").WhenValid()
             .WithCompletionFinalStep();
 

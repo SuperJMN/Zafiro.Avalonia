@@ -1,9 +1,8 @@
 <linker>
-  <assembly fullname="Xaml.Behaviors.Interactions.DragAndDrop" preserve="all" />
-  <assembly fullname="Xaml.Behaviors.Interactions" preserve="all" />
-  <assembly fullname="Xaml.Behaviors.Interactions.Custom" preserve="all" />
-  <assembly fullname="Xaml.Behaviors.Interactions.Responsive" preserve="all" />
-  <assembly fullname="Xaml.Behaviors.Interactions.Draggable" preserve="all" />
-  <assembly fullname="Xaml.Behaviors.Interactions.Events" preserve="all" />
+    <assembly fullname="Xaml.Behaviors.Interactions.DragAndDrop" preserve="all"/>
+    <assembly fullname="Xaml.Behaviors.Interactions" preserve="all"/>
+    <assembly fullname="Xaml.Behaviors.Interactions.Custom" preserve="all"/>
+    <assembly fullname="Xaml.Behaviors.Interactions.Responsive" preserve="all"/>
+    <assembly fullname="Xaml.Behaviors.Interactions.Draggable" preserve="all"/>
+    <assembly fullname="Xaml.Behaviors.Interactions.Events" preserve="all"/>
 </linker>
-

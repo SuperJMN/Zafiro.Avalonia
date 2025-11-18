@@ -1,22 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk.WebAssembly">
-  <PropertyGroup>
-    <TargetFramework>net8.0-browser</TargetFramework>
-    <OutputType>Exe</OutputType>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-      <WasmBuildNative>true</WasmBuildNative>
-  </PropertyGroup>
-
-  <ItemGroup>
-      <PackageReference Include="Avalonia.Browser"/>
-  </ItemGroup>
-          
-  <ItemGroup>
-    <ProjectReference Include="../TestApp/TestApp.csproj" />
-  </ItemGroup>
-
-  <PropertyGroup>
-    <PublishTrimmed>false</PublishTrimmed>
-    <EnableTrimAnalyzer>false</EnableTrimAnalyzer>
-  </PropertyGroup>
-  
+    <PropertyGroup>
+        <TargetFramework>net8.0-browser</TargetFramework>
+        <OutputType>Exe</OutputType>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <WasmBuildNative>true</WasmBuildNative>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="Avalonia.Browser"/>
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="../TestApp/TestApp.csproj"/>
+    </ItemGroup>
+    <PropertyGroup>
+        <PublishTrimmed>false</PublishTrimmed>
+        <EnableTrimAnalyzer>false</EnableTrimAnalyzer>
+    </PropertyGroup>
 </Project>

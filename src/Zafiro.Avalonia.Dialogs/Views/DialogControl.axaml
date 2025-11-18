@@ -73,14 +73,8 @@
                                        Text="{Binding $parent[DialogControl].Title}" IsVisible="{Binding $self.Text, Converter={x:Static ObjectConverters.IsNotNull}}" />
 
                             <!-- Content -->
-                            <ScrollViewer Grid.Row="1" x:Name="DialogScrollViewer">
-                                <Interaction.Behaviors>
-                                    <NestedScrollViewerBehavior />
-                                </Interaction.Behaviors>
-                                <ContentPresenter
-                                    HorizontalAlignment="Stretch"
-                                    VerticalAlignment="Stretch"
-                                    Content="{TemplateBinding Content}" />
+                            <ScrollViewer Grid.Row="1" x:Name="DialogScrollViewer" HorizontalScrollBarVisibility="Auto">
+                                <ContentPresenter Content="{TemplateBinding Content}" />
                             </ScrollViewer>
 
                             <!-- Buttons -->
@@ -128,6 +122,19 @@
                 <DialogControl Title="TITLE">
                     <DialogControl.Content>
                         <TextBlock>THIS IS MY FUCKING CONTENT</TextBlock>
+                    </DialogControl.Content>
+                    <DialogControl.Options>
+                        <g:List x:TypeArguments="dialogs:IOption">
+                            <dialogs:OptionDesign Role="Cancel" Title="Cancel" />
+                            <dialogs:OptionDesign Role="Primary" Title="Next" />
+                        </g:List>
+                    </DialogControl.Options>
+                </DialogControl>
+            </Border>
+            <Border BorderThickness="1" BorderBrush="Black" HorizontalAlignment="Center">
+                <DialogControl Title="TITLE" Width="300">
+                    <DialogControl.Content>
+                        <TextBlock>THIS IS MY FUCKING CONTENT AND IT'S TOO WIDE TO FIT</TextBlock>
                     </DialogControl.Content>
                     <DialogControl.Options>
                         <g:List x:TypeArguments="dialogs:IOption">

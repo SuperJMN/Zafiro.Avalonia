@@ -3,9 +3,9 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:designTime="clr-namespace:Zafiro.Avalonia.DesignTime;assembly=Zafiro.Avalonia"
-             xmlns:pr="clr-namespace:AvaloniaProgressRing;assembly=AvaloniaProgressRing"
              xmlns:jobs1="clr-namespace:Zafiro.Avalonia.Controls.StatusBar.Jobs"
              xmlns:design="clr-namespace:Zafiro.Avalonia.Controls.StatusBar.Design"
+             xmlns:controls="clr-namespace:FluentAvalonia.UI.Controls;assembly=FluentAvalonia"
              mc:Ignorable="d" d:DesignWidth="250" d:DesignHeight="30"
              x:Class="Zafiro.Avalonia.Controls.StatusBar.Jobs.TransientJob" x:DataType="jobs1:IJobViewModel">
 
@@ -32,7 +32,7 @@
                 </MenuFlyout>
             </DockPanel.ContextFlyout>
             <ContentControl Content="{Binding Icon}" />
-            <pr:ProgressRing Foreground="{DynamicResource SystemAccentColorLight1}" IsVisible="{Binding Execution.Start.IsExecuting^}" Height="15" Width="15" Margin="4 0 " />
+            <controls:ProgressRing Foreground="{DynamicResource SystemAccentColorLight1}" IsVisible="{Binding Execution.Start.IsExecuting^}" Height="15" Width="15" Margin="4 0 " />
             <ContentControl VerticalAlignment="Center" Content="{Binding Status^}" />
         </DockPanel>
     </Border>

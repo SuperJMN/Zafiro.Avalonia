@@ -2,15 +2,15 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:avaloniaProgressRing="clr-namespace:AvaloniaProgressRing;assembly=AvaloniaProgressRing"
              xmlns:conv="clr-namespace:Zafiro.Avalonia.Converters"
              xmlns:nt="clr-namespace:Zafiro.Avalonia.Controls.StatusBar.NotificationTypes"
              xmlns:s="clr-namespace:Zafiro.Avalonia.Controls.StatusBar"
              xmlns:j="clr-namespace:Zafiro.Avalonia.Controls.StatusBar.Jobs"
              xmlns:design="clr-namespace:Zafiro.Avalonia.Controls.StatusBar.Design"
+             xmlns:controls="clr-namespace:FluentAvalonia.UI.Controls;assembly=FluentAvalonia"
              mc:Ignorable="d" d:DesignWidth="500"
              x:Class="Zafiro.Avalonia.Controls.StatusBar.StatusBarView" x:DataType="s:IStatusBar">
-    
+
     <Design.DataContext>
         <design:StatusBarDesign />
     </Design.DataContext>
@@ -34,12 +34,12 @@
         </DataTemplate>
         <DataTemplate DataType="nt:LoadingMessage">
             <DockPanel>
-                <avaloniaProgressRing:ProgressRing Width="15" Height="15"
-                                                   IsActive="true"
-                                                   HorizontalAlignment="Center"
-                                                   VerticalAlignment="Center"
-                                                   Foreground="{DynamicResource SystemAccentColorLight1}"
-                                                   Margin="4 0 0 0" />
+                <controls:ProgressRing Width="15" Height="15"
+                                       IsActive="true"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"
+                                       Foreground="{DynamicResource SystemAccentColorLight1}"
+                                       Margin="4 0 0 0" />
                 <TextBlock Text="{Binding Message}" />
             </DockPanel>
         </DataTemplate>

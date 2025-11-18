@@ -1,26 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
-    <PropertyGroup>
-        <TargetFramework>net8.0</TargetFramework>
-        <ImplicitUsings>enable</ImplicitUsings>
-        <Nullable>enable</Nullable>
-    </PropertyGroup>
-    <PropertyGroup>
-        <NoWarn>$(NoWarn);NU1605</NoWarn>
-    </PropertyGroup>
-    <Import Project="..\Common.props" />
-    <ItemGroup>
-        <PackageReference Include="Avalonia" />
-        <PackageReference Include="ReactiveUI" />
-        <PackageReference Include="ReactiveUI.SourceGenerators" />
-        <PackageReference Include="Xaml.Behaviors.Avalonia" />
-    </ItemGroup>
-    <ItemGroup>
-        <ProjectReference Include="..\Zafiro.Avalonia\Zafiro.Avalonia.csproj" />
-        <!-- Run the source generator locally as an Analyzer during in-repo builds and packing -->
-        <ProjectReference Include="..\Zafiro.Avalonia.Generators\Zafiro.Avalonia.Generators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
-    </ItemGroup>
-    <!-- Make .axaml files visible to the generator -->
-    <ItemGroup>
-        <AdditionalFiles Include="**/*.axaml" />
-    </ItemGroup>
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+  <PropertyGroup>
+    <NoWarn>$(NoWarn);NU1605</NoWarn>
+  </PropertyGroup>
+  <Import Project="..\Common.props"/>
+  <ItemGroup>
+    <PackageReference Include="Avalonia"/>
+    <PackageReference Include="ReactiveUI"/>
+    <PackageReference Include="ReactiveUI.SourceGenerators"/>
+    <PackageReference Include="Xaml.Behaviors.Avalonia"/>
+    <PackageReference Include="Zafiro.UI"/>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Zafiro.Avalonia\Zafiro.Avalonia.csproj"/>
+    <!-- Run the source generator locally as an Analyzer during in-repo builds and packing -->
+    <ProjectReference Include="..\Zafiro.Avalonia.Generators\Zafiro.Avalonia.Generators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false"/>
+  </ItemGroup>
+  <!-- Make .axaml files visible to the generator -->
+  <ItemGroup>
+    <AdditionalFiles Include="**/*.axaml"/>
+  </ItemGroup>
 </Project>

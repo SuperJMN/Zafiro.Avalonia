@@ -1,6 +1,5 @@
 ﻿using System.Reactive.Linq;
 using Avalonia;
-using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Layout;
 using Avalonia.Threading;
@@ -12,7 +11,7 @@ namespace Zafiro.Avalonia.Dialogs.Implementations;
 public class AdornerDialog : IDialog, ICloseable
 {
     private readonly Lazy<AdornerLayer> adornerLayerLazy;
-    private readonly Stack<Control> dialogs = new();
+    private readonly Stack<DialogEntry> dialogs = new();
 
     private TaskCompletionSource<bool>? currentDialog;
 
@@ -27,8 +26,9 @@ public class AdornerDialog : IDialog, ICloseable
         {
             if (dialogs.Count > 0)
             {
-                var dialog = dialogs.Pop();
-                adornerLayerLazy.Value.Children.Remove(dialog);
+                var entry = dialogs.Pop();
+                entry.TitleSubscription.Dispose();
+                adornerLayerLazy.Value.Children.Remove(entry.Dialog);
             }
 
             currentDialog?.TrySetResult(true);
@@ -42,8 +42,9 @@ public class AdornerDialog : IDialog, ICloseable
         {
             if (dialogs.Count > 0)
             {
-                var dialog = dialogs.Pop();
-                adornerLayerLazy.Value.Children.Remove(dialog);
+                var entry = dialogs.Pop();
+                entry.TitleSubscription.Dispose();
+                adornerLayerLazy.Value.Children.Remove(entry.Dialog);
             }
 
             currentDialog?.TrySetResult(false);
@@ -51,9 +52,11 @@ public class AdornerDialog : IDialog, ICloseable
         });
     }
 
-    public async Task<bool> Show(object viewModel, string title, Func<ICloseable, IEnumerable<IOption>> optionsFactory)
+    public async Task<bool> Show(object viewModel, IObservable<string> title, Func<ICloseable, IEnumerable<IOption>> optionsFactory)
     {
         if (viewModel == null) throw new ArgumentNullException(nameof(viewModel));
+        if (title == null) throw new ArgumentNullException(nameof(title));
+        if (optionsFactory == null) throw new ArgumentNullException(nameof(optionsFactory));
 
         var showTask = await Dispatcher.UIThread.InvokeAsync(() =>
         {
@@ -62,7 +65,6 @@ public class AdornerDialog : IDialog, ICloseable
 
             var dialog = new DialogViewContainer
             {
-                Title = title,
                 Content = new DialogControl()
                 {
                     Content = viewModel,
@@ -70,6 +72,10 @@ public class AdornerDialog : IDialog, ICloseable
                 },
                 Close = ReactiveCommand.Create(() => Dismiss()),
             };
+
+            // Actualizar título de forma reactiva mientras el diálogo está visible
+            var titleSubscription = title
+                .Subscribe(t => Dispatcher.UIThread.Post(() => dialog.Title = t ?? string.Empty));
 
             var adornerLayer = adornerLayerLazy.Value;
 
@@ -84,11 +90,13 @@ public class AdornerDialog : IDialog, ICloseable
                 .ToBinding();
 
             adornerLayer.Children.Add(dialog);
-            dialogs.Push(dialog);
+            dialogs.Push(new DialogEntry(dialog, titleSubscription));
 
             return currentDialog.Task;
         });
 
         return showTask;
     }
+
+    private sealed record DialogEntry(DialogViewContainer Dialog, IDisposable TitleSubscription);
 }

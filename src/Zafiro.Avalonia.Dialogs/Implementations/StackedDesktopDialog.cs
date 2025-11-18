@@ -9,10 +9,13 @@ public class StackedDesktopDialog : IDialog
 {
     private static Window? dialogWindow;
     private static readonly Stack<DialogContext> DialogStack = new();
+    private static IDisposable? titleSubscription;
 
-    public async Task<bool> Show(object viewModel, string title, Func<ICloseable, IEnumerable<IOption>> optionsFactory)
+    public async Task<bool> Show(object viewModel, IObservable<string> title, Func<ICloseable, IEnumerable<IOption>> optionsFactory)
     {
         if (viewModel == null) throw new ArgumentNullException(nameof(viewModel));
+        if (title == null) throw new ArgumentNullException(nameof(title));
+        if (optionsFactory == null) throw new ArgumentNullException(nameof(optionsFactory));
 
         var showTask = await Dispatcher.UIThread.InvokeAsync(() =>
         {
@@ -77,7 +80,16 @@ public class StackedDesktopDialog : IDialog
     {
         if (dialogWindow != null)
         {
-            dialogWindow.Title = dialogContext.Title;
+            titleSubscription?.Dispose();
+            titleSubscription = dialogContext.Title
+                .Subscribe(t => Dispatcher.UIThread.Post(() =>
+                {
+                    if (dialogWindow != null)
+                    {
+                        dialogWindow.Title = t ?? string.Empty;
+                    }
+                }));
+
             dialogWindow.Content = new DialogControl
             {
                 Content = dialogContext.ViewModel,
@@ -88,7 +100,7 @@ public class StackedDesktopDialog : IDialog
 
     private class DialogContext
     {
-        public DialogContext(object viewModel, string title, IEnumerable<IOption> options, TaskCompletionSource<bool> completionSource)
+        public DialogContext(object viewModel, IObservable<string> title, IEnumerable<IOption> options, TaskCompletionSource<bool> completionSource)
         {
             ViewModel = viewModel;
             Title = title;
@@ -97,7 +109,7 @@ public class StackedDesktopDialog : IDialog
         }
 
         public object ViewModel { get; }
-        public string Title { get; }
+        public IObservable<string> Title { get; }
         public IEnumerable<IOption> Options { get; }
         public TaskCompletionSource<bool> CompletionSource { get; }
     }
