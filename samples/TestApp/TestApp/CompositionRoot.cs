@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Reflection;
+using Avalonia.Controls;
 using Avalonia.Controls.Notifications;
 using Microsoft.Extensions.DependencyInjection;
 using TestApp.Samples.Navigation;
@@ -40,9 +41,12 @@ public static class CompositionRoot
 
         var serviceProvider = services.BuildServiceProvider();
 
-        Commands.Instance = new Commands(
-            serviceProvider.GetRequiredService<INotificationService>(),
-            LauncherService.Instance);
+        if (!Design.IsDesignMode)
+        {
+            Commands.Instance = new Commands(
+                serviceProvider.GetRequiredService<INotificationService>(),
+                LauncherService.Instance);
+        }
 
         return serviceProvider.GetRequiredService<MainViewModel>();
     }

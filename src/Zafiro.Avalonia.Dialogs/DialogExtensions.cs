@@ -4,18 +4,48 @@ using CSharpFunctionalExtensions;
 using ReactiveUI;
 using Zafiro.Avalonia.Dialogs.Views;
 using Zafiro.CSharpFunctionalExtensions;
+using Zafiro.UI;
 using Zafiro.UI.Commands;
 
 namespace Zafiro.Avalonia.Dialogs;
 
 public static class DialogExtensions
 {
+    // Compatibilidad: API clásica con título como string
     public static Task<bool> Show(this IDialog dialogService,
         object viewModel,
         string title,
         Func<ICloseable, IOption[]> optionsFactory)
     {
+        if (dialogService == null) throw new ArgumentNullException(nameof(dialogService));
+        if (viewModel == null) throw new ArgumentNullException(nameof(viewModel));
+        if (optionsFactory == null) throw new ArgumentNullException(nameof(optionsFactory));
+
+        return dialogService.Show(viewModel, Observable.Return(title), closeable => optionsFactory(closeable));
+    }
+
+    // Nueva sobrecarga: títulos reactivos
+    public static Task<bool> Show(this IDialog dialogService,
+        object viewModel,
+        IObservable<string> title,
+        Func<ICloseable, IEnumerable<IOption>> optionsFactory)
+    {
+        if (dialogService == null) throw new ArgumentNullException(nameof(dialogService));
+        if (viewModel == null) throw new ArgumentNullException(nameof(viewModel));
+        if (title == null) throw new ArgumentNullException(nameof(title));
+        if (optionsFactory == null) throw new ArgumentNullException(nameof(optionsFactory));
+
         return dialogService.Show(viewModel, title, optionsFactory);
+    }
+
+    // Conveniencia: ViewModels que exponen título
+    public static Task<bool> Show(this IDialog dialogService,
+        IHaveTitle viewModel,
+        Func<ICloseable, IOption[]> optionsFactory)
+    {
+        if (viewModel == null) throw new ArgumentNullException(nameof(viewModel));
+
+        return dialogService.Show(viewModel, viewModel.Title, closeable => optionsFactory(closeable));
     }
 
     public static Task ShowOk(this IDialog dialogService,
@@ -73,14 +103,7 @@ public static class DialogExtensions
         Func<ICloseable, IEnumerable<IOption>> optionsFactory,
         Func<TViewModel, TResult> getResult)
     {
-        bool showed = await dialogService.Show(viewModel, title, optionsFactory);
-
-        if (showed)
-        {
-            return getResult(viewModel);
-        }
-
-        return Maybe<TResult>.None;
+        return await dialogService.ShowAndGetResult(viewModel, Observable.Return(title), optionsFactory, getResult);
     }
 
     public static async Task<Maybe<TResult>> ShowAndGetResult<TViewModel, TResult>(this IDialog dialogService,
@@ -89,14 +112,7 @@ public static class DialogExtensions
         Func<ICloseable, IEnumerable<IOption>> optionsFactory,
         Func<TViewModel, Task<TResult>> getResult)
     {
-        bool showed = await dialogService.Show(viewModel, title, optionsFactory);
-
-        if (showed)
-        {
-            return await getResult(viewModel);
-        }
-
-        return Maybe<TResult>.None;
+        return await dialogService.ShowAndGetResult(viewModel, Observable.Return(title), optionsFactory, getResult);
     }
 
     public static async Task<Maybe<TResult>> ShowAndGetResult<TViewModel, TResult>(this IDialog dialogService,
@@ -111,7 +127,39 @@ public static class DialogExtensions
             Ok(closeable, canSubmit(viewModel))
         ];
 
-        return await dialogService.ShowAndGetResult(viewModel, title, optionsFactory, getResult);
+        return await dialogService.ShowAndGetResult(viewModel, Observable.Return(title), optionsFactory, getResult);
+    }
+
+    public static async Task<Maybe<TResult>> ShowAndGetResult<TViewModel, TResult>(this IDialog dialogService,
+        [DisallowNull] TViewModel viewModel,
+        IObservable<string> title,
+        Func<ICloseable, IEnumerable<IOption>> optionsFactory,
+        Func<TViewModel, TResult> getResult)
+    {
+        bool showed = await dialogService.Show(viewModel, title, optionsFactory);
+
+        if (showed)
+        {
+            return getResult(viewModel);
+        }
+
+        return Maybe<TResult>.None;
+    }
+
+    public static async Task<Maybe<TResult>> ShowAndGetResult<TViewModel, TResult>(this IDialog dialogService,
+        [DisallowNull] TViewModel viewModel,
+        IObservable<string> title,
+        Func<ICloseable, IEnumerable<IOption>> optionsFactory,
+        Func<TViewModel, Task<TResult>> getResult)
+    {
+        bool showed = await dialogService.Show(viewModel, title, optionsFactory);
+
+        if (showed)
+        {
+            return await getResult(viewModel);
+        }
+
+        return Maybe<TResult>.None;
     }
 
     public static async Task<Maybe<bool>> ShowConfirmation(this IDialog dialogService, string title, string text, string yesText = "Yes", string noText = "No")
@@ -134,7 +182,7 @@ public static class DialogExtensions
                 }).Enhance(), new Settings())
             ];
 
-            return options;
+            return options.ToArray();
         });
 
         if (show)
@@ -148,6 +196,14 @@ public static class DialogExtensions
     public static async Task<Maybe<TResult>> ShowAndGetResult<TViewModel, TResult>(this IDialog dialogService,
         [DisallowNull] TViewModel viewModel,
         string title,
+        Func<TViewModel, IEnhancedCommand<Result<TResult>>> getResultCommand)
+    {
+        return await dialogService.ShowAndGetResult(viewModel, Observable.Return(title), getResultCommand);
+    }
+
+    public static async Task<Maybe<TResult>> ShowAndGetResult<TViewModel, TResult>(this IDialog dialogService,
+        [DisallowNull] TViewModel viewModel,
+        IObservable<string> title,
         Func<TViewModel, IEnhancedCommand<Result<TResult>>> getResultCommand)
     {
         var command = getResultCommand(viewModel);

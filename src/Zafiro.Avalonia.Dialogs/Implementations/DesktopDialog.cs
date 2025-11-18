@@ -7,9 +7,11 @@ namespace Zafiro.Avalonia.Dialogs.Implementations;
 
 public class DesktopDialog : IDialog
 {
-    public async Task<bool> Show(object viewModel, string title, Func<ICloseable, IEnumerable<IOption>> optionsFactory)
+    public async Task<bool> Show(object viewModel, IObservable<string> title, Func<ICloseable, IEnumerable<IOption>> optionsFactory)
     {
         if (viewModel == null) throw new ArgumentNullException(nameof(viewModel));
+        if (title == null) throw new ArgumentNullException(nameof(title));
+        if (optionsFactory == null) throw new ArgumentNullException(nameof(optionsFactory));
 
         var showTask = await Dispatcher.UIThread.InvokeAsync(async () =>
         {
@@ -17,12 +19,14 @@ public class DesktopDialog : IDialog
 
             var window = new Window
             {
-                Title = title,
                 WindowStartupLocation = WindowStartupLocation.CenterOwner,
                 CanResize = false,
                 Icon = mainWindow.Icon,
                 SizeToContent = SizeToContent.WidthAndHeight,
             };
+
+            using var titleSubscription = title
+                .Subscribe(t => Dispatcher.UIThread.Post(() => window.Title = t ?? string.Empty));
 
             var closeable = new CloseableWrapper(window);
             var options = optionsFactory(closeable);

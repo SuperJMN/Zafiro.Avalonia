@@ -3,6 +3,7 @@ using System.Reactive.Linq;
 using System.Reactive.Threading.Tasks;
 using CSharpFunctionalExtensions;
 using ReactiveUI;
+using Zafiro.UI;
 using Zafiro.UI.Commands;
 using Zafiro.UI.Wizards.Slim;
 
@@ -35,7 +36,19 @@ public static class WizardExtensions
             ];
         };
 
-        var showAndGetResult = await dialog.ShowAndGetResult(wizard, title, optionsFactory, x => x.Finished.FirstAsync().ToTask());
+        // Título del diálogo:
+        // - Si el contenido actual implementa IHaveTitle, se usa su Title (IObservable<string>).
+        // - En otro caso, se usa el título explícito pasado al método.
+        var dialogTitle = wizard
+            .WhenAnyValue(slimWizard => slimWizard.CurrentPage.Content)
+            .Select(content =>
+                content is IHaveTitle haveTitle
+                    ? haveTitle.Title
+                    : Observable.Return(title))
+            .Switch()
+            .DistinctUntilChanged();
+
+        var showAndGetResult = await dialog.ShowAndGetResult(wizard, dialogTitle, optionsFactory, x => x.Finished.FirstAsync().ToTask());
 
         disposables.Dispose();
 

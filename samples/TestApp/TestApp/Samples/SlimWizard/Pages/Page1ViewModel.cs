@@ -6,11 +6,12 @@ using ReactiveUI;
 using ReactiveUI.SourceGenerators;
 using ReactiveUI.Validation.Extensions;
 using ReactiveUI.Validation.Helpers;
+using Zafiro.UI;
 using Zafiro.UI.Commands;
 
 namespace TestApp.Samples.SlimWizard.Pages;
 
-public partial class Page1ViewModel : ReactiveValidationObject
+public partial class Page1ViewModel : ReactiveValidationObject, IHaveTitle
 {
     [Reactive] private int? number;
 
@@ -29,4 +30,11 @@ public partial class Page1ViewModel : ReactiveValidationObject
     public IObservable<bool> IsValid => this.IsValid();
     public IObservable<bool> IsBusy => Observable.Return(false);
     public bool AutoAdvance => false;
+
+    // Reactive title example: reflects the current number as the user types
+    public IObservable<string> Title => this
+        .WhenAnyValue(x => x.Number)
+        .Select(n => n.HasValue
+            ? $"First page (current value: {n.Value})"
+            : "First page (enter an even number)");
 }

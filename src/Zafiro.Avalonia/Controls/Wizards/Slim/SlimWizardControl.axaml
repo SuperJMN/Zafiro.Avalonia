@@ -11,14 +11,10 @@
     <Style Selector="SlimWizardControl">
         <Setter Property="Template">
             <ControlTemplate>
-                <DockPanel>
-                    <WizardHeader Width="{TemplateBinding Wizard}" DockPanel.Dock="Top" />
-                    <ScrollViewer>
-                        <ContentControl Padding="{TemplateBinding Padding}" Content="{Binding $parent[SlimWizardControl].Wizard.CurrentPage.Content}" />
-                        <Interaction.Behaviors>
-                            <NestedScrollViewerBehavior />
-                        </Interaction.Behaviors>
-                    </ScrollViewer>
+                <DockPanel VerticalSpacing="10">
+                    <WizardHeader DockPanel.Dock="Top" />
+                    <ContentControl Padding="{TemplateBinding Padding}"
+                                    Content="{Binding $parent[SlimWizardControl].Wizard.CurrentPage.Content}" />
                 </DockPanel>
             </ControlTemplate>
         </Setter>
