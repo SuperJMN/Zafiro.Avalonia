@@ -3,7 +3,6 @@ using System.Reactive.Linq;
 using System.Reactive.Threading.Tasks;
 using CSharpFunctionalExtensions;
 using ReactiveUI;
-using Zafiro.UI;
 using Zafiro.UI.Commands;
 using Zafiro.UI.Wizards.Slim;
 
@@ -37,14 +36,14 @@ public static class WizardExtensions
         };
 
         // Título del diálogo:
-        // - Si el contenido actual implementa IHaveTitle, se usa su Title (IObservable<string>).
-        // - En otro caso, se usa el título explícito pasado al método.
+        // - Se usa el TitleObservable de la página actual construido por el Slim wizard builder.
+        // - Si por cualquier motivo la página no implementa IPage (no debería pasar en SlimWizard),
+        //   se usa el título global pasado al método como fallback.
         var dialogTitle = wizard
-            .WhenAnyValue(slimWizard => slimWizard.CurrentPage.Content)
-            .Select(content =>
-                content is IHaveTitle haveTitle
-                    ? haveTitle.Title
-                    : Observable.Return(title))
+            .WhenAnyValue(slimWizard => slimWizard.CurrentPage)
+            .Select(page => page is IPage p
+                ? p.TitleObservable
+                : Observable.Return(title))
             .Switch()
             .DistinctUntilChanged();
 
