@@ -172,7 +172,7 @@
             <Card Header="BoostrapGridPanel">
                 <BootstrapGridPanel MaxColumns="12" Gutter="16">
 
-                    <!-- Card 1: Full width mobile, mitad en tablet, tercio en desktop -->
+                    <!-- Card 1: Full width on mobile, half on tablet, third on desktop -->
                     <Border Background="#E3F2FD"
                             Padding="20"
                             CornerRadius="8"
@@ -181,11 +181,11 @@
                             BootstrapGridPanel.ColLg="4">
                         <StackPanel>
                             <TextBlock Text="Card 1" FontSize="18" FontWeight="Bold" />
-                            <TextBlock Text="Responsivo según pantalla" Margin="0,8,0,0" />
+                            <TextBlock Text="Responsive to screen size" Margin="0,8,0,0" />
                         </StackPanel>
                     </Border>
 
-                    <!-- Card 2: Mismo comportamiento -->
+                    <!-- Card 2: Same behavior -->
                     <Border Background="#F3E5F5"
                             Padding="20"
                             CornerRadius="8"
@@ -194,7 +194,7 @@
                             BootstrapGridPanel.ColLg="4">
                         <StackPanel>
                             <TextBlock Text="Card 2" FontSize="18" FontWeight="Bold" />
-                            <TextBlock Text="Se adapta automáticamente" Margin="0,8,0,0" />
+                            <TextBlock Text="Adapts automatically" Margin="0,8,0,0" />
                         </StackPanel>
                     </Border>
 
@@ -207,7 +207,7 @@
                             BootstrapGridPanel.ColLg="4">
                         <StackPanel>
                             <TextBlock Text="Card 3" FontSize="18" FontWeight="Bold" />
-                            <TextBlock Text="Layout fluido" Margin="0,8,0,0" />
+                            <TextBlock Text="Fluid layout" Margin="0,8,0,0" />
                         </StackPanel>
                     </Border>
 
@@ -234,7 +234,7 @@
                             BootstrapGridPanel.Order="2"
                             Background="#F5F5F5"
                             Padding="10">
-                        <TextBlock Text="Mi Aplicación"
+                        <TextBlock Text="My Application"
                                    FontSize="24"
                                    FontWeight="Bold"
                                    HorizontalAlignment="Center"
@@ -247,7 +247,7 @@
                             BootstrapGridPanel.Order="3"
                             Background="#E8F5E9">
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                            <TextBlock Text="Usuario" Margin="8,0,0,0" VerticalAlignment="Center" />
+                            <TextBlock Text="User" Margin="8,0,0,0" VerticalAlignment="Center" />
                         </StackPanel>
                     </Border>
 

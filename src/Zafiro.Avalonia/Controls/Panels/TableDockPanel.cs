@@ -52,7 +52,7 @@ public class TableDockPanel : Panel
                     child.Measure(constraint);
                     break;
                 case TableDock.Center:
-                    // Mediremos el centro más tarde
+                    // Measure the center later
                     break;
             }
 

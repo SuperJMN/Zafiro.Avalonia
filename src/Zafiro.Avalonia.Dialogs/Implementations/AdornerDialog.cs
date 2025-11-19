@@ -73,7 +73,7 @@ public class AdornerDialog : IDialog, ICloseable
                 Close = ReactiveCommand.Create(() => Dismiss()),
             };
 
-            // Actualizar título de forma reactiva mientras el diálogo está visible
+            // Update the title reactively while the dialog is visible
             var titleSubscription = title
                 .Subscribe(t => Dispatcher.UIThread.Post(() => dialog.Title = t ?? string.Empty));
 

@@ -17,7 +17,7 @@ public static class DesignData
         };
 
         IList<string> columns = ["8-10", "10-12", "12-14", "14-16", "16-18", "18-20"];
-        IList<string> rows = ["Café Americano", "Capuccino", "Té", "Chocolate", "Latte"];
+        IList<string> rows = ["Americano Coffee", "Cappuccino", "Tea", "Chocolate", "Latte"];
         var sut = new Table<string, string, double>(matrix, rows, columns);
         return sut;
     }

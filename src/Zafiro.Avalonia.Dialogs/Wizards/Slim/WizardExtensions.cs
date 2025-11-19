@@ -35,10 +35,10 @@ public static class WizardExtensions
             ];
         };
 
-        // Título del diálogo:
-        // - Se usa el TitleObservable de la página actual construido por el Slim wizard builder.
-        // - Si por cualquier motivo la página no implementa IPage (no debería pasar en SlimWizard),
-        //   se usa el título global pasado al método como fallback.
+        // Dialog title:
+        // - Uses the TitleObservable of the current page built by the Slim wizard builder.
+        // - If for any reason the page does not implement IPage (it should not happen in SlimWizard),
+        //   the global title passed to the method is used as a fallback.
         var dialogTitle = wizard
             .WhenAnyValue(slimWizard => slimWizard.CurrentPage)
             .Select(page => page is IPage p

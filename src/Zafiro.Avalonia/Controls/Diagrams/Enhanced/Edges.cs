@@ -7,23 +7,23 @@ namespace Zafiro.Avalonia.Controls.Diagrams.Enhanced;
 
 public class Edges : MarkupExtension
 {
-    // La lista de nodos a la que haremos referencia
+    // The list of nodes we are going to reference
     public required IEnumerable<INode> List { get; set; }
 
-    // Recogemos los <avalonia:Edge .../> como hijitos
-    // Marcamos [Content] para que XAML coloque las EdgeItem dentro.
+    // Collect the <avalonia:Edge .../> as child items
+    // Marked with [Content] so XAML places EdgeItem instances inside.
     [Content]
     public List<EdgeItem> Items { get; } = new List<EdgeItem>();
 
-    // Este método se invoca en tiempo de XAML para crear la "salida"
+    // This method is invoked at XAML time to create the "output"
     public override object ProvideValue(IServiceProvider serviceProvider)
     {
         var result = new List<IEdge<INode>>();
 
         if (List == null || !List.Any() || Items.Count == 0)
-            return result; // lista vacía si no hay datos
+            return result; // empty list when there is no data
 
-        // Para cada "EdgeItem", buscamos en la List el nodo con el Name que coincida
+        // For each EdgeItem, look in the List for the node whose Name matches
         foreach (var edgeItem in Items)
         {
             var fromNode = List.FirstOrDefault(n => n.Name == edgeItem.From);
@@ -37,7 +37,7 @@ public class Edges : MarkupExtension
         return result;
     }
 
-    // Implementación interna de la arista
+    // Internal implementation of the edge
     private class MyEdge : IEdge<INode>
     {
         public INode From { get; }
