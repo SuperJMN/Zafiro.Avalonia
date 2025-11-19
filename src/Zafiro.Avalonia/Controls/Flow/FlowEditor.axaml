@@ -10,6 +10,13 @@
         <Setter Property="Canvas.Top" Value="{Binding Top}" x:DataType="diagrams:IHaveLocation" />
         <Setter Property="Padding" Value="0" />
         <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Interaction.Behaviors">
+            <BehaviorCollectionTemplate>
+                <BehaviorCollection>
+                    <behaviors:DragDeltaBehavior Left="{Binding Left}" Top="{Binding Top}" x:DataType="diagrams:IHaveLocation" />
+                </BehaviorCollection>
+            </BehaviorCollectionTemplate>
+        </Setter>
         <Setter Property="Template">
             <ControlTemplate>
                 <Panel>
@@ -22,19 +29,7 @@
                                       Content="{TemplateBinding Content}"
                                       Padding="{TemplateBinding Padding}"
                                       VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
-                                      HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}">
-                        <ContentPresenter.Styles>
-                            <Style Selector="ContentPresenter">
-                                <Setter Property="Interaction.Behaviors">
-                                    <BehaviorCollectionTemplate>
-                                        <BehaviorCollection>
-                                            <behaviors:DragDeltaBehavior Left="{Binding Left}" Top="{Binding Top}" x:DataType="diagrams:IHaveLocation" />
-                                        </BehaviorCollection>
-                                    </BehaviorCollectionTemplate>
-                                </Setter>
-                            </Style>
-                        </ContentPresenter.Styles>
-                    </ContentPresenter>
+                                      HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" />
 
                     <CheckBox Name="SelectionCheckBox"
                               IsChecked="{TemplateBinding IsSelected, Mode=TwoWay}"
