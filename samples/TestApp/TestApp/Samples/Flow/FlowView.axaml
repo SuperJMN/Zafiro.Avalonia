@@ -27,7 +27,7 @@
                         <StackPanel>
                             <TextBlock Text="{Binding Name}" FontWeight="Bold" HorizontalAlignment="Center" />
                             <TextBlock Text="{Binding ProcessingPower, StringFormat='Power: {0}'}" HorizontalAlignment="Center" FontSize="10" />
-                            <CheckBox IsChecked="{Binding IsActive}" IsHitTestVisible="False" HorizontalAlignment="Center" Content="Active" FontSize="10" />
+                            <CheckBox IsChecked="{Binding IsActive}" HorizontalAlignment="Center" Content="Active" FontSize="10" />
                         </StackPanel>
                     </Border>
                 </DataTemplate>
