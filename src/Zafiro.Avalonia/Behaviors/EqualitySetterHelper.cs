@@ -16,7 +16,7 @@ public static class EqualitySetterHelper
         bool isMatch = Equals(bindingValue, compareValue);
         object result = isMatch ? trueValue : falseValue;
 
-        // Conversión si es necesario: por ejemplo, de string a bool.
+        // Conversion when needed: for example, from string to bool.
         Type targetType = targetProperty.PropertyType;
         if (result != null && !targetType.IsInstanceOfType(result))
         {
@@ -30,7 +30,7 @@ public static class EqualitySetterHelper
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Error al convertir: " + ex.Message);
+                Console.WriteLine("Error while converting: " + ex.Message);
             }
         }
 

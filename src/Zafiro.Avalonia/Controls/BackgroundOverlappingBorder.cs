@@ -73,14 +73,14 @@ public class BackgroundOverlappingBorder : Decorator
         var t = BorderThickness;
         var p = Padding;
 
-        // Area dentro del borde (donde se pinta el fondo)
+        // Area inside the border (where the background is drawn)
         var innerRect = new Rect(
             t.Left,
             t.Top,
             Math.Max(0, finalSize.Width - t.Left - t.Right),
             Math.Max(0, finalSize.Height - t.Top - t.Bottom));
 
-        // Área de contenido (aplica Padding)
+        // Content area (applies padding)
         var contentRect = new Rect(
             innerRect.X + p.Left,
             innerRect.Y + p.Top,

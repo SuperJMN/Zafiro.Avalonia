@@ -43,38 +43,38 @@ public class AspectRatioDecorator : Decorator
 
                 if (availableAspectRatio > AspectRatio)
                 {
-                    // Espacio sobrante horizontalmente
+                    // Extra horizontal space
                     desiredHeight = availableSize.Height;
                     desiredWidth = desiredHeight * AspectRatio;
                 }
                 else
                 {
-                    // Espacio sobrante verticalmente
+                    // Extra vertical space
                     desiredWidth = availableSize.Width;
                     desiredHeight = desiredWidth / AspectRatio;
                 }
             }
             else if (!double.IsInfinity(availableSize.Width))
             {
-                // Ancho limitado, alto infinito
+                // Width is limited, height is infinite
                 desiredWidth = availableSize.Width;
                 desiredHeight = desiredWidth / AspectRatio;
             }
             else if (!double.IsInfinity(availableSize.Height))
             {
-                // Alto limitado, ancho infinito
+                // Height is limited, width is infinite
                 desiredHeight = availableSize.Height;
                 desiredWidth = desiredHeight * AspectRatio;
             }
             else
             {
-                // Ambos anchos y altos son infinitos
-                // Podemos definir un tamaño por defecto o usar el tamaño deseado del hijo
-                desiredWidth = 100; // Tamaño por defecto
+                // Both width and height are infinite
+                // We can define a default size or use the child's desired size
+                desiredWidth = 100; // Default size
                 desiredHeight = desiredWidth / AspectRatio;
             }
 
-            // Medir el hijo con el tamaño calculado
+            // Measure the child with the calculated size
             Child.Measure(new Size(desiredWidth, desiredHeight));
 
             return new Size(desiredWidth, desiredHeight);
@@ -96,12 +96,12 @@ public class AspectRatioDecorator : Decorator
 
             if (finalAspectRatio > AspectRatio)
             {
-                // Espacio sobrante horizontalmente
+                // Extra horizontal space
                 height = finalSize.Height;
                 width = height * AspectRatio;
                 double remainingWidth = finalSize.Width - width;
 
-                // Aplicar alineación horizontal
+                // Apply horizontal alignment
                 switch (ContentAlignment)
                 {
                     case ContentAlignment.Start:
@@ -119,12 +119,12 @@ public class AspectRatioDecorator : Decorator
             }
             else
             {
-                // Espacio sobrante verticalmente
+                // Extra vertical space
                 width = finalSize.Width;
                 height = width / AspectRatio;
                 double remainingHeight = finalSize.Height - height;
 
-                // Aplicar alineación vertical
+                // Apply vertical alignment
                 switch (ContentAlignment)
                 {
                     case ContentAlignment.Start:

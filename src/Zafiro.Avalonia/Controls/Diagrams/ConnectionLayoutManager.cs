@@ -21,7 +21,7 @@ public class ConnectionLayoutManager
 
         return containersPrepared.ToSignal()
             .Merge(layoutUpdated.ToSignal())
-            .StartWith(Unit.Default) // Intentamos inmediatamente
+            .StartWith(Unit.Default) // Attempt immediately
             .Select(_ => TryCalculateLayout(edges, host))
             .Where(layout => layout != null)
             .Take(1)
@@ -32,7 +32,7 @@ public class ConnectionLayoutManager
 
     private Layout? TryCalculateLayout(IReadOnlyList<IEdge<object>> edges, ItemsControl host)
     {
-        // Verificamos que todos los controles estén disponibles y tengan bounds válidos
+        // Verify that every control is available and has valid bounds
         if (!edges.All(edge =>
             {
                 var (from, to) = GetControls(edge, host);

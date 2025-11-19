@@ -9,19 +9,19 @@ public class HorizontalTickPanel : Panel
 
         foreach (var child in Children)
         {
-            // Medir cada hijo con ancho infinito y altura disponible
+            // Measure each child with infinite width and the available height
             child.Measure(new Size(Double.PositiveInfinity, availableSize.Height));
 
-            // Acumular el ancho total y la altura máxima
+            // Accumulate the total width and the maximum height
             totalChildWidth += child.DesiredSize.Width;
             maxChildHeight = Math.Max(maxChildHeight, child.DesiredSize.Height);
         }
 
-        // Calcular el tamaño deseado del panel
+        // Calculate the desired size of the panel
         double desiredWidth = double.IsInfinity(availableSize.Width) ? totalChildWidth : availableSize.Width;
         double desiredHeight = double.IsInfinity(availableSize.Height) ? maxChildHeight : availableSize.Height;
 
-        // Retornar el tamaño deseado sin valores infinitos o NaN
+        // Return the desired size without infinite or NaN values
         return new Size(desiredWidth, desiredHeight);
     }
 
@@ -39,20 +39,20 @@ public class HorizontalTickPanel : Panel
             double xPosition;
             if (count == 1)
             {
-                // Si solo hay un hijo, centrarlo en el medio del panel
+                // If there is only one child, center it in the middle of the panel
                 xPosition = finalSize.Width / 2;
             }
             else
             {
-                // Distribuir los hijos entre 0 y finalSize.Width
+                // Distribute the children between 0 and finalSize.Width
                 xPosition = (finalSize.Width / (count - 1)) * childId;
             }
 
-            // Ajustar para alinear horizontalmente el hijo respecto al punto xPosition
+            // Adjust to horizontally align the child relative to xPosition
             double childWidth = child.DesiredSize.Width;
             double x = xPosition - (childWidth / 2);
 
-            // No limitar la posición x para permitir que los hijos se extiendan más allá del panel si es necesario
+            // Do not clamp the x position so children can extend beyond the panel if needed
             child.Arrange(new Rect(new Point(x, 0), new Size(childWidth, finalSize.Height)));
         }
 

@@ -29,20 +29,20 @@ public class TrueCenterPanel : Panel
         var centerChild = Children.FirstOrDefault(c => GetDock(c) == TrueCenterDock.Center);
         var rightChild = Children.FirstOrDefault(c => GetDock(c) == TrueCenterDock.Right);
 
-        // 1) Mide Left y Right libremente con el tamaño ofrecido
+        // 1) Measure Left and Right freely with the offered size
         leftChild?.Measure(availableSize);
         var leftSize = leftChild?.DesiredSize ?? new Size();
 
         rightChild?.Measure(availableSize);
         var rightSize = rightChild?.DesiredSize ?? new Size();
 
-        // 2) side = máximo ancho de left vs right
+        // 2) side = maximum width between left and right
         double side = Math.Max((double)leftSize.Width, rightSize.Width);
 
-        // 3) El ancho disponible para el centro = total - 2*side (clamp >=0)
+        // 3) The width available for the center = total - 2*side (clamped to >= 0)
         double centerAvailWidth = Math.Max(0, availableSize.Width - 2 * side);
 
-        // Mide el centro con ese ancho
+        // Measure the center with that width
         if (centerChild != null)
         {
             centerChild.Measure(new Size(centerAvailWidth, availableSize.Height));
@@ -50,7 +50,7 @@ public class TrueCenterPanel : Panel
 
         var centerSize = centerChild?.DesiredSize ?? new Size();
 
-        // 4) La altura necesaria = la máxima de los tres
+        // 4) The required height = the maximum among the three
         double neededHeight = new double[] { leftSize.Height, centerSize.Height, rightSize.Height }.Max();
         double finalHeight = Math.Min(neededHeight, availableSize.Height);
 
@@ -75,16 +75,16 @@ public class TrueCenterPanel : Panel
         var centerSize = centerChild?.DesiredSize ?? new Size();
         var rightSize = rightChild?.DesiredSize ?? new Size();
 
-        // side = mayor ancho de Left / Right
+        // side = larger width between Left and Right
         double side = Math.Max(leftSize.Width, rightSize.Width);
 
         // --- LEFT ---
         if (leftChild != null)
         {
             double w = Math.Min(leftSize.Width, finalSize.Width);
-            // Calculamos la altura final que va a usar
+            // Calculate the final height it will use
             double h = GetArrangedHeight(leftChild, finalSize.Height, leftSize.Height);
-            // Calculamos el top en función del VerticalAlignment
+            // Calculate the top based on VerticalAlignment
             double top = GetTop(leftChild, finalSize.Height, h);
 
             leftChild.Arrange(new Rect(0, top, w, h));
@@ -105,14 +105,14 @@ public class TrueCenterPanel : Panel
         // --- CENTER ---
         if (centerChild != null)
         {
-            // Franja central = [side .. (finalSize.Width - side)]
+            // Central strip = [side .. (finalSize.Width - side)]
             double sliceWidth = Math.Max(0, finalSize.Width - 2 * side);
             double cWidth = Math.Min(centerSize.Width, sliceWidth);
 
             double cHeight = GetArrangedHeight(centerChild, finalSize.Height, centerSize.Height);
             double top = GetTop(centerChild, finalSize.Height, cHeight);
 
-            // centrar dentro de esa franja
+            // Center within that strip
             double cX = side + (sliceWidth - cWidth) / 2;
             centerChild.Arrange(new Rect(cX, top, cWidth, cHeight));
         }
@@ -121,7 +121,7 @@ public class TrueCenterPanel : Panel
     }
 
     /// <summary>
-    /// Calcula la posición vertical (Top) según el VerticalAlignment del control.
+    /// Calculates the vertical position (Top) according to the control's VerticalAlignment.
     /// </summary>
     private double GetTop(Control child, double containerHeight, double arrangedHeight)
     {
@@ -130,13 +130,13 @@ public class TrueCenterPanel : Panel
             VerticalAlignment.Top => 0,
             VerticalAlignment.Bottom => containerHeight - arrangedHeight,
             VerticalAlignment.Center => (containerHeight - arrangedHeight) / 2,
-            VerticalAlignment.Stretch => 0, // y el alto se lleva todo
+            VerticalAlignment.Stretch => 0, // and the height takes the full space
             _ => 0
         };
     }
 
     /// <summary>
-    /// Calcula el alto final que debe ocupar el child, según su VerticalAlignment.
+    /// Calculates the final height the child should occupy according to its VerticalAlignment.
     /// </summary>
     private double GetArrangedHeight(Control child, double containerHeight, double measuredHeight)
     {

@@ -7,12 +7,12 @@ public static class ConnectorExtensions
     public static void ConnectWithSLine(this DrawingContext context, Point from, Side sideFrom, Point to, Side sideTo,
         Pen pen, bool startArrow = false, bool endArrow = false)
     {
-        // Definir el offset para el control de la curva
+        // Define the offset for the curve control points
         double offset = 100;
         Point controlPoint1 = from;
         Point controlPoint2 = to;
 
-        // Ajustar los puntos de control dependiendo del lado de conexión
+        // Adjust the control points depending on the connection side
         switch (sideFrom)
         {
             case Side.Top:
@@ -45,7 +45,7 @@ public static class ConnectorExtensions
                 break;
         }
 
-        // Crear la curva de B�zier
+        // Create the Bezier curve
         var segment = new BezierSegment
         {
             Point1 = controlPoint1,
@@ -65,10 +65,10 @@ public static class ConnectorExtensions
             Figures = new PathFigures {figure}
         };
 
-        // Dibujar la curva
+        // Draw the curve
         context.DrawGeometry(null, pen, geometry);
 
-        // Dibujar flechas si est�n habilitadas
+        // Draw arrows if they are enabled
         if (startArrow)
         {
             DrawArrowHead(context, controlPoint1, from, pen);
@@ -83,21 +83,21 @@ public static class ConnectorExtensions
 
     private static void DrawArrowHead(DrawingContext context, Point controlPoint, Point endPoint, Pen pen)
     {
-        // C�lculo de la direcci�n en el punto final
+        // Calculate the direction at the end point
         Vector direction = endPoint - controlPoint;
         direction = direction.Normalize();
 
-        // Vector perpendicular para la base de la flecha
+        // Perpendicular vector for the base of the arrow
         Vector perpendicular = new Vector(-direction.Y, direction.X);
 
-        // Tama�o de la punta de la flecha
+        // Size of the arrow head
         double arrowSize = 10;
 
-        // Puntos para el tri�ngulo de la flecha
+        // Points for the arrow triangle
         Point arrowPoint1 = endPoint - direction * arrowSize + perpendicular * (arrowSize / 2);
         Point arrowPoint2 = endPoint - direction * arrowSize - perpendicular * (arrowSize / 2);
 
-        // Crear la figura de la flecha
+        // Create the arrow figure
         var arrowFigure = new PathFigure
         {
             StartPoint = endPoint,
@@ -114,7 +114,7 @@ public static class ConnectorExtensions
             Figures = new PathFigures {arrowFigure}
         };
 
-        // Dibujar la punta de la flecha
+        // Draw the arrow tip
         context.DrawGeometry(pen.Brush, null, arrowGeometry);
     }
 

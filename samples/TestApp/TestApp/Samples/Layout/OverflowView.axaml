@@ -10,8 +10,8 @@
             <OverflowBehavior IsEnabled="True" />
         </Interaction.Behaviors>
 
-        <EnhancedButton HorizontalAlignment="Stretch">CÓMO ESTÁS</EnhancedButton>
-        <EnhancedButton DockPanel.Dock="Right" HorizontalAlignment="Stretch">CÓMO ESTÁS</EnhancedButton>
+        <EnhancedButton HorizontalAlignment="Stretch">HOW ARE YOU</EnhancedButton>
+        <EnhancedButton DockPanel.Dock="Right" HorizontalAlignment="Stretch">HOW ARE YOU</EnhancedButton>
 
         <TextBlock MinWidth="100" TextWrapping="Wrap">blab blabla y todo eso y la bla bla blabla wrap</TextBlock>
 

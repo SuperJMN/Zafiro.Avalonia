@@ -200,16 +200,16 @@ public class SmartWrapPanel : Panel, INavigableContainer
                 itemWidthSet ? itemWidth : child.DesiredSize.Width,
                 itemHeightSet ? itemHeight : child.DesiredSize.Height);
 
-            if (MathUtilities.GreaterThan(curLineSize.U + sz.U, uvFinalSize.U)) // Necesita pasar a otra línea
+            if (MathUtilities.GreaterThan(curLineSize.U + sz.U, uvFinalSize.U)) // Needs to move to another line
             {
                 ArrangeLine(accumulatedV, curLineSize.V, firstInLine, i, useItemU, itemU);
 
                 accumulatedV += curLineSize.V;
                 curLineSize = sz;
 
-                if (MathUtilities.GreaterThan(sz.U, uvFinalSize.U)) // El elemento es más ancho que el espacio disponible
+                if (MathUtilities.GreaterThan(sz.U, uvFinalSize.U)) // The element is wider than the available space
                 {
-                    // Cambiar a la siguiente línea que solo contiene un elemento
+                    // Move to the next line that only contains one element
                     ArrangeLine(accumulatedV, sz.V, i, i + 1, useItemU, itemU);
 
                     accumulatedV += sz.V;
@@ -221,14 +221,14 @@ public class SmartWrapPanel : Panel, INavigableContainer
                     firstInLine = i;
                 }
             }
-            else // Continuar acumulando en la línea actual
+            else // Continue accumulating on the current line
             {
                 curLineSize.U += sz.U;
                 curLineSize.V = Max(sz.V, curLineSize.V);
             }
         }
 
-        // Disponer la última línea, si es necesario
+        // Arrange the last line if necessary
         if (firstInLine < children.Count)
         {
             ArrangeLine(accumulatedV, curLineSize.V, firstInLine, children.Count, useItemU, itemU);

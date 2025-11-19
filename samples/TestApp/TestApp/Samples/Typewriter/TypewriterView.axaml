@@ -17,7 +17,7 @@
                 <a:Strings>
                     <x:String>Yeah! this is Zafiro.Avalonia</x:String>
                     <x:String>Crema for developers</x:String>
-                    <x:String>Duro, durísimo</x:String>
+                    <x:String>Tough, very tough</x:String>
                 </a:Strings>
             </c:TypewriterControl.Strings>
         </c:TypewriterControl>

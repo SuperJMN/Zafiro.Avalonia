@@ -80,31 +80,31 @@
                             <!-- Buttons -->
                             <Grid Grid.Row="2" ColumnSpacing="16" ColumnDefinitions="Auto,*,Auto" Margin="0 16 0 0">
 
-                                <!-- Cancel y Secondary a la izquierda -->
+                                <!-- Cancel and Secondary on the left -->
                                 <StackPanel Grid.Column="0"
                                             Classes="ButtonGroup"
                                             Orientation="Horizontal"
                                             Spacing="8">
-                                    <!-- Cancel siempre va primero -->
+                                    <!-- Cancel always goes first -->
                                     <ItemsControl Classes="Horizontal" ItemsSource="{Binding $parent[DialogControl].CancelOptions}" />
-                                    <!-- Secondary después de Cancel -->
+                                    <!-- Secondary after Cancel -->
                                     <ItemsControl Classes="Horizontal" ItemsSource="{Binding $parent[DialogControl].SecondaryOptions}" />
                                 </StackPanel>
 
-                                <!-- Info en el centro -->
+                                <!-- Info in the center -->
                                 <ItemsControl Classes="Horizontal"
                                               Grid.Column="1"
                                               HorizontalAlignment="Center"
                                               ItemsSource="{Binding $parent[DialogControl].InfoOptions}" />
 
-                                <!-- Primary/Destructive a la derecha -->
+                                <!-- Primary/Destructive on the right -->
                                 <StackPanel Grid.Column="2"
                                             Orientation="Horizontal"
                                             Classes="ButtonGroup"
                                             Spacing="8">
-                                    <!-- Primary primero -->
+                                    <!-- Primary first -->
                                     <ItemsControl Classes="Horizontal" ItemsSource="{Binding $parent[DialogControl].PrimaryOptions}" />
-                                    <!-- Destructive al final -->
+                                    <!-- Destructive at the end -->
                                     <ItemsControl Classes="Horizontal" ItemsSource="{Binding $parent[DialogControl].DestructiveOptions}" />
                                 </StackPanel>
                             </Grid>

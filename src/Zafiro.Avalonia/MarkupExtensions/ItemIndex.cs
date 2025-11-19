@@ -82,15 +82,15 @@ public class ContainerIdConverter : IMultiValueConverter
         if (StartFromOne)
             index++;
 
-        // 1) Si hay Converter, delegamos en él
+        // 1) If there is a Converter, delegate to it
         if (Converter != null)
             return Converter.Convert(index, targetType, ConverterParameter, culture);
 
-        // 2) Si el objetivo es String, devolvemos ToString
+        // 2) If the target is a string, return ToString
         if (targetType == typeof(string))
             return index.ToString(culture);
 
-        // 3) Para otros tipos, usamos ChangeType
+        // 3) For other types, use ChangeType
         return System.Convert.ChangeType(index, targetType, culture);
     }
 
