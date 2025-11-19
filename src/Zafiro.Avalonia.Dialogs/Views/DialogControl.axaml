@@ -73,7 +73,7 @@
                                        Text="{Binding $parent[DialogControl].Title}" IsVisible="{Binding $self.Text, Converter={x:Static ObjectConverters.IsNotNull}}" />
 
                             <!-- Content -->
-                            <ScrollViewer Grid.Row="1" x:Name="DialogScrollViewer" HorizontalScrollBarVisibility="Auto">
+                            <ScrollViewer Grid.Row="1" x:Name="DialogScrollViewer">
                                 <ContentPresenter Content="{TemplateBinding Content}" />
                             </ScrollViewer>
 
