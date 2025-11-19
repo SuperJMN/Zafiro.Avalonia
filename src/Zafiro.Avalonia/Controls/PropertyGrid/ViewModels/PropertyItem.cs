@@ -64,19 +64,9 @@ public class PropertyItem : ReactiveObject, IPropertyItem, IDisposable
         }
         else
         {
-            value = GetDefault(PropertyType); // Or null?
+            value = null;
             this.RaisePropertyChanged(nameof(Value));
         }
-    }
-
-    private static object? GetDefault(Type type)
-    {
-        if (type.IsValueType)
-        {
-            return Activator.CreateInstance(type);
-        }
-
-        return null;
     }
 
     private void SetTargetsValue(object? newValue)
@@ -88,6 +78,12 @@ public class PropertyItem : ReactiveObject, IPropertyItem, IDisposable
             {
                 try
                 {
+                    // Skip setting null on non-nullable value types
+                    if (newValue == null && PropertyType.IsValueType && Nullable.GetUnderlyingType(PropertyType) == null)
+                    {
+                        continue;
+                    }
+
                     // Handle simple conversions if necessary, but usually binding does it.
                     // Especially important for Enum or numeric types.
                     if (newValue != null && !PropertyType.IsInstanceOfType(newValue))
