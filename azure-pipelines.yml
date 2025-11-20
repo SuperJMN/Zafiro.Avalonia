@@ -41,7 +41,7 @@ steps:
       if ($isMaster) {
         Write-Host 'Publishing NuGet packages'
         dotnetdeployer nuget --api-key '$(NuGetApiKey)'
-        dotnetdeployer github pages --github-token '$(GitHubApiKey)' --repository SuperJMN-Zafiro.github.io --owner SuperJMN-Zafiro --prefix TestApp
+        dotnetdeployer github pages --github-token '$(GitHubApiKey)' --repository Zafiro.Avalonia.github.io --owner SuperJMN --prefix TestApp
       } else {
         Write-Host 'NuGet dry run (no push)'
         dotnetdeployer nuget --api-key '$(NuGetApiKey)' --no-push
