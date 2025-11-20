@@ -92,8 +92,8 @@
                         </Column.HeaderTemplate>
                         <Column.CellTemplate>
                             <DataTemplate>
-                                <!-- <EnhancedButton HorizontalAlignment="Center" avalonia:Attached.Icon="fa-solid fa-arrow-up-right-from-square" CommandParameter="http://www.youtube.com" -->
-                                <!--                 Command="{Binding Source={StaticResource DefaultCommands}, Path=LaunchUri}" /> -->
+                                <EnhancedButton HorizontalAlignment="Center" Icon="{Icon fa-solid fa-arrow-up-right-from-square}" CommandParameter="http://www.youtube.com"
+                                                Command="{Binding LaunchUriString, Source={x:Static Commands.Instance}}" />
                             </DataTemplate>
                         </Column.CellTemplate>
                     </Column>

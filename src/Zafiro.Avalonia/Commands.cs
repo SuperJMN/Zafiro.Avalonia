@@ -1,5 +1,3 @@
-using System;
-using System.Threading.Tasks;
 using CSharpFunctionalExtensions;
 using Zafiro.Avalonia.Misc;
 using Zafiro.Avalonia.Services;
@@ -9,10 +7,9 @@ namespace Zafiro.Avalonia;
 
 public class Commands
 {
-    private readonly INotificationService notificationService;
-    private readonly ILauncherService launcherService;
-
     private static Commands instance = CreateDefault();
+    private readonly ILauncherService launcherService;
+    private readonly INotificationService notificationService;
 
     public Commands(INotificationService notificationService, ILauncherService launcherService)
     {
@@ -23,8 +20,11 @@ public class Commands
         this.launcherService = launcherService;
 
         CopyParameter = ReactiveCommand.CreateFromTask<string, Result>(CopyParameterImplementation).Enhance();
-        LaunchUri = ReactiveCommand.CreateFromTask<Uri, Result>(LaunchUriImplementation).Enhance();
+        LaunchUri = ReactiveCommand.CreateFromTask<Uri, Result>(uri => this.launcherService.LaunchUri(uri)).Enhance();
+        LaunchUriString = ReactiveCommand.CreateFromTask<string, Result>(uri => ToUri(uri).Bind(u => this.launcherService.LaunchUri(u))).Enhance();
     }
+
+    public IEnhancedCommand<string, Result> LaunchUriString { get; }
 
     public static Commands Instance
     {
@@ -36,17 +36,17 @@ public class Commands
 
     public IEnhancedCommand<Uri, Result> LaunchUri { get; }
 
+    private static Result<Uri> ToUri(string uriString)
+    {
+        return Uri.TryCreate(uriString, UriKind.Absolute, out var uri) ? Result.Success(uri) : Result.Failure<Uri>($"Cannot parse URI '{uriString}'");
+    }
+
     private async Task<Result> CopyParameterImplementation(string text)
     {
         return await ApplicationUtils.GetClipboard()
             .ToResult("Cannot access clipboard")
             .Tap(clipboard => clipboard.SetTextAsync(text))
             .Tap(() => notificationService.Show(null!, "Copied to clipboard"));
-    }
-
-    private Task<Result> LaunchUriImplementation(Uri uri)
-    {
-        return Result.Try(() => launcherService.LaunchUri(uri));
     }
 
     private static Commands CreateDefault()
@@ -56,9 +56,9 @@ public class Commands
 
     private class DummyLauncherService : ILauncherService
     {
-        public Task LaunchUri(Uri uri)
+        public Task<Result> LaunchUri(Uri uri)
         {
-            return Task.CompletedTask;
+            return Task.FromResult(Result.Success());
         }
     }
 }
