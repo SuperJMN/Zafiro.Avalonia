@@ -9,7 +9,7 @@ public class Link
     public Link(ILauncherService lanLauncherService, string url)
     {
         Url = url;
-        Open = ReactiveCommand.CreateFromTask(() => Result.Try(() => lanLauncherService.LaunchUri(new Uri(url))));
+        Open = ReactiveCommand.CreateFromTask(() => lanLauncherService.LaunchUri(new Uri(url)));
     }
 
     public string Url { get; }

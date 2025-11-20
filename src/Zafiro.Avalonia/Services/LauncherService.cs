@@ -1,26 +1,16 @@
-using Avalonia.Controls.ApplicationLifetimes;
-using Avalonia.Platform.Storage;
+using CSharpFunctionalExtensions;
+using Zafiro.Avalonia.Misc;
 
 namespace Zafiro.Avalonia.Services;
 
-public class LauncherService(ILauncher launcher) : ILauncherService
+public class LauncherService : ILauncherService
 {
-    public Task LaunchUri(Uri uri) => launcher.LaunchUriAsync(uri);
-    
-    public static LauncherService Instance => new(TopLevel().Launcher);
-
-    private static TopLevel TopLevel()
+    public async Task<Result> LaunchUri(Uri uri)
     {
-        if (Application.Current?.ApplicationLifetime is null)
-        {
-            throw new InvalidOperationException("This application is not supported");
-        }
-
-        return Application.Current.ApplicationLifetime switch
-        {
-            IClassicDesktopStyleApplicationLifetime classicDesktopStyleApplicationLifetime => classicDesktopStyleApplicationLifetime.MainWindow!,
-            ISingleViewApplicationLifetime singleViewApplicationLifetime => global::Avalonia.Controls.TopLevel.GetTopLevel(singleViewApplicationLifetime.MainView)!,
-            _ => throw new ArgumentOutOfRangeException()
-        };
+        return await ApplicationUtils.TopLevel().ToResult("Cannot get the top level host")
+            .Map(topLevel => topLevel.Launcher)
+            .EnsureNotNull("The top level launcher service cannot be null")
+            .Bind(l => Result.Try(() => l.LaunchUriAsync(uri)))
+            .Ensure(b => b, "Launch URI operation failed").ConfigureAwait(false);
     }
 }
