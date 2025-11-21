@@ -12,6 +12,7 @@ using Zafiro.UI.Shell.Utils;
 namespace TestApp.Samples.SlimDataGrid;
 
 [Section(icon: "mdi-grid", sortIndex: 0)]
+[SectionGroup("data-display", "Data Display")]
 public partial class SlimDataGridViewModel : ReactiveValidationObject
 {
     [Reactive] private string? personName;

@@ -60,13 +60,19 @@ public sealed class SectionsRegistrationGenerator : IIncrementalGenerator
             foreach (var s in sections)
             {
                 var iconSource = s.icon ?? "fa-window-maximize";
+                var groupFriendlyName = s.groupFriendlyName ?? s.groupKey;
+                var group = s.groupKey is null
+                    ? "null"
+                    : $"new global::Zafiro.UI.Navigation.Sections.SectionGroup(\"{Escape(s.groupKey)}\", \"{Escape(groupFriendlyName)}\")";
                 sb.Append("            builder.Add<");
                 sb.Append(s.contractFqn);
                 sb.Append(">(\"");
                 sb.Append(Escape(s.displayName));
                 sb.Append("\", new global::Zafiro.UI.Icon { Source = \"");
                 sb.Append(Escape(iconSource));
-                sb.Append("\" }, true);");
+                sb.Append("\" }, ");
+                sb.Append(group);
+                sb.Append(");");
                 sb.AppendLine();
             }
 
@@ -82,9 +88,10 @@ public sealed class SectionsRegistrationGenerator : IIncrementalGenerator
         });
     }
 
-    private static IEnumerable<(string implFqn, string contractFqn, int sortIndex, string displayName, string? icon)> FindAnnotatedSections(Compilation compilation, SourceProductionContext context)
+    private static IEnumerable<(string implFqn, string contractFqn, int sortIndex, string displayName, string? icon, string? groupKey, string? groupFriendlyName)> FindAnnotatedSections(Compilation compilation, SourceProductionContext context)
     {
         var attr = compilation.GetTypeByMetadataName("Zafiro.UI.Shell.Utils.SectionAttribute");
+        var groupAttr = compilation.GetTypeByMetadataName("Zafiro.UI.Shell.Utils.SectionGroupAttribute");
         if (attr is null)
             yield break;
 
@@ -96,6 +103,27 @@ public sealed class SectionsRegistrationGenerator : IIncrementalGenerator
             var sectionAttr = type.GetAttributes().FirstOrDefault(a => SymbolEqualityComparer.Default.Equals(a.AttributeClass, attr));
             if (sectionAttr is null)
                 continue;
+
+            string? groupKey = null;
+            string? groupFriendlyName = null;
+
+            var sectionGroupAttr = groupAttr is null
+                ? null
+                : type.GetAttributes().FirstOrDefault(a => SymbolEqualityComparer.Default.Equals(a.AttributeClass, groupAttr));
+
+            if (sectionGroupAttr is not null)
+            {
+                var ctorArgs = sectionGroupAttr.ConstructorArguments;
+                if (ctorArgs.Length > 0 && ctorArgs[0].Value is string gk)
+                {
+                    groupKey = gk;
+                }
+
+                if (ctorArgs.Length > 1 && ctorArgs[1].Value is string gf)
+                {
+                    groupFriendlyName = gf;
+                }
+            }
 
             string? icon = null;
             var sortIndex = 0;
@@ -126,7 +154,7 @@ public sealed class SectionsRegistrationGenerator : IIncrementalGenerator
                 : simple;
             var display = ToSpaced(baseName);
 
-            yield return (implFqn, contractFqn, sortIndex, display, icon);
+            yield return (implFqn, contractFqn, sortIndex, display, icon, groupKey, groupFriendlyName);
         }
     }
 

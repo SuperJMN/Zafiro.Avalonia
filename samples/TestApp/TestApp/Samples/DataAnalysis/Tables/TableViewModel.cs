@@ -5,6 +5,7 @@ using Zafiro.UI.Shell.Utils;
 namespace TestApp.Samples.DataAnalysis.Tables;
 
 [Section(icon: "mdi-table", sortIndex: 1)]
+[SectionGroup("data-viz", "Data Visualization")]
 public class TableViewModel
 {
     public TableViewModel()

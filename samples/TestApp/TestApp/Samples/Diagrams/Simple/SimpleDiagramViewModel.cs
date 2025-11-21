@@ -5,6 +5,7 @@ using Zafiro.UI.Shell.Utils;
 namespace TestApp.Samples.Diagrams.Simple;
 
 [Section(icon: "fa-diagram-project", sortIndex: 9)]
+[SectionGroup("data-viz", "Data Visualization")]
 public class SimpleDiagramViewModel : ViewModelBase
 {
     public SimpleDiagramViewModel()

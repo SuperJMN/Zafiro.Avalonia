@@ -20,6 +20,7 @@ using Zafiro.UI.Wizards.Slim.Builder;
 namespace TestApp.Samples.SlimWizard;
 
 [Section("Wizard", "mdi-wizard-hat", 1)]
+[SectionGroup("navigation", "Navigation & Dialogs")]
 public class WizardViewModel : IDisposable
 {
     private readonly CompositeDisposable disposable = new();

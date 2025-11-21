@@ -14,6 +14,7 @@ using Zafiro.UI.Shell.Utils;
 namespace TestApp.Samples.Dialogs;
 
 [Section(icon: "fa-comment-dots", sortIndex: 4)]
+[SectionGroup("navigation", "Navigation & Dialogs")]
 public class DialogSampleViewModel : IViewModel
 {
     public DialogSampleViewModel(INotificationService notificationService, IDialog dialogService)

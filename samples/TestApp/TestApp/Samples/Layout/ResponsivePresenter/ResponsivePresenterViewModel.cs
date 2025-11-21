@@ -7,6 +7,7 @@ using Zafiro.UI.Shell.Utils;
 namespace TestApp.Samples.Layout.ResponsivePresenterSample;
 
 [Section(icon: "mdi-tablet-cellphone", sortIndex: 10)]
+[SectionGroup("layout", "Layout & Panels")]
 public partial class ResponsivePresenterViewModel : ReactiveObject
 {
     public ResponsivePresenterViewModel()
