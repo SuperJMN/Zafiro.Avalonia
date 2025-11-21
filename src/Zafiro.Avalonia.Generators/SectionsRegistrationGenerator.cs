@@ -113,13 +113,13 @@ public sealed class SectionsRegistrationGenerator : IIncrementalGenerator
 
             if (sectionGroupAttr is not null)
             {
-                var ctorArgs = sectionGroupAttr.ConstructorArguments;
-                if (ctorArgs.Length > 0 && ctorArgs[0].Value is string gk)
+                var groupCtorArgs = sectionGroupAttr.ConstructorArguments;
+                if (groupCtorArgs.Length > 0 && groupCtorArgs[0].Value is string gk)
                 {
                     groupKey = gk;
                 }
 
-                if (ctorArgs.Length > 1 && ctorArgs[1].Value is string gf)
+                if (groupCtorArgs.Length > 1 && groupCtorArgs[1].Value is string gf)
                 {
                     groupFriendlyName = gf;
                 }
@@ -129,18 +129,18 @@ public sealed class SectionsRegistrationGenerator : IIncrementalGenerator
             var sortIndex = 0;
             ITypeSymbol? contract = null;
 
-            var ctorArgs = sectionAttr.ConstructorArguments;
-            if (ctorArgs.Length >= 2 && ctorArgs[1].Value is string iconStr)
+            var sectionCtorArgs = sectionAttr.ConstructorArguments;
+            if (sectionCtorArgs.Length >= 2 && sectionCtorArgs[1].Value is string iconStr)
             {
                 icon = iconStr;
             }
 
-            if (ctorArgs.Length >= 3 && ctorArgs[2].Value is int si)
+            if (sectionCtorArgs.Length >= 3 && sectionCtorArgs[2].Value is int si)
             {
                 sortIndex = si;
             }
 
-            if (ctorArgs.Length >= 4 && ctorArgs[3].Value is ITypeSymbol contractSym)
+            if (sectionCtorArgs.Length >= 4 && sectionCtorArgs[3].Value is ITypeSymbol contractSym)
             {
                 contract = contractSym;
             }
