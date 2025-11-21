@@ -2,6 +2,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:generic="clr-namespace:System.Collections.Generic;assembly=System.Collections"
         xmlns:sections="clr-namespace:Zafiro.UI.Navigation.Sections;assembly=Zafiro.UI"
+        xmlns:controls="clr-namespace:Zafiro.Avalonia.Controls"
+        xmlns:conv="clr-namespace:Zafiro.Avalonia.Converters"
         x:CompileBindings="True">
     <Design.PreviewWith>
         <StackPanel Spacing="20" Height="400">
@@ -31,6 +33,8 @@
     </Design.PreviewWith>
 
     <Styles.Resources>
+
+        <conv:StringNotNullOrWhiteSpaceConverter x:Key="StringNotNullOrWhiteSpaceConverter" />
 
         <ControlTheme x:Key="SectionListItem" TargetType="ListBoxItem" x:DataType="sections:ISection"
                       BasedOn="{StaticResource {x:Type ListBoxItem}}">
@@ -63,6 +67,24 @@
             </DockPanel>
         </DataTemplate>
 
+        <DataTemplate x:Key="SectionGroupTemplate" DataType="controls:SectionGroupView">
+            <StackPanel Spacing="6">
+                <TextBlock Classes="SectionStripGroupHeader"
+                           Text="{Binding Group.FriendlyName}"
+                           IsVisible="{Binding Group.FriendlyName, Converter={StaticResource StringNotNullOrWhiteSpaceConverter}}" />
+                <ListBox Background="Transparent"
+                         ItemContainerTheme="{StaticResource SectionListItem}"
+                         SelectedItem="{Binding $parent[SectionStrip].SelectedSection, Mode=TwoWay}"
+                         ItemsSource="{Binding Sections}">
+                    <ListBox.DataTemplates>
+                        <DataTemplate DataType="sections:ISection">
+                            <ContentControl Content="{Binding}" ContentTemplate="{StaticResource HorizontalItem}" />
+                        </DataTemplate>
+                    </ListBox.DataTemplates>
+                </ListBox>
+            </StackPanel>
+        </DataTemplate>
+
         <ControlTheme x:Key="{x:Type SectionStrip}" TargetType="SectionStrip">
             <Setter Property="HorizontalIconLabelSpacing" Value="10" />
             <Setter Property="VerticalIconLabelSpacing" Value="4" />
@@ -76,14 +98,16 @@
             <Style Selector="^[Orientation=Vertical]">
                 <Setter Property="Template">
                     <ControlTemplate>
-                        <ListBox ItemContainerTheme="{StaticResource SectionListItem}" Background="{TemplateBinding Background}" SelectedItem="{TemplateBinding SelectedSection, Mode=TwoWay}"
-                                 ItemsSource="{TemplateBinding FilteredSections}">
-                            <ListBox.DataTemplates>
-                                <DataTemplate DataType="sections:ISection">
-                                    <ContentControl Content="{Binding}" ContentTemplate="{StaticResource HorizontalItem}" />
-                                </DataTemplate>
-                            </ListBox.DataTemplates>
-                        </ListBox>
+                        <ItemsControl ItemsSource="{TemplateBinding SectionGroups}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Spacing="{Binding $parent[SectionStrip].ItemSpacing}" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <StaticResource ResourceKey="SectionGroupTemplate" />
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
                     </ControlTemplate>
                 </Setter>
             </Style>

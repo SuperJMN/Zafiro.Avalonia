@@ -1,0 +1,37 @@
+using System;
+using System.Collections.ObjectModel;
+using System.Reactive.Disposables;
+using DynamicData;
+using DynamicData.Binding;
+using Zafiro.UI.Navigation.Sections;
+
+namespace Zafiro.Avalonia.Controls;
+
+public sealed class SectionGrouper : IDisposable
+{
+    private readonly CompositeDisposable disposable = new();
+
+    public SectionGrouper(IObservable<IChangeSet<ISection, string>> sectionChanges)
+    {
+        sectionChanges
+            .AutoRefresh(section => section.IsVisible)
+            .AutoRefresh(section => section.SortOrder)
+            .AutoRefresh(section => section.Group)
+            .Filter(section => section.IsVisible)
+            .Group(section => section.Group ?? SectionGroup.Ungrouped)
+            .Transform(group => new SectionGroupView(group))
+            .DisposeMany()
+            .Bind(out ReadOnlyObservableCollection<SectionGroupView> groups)
+            .Subscribe()
+            .DisposeWith(disposable);
+
+        SectionGroups = groups;
+    }
+
+    public ReadOnlyObservableCollection<SectionGroupView> SectionGroups { get; }
+
+    public void Dispose()
+    {
+        disposable.Dispose();
+    }
+}
