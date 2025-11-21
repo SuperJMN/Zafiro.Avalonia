@@ -7,6 +7,7 @@ using Zafiro.UI.Shell.Utils;
 namespace TestApp.Samples.Misc;
 
 [Section("Visibility Expose", icon: "mdi-eye-outline", sortIndex: 7)]
+[SectionGroup("behaviors", "Behaviors")]
 public class ChildrenVisibilityExposerBehaviorViewModel
 {
     public ChildrenVisibilityExposerBehaviorViewModel()

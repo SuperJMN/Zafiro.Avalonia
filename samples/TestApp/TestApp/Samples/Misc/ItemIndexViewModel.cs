@@ -9,6 +9,7 @@ using Zafiro.UI.Shell.Utils;
 namespace TestApp.Samples.Misc;
 
 [Section("ItemId Extension", icon: "fa-list-ol", sortIndex: 22)]
+[SectionGroup("controls", "Controls & Input")]
 public class ItemIndexViewModel
 {
     public ItemIndexViewModel()

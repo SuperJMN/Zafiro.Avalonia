@@ -4,6 +4,7 @@ using Zafiro.UI.Shell.Utils;
 namespace TestApp.Samples.DataAnalysis.Dendrograms;
 
 [Section(icon: "mdi-family-tree", sortIndex: 2)]
+[SectionGroup("data-viz", "Data Visualization")]
 public class DendrogramViewModel
 {
     public DendrogramViewModel()

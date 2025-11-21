@@ -7,6 +7,7 @@ using Zafiro.UI.Shell.Utils;
 namespace TestApp.Samples.Adorners;
 
 [Section(icon: "mdi-bee", sortIndex: 21)]
+[SectionGroup("behaviors", "Behaviors")]
 public class AdornerSampleViewModel : ReactiveObject
 {
     public AdornerSampleViewModel()

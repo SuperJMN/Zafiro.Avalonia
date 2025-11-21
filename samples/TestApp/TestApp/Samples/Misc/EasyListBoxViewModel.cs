@@ -14,6 +14,7 @@ using Zafiro.UI.Shell.Utils;
 namespace TestApp.Samples.Misc;
 
 [Section(icon: "fa-list-check", sortIndex: 20)]
+[SectionGroup("controls", "Controls & Input")]
 public class EasyListBoxViewModel
 {
     public EasyListBoxViewModel()

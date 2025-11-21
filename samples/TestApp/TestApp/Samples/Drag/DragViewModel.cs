@@ -9,6 +9,7 @@ using Zafiro.UI.Shell.Utils;
 namespace TestApp.Samples.Drag;
 
 [Section(icon: "mdi-cursor-pointer", sortIndex: 18)]
+[SectionGroup("behaviors", "Behaviors")]
 public partial class DragViewModel : ReactiveObject
 {
     [Reactive] private bool isEnabled;
