@@ -44,7 +44,7 @@
 
         <DataTemplate x:Key="VerticalItem" DataType="sections:ISection">
             <Grid Margin="{Binding $parent[SectionStrip].ItemPadding}" ColumnSpacing="{Binding $parent[SectionStrip].HorizontalIconLabelSpacing}"
-                  RowSpacing="{Binding $parent[SectionStrip].VerticalIconLabelSpacing}">
+                  RowSpacing="{Binding $parent[SectionStrip].VerticalIconLabelSpacing}" x:Name="SectionGrid">
                 <Grid.RowDefinitions>
                     <RowDefinition SharedSizeGroup="Icon" Height="Auto" />
                     <RowDefinition SharedSizeGroup="Label" Height="Auto" />
@@ -54,7 +54,7 @@
                 </Viewbox>
                 <TextBlock Grid.Row="1" DockPanel.Dock="Bottom"
                            TextAlignment="Center" TextWrapping="Wrap"
-                           HorizontalAlignment="Center" Text="{Binding FriendlyName}" />
+                           HorizontalAlignment="Center" TextTrimming="{x:Static TextTrimming.CharacterEllipsis}" Text="{Binding FriendlyName}" />
             </Grid>
         </DataTemplate>
 
@@ -63,7 +63,7 @@
                 <Viewbox Height="{Binding $parent[SectionStrip].IconSize}" Width="{Binding $self.Width}">
                     <ContentControl Margin="{Binding $parent[SectionStrip].IconMargin}" Content="{Binding Icon}" />
                 </Viewbox>
-                <TextBlock VerticalAlignment="Center" Text="{Binding FriendlyName}" />
+                <TextBlock VerticalAlignment="Center" TextTrimming="{x:Static TextTrimming.CharacterEllipsis}" Text="{Binding FriendlyName}" />
             </DockPanel>
         </DataTemplate>
 
@@ -71,10 +71,12 @@
             <StackPanel Spacing="6">
                 <TextBlock Classes="SectionStripGroupHeader"
                            Text="{Binding Group.FriendlyName}"
+                           TextTrimming="{x:Static TextTrimming.CharacterEllipsis}"
+                           FontWeight="Bold"
                            IsVisible="{Binding Group.FriendlyName, Converter={StaticResource StringNotNullOrWhiteSpaceConverter}}" />
                 <ListBox Background="Transparent"
                          ItemContainerTheme="{StaticResource SectionListItem}"
-                         SelectedItem="{Binding $parent[SectionStrip].SelectedSection, Mode=TwoWay}"
+                         SelectedValue="{Binding $parent[SectionStrip].SelectedSection, Mode=TwoWay}"
                          ItemsSource="{Binding Sections}">
                     <ListBox.DataTemplates>
                         <DataTemplate DataType="sections:ISection">
@@ -89,6 +91,7 @@
             <Setter Property="HorizontalIconLabelSpacing" Value="10" />
             <Setter Property="VerticalIconLabelSpacing" Value="4" />
             <Setter Property="ItemPadding" Value="5" />
+            <Setter Property="Padding" Value="10"></Setter>
             <Style Selector="^ /template/ ListBox">
                 <Setter Property="Background" Value="Transparent" />
             </Style>
@@ -98,16 +101,18 @@
             <Style Selector="^[Orientation=Vertical]">
                 <Setter Property="Template">
                     <ControlTemplate>
-                        <ItemsControl ItemsSource="{TemplateBinding SectionGroups}">
-                            <ItemsControl.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <StackPanel Spacing="{Binding $parent[SectionStrip].ItemSpacing}" />
-                                </ItemsPanelTemplate>
-                            </ItemsControl.ItemsPanel>
-                            <ItemsControl.ItemTemplate>
-                                <StaticResource ResourceKey="SectionGroupTemplate" />
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>
+                        <ScrollViewer>
+                            <ItemsControl Padding="{TemplateBinding Padding}" ItemsSource="{TemplateBinding SectionGroups}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Spacing="{Binding $parent[SectionStrip].ItemSpacing}" />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <StaticResource ResourceKey="SectionGroupTemplate" />
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </ScrollViewer>
                     </ControlTemplate>
                 </Setter>
             </Style>
