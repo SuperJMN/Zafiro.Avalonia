@@ -1,4 +1,3 @@
-using System;
 using System.Collections.ObjectModel;
 using System.Reactive.Disposables;
 using DynamicData;
@@ -13,7 +12,7 @@ public sealed class SectionGroupView : IDisposable
 
     public SectionGroupView(IGroup<ISection, string, SectionGroup> group)
     {
-        Group = group.GroupKey;
+        Group = group.Key;
 
         group.Cache.Connect()
             .AutoRefresh(section => section.SortOrder)
