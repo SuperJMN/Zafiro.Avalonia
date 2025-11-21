@@ -1,0 +1,15 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:samples="clr-namespace:TestApp.Samples"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="TestApp.Samples.WelcomeView" x:DataType="samples:WelcomeViewModel" FontSize="40">
+    <TextBlock TextAlignment="Center" TextWrapping="Wrap" VerticalAlignment="Center">
+        <TextBlock.Inlines>
+            <Run>Welcome to the </Run>
+            <LineBreak />
+            <Run>Zafiro.Avalonia Toolkit Demo</Run>
+        </TextBlock.Inlines>
+    </TextBlock>
+</UserControl>
