@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Reactive.Disposables;
 using Avalonia.Controls.Primitives;
 using Avalonia.Data;
@@ -45,9 +46,14 @@ public class SectionStrip : TemplatedControl
     public static readonly StyledProperty<double> VerticalIconLabelSpacingProperty = AvaloniaProperty.Register<SectionStrip, double>(
         nameof(VerticalIconLabelSpacing));
 
+    public static readonly DirectProperty<SectionStrip, IEnumerable<SectionGroupView>> SectionGroupsProperty = AvaloniaProperty.RegisterDirect<SectionStrip, IEnumerable<SectionGroupView>>(
+        nameof(SectionGroups), strip => strip.SectionGroups, (strip, value) => strip.SectionGroups = value);
+
     private readonly CompositeDisposable disposable = new();
 
     private IEnumerable<ISection> filteredSections;
+
+    private IEnumerable<SectionGroupView> sectionGroups = Enumerable.Empty<SectionGroupView>();
 
     public SectionStrip()
     {
@@ -60,6 +66,11 @@ public class SectionStrip : TemplatedControl
             .DisposeWith(disposable);
 
         FilteredSections = sectionSorter.Sections;
+
+        var sectionGrouper = new SectionGrouper(sectionChanges)
+            .DisposeWith(disposable);
+
+        SectionGroups = sectionGrouper.SectionGroups;
     }
 
     public Thickness IconMargin
@@ -132,5 +143,11 @@ public class SectionStrip : TemplatedControl
     {
         get => GetValue(VerticalIconLabelSpacingProperty);
         set => SetValue(VerticalIconLabelSpacingProperty, value);
+    }
+
+    public IEnumerable<SectionGroupView> SectionGroups
+    {
+        get => sectionGroups;
+        private set => SetAndRaise(SectionGroupsProperty, ref sectionGroups, value);
     }
 }
