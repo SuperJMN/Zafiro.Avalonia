@@ -12,7 +12,13 @@ public class NotificationService : INotificationService
 
     public NotificationService(Func<IManagedNotificationManager> factory)
     {
-        manager = new Lazy<IManagedNotificationManager>(factory);
+        manager = new Lazy<IManagedNotificationManager>(() =>
+        {
+            var adornerLayer = ApplicationUtils.CurrentAdornerLayer();
+
+            return adornerLayer.Map(layer => (IManagedNotificationManager)new AdornerNotificationManager(() => layer))
+                .GetValueOrDefault(factory());
+        });
     }
 
     public Task Show(string message, Maybe<string> title)
