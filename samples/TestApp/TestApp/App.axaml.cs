@@ -21,7 +21,7 @@ public class App : Application
         // Register Projektanker-based icon provider as the default for Zafiro.UI icons
         IconControlProviderRegistry.Register(new ProjektankerIconControlProvider(), asDefault: true);
 
-        this.Connect(() => new MainView(), view => CompositionRoot.Create(), () => new MainWindow());
+        this.Connect(() => new MainView(), view => CompositionRoot.Create(view), () => new MainWindow());
 
         base.OnFrameworkInitializationCompleted();
     }

@@ -8,21 +8,21 @@
   <PropertyGroup>
     <NoWarn>$(NoWarn);NU1605</NoWarn>
   </PropertyGroup>
-  <Import Project="..\Common.props"/>
+    <Import Project="..\Common.props"/>
   <ItemGroup>
-    <PackageReference Include="Avalonia"/>
-    <PackageReference Include="ReactiveUI"/>
-    <PackageReference Include="ReactiveUI.SourceGenerators"/>
-    <PackageReference Include="Xaml.Behaviors.Avalonia"/>
-    <PackageReference Include="Zafiro.UI"/>
+      <PackageReference Include="Avalonia"/>
+      <PackageReference Include="ReactiveUI"/>
+      <PackageReference Include="ReactiveUI.SourceGenerators"/>
+      <PackageReference Include="Xaml.Behaviors.Avalonia"/>
+      <PackageReference Include="Zafiro.UI"/>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Zafiro.Avalonia\Zafiro.Avalonia.csproj"/>
+      <ProjectReference Include="..\Zafiro.Avalonia\Zafiro.Avalonia.csproj"/>
     <!-- Run the source generator locally as an Analyzer during in-repo builds and packing -->
-    <ProjectReference Include="..\Zafiro.Avalonia.Generators\Zafiro.Avalonia.Generators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false"/>
+      <ProjectReference Include="..\Zafiro.Avalonia.Generators\Zafiro.Avalonia.Generators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false"/>
   </ItemGroup>
   <!-- Make .axaml files visible to the generator -->
   <ItemGroup>
-    <AdditionalFiles Include="**/*.axaml"/>
+      <AdditionalFiles Include="**/*.axaml"/>
   </ItemGroup>
 </Project>

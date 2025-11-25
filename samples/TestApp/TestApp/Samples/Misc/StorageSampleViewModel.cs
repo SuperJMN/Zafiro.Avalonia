@@ -4,19 +4,21 @@ using System.Reactive.Linq;
 using CSharpFunctionalExtensions;
 using ReactiveUI;
 using Zafiro.CSharpFunctionalExtensions;
-using Zafiro.FileSystem.Core;
-using Zafiro.FileSystem.Readonly;
+using Zafiro.DivineBytes;
 using Zafiro.UI;
+using Zafiro.UI.Shell.Utils;
 
 namespace TestApp.Samples.Misc;
 
+[Section("Storage", icon: "fa-database", sortIndex: 5)]
+[SectionGroup("misc", "Miscellaneous")]
 public class StorageSampleViewModel
 {
     public StorageSampleViewModel(IFileSystemPicker storage)
     {
         OpenFile = ReactiveCommand.CreateFromTask(async () =>
         {
-            Result<Maybe<IFile>> result = await storage.PickForOpen(new FileTypeFilter("All files", new[] { "*.jpg", "*.png", "*.gif", "*.bmp" }));
+            var result = await storage.PickForOpen(new FileTypeFilter("All files", ["*.jpg", "*.png", "*.gif", "*.bmp"]));
 
             return result.Map(maybe => maybe.Map(file => file)).GetValueOrDefault();
         });
@@ -24,12 +26,12 @@ public class StorageSampleViewModel
         var files = OpenFile.Values().Publish().RefCount();
 
         SelectedPaths = files.Select(file => file.Name);
-        SelectedBytes = files.Select(file => file.Bytes());
+        SelectedBytes = files.SelectMany(file => file.Bytes);
     }
 
     public IObservable<byte[]> SelectedBytes { get; set; }
 
     public IObservable<string> SelectedPaths { get; }
 
-    public ReactiveCommand<Unit, Maybe<IFile>> OpenFile { get; }
+    public ReactiveCommand<Unit, Maybe<INamedByteSource>> OpenFile { get; }
 }

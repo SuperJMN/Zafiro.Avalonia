@@ -16,19 +16,11 @@
         <PackageReference Include="Avalonia" />
         <PackageReference Include="Avalonia.Themes.Fluent" />
         <PackageReference Include="Avalonia.Fonts.Inter" />
-        <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
         <PackageReference Include="PanAndZoom" />
     </ItemGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\Zafiro.Avalonia\Zafiro.Avalonia.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <Compile Update="Graphs\GraphControl.axaml.cs">
-            <DependentUpon>GraphControl.axaml</DependentUpon>
-            <SubType>Code</SubType>
-        </Compile>
     </ItemGroup>
 
 </Project>
