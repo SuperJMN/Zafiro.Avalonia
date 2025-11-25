@@ -17,7 +17,7 @@ public sealed class SectionGroupView : IDisposable
         group.Cache.Connect()
             .AutoRefresh(section => section.SortOrder)
             .Sort(SortExpressionComparer<ISection>.Ascending(section => section.SortOrder))
-            .Bind(out ReadOnlyObservableCollection<ISection> sections)
+            .Bind(out var sections)
             .Subscribe()
             .DisposeWith(disposable);
 

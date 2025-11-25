@@ -16,7 +16,7 @@ public sealed class SectionGrouper : IDisposable
             .AutoRefresh(section => section.SortOrder)
             .AutoRefresh(section => section.Group)
             .Filter(section => section.IsVisible)
-            .Group(section => section.Group ?? SectionGroup.Default)
+            .Group(section => section.Group)
             .Transform(group => new SectionGroupView(group))
             .DisposeMany()
             .Bind(out var groups)

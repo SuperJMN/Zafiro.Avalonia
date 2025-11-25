@@ -61,9 +61,10 @@ public sealed class SectionsRegistrationGenerator : IIncrementalGenerator
             {
                 var iconSource = s.icon ?? "fa-window-maximize";
                 var groupFriendlyName = s.groupFriendlyName; // keep null if null
-                var group = s.groupKey is null
+                var groupName = groupFriendlyName ?? s.groupKey;
+                var group = groupName is null
                     ? "null"
-                    : $"new global::Zafiro.UI.Navigation.Sections.SectionGroup(\"{Escape(s.groupKey)}\", {(groupFriendlyName is null ? "null" : $"\"{Escape(groupFriendlyName)}\"")})";
+                    : $"new global::Zafiro.UI.Navigation.Sections.SectionGroup(\"{Escape(groupName)}\")";
                 sb.Append("            builder.Add<");
                 sb.Append(s.contractFqn);
                 sb.Append(">(\"");

@@ -10,33 +10,33 @@ namespace TestApp.Samples.Shell;
 [SectionGroup("shell", "Shell")]
 public class SectionStripViewModel
 {
-    private static readonly SectionGroup MainGroup = new("main", "Main");
-    private static readonly SectionGroup AdminGroup = new("admin", "Administration");
+    private static readonly SectionGroup MainGroup = new("Main");
+    private static readonly SectionGroup AdminGroup = new("Administration");
 
     public IEnumerable<ISection> GroupedSections { get; } = new List<ISection>
     {
-        new ContentSectionDesign
+        new SimpleSection
         {
             Name = "Dashboard",
             FriendlyName = "Dashboard",
             Icon = new Icon("fa-tachometer-alt"),
             Group = MainGroup
         },
-        new ContentSectionDesign
+        new SimpleSection
         {
             Name = "Analytics",
             FriendlyName = "Analytics",
             Icon = new Icon("fa-chart-line"),
             Group = MainGroup
         },
-        new ContentSectionDesign
+        new SimpleSection
         {
             Name = "Users",
             FriendlyName = "Users",
             Icon = new Icon("fa-users"),
             Group = AdminGroup
         },
-        new ContentSectionDesign
+        new SimpleSection
         {
             Name = "Settings",
             FriendlyName = "Settings",

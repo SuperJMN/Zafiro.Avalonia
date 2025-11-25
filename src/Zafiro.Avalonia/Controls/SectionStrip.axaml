@@ -10,22 +10,22 @@
             <SectionStrip Orientation="Horizontal" Width="300" MaxItemWidth="100" IconSize="10">
                 <SectionStrip.Sections>
                     <generic:List x:TypeArguments="sections:ISection">
-                        <ContentSectionDesign Name="Section1" IsVisible="False" FriendlyName="Section 1" Icon="{Icon fa-wallet}" />
-                        <ContentSectionDesign Name="Section2" FriendlyName="Section Wider" Icon="{Icon fa-wallet}" />
-                        <ContentSectionDesign Name="Section3" FriendlyName="Section 3" Icon="{Icon fa-wallet}" />
-                        <ContentSectionDesign Name="Section4" FriendlyName="Section Much Wider" Icon="{Icon fa-wallet}" />
-                        <ContentSectionDesign Name="Section5" FriendlyName="Section 5" Icon="{Icon fa-wallet}" />
+                        <SimpleSection Name="Section1" IsVisible="False" FriendlyName="Section 1" Icon="{Icon fa-wallet}" />
+                        <SimpleSection Name="Section2" FriendlyName="Section Wider" Icon="{Icon fa-wallet}" />
+                        <SimpleSection Name="Section3" FriendlyName="Section 3" Icon="{Icon fa-wallet}" />
+                        <SimpleSection Name="Section4" FriendlyName="Section Much Wider" Icon="{Icon fa-wallet}" />
+                        <SimpleSection Name="Section5" FriendlyName="Section 5" Icon="{Icon fa-wallet}" />
                     </generic:List>
                 </SectionStrip.Sections>
             </SectionStrip>
             <SectionStrip Orientation="Vertical" Height="300" MaxItemWidth="100" IconSize="10">
                 <SectionStrip.Sections>
                     <generic:List x:TypeArguments="sections:ISection">
-                        <ContentSectionDesign Name="Section1" FriendlyName="Section 1" Icon="{Icon fa-wallet}" />
-                        <ContentSectionDesign Name="Section2" IsVisible="False" FriendlyName="Section 2" Icon="{Icon fa-wallet}" />
-                        <ContentSectionDesign Name="Section3" FriendlyName="Section 3" Icon="{Icon fa-wallet}" />
-                        <ContentSectionDesign Name="Section4" FriendlyName="Section 4" Icon="{Icon fa-wallet}" />
-                        <ContentSectionDesign Name="Section5" FriendlyName="Section 5" Icon="{Icon fa-wallet}" />
+                        <SimpleSection Name="Section1" FriendlyName="Section 1" Icon="{Icon fa-wallet}" />
+                        <SimpleSection Name="Section2" IsVisible="False" FriendlyName="Section 2" Icon="{Icon fa-wallet}" />
+                        <SimpleSection Name="Section3" FriendlyName="Section 3" Icon="{Icon fa-wallet}" />
+                        <SimpleSection Name="Section4" FriendlyName="Section 4" Icon="{Icon fa-wallet}" />
+                        <SimpleSection Name="Section5" FriendlyName="Section 5" Icon="{Icon fa-wallet}" />
                     </generic:List>
                 </SectionStrip.Sections>
             </SectionStrip>
@@ -132,8 +132,8 @@
             <StackPanel Spacing="6">
                 <controls:SectionStripGroupHeader
                     Theme="{Binding $parent[SectionStrip].GroupHeaderTheme, TargetNullValue={StaticResource {x:Type controls:SectionStripGroupHeader}}}"
-                    Header="{Binding Group.FriendlyName}"
-                    IsVisible="{Binding Group.FriendlyName, Converter={StaticResource StringNotNullOrWhiteSpaceConverter}}" />
+                    Header="{Binding Group.Name}"
+                    IsVisible="{Binding Group.Name, Converter={StaticResource StringNotNullOrWhiteSpaceConverter}}" />
                 <controls:SectionStripListBox Background="Transparent"
                                               ItemContainerTheme="{Binding $parent[SectionStrip].ItemContainerTheme, TargetNullValue={StaticResource {x:Type controls:SectionStripItem}}}"
                                               SelectedValue="{Binding $parent[SectionStrip].SelectedSection, Mode=TwoWay}"
