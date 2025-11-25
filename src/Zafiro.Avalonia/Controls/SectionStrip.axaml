@@ -129,7 +129,7 @@
                 <controls:SectionStripGroupHeader
                     Header="{Binding Group.FriendlyName}"
                     IsVisible="{Binding Group.FriendlyName, Converter={StaticResource StringNotNullOrWhiteSpaceConverter}}" />
-                <ListBox Background="Transparent"
+                <controls:SectionStripListBox Background="Transparent"
                          ItemContainerTheme="{Binding $parent[SectionStrip].ItemContainerTheme, TargetNullValue={StaticResource {x:Type controls:SectionStripItem}}}"
                          SelectedValue="{Binding $parent[SectionStrip].SelectedSection, Mode=TwoWay}"
                          ItemsSource="{Binding Sections}"
@@ -174,7 +174,7 @@
                                             DockPanel.Dock="Right" HorizontalAlignment="Right" Content="...">
                                 <Button.Flyout>
                                     <Flyout>
-                                        <ListBox x:Name="OtherSections" SelectedItem="{TemplateBinding SelectedSection, Mode=TwoWay}"
+                                        <controls:SectionStripListBox x:Name="OtherSections" SelectedItem="{TemplateBinding SelectedSection, Mode=TwoWay}"
                                                  ItemContainerTheme="{Binding ItemContainerTheme, RelativeSource={RelativeSource TemplatedParent}, TargetNullValue={StaticResource {x:Type controls:SectionStripItem}}}"
                                                  ItemTemplate="{Binding ItemTemplate, RelativeSource={RelativeSource TemplatedParent}, TargetNullValue={StaticResource VerticalItem}}"
                                                  ItemsSource="{Binding #VisibilityExposerBehavior.InvisibleItems}" />
@@ -186,13 +186,13 @@
                                     </EventTriggerBehavior>
                                 </Interaction.Behaviors>
                             </EnhancedButton>
-                            <ListBox ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                            <controls:SectionStripListBox ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                                      Background="{TemplateBinding Background}"
                                      ItemContainerTheme="{Binding ItemContainerTheme, RelativeSource={RelativeSource TemplatedParent}, TargetNullValue={StaticResource {x:Type controls:SectionStripItem}}}"
                                      ItemTemplate="{Binding ItemTemplate, RelativeSource={RelativeSource TemplatedParent}, TargetNullValue={StaticResource VerticalItem}}"
                                      SelectedItem="{TemplateBinding SelectedSection, Mode=TwoWay}"
                                      ItemsSource="{TemplateBinding FilteredSections}">
-                                <ListBox.ItemsPanel>
+                                <controls:SectionStripListBox.ItemsPanel>
                                     <ItemsPanelTemplate>
                                         <UniformStripPanel
                                             Grid.IsSharedSizeScope="True"
@@ -200,11 +200,11 @@
                                             ItemMinWidth="{Binding $parent[SectionStrip].MinItemWidth}"
                                             ItemMaxWidth="{Binding $parent[SectionStrip].MaxItemWidth}" />
                                     </ItemsPanelTemplate>
-                                </ListBox.ItemsPanel>
+                                </controls:SectionStripListBox.ItemsPanel>
                                 <Interaction.Behaviors>
                                     <ItemVisibilityMonitoringBehavior x:Name="VisibilityExposerBehavior" />
                                 </Interaction.Behaviors>
-                            </ListBox>
+                            </controls:SectionStripListBox>
                         </DockPanel>
                     </ControlTemplate>
                 </Setter>
