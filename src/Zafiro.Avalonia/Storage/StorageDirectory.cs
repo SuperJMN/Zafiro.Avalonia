@@ -4,11 +4,11 @@ using CSharpFunctionalExtensions;
 using Zafiro.CSharpFunctionalExtensions;
 using Zafiro.FileSystem.Core;
 using Zafiro.FileSystem.Mutable;
-using Zafiro.FileSystem.Readonly;
+using Path = Zafiro.DivineBytes.Path;
 
 namespace Zafiro.Avalonia.Storage;
 
-public class StorageDirectory : IMutableDirectory, IRooted
+public class StorageDirectory : IMutableDirectory
 {
     private readonly IStorageFolder folder;
 
@@ -17,12 +17,14 @@ public class StorageDirectory : IMutableDirectory, IRooted
         this.folder = folder;
     }
 
-    public async Task<Result<IEnumerable<IMutableNode>>> MutableChildren()
+    public Path Path => folder.Path.ToString();
+
+    public Task<Result<IEnumerable<IMutableNode>>> GetChildren(CancellationToken cancellationToken = default)
     {
-        return await Result.Try(() => folder.GetItemsAsync())
+        return Result.Try(() => folder.GetItemsAsync())
             .Map(async a =>
             {
-                var storageItems = await a.ToListAsync().ConfigureAwait(false);
+                var storageItems = await a.ToListAsync(cancellationToken).ConfigureAwait(false);
                 return storageItems.AsEnumerable();
             })
             .MapEach(ToMutableNode)
@@ -30,55 +32,65 @@ public class StorageDirectory : IMutableDirectory, IRooted
             .Map(nodes => nodes.AsEnumerable());
     }
 
-    public Task<Result> AddOrUpdate(IFile data, ISubject<double>? progress = null)
+    public IObservable<IMutableFile> FileCreated { get; } = new Subject<IMutableFile>();
+    public IObservable<IMutableDirectory> DirectoryCreated { get; } = new Subject<IMutableDirectory>();
+    public IObservable<string> FileDeleted { get; } = new Subject<string>();
+    public IObservable<string> DirectoryDeleted { get; } = new Subject<string>();
+
+    public async Task<Result> DeleteFile(string name)
     {
-        throw new NotImplementedException();
+        return await Result.Try(async () =>
+        {
+            var file = await folder.GetItemsAsync().OfType<IStorageFile>().FirstOrDefaultAsync(f => f.Name == name).ConfigureAwait(false);
+            if (file is not null)
+            {
+                await file.DeleteAsync().ConfigureAwait(false);
+            }
+        });
     }
 
-    public Task<Result<IMutableFile>> Get(string name)
+    public async Task<Result> DeleteSubdirectory(string name)
     {
-        throw new NotImplementedException();
+        return await Result.Try(async () =>
+        {
+            var dir = await folder.GetItemsAsync().OfType<IStorageFolder>().FirstOrDefaultAsync(f => f.Name == name).ConfigureAwait(false);
+            if (dir is not null)
+            {
+                await dir.DeleteAsync().ConfigureAwait(false);
+            }
+        });
     }
 
-    public Task<Result> DeleteFile(string name)
+    public async Task<Result<IMutableFile>> CreateFile(string entryName)
     {
-        throw new NotImplementedException();
+        return await Result.Try(async () =>
+        {
+            var file = await folder.CreateFileAsync(entryName).ConfigureAwait(false);
+            return (IMutableFile)new MutableStorageFile(file!);
+        });
     }
 
-    public Task<Result> DeleteSubdirectory(string name)
+    public async Task<Result<IMutableDirectory>> CreateSubdirectory(string name)
     {
-        throw new NotImplementedException();
+        return await Result.Try(async () =>
+        {
+            var subFolder = await folder.CreateFolderAsync(name).ConfigureAwait(false);
+            return (IMutableDirectory)new StorageDirectory(subFolder!);
+        });
     }
 
-    public Task<Result<IMutableFile>> CreateFile(string entryName)
+    public async Task<Result<bool>> HasFile(string name)
     {
-        throw new NotImplementedException();
+        return await Result.Try(async () => await folder.GetItemsAsync().OfType<IStorageFile>().AnyAsync(f => f.Name == name).ConfigureAwait(false));
     }
 
-    public Task<Result<IMutableDirectory>> CreateSubdirectory(string name)
+    public async Task<Result<bool>> HasSubdirectory(string name)
     {
-        throw new NotImplementedException();
+        return await Result.Try(async () => await folder.GetItemsAsync().OfType<IStorageFolder>().AnyAsync(f => f.Name == name).ConfigureAwait(false));
     }
 
-    public Task<Result<IEnumerable<IMutableNode>>> GetChildren(CancellationToken cancellationToken = new CancellationToken())
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<Result<bool>> HasFile(string name)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<Result<bool>> HasSubdirectory(string name)
-    {
-        throw new NotImplementedException();
-    }
-
-    public IObservable<IMutableFile> FileCreated { get; }
-    public IObservable<IMutableDirectory> DirectoryCreated { get; }
-    public IObservable<string> FileDeleted { get; }
-    public IObservable<string> DirectoryDeleted { get; }
+    public string Name => folder.Name;
+    public bool IsHidden => false;
 
     public Task<Result> Delete()
     {
@@ -95,10 +107,8 @@ public class StorageDirectory : IMutableDirectory, IRooted
         };
     }
 
-    public string Name => folder.Name;
-    public Task<Result<IEnumerable<INode>>> Children() => MutableChildren().Map(x => x.Cast<INode>());
-    public ZafiroPath Path => folder.Path.ToString();
-    public bool IsHidden => false;
+    public Task<Result<IEnumerable<INode>>> Children() => GetChildren().Map(x => x.Cast<INode>());
+
     public Task<Result> Create()
     {
         throw new NotImplementedException();

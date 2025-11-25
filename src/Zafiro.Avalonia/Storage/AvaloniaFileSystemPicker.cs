@@ -2,23 +2,15 @@ using Avalonia.Platform.Storage;
 using CSharpFunctionalExtensions;
 using JetBrains.Annotations;
 using Zafiro.CSharpFunctionalExtensions;
-using Zafiro.FileSystem;
+using Zafiro.DivineBytes;
 using Zafiro.FileSystem.Mutable;
-using Zafiro.FileSystem.Readonly;
 
 namespace Zafiro.Avalonia.Storage;
 
 [PublicAPI]
-public class AvaloniaFileSystemPicker : IFileSystemPicker
+public class AvaloniaFileSystemPicker(IStorageProvider storageProvider) : IFileSystemPicker
 {
-    private readonly IStorageProvider storageProvider;
-
-    public AvaloniaFileSystemPicker(IStorageProvider storageProvider)
-    {
-        this.storageProvider = storageProvider;
-    }
-
-    public Task<Result<IEnumerable<IFile>>> PickForOpenMultiple(params FileTypeFilter[] filters)
+    public Task<Result<IEnumerable<INamedByteSource>>> PickForOpenMultiple(params FileTypeFilter[] filters)
     {
         return PickCore(new FilePickerOpenOptions
         {
@@ -27,7 +19,7 @@ public class AvaloniaFileSystemPicker : IFileSystemPicker
         });
     }
 
-    public Task<Result<Maybe<IFile>>> PickForOpen(params FileTypeFilter[] filters)
+    public Task<Result<Maybe<INamedByteSource>>> PickForOpen(params FileTypeFilter[] filters)
     {
         return PickCore(new FilePickerOpenOptions
         {
@@ -36,7 +28,8 @@ public class AvaloniaFileSystemPicker : IFileSystemPicker
         }).Map(files => files.TryFirst());
     }
 
-    public async Task<Maybe<IMutableFile>> PickForSave(string desiredName, Maybe<string> defaultExtension,
+    public async Task<Maybe<IMutableFile>> PickForSave(string desiredName,
+        Maybe<string> defaultExtension,
         params FileTypeFilter[] filters)
     {
         var file = await storageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
@@ -49,17 +42,17 @@ public class AvaloniaFileSystemPicker : IFileSystemPicker
         return Maybe.From<IMutableFile>(file is null ? default! : new MutableStorageFile(file));
     }
 
-    private Task<Result<IEnumerable<IFile>>> PickCore(FilePickerOpenOptions filePickerOpenOptions)
+    public Task<Maybe<IMutableDirectory>> PickFolder()
+    {
+        return PickFolders(new FolderPickerOpenOptions { AllowMultiple = false }).Bind(x => x.TryFirst());
+    }
+
+    private Task<Result<IEnumerable<INamedByteSource>>> PickCore(FilePickerOpenOptions filePickerOpenOptions)
     {
         return Result.Try(async () => (await storageProvider.OpenFilePickerAsync(filePickerOpenOptions)).AsEnumerable())
             .MapEach(storageFile => new MutableStorageFile(storageFile))
             .MapEach(x => x.AsReadOnly())
             .CombineSequentially();
-    }
-
-    public Task<Maybe<IMutableDirectory>> PickFolder()
-    {
-        return PickFolders(new FolderPickerOpenOptions { AllowMultiple = false }).Bind(x => x.TryFirst());
     }
 
     public async Task<Maybe<IEnumerable<IMutableDirectory>>> PickFolders(
