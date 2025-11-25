@@ -99,6 +99,10 @@
             </Setter>
         </ControlTheme>
 
+        <!-- SectionStripListBox inherits ListBox theme -->
+        <ControlTheme x:Key="{x:Type controls:SectionStripListBox}" TargetType="controls:SectionStripListBox"
+                      BasedOn="{StaticResource {x:Type ListBox}}" />
+
         <DataTemplate x:Key="VerticalItem" DataType="sections:ISection">
             <Grid Margin="{Binding $parent[SectionStrip].ItemPadding}" ColumnSpacing="{Binding $parent[SectionStrip].HorizontalIconLabelSpacing}"
                   RowSpacing="{Binding $parent[SectionStrip].VerticalIconLabelSpacing}" x:Name="SectionGrid">
