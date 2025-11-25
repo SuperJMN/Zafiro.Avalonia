@@ -75,6 +75,30 @@
             </Style>
         </ControlTheme>
 
+        <!-- Default theme for SectionStripGroupHeader - can be customized via Style selectors -->
+        <ControlTheme x:Key="{x:Type controls:SectionStripGroupHeader}" TargetType="controls:SectionStripGroupHeader">
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="Foreground" Value="{DynamicResource SystemControlForegroundBaseHighBrush}" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="Margin" Value="0,0,0,4" />
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Padding="{TemplateBinding Padding}">
+                        <ContentPresenter x:Name="PART_HeaderPresenter"
+                                          Content="{TemplateBinding Header}"
+                                          ContentTemplate="{TemplateBinding HeaderTemplate}"
+                                          HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+                    </Border>
+                </ControlTemplate>
+            </Setter>
+        </ControlTheme>
+
         <DataTemplate x:Key="VerticalItem" DataType="sections:ISection">
             <Grid Margin="{Binding $parent[SectionStrip].ItemPadding}" ColumnSpacing="{Binding $parent[SectionStrip].HorizontalIconLabelSpacing}"
                   RowSpacing="{Binding $parent[SectionStrip].VerticalIconLabelSpacing}" x:Name="SectionGrid">
@@ -102,11 +126,9 @@
 
         <DataTemplate x:Key="SectionGroupTemplate" DataType="controls:SectionGroupView">
             <StackPanel Spacing="6">
-                <TextBlock Classes="SectionStripGroupHeader"
-                           Text="{Binding Group.FriendlyName}"
-                           TextTrimming="{x:Static TextTrimming.CharacterEllipsis}"
-                           FontWeight="Bold"
-                           IsVisible="{Binding Group.FriendlyName, Converter={StaticResource StringNotNullOrWhiteSpaceConverter}}" />
+                <controls:SectionStripGroupHeader
+                    Header="{Binding Group.FriendlyName}"
+                    IsVisible="{Binding Group.FriendlyName, Converter={StaticResource StringNotNullOrWhiteSpaceConverter}}" />
                 <ListBox Background="Transparent"
                          ItemContainerTheme="{Binding $parent[SectionStrip].ItemContainerTheme, TargetNullValue={StaticResource {x:Type controls:SectionStripItem}}}"
                          SelectedValue="{Binding $parent[SectionStrip].SelectedSection, Mode=TwoWay}"
