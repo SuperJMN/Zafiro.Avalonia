@@ -131,13 +131,14 @@
         <DataTemplate x:Key="SectionGroupTemplate" DataType="controls:SectionGroupView">
             <StackPanel Spacing="6">
                 <controls:SectionStripGroupHeader
+                    Theme="{Binding $parent[SectionStrip].GroupHeaderTheme, TargetNullValue={StaticResource {x:Type controls:SectionStripGroupHeader}}}"
                     Header="{Binding Group.FriendlyName}"
                     IsVisible="{Binding Group.FriendlyName, Converter={StaticResource StringNotNullOrWhiteSpaceConverter}}" />
                 <controls:SectionStripListBox Background="Transparent"
-                         ItemContainerTheme="{Binding $parent[SectionStrip].ItemContainerTheme, TargetNullValue={StaticResource {x:Type controls:SectionStripItem}}}"
-                         SelectedValue="{Binding $parent[SectionStrip].SelectedSection, Mode=TwoWay}"
-                         ItemsSource="{Binding Sections}"
-                         ItemTemplate="{Binding $parent[SectionStrip].ItemTemplate, TargetNullValue={StaticResource HorizontalItem}}" />
+                                              ItemContainerTheme="{Binding $parent[SectionStrip].ItemContainerTheme, TargetNullValue={StaticResource {x:Type controls:SectionStripItem}}}"
+                                              SelectedValue="{Binding $parent[SectionStrip].SelectedSection, Mode=TwoWay}"
+                                              ItemsSource="{Binding Sections}"
+                                              ItemTemplate="{Binding $parent[SectionStrip].ItemTemplate, TargetNullValue={StaticResource HorizontalItem}}" />
             </StackPanel>
         </DataTemplate>
 
@@ -179,9 +180,9 @@
                                 <Button.Flyout>
                                     <Flyout>
                                         <controls:SectionStripListBox x:Name="OtherSections" SelectedItem="{TemplateBinding SelectedSection, Mode=TwoWay}"
-                                                 ItemContainerTheme="{Binding ItemContainerTheme, RelativeSource={RelativeSource TemplatedParent}, TargetNullValue={StaticResource {x:Type controls:SectionStripItem}}}"
-                                                 ItemTemplate="{Binding ItemTemplate, RelativeSource={RelativeSource TemplatedParent}, TargetNullValue={StaticResource VerticalItem}}"
-                                                 ItemsSource="{Binding #VisibilityExposerBehavior.InvisibleItems}" />
+                                                                      ItemContainerTheme="{Binding ItemContainerTheme, RelativeSource={RelativeSource TemplatedParent}, TargetNullValue={StaticResource {x:Type controls:SectionStripItem}}}"
+                                                                      ItemTemplate="{Binding ItemTemplate, RelativeSource={RelativeSource TemplatedParent}, TargetNullValue={StaticResource VerticalItem}}"
+                                                                      ItemsSource="{Binding #VisibilityExposerBehavior.InvisibleItems}" />
                                     </Flyout>
                                 </Button.Flyout>
                                 <Interaction.Behaviors>
@@ -191,11 +192,11 @@
                                 </Interaction.Behaviors>
                             </EnhancedButton>
                             <controls:SectionStripListBox ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                                     Background="{TemplateBinding Background}"
-                                     ItemContainerTheme="{Binding ItemContainerTheme, RelativeSource={RelativeSource TemplatedParent}, TargetNullValue={StaticResource {x:Type controls:SectionStripItem}}}"
-                                     ItemTemplate="{Binding ItemTemplate, RelativeSource={RelativeSource TemplatedParent}, TargetNullValue={StaticResource VerticalItem}}"
-                                     SelectedItem="{TemplateBinding SelectedSection, Mode=TwoWay}"
-                                     ItemsSource="{TemplateBinding FilteredSections}">
+                                                          Background="{TemplateBinding Background}"
+                                                          ItemContainerTheme="{Binding ItemContainerTheme, RelativeSource={RelativeSource TemplatedParent}, TargetNullValue={StaticResource {x:Type controls:SectionStripItem}}}"
+                                                          ItemTemplate="{Binding ItemTemplate, RelativeSource={RelativeSource TemplatedParent}, TargetNullValue={StaticResource VerticalItem}}"
+                                                          SelectedItem="{TemplateBinding SelectedSection, Mode=TwoWay}"
+                                                          ItemsSource="{TemplateBinding FilteredSections}">
                                 <controls:SectionStripListBox.ItemsPanel>
                                     <ItemsPanelTemplate>
                                         <UniformStripPanel

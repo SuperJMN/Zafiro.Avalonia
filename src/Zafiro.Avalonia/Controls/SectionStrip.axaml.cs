@@ -1,4 +1,3 @@
-using System.Linq;
 using System.Reactive.Disposables;
 using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Templates;
@@ -56,6 +55,9 @@ public class SectionStrip : TemplatedControl
 
     public static readonly StyledProperty<ControlTheme?> ItemContainerThemeProperty = AvaloniaProperty.Register<SectionStrip, ControlTheme?>(
         nameof(ItemContainerTheme));
+
+    public static readonly StyledProperty<ControlTheme?> GroupHeaderThemeProperty = AvaloniaProperty.Register<SectionStrip, ControlTheme?>(
+        nameof(GroupHeaderTheme));
 
     private readonly CompositeDisposable disposable = new();
 
@@ -177,5 +179,15 @@ public class SectionStrip : TemplatedControl
     {
         get => GetValue(ItemContainerThemeProperty);
         set => SetValue(ItemContainerThemeProperty, value);
+    }
+
+    /// <summary>
+    /// Gets or sets the theme applied to each <see cref="SectionStripGroupHeader"/>.
+    /// When null, the default SectionStripGroupHeader theme is used.
+    /// </summary>
+    public ControlTheme? GroupHeaderTheme
+    {
+        get => GetValue(GroupHeaderThemeProperty);
+        set => SetValue(GroupHeaderThemeProperty, value);
     }
 }
