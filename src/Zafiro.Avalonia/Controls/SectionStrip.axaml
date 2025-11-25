@@ -36,10 +36,43 @@
 
         <conv:StringNotNullOrWhiteSpaceConverter x:Key="StringNotNullOrWhiteSpaceConverter" />
 
-        <ControlTheme x:Key="SectionListItem" TargetType="ListBoxItem" x:DataType="sections:ISection"
-                      BasedOn="{StaticResource {x:Type ListBoxItem}}">
+        <!-- Default theme for SectionStripItem - can be customized via SectionStrip.ItemContainerTheme or Style selectors -->
+        <ControlTheme x:Key="{x:Type controls:SectionStripItem}" TargetType="controls:SectionStripItem">
             <Setter Property="Padding" Value="0" />
             <Setter Property="Focusable" Value="False" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="CornerRadius" Value="4" />
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Padding="{TemplateBinding Padding}">
+                        <ContentPresenter x:Name="PART_ContentPresenter"
+                                          Content="{TemplateBinding Content}"
+                                          ContentTemplate="{TemplateBinding ContentTemplate}"
+                                          HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+                    </Border>
+                </ControlTemplate>
+            </Setter>
+
+            <Style Selector="^:pointerover">
+                <Setter Property="Background" Value="{DynamicResource SystemControlHighlightListLowBrush}" />
+            </Style>
+
+            <Style Selector="^:selected">
+                <Setter Property="Background" Value="{DynamicResource SystemControlHighlightListAccentLowBrush}" />
+            </Style>
+
+            <Style Selector="^:selected:pointerover">
+                <Setter Property="Background" Value="{DynamicResource SystemControlHighlightListAccentMediumBrush}" />
+            </Style>
+
+            <Style Selector="^:pressed">
+                <Setter Property="Background" Value="{DynamicResource SystemControlHighlightListMediumBrush}" />
+            </Style>
         </ControlTheme>
 
         <DataTemplate x:Key="VerticalItem" DataType="sections:ISection">
@@ -75,15 +108,10 @@
                            FontWeight="Bold"
                            IsVisible="{Binding Group.FriendlyName, Converter={StaticResource StringNotNullOrWhiteSpaceConverter}}" />
                 <ListBox Background="Transparent"
-                         ItemContainerTheme="{StaticResource SectionListItem}"
+                         ItemContainerTheme="{Binding $parent[SectionStrip].ItemContainerTheme, TargetNullValue={StaticResource {x:Type controls:SectionStripItem}}}"
                          SelectedValue="{Binding $parent[SectionStrip].SelectedSection, Mode=TwoWay}"
-                         ItemsSource="{Binding Sections}">
-                    <ListBox.DataTemplates>
-                        <DataTemplate DataType="sections:ISection">
-                            <ContentControl Content="{Binding}" ContentTemplate="{StaticResource HorizontalItem}" />
-                        </DataTemplate>
-                    </ListBox.DataTemplates>
-                </ListBox>
+                         ItemsSource="{Binding Sections}"
+                         ItemTemplate="{Binding $parent[SectionStrip].ItemTemplate, TargetNullValue={StaticResource HorizontalItem}}" />
             </StackPanel>
         </DataTemplate>
 
@@ -120,19 +148,14 @@
                 <Setter Property="Template">
                     <ControlTemplate>
                         <DockPanel>
-                            <DockPanel.DataTemplates>
-                                <DataTemplate DataType="sections:ISection">
-                                    <ContentControl Content="{Binding}" ContentTemplate="{StaticResource VerticalItem}" />
-                                </DataTemplate>
-                            </DockPanel.DataTemplates>
                             <EnhancedButton VerticalAlignment="Stretch" x:Name="Button" IsVisible="{Binding !!#VisibilityExposerBehavior.InvisibleItems.Count}"
                                             DockPanel.Dock="Right" HorizontalAlignment="Right" Content="...">
                                 <Button.Flyout>
                                     <Flyout>
                                         <ListBox x:Name="OtherSections" SelectedItem="{TemplateBinding SelectedSection, Mode=TwoWay}"
-                                                 ItemContainerTheme="{StaticResource SectionListItem}"
-                                                 ItemsSource="{Binding #VisibilityExposerBehavior.InvisibleItems}">
-                                        </ListBox>
+                                                 ItemContainerTheme="{Binding ItemContainerTheme, RelativeSource={RelativeSource TemplatedParent}, TargetNullValue={StaticResource {x:Type controls:SectionStripItem}}}"
+                                                 ItemTemplate="{Binding ItemTemplate, RelativeSource={RelativeSource TemplatedParent}, TargetNullValue={StaticResource VerticalItem}}"
+                                                 ItemsSource="{Binding #VisibilityExposerBehavior.InvisibleItems}" />
                                     </Flyout>
                                 </Button.Flyout>
                                 <Interaction.Behaviors>
@@ -143,8 +166,10 @@
                             </EnhancedButton>
                             <ListBox ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                                      Background="{TemplateBinding Background}"
-                                     ItemContainerTheme="{StaticResource SectionListItem}"
-                                     SelectedItem="{TemplateBinding SelectedSection, Mode=TwoWay}" ItemsSource="{TemplateBinding FilteredSections}">
+                                     ItemContainerTheme="{Binding ItemContainerTheme, RelativeSource={RelativeSource TemplatedParent}, TargetNullValue={StaticResource {x:Type controls:SectionStripItem}}}"
+                                     ItemTemplate="{Binding ItemTemplate, RelativeSource={RelativeSource TemplatedParent}, TargetNullValue={StaticResource VerticalItem}}"
+                                     SelectedItem="{TemplateBinding SelectedSection, Mode=TwoWay}"
+                                     ItemsSource="{TemplateBinding FilteredSections}">
                                 <ListBox.ItemsPanel>
                                     <ItemsPanelTemplate>
                                         <UniformStripPanel
