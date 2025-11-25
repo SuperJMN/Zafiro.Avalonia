@@ -19,9 +19,9 @@ public class ShellDesign : IShell
 
     public IEnumerable<ISection> Sections =>
     [
-        new ContentSectionDesign { Name = "Hi Test section 1. Very long for the testing", Icon = new Icon() { Source = "fa-wallet", }, Content = Observable.Return<object>("Test") },
-        new ContentSectionDesign { Name = "Test section 2", Icon = new Icon() { Source = "fa-gear" } },
-        new ContentSectionDesign { Name = "Test section 3", Icon = new Icon() { Source = "fa-user" } }
+        new SimpleSection { Name = "Hi Test section 1. Very long for the testing", Icon = new Icon() { Source = "fa-wallet", }, ContentValue = "Test" },
+        new SimpleSection { Name = "Test section 2", Icon = new Icon() { Source = "fa-gear" } },
+        new SimpleSection { Name = "Test section 3", Icon = new Icon() { Source = "fa-user" } }
     ];
 
     public ISection SelectedSection { get; set; }

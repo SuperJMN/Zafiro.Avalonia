@@ -1,8 +1,9 @@
-using System.Linq;
 using System.Reactive.Disposables;
 using Avalonia.Controls.Primitives;
+using Avalonia.Controls.Templates;
 using Avalonia.Data;
 using Avalonia.Layout;
+using Avalonia.Styling;
 using DynamicData;
 using Zafiro.Reactive;
 using Zafiro.UI.Navigation.Sections;
@@ -48,6 +49,15 @@ public class SectionStrip : TemplatedControl
 
     public static readonly DirectProperty<SectionStrip, IEnumerable<SectionGroupView>> SectionGroupsProperty = AvaloniaProperty.RegisterDirect<SectionStrip, IEnumerable<SectionGroupView>>(
         nameof(SectionGroups), strip => strip.SectionGroups, (strip, value) => strip.SectionGroups = value);
+
+    public static readonly StyledProperty<IDataTemplate?> ItemTemplateProperty = AvaloniaProperty.Register<SectionStrip, IDataTemplate?>(
+        nameof(ItemTemplate));
+
+    public static readonly StyledProperty<ControlTheme?> ItemContainerThemeProperty = AvaloniaProperty.Register<SectionStrip, ControlTheme?>(
+        nameof(ItemContainerTheme));
+
+    public static readonly StyledProperty<ControlTheme?> GroupHeaderThemeProperty = AvaloniaProperty.Register<SectionStrip, ControlTheme?>(
+        nameof(GroupHeaderTheme));
 
     private readonly CompositeDisposable disposable = new();
 
@@ -149,5 +159,35 @@ public class SectionStrip : TemplatedControl
     {
         get => sectionGroups;
         private set => SetAndRaise(SectionGroupsProperty, ref sectionGroups, value);
+    }
+
+    /// <summary>
+    /// Gets or sets the template used to display the content of each section item.
+    /// When null, the default template (VerticalItem or HorizontalItem) is used based on orientation.
+    /// </summary>
+    public IDataTemplate? ItemTemplate
+    {
+        get => GetValue(ItemTemplateProperty);
+        set => SetValue(ItemTemplateProperty, value);
+    }
+
+    /// <summary>
+    /// Gets or sets the theme applied to each <see cref="SectionStripItem"/> container.
+    /// When null, the default SectionStripItem theme is used.
+    /// </summary>
+    public ControlTheme? ItemContainerTheme
+    {
+        get => GetValue(ItemContainerThemeProperty);
+        set => SetValue(ItemContainerThemeProperty, value);
+    }
+
+    /// <summary>
+    /// Gets or sets the theme applied to each <see cref="SectionStripGroupHeader"/>.
+    /// When null, the default SectionStripGroupHeader theme is used.
+    /// </summary>
+    public ControlTheme? GroupHeaderTheme
+    {
+        get => GetValue(GroupHeaderThemeProperty);
+        set => SetValue(GroupHeaderThemeProperty, value);
     }
 }

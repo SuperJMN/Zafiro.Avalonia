@@ -10,22 +10,22 @@
             <SectionStrip Orientation="Horizontal" Width="300" MaxItemWidth="100" IconSize="10">
                 <SectionStrip.Sections>
                     <generic:List x:TypeArguments="sections:ISection">
-                        <ContentSectionDesign Name="Section1" IsVisible="False" FriendlyName="Section 1" Icon="{Icon fa-wallet}" />
-                        <ContentSectionDesign Name="Section2" FriendlyName="Section Wider" Icon="{Icon fa-wallet}" />
-                        <ContentSectionDesign Name="Section3" FriendlyName="Section 3" Icon="{Icon fa-wallet}" />
-                        <ContentSectionDesign Name="Section4" FriendlyName="Section Much Wider" Icon="{Icon fa-wallet}" />
-                        <ContentSectionDesign Name="Section5" FriendlyName="Section 5" Icon="{Icon fa-wallet}" />
+                        <SimpleSection Name="Section1" IsVisible="False" FriendlyName="Section 1" Icon="{Icon fa-wallet}" />
+                        <SimpleSection Name="Section2" FriendlyName="Section Wider" Icon="{Icon fa-wallet}" />
+                        <SimpleSection Name="Section3" FriendlyName="Section 3" Icon="{Icon fa-wallet}" />
+                        <SimpleSection Name="Section4" FriendlyName="Section Much Wider" Icon="{Icon fa-wallet}" />
+                        <SimpleSection Name="Section5" FriendlyName="Section 5" Icon="{Icon fa-wallet}" />
                     </generic:List>
                 </SectionStrip.Sections>
             </SectionStrip>
             <SectionStrip Orientation="Vertical" Height="300" MaxItemWidth="100" IconSize="10">
                 <SectionStrip.Sections>
                     <generic:List x:TypeArguments="sections:ISection">
-                        <ContentSectionDesign Name="Section1" FriendlyName="Section 1" Icon="{Icon fa-wallet}" />
-                        <ContentSectionDesign Name="Section2" IsVisible="False" FriendlyName="Section 2" Icon="{Icon fa-wallet}" />
-                        <ContentSectionDesign Name="Section3" FriendlyName="Section 3" Icon="{Icon fa-wallet}" />
-                        <ContentSectionDesign Name="Section4" FriendlyName="Section 4" Icon="{Icon fa-wallet}" />
-                        <ContentSectionDesign Name="Section5" FriendlyName="Section 5" Icon="{Icon fa-wallet}" />
+                        <SimpleSection Name="Section1" FriendlyName="Section 1" Icon="{Icon fa-wallet}" />
+                        <SimpleSection Name="Section2" IsVisible="False" FriendlyName="Section 2" Icon="{Icon fa-wallet}" />
+                        <SimpleSection Name="Section3" FriendlyName="Section 3" Icon="{Icon fa-wallet}" />
+                        <SimpleSection Name="Section4" FriendlyName="Section 4" Icon="{Icon fa-wallet}" />
+                        <SimpleSection Name="Section5" FriendlyName="Section 5" Icon="{Icon fa-wallet}" />
                     </generic:List>
                 </SectionStrip.Sections>
             </SectionStrip>
@@ -36,11 +36,72 @@
 
         <conv:StringNotNullOrWhiteSpaceConverter x:Key="StringNotNullOrWhiteSpaceConverter" />
 
-        <ControlTheme x:Key="SectionListItem" TargetType="ListBoxItem" x:DataType="sections:ISection"
-                      BasedOn="{StaticResource {x:Type ListBoxItem}}">
+        <!-- Default theme for SectionStripItem - can be customized via SectionStrip.ItemContainerTheme or Style selectors -->
+        <ControlTheme x:Key="{x:Type controls:SectionStripItem}" TargetType="controls:SectionStripItem">
             <Setter Property="Padding" Value="0" />
             <Setter Property="Focusable" Value="False" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="CornerRadius" Value="4" />
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Padding="{TemplateBinding Padding}">
+                        <ContentPresenter x:Name="PART_ContentPresenter"
+                                          Content="{TemplateBinding Content}"
+                                          ContentTemplate="{TemplateBinding ContentTemplate}"
+                                          HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+                    </Border>
+                </ControlTemplate>
+            </Setter>
+
+            <Style Selector="^:pointerover">
+                <Setter Property="Background" Value="{DynamicResource SystemControlHighlightListLowBrush}" />
+            </Style>
+
+            <Style Selector="^:selected">
+                <Setter Property="Background" Value="{DynamicResource SystemControlHighlightListAccentLowBrush}" />
+            </Style>
+
+            <Style Selector="^:selected:pointerover">
+                <Setter Property="Background" Value="{DynamicResource SystemControlHighlightListAccentMediumBrush}" />
+            </Style>
+
+            <Style Selector="^:pressed">
+                <Setter Property="Background" Value="{DynamicResource SystemControlHighlightListMediumBrush}" />
+            </Style>
         </ControlTheme>
+
+        <!-- Default theme for SectionStripGroupHeader - can be customized via Style selectors -->
+        <ControlTheme x:Key="{x:Type controls:SectionStripGroupHeader}" TargetType="controls:SectionStripGroupHeader">
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="Foreground" Value="{DynamicResource SystemControlForegroundBaseHighBrush}" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="Margin" Value="0,0,0,4" />
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Padding="{TemplateBinding Padding}">
+                        <ContentPresenter x:Name="PART_HeaderPresenter"
+                                          Content="{TemplateBinding Header}"
+                                          ContentTemplate="{TemplateBinding HeaderTemplate}"
+                                          HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+                    </Border>
+                </ControlTemplate>
+            </Setter>
+        </ControlTheme>
+
+        <!-- SectionStripListBox inherits ListBox theme -->
+        <ControlTheme x:Key="{x:Type controls:SectionStripListBox}" TargetType="controls:SectionStripListBox"
+                      BasedOn="{StaticResource {x:Type ListBox}}" />
 
         <DataTemplate x:Key="VerticalItem" DataType="sections:ISection">
             <Grid Margin="{Binding $parent[SectionStrip].ItemPadding}" ColumnSpacing="{Binding $parent[SectionStrip].HorizontalIconLabelSpacing}"
@@ -69,21 +130,15 @@
 
         <DataTemplate x:Key="SectionGroupTemplate" DataType="controls:SectionGroupView">
             <StackPanel Spacing="6">
-                <TextBlock Classes="SectionStripGroupHeader"
-                           Text="{Binding Group.FriendlyName}"
-                           TextTrimming="{x:Static TextTrimming.CharacterEllipsis}"
-                           FontWeight="Bold"
-                           IsVisible="{Binding Group.FriendlyName, Converter={StaticResource StringNotNullOrWhiteSpaceConverter}}" />
-                <ListBox Background="Transparent"
-                         ItemContainerTheme="{StaticResource SectionListItem}"
-                         SelectedValue="{Binding $parent[SectionStrip].SelectedSection, Mode=TwoWay}"
-                         ItemsSource="{Binding Sections}">
-                    <ListBox.DataTemplates>
-                        <DataTemplate DataType="sections:ISection">
-                            <ContentControl Content="{Binding}" ContentTemplate="{StaticResource HorizontalItem}" />
-                        </DataTemplate>
-                    </ListBox.DataTemplates>
-                </ListBox>
+                <controls:SectionStripGroupHeader
+                    Theme="{Binding $parent[SectionStrip].GroupHeaderTheme, TargetNullValue={StaticResource {x:Type controls:SectionStripGroupHeader}}}"
+                    Header="{Binding Group.Name}"
+                    IsVisible="{Binding Group.Name, Converter={StaticResource StringNotNullOrWhiteSpaceConverter}}" />
+                <controls:SectionStripListBox Background="Transparent"
+                                              ItemContainerTheme="{Binding $parent[SectionStrip].ItemContainerTheme, TargetNullValue={StaticResource {x:Type controls:SectionStripItem}}}"
+                                              SelectedValue="{Binding $parent[SectionStrip].SelectedSection, Mode=TwoWay}"
+                                              ItemsSource="{Binding Sections}"
+                                              ItemTemplate="{Binding $parent[SectionStrip].ItemTemplate, TargetNullValue={StaticResource HorizontalItem}}" />
             </StackPanel>
         </DataTemplate>
 
@@ -120,19 +175,14 @@
                 <Setter Property="Template">
                     <ControlTemplate>
                         <DockPanel>
-                            <DockPanel.DataTemplates>
-                                <DataTemplate DataType="sections:ISection">
-                                    <ContentControl Content="{Binding}" ContentTemplate="{StaticResource VerticalItem}" />
-                                </DataTemplate>
-                            </DockPanel.DataTemplates>
                             <EnhancedButton VerticalAlignment="Stretch" x:Name="Button" IsVisible="{Binding !!#VisibilityExposerBehavior.InvisibleItems.Count}"
                                             DockPanel.Dock="Right" HorizontalAlignment="Right" Content="...">
                                 <Button.Flyout>
                                     <Flyout>
-                                        <ListBox x:Name="OtherSections" SelectedItem="{TemplateBinding SelectedSection, Mode=TwoWay}"
-                                                 ItemContainerTheme="{StaticResource SectionListItem}"
-                                                 ItemsSource="{Binding #VisibilityExposerBehavior.InvisibleItems}">
-                                        </ListBox>
+                                        <controls:SectionStripListBox x:Name="OtherSections" SelectedItem="{TemplateBinding SelectedSection, Mode=TwoWay}"
+                                                                      ItemContainerTheme="{Binding ItemContainerTheme, RelativeSource={RelativeSource TemplatedParent}, TargetNullValue={StaticResource {x:Type controls:SectionStripItem}}}"
+                                                                      ItemTemplate="{Binding ItemTemplate, RelativeSource={RelativeSource TemplatedParent}, TargetNullValue={StaticResource VerticalItem}}"
+                                                                      ItemsSource="{Binding #VisibilityExposerBehavior.InvisibleItems}" />
                                     </Flyout>
                                 </Button.Flyout>
                                 <Interaction.Behaviors>
@@ -141,11 +191,13 @@
                                     </EventTriggerBehavior>
                                 </Interaction.Behaviors>
                             </EnhancedButton>
-                            <ListBox ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                                     Background="{TemplateBinding Background}"
-                                     ItemContainerTheme="{StaticResource SectionListItem}"
-                                     SelectedItem="{TemplateBinding SelectedSection, Mode=TwoWay}" ItemsSource="{TemplateBinding FilteredSections}">
-                                <ListBox.ItemsPanel>
+                            <controls:SectionStripListBox ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                                          Background="{TemplateBinding Background}"
+                                                          ItemContainerTheme="{Binding ItemContainerTheme, RelativeSource={RelativeSource TemplatedParent}, TargetNullValue={StaticResource {x:Type controls:SectionStripItem}}}"
+                                                          ItemTemplate="{Binding ItemTemplate, RelativeSource={RelativeSource TemplatedParent}, TargetNullValue={StaticResource VerticalItem}}"
+                                                          SelectedItem="{TemplateBinding SelectedSection, Mode=TwoWay}"
+                                                          ItemsSource="{TemplateBinding FilteredSections}">
+                                <controls:SectionStripListBox.ItemsPanel>
                                     <ItemsPanelTemplate>
                                         <UniformStripPanel
                                             Grid.IsSharedSizeScope="True"
@@ -153,11 +205,11 @@
                                             ItemMinWidth="{Binding $parent[SectionStrip].MinItemWidth}"
                                             ItemMaxWidth="{Binding $parent[SectionStrip].MaxItemWidth}" />
                                     </ItemsPanelTemplate>
-                                </ListBox.ItemsPanel>
+                                </controls:SectionStripListBox.ItemsPanel>
                                 <Interaction.Behaviors>
                                     <ItemVisibilityMonitoringBehavior x:Name="VisibilityExposerBehavior" />
                                 </Interaction.Behaviors>
-                            </ListBox>
+                            </controls:SectionStripListBox>
                         </DockPanel>
                     </ControlTemplate>
                 </Setter>

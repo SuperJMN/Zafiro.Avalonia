@@ -4,22 +4,92 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:se="clr-namespace:Zafiro.UI.Navigation.Sections;assembly=Zafiro.UI"
              xmlns:generic="clr-namespace:System.Collections.Generic;assembly=System.Collections"
-             mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="450"
-             x:Class="TestApp.Samples.Shell.SectionStripView">
+             xmlns:controls="clr-namespace:Zafiro.Avalonia.Controls;assembly=Zafiro.Avalonia"
+             xmlns:shell="clr-namespace:TestApp.Samples.Shell"
+             mc:Ignorable="d" d:DesignWidth="500" d:DesignHeight="800"
+             x:Class="TestApp.Samples.Shell.SectionStripView"
+             x:DataType="shell:SectionStripViewModel">
     <HeaderedContainer Header="SectionStrip">
-        <StackPanel Spacing="8">
-            <TextBlock Text="Shows sections with overflow" FontWeight="Bold" />
-            <SectionStrip IconOptions.Size="22" HorizontalIconLabelSpacing="10" VerticalIconLabelSpacing="10" Orientation="Horizontal" MaxItemWidth="100">
-                <SectionStrip.Sections>
-                    <generic:List x:TypeArguments="se:ISection">
-                        <ContentSectionDesign Name="Section1" FriendlyName="Section 1" Icon="{Icon fa-wallet}" />
-                        <ContentSectionDesign Name="Section2" FriendlyName="Section 2" Icon="{Icon fa-wallet}" />
-                        <ContentSectionDesign Name="Section3" FriendlyName="Section 3" Icon="{Icon fa-wallet}" />
-                        <ContentSectionDesign Name="Section4" FriendlyName="Section 4" Icon="{Icon fa-wallet}" />
-                        <ContentSectionDesign Name="Section5" FriendlyName="Sectioncilla 5 3 3 3 3 3 3 3 3 3 3 23 " Icon="{Icon fa-wallet}" />
-                    </generic:List>
-                </SectionStrip.Sections>
-            </SectionStrip>
-        </StackPanel>
+        <ScrollViewer>
+            <StackPanel Spacing="20">
+                <!-- Basic horizontal example -->
+                <StackPanel Spacing="8">
+                    <TextBlock Text="Basic horizontal (with overflow)" FontWeight="Bold" />
+                    <SectionStrip IconOptions.Size="22" HorizontalIconLabelSpacing="10" VerticalIconLabelSpacing="10" Orientation="Horizontal" MaxItemWidth="100">
+                        <SectionStrip.Sections>
+                            <generic:List x:TypeArguments="se:ISection">
+                                <SimpleSection Name="Section1" FriendlyName="Section 1" Icon="{Icon fa-wallet}" />
+                                <SimpleSection Name="Section2" FriendlyName="Section 2" Icon="{Icon fa-wallet}" />
+                                <SimpleSection Name="Section3" FriendlyName="Section 3" Icon="{Icon fa-wallet}" />
+                                <SimpleSection Name="Section4" FriendlyName="Section 4" Icon="{Icon fa-wallet}" />
+                                <SimpleSection Name="Section5" FriendlyName="Section 5" Icon="{Icon fa-wallet}" />
+                            </generic:List>
+                        </SectionStrip.Sections>
+                    </SectionStrip>
+                </StackPanel>
+
+                <!-- Customized items -->
+                <StackPanel Spacing="8">
+                    <TextBlock Text="Customized SectionStripItem (rounded, colored)" FontWeight="Bold" />
+                    <SectionStrip IconOptions.Size="22" Orientation="Horizontal" MaxItemWidth="100">
+                        <SectionStrip.Styles>
+                            <Style Selector="controls|SectionStripItem">
+                                <Setter Property="CornerRadius" Value="12" />
+                                <Setter Property="Background" Value="#15000000" />
+                                <Setter Property="Margin" Value="2" />
+                            </Style>
+                            <Style Selector="controls|SectionStripItem:pointerover">
+                                <Setter Property="Background" Value="#25000000" />
+                            </Style>
+                            <Style Selector="controls|SectionStripItem:selected">
+                                <Setter Property="Background" Value="#FF6200EE" />
+                                <Setter Property="Foreground" Value="White" />
+                            </Style>
+                        </SectionStrip.Styles>
+                        <SectionStrip.Sections>
+                            <generic:List x:TypeArguments="se:ISection">
+                                <SimpleSection Name="Home" FriendlyName="Home" Icon="{Icon fa-home}" />
+                                <SimpleSection Name="Search" FriendlyName="Search" Icon="{Icon fa-search}" />
+                                <SimpleSection Name="Settings" FriendlyName="Settings" Icon="{Icon fa-cog}" />
+                            </generic:List>
+                        </SectionStrip.Sections>
+                    </SectionStrip>
+                </StackPanel>
+
+                <!-- Vertical with groups -->
+                <StackPanel Spacing="8">
+                    <TextBlock Text="Vertical with groups (default style)" FontWeight="Bold" />
+                    <TextBlock Text="Groups are configured via ViewModel - see SectionStripViewModel" FontStyle="Italic" Opacity="0.7" />
+                    <Border BorderBrush="Gray" BorderThickness="1" Padding="8" Height="200">
+                        <SectionStrip IconOptions.Size="18" Orientation="Vertical" Sections="{Binding GroupedSections}" />
+                    </Border>
+                </StackPanel>
+
+                <!-- Customized group headers -->
+                <StackPanel Spacing="8">
+                    <TextBlock Text="Customized SectionStripGroupHeader" FontWeight="Bold" />
+                    <Border BorderBrush="Gray" BorderThickness="1" Padding="8" Height="220">
+                        <SectionStrip IconOptions.Size="18" Orientation="Vertical" Sections="{Binding GroupedSections}">
+                            <SectionStrip.Styles>
+                                <Style Selector="controls|SectionStripGroupHeader">
+                                    <Setter Property="Background" Value="#20FF6200" />
+                                    <Setter Property="CornerRadius" Value="6" />
+                                    <Setter Property="Padding" Value="8,4" />
+                                    <Setter Property="Margin" Value="0,0,0,8" />
+                                    <Setter Property="Foreground" Value="#FF6200EE" />
+                                    <Setter Property="FontSize" Value="11" />
+                                </Style>
+                                <Style Selector="controls|SectionStripItem">
+                                    <Setter Property="CornerRadius" Value="8" />
+                                </Style>
+                                <Style Selector="controls|SectionStripItem:selected">
+                                    <Setter Property="Background" Value="#FF6200EE" />
+                                </Style>
+                            </SectionStrip.Styles>
+                        </SectionStrip>
+                    </Border>
+                </StackPanel>
+            </StackPanel>
+        </ScrollViewer>
     </HeaderedContainer>
 </UserControl>
