@@ -20,7 +20,7 @@
                 <DrawingGroup.Transform>
                     <MatrixTransform Matrix="0.78125,0,0,0.78125,0,0" />
                 </DrawingGroup.Transform>
-                <GeometryDrawing Brush="{DynamicResource ArrowColor}"
+                <GeometryDrawing Brush="{DynamicResource Accent}"
                                  Geometry="F1 M669.6 849.6C678.4 857.6 692 856.8 700 848C708 839.2 707.2 825.6 698.4 817.6L388.8 537.6C380.8 530.4 380.8 520 388.8 512.8L698.4 242.4C707.2 234.4 708 220.8 700.8 212C692.8 203.2 679.2 202.4 670.4 209.6L360.8 480.8C333.6 504.8 332.8 544.8 360 569.6L669.6 849.6Z" />
             </DrawingGroup>
         </DrawingGroup>

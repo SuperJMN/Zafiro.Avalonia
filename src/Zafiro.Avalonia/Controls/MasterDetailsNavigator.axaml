@@ -6,8 +6,6 @@
         <controls:MasterDetailsNavigator />
     </Design.PreviewWith>
 
-    <SolidColorBrush x:Key="ArrowColor" Color="{DynamicResource Accent}" />
-
     <ControlTheme x:Key="{x:Type controls:MasterDetailsNavigator}" TargetType="controls:MasterDetailsNavigator">
         <Setter Property="Template">
             <ControlTemplate TargetType="controls:MasterDetailsNavigator">
