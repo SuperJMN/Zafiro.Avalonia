@@ -9,7 +9,7 @@
         <StackPanel Spacing="20" Height="400">
             <SectionStrip Orientation="Horizontal" Width="300" MaxItemWidth="100" IconSize="10">
                 <SectionStrip.Sections>
-                    <generic:List x:TypeArguments="sections:ISection">
+                    <generic:List x:TypeArguments="sections:INavigationRoot">
                         <SimpleSection Name="Section1" IsVisible="False" FriendlyName="Section 1" Icon="{Icon fa-wallet}" />
                         <SimpleSection Name="Section2" FriendlyName="Section Wider" Icon="{Icon fa-wallet}" />
                         <SimpleSection Name="Section3" FriendlyName="Section 3" Icon="{Icon fa-wallet}" />
@@ -20,7 +20,7 @@
             </SectionStrip>
             <SectionStrip Orientation="Vertical" Height="300" MaxItemWidth="100" IconSize="10">
                 <SectionStrip.Sections>
-                    <generic:List x:TypeArguments="sections:ISection">
+                    <generic:List x:TypeArguments="sections:INavigationRoot">
                         <SimpleSection Name="Section1" FriendlyName="Section 1" Icon="{Icon fa-wallet}" />
                         <SimpleSection Name="Section2" IsVisible="False" FriendlyName="Section 2" Icon="{Icon fa-wallet}" />
                         <SimpleSection Name="Section3" FriendlyName="Section 3" Icon="{Icon fa-wallet}" />
@@ -103,7 +103,7 @@
         <ControlTheme x:Key="{x:Type controls:SectionStripListBox}" TargetType="controls:SectionStripListBox"
                       BasedOn="{StaticResource {x:Type ListBox}}" />
 
-        <DataTemplate x:Key="VerticalItem" DataType="sections:ISection">
+        <DataTemplate x:Key="VerticalItem" DataType="sections:INavigationRoot">
             <Grid Margin="{Binding $parent[SectionStrip].ItemPadding}" ColumnSpacing="{Binding $parent[SectionStrip].HorizontalIconLabelSpacing}"
                   RowSpacing="{Binding $parent[SectionStrip].VerticalIconLabelSpacing}" x:Name="SectionGrid">
                 <Grid.RowDefinitions>
@@ -119,7 +119,7 @@
             </Grid>
         </DataTemplate>
 
-        <DataTemplate x:Key="HorizontalItem" DataType="sections:ISection">
+        <DataTemplate x:Key="HorizontalItem" DataType="sections:INavigationRoot">
             <DockPanel Margin="{Binding $parent[SectionStrip].ItemPadding}" HorizontalSpacing="{Binding $parent[SectionStrip].HorizontalIconLabelSpacing}">
                 <Viewbox Height="{Binding $parent[SectionStrip].IconSize}" Width="{Binding $self.Width}">
                     <ContentControl Margin="{Binding $parent[SectionStrip].IconMargin}" Content="{Binding Icon}" />

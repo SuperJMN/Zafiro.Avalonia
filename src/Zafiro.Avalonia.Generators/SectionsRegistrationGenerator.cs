@@ -55,7 +55,7 @@ public sealed class SectionsRegistrationGenerator : IIncrementalGenerator
             sb.AppendLine();
             sb.AppendLine("    public static global::Microsoft.Extensions.DependencyInjection.IServiceCollection AddAnnotatedSections(this global::Microsoft.Extensions.DependencyInjection.IServiceCollection services, global::Serilog.ILogger? logger = null, global::System.Reactive.Concurrency.IScheduler? scheduler = null)");
             sb.AppendLine("    {");
-            sb.AppendLine("        global::Zafiro.UI.Navigation.AddNavigation.RegisterSections(services, builder =>");
+            sb.AppendLine("        global::Zafiro.UI.Navigation.AddNavigation.RegisterNavigationRoots(services, provider => new global::Zafiro.UI.Navigation.Sections.INavigationRoot[]");
             sb.AppendLine("        {");
             foreach (var s in sections)
             {
@@ -65,15 +65,18 @@ public sealed class SectionsRegistrationGenerator : IIncrementalGenerator
                 var group = groupName is null
                     ? "null"
                     : $"new global::Zafiro.UI.Navigation.Sections.SectionGroup(\"{Escape(groupName)}\")";
-                sb.Append("            builder.Add<");
+                sb.Append("            new global::Zafiro.UI.Navigation.Sections.NavigationRoot<");
                 sb.Append(s.contractFqn);
                 sb.Append(">(\"");
                 sb.Append(Escape(s.displayName));
-                sb.Append("\", new global::Zafiro.UI.Icon { Source = \"");
+                sb.Append("\", provider, new global::Zafiro.UI.Icon { Source = \"");
                 sb.Append(Escape(iconSource));
                 sb.Append("\" }, ");
                 sb.Append(group);
-                sb.Append(");");
+                sb.Append(") { SortOrder = ");
+                sb.Append(s.sortIndex);
+                sb.Append(" }");
+                sb.Append(',');
                 sb.AppendLine();
             }
 

@@ -10,7 +10,7 @@ public sealed class SectionGrouper : IDisposable
 {
     private readonly CompositeDisposable disposable = new();
 
-    public SectionGrouper(IObservable<IChangeSet<ISection, string>> sectionChanges)
+    public SectionGrouper(IObservable<IChangeSet<INavigationRoot, string>> sectionChanges)
     {
         sectionChanges
             .AutoRefresh(section => section.IsVisible)

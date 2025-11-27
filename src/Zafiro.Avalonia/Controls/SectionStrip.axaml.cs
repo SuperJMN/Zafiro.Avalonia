@@ -12,10 +12,10 @@ namespace Zafiro.Avalonia.Controls;
 
 public class SectionStrip : TemplatedControl
 {
-    public static readonly StyledProperty<IEnumerable<ISection>?> SectionsProperty = AvaloniaProperty.Register<SectionStrip, IEnumerable<ISection>?>(
+    public static readonly StyledProperty<IEnumerable<INavigationRoot>?> SectionsProperty = AvaloniaProperty.Register<SectionStrip, IEnumerable<INavigationRoot>?>(
         nameof(Sections));
 
-    public static readonly StyledProperty<ISection> SelectedSectionProperty = AvaloniaProperty.Register<SectionStrip, ISection>(nameof(SelectedSection), defaultBindingMode: BindingMode.TwoWay);
+    public static readonly StyledProperty<INavigationRoot> SelectedSectionProperty = AvaloniaProperty.Register<SectionStrip, INavigationRoot>(nameof(SelectedSection), defaultBindingMode: BindingMode.TwoWay);
 
     public static readonly StyledProperty<Orientation> OrientationProperty = AvaloniaProperty.Register<SectionStrip, Orientation>(
         nameof(Orientation), Orientation.Vertical);
@@ -38,7 +38,7 @@ public class SectionStrip : TemplatedControl
     public static readonly StyledProperty<Thickness> ItemPaddingProperty = AvaloniaProperty.Register<SectionStrip, Thickness>(
         nameof(ItemPadding));
 
-    public static readonly DirectProperty<SectionStrip, IEnumerable<ISection>> FilteredSectionsProperty = AvaloniaProperty.RegisterDirect<SectionStrip, IEnumerable<ISection>>(
+    public static readonly DirectProperty<SectionStrip, IEnumerable<INavigationRoot>> FilteredSectionsProperty = AvaloniaProperty.RegisterDirect<SectionStrip, IEnumerable<INavigationRoot>>(
         nameof(FilteredSections), o => o.FilteredSections, (o, v) => o.FilteredSections = v);
 
     public static readonly StyledProperty<Thickness> IconMarginProperty = AvaloniaProperty.Register<SectionStrip, Thickness>(
@@ -61,7 +61,7 @@ public class SectionStrip : TemplatedControl
 
     private readonly CompositeDisposable disposable = new();
 
-    private IEnumerable<ISection> filteredSections;
+    private IEnumerable<INavigationRoot> filteredSections = Enumerable.Empty<INavigationRoot>();
 
     private IEnumerable<SectionGroupView> sectionGroups = Enumerable.Empty<SectionGroupView>();
 
@@ -89,19 +89,19 @@ public class SectionStrip : TemplatedControl
         set => SetValue(IconMarginProperty, value);
     }
 
-    public IEnumerable<ISection> FilteredSections
+    public IEnumerable<INavigationRoot> FilteredSections
     {
         get => filteredSections;
         private set => SetAndRaise(FilteredSectionsProperty, ref filteredSections, value);
     }
 
-    public IEnumerable<ISection>? Sections
+    public IEnumerable<INavigationRoot>? Sections
     {
         get => GetValue(SectionsProperty);
         set => SetValue(SectionsProperty, value);
     }
 
-    public ISection SelectedSection
+    public INavigationRoot SelectedSection
     {
         get => GetValue(SelectedSectionProperty);
         set => SetValue(SelectedSectionProperty, value);

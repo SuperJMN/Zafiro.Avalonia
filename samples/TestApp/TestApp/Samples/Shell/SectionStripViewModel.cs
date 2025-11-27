@@ -13,7 +13,7 @@ public class SectionStripViewModel
     private static readonly SectionGroup MainGroup = new("Main");
     private static readonly SectionGroup AdminGroup = new("Administration");
 
-    public IEnumerable<ISection> GroupedSections { get; } = new List<ISection>
+    public IEnumerable<INavigationRoot> GroupedSections { get; } = new List<INavigationRoot>
     {
         new SimpleSection
         {
