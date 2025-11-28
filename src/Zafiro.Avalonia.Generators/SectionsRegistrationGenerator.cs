@@ -68,9 +68,9 @@ public sealed class SectionsRegistrationGenerator : IIncrementalGenerator
                 sb.Append("            builder.AddSection<");
                 sb.Append(s.contractFqn);
                 sb.Append(">(\"");
-                sb.Append(Escape(s.displayName));
+                sb.Append(Escape(s.name));
                 sb.Append("\", \"");
-                sb.Append(Escape(s.displayName));
+                sb.Append(Escape(s.friendlyName));
                 sb.Append("\", new global::Zafiro.UI.Icon { Source = \"");
                 sb.Append(Escape(iconSource));
                 sb.Append("\" }, ");
@@ -93,7 +93,7 @@ public sealed class SectionsRegistrationGenerator : IIncrementalGenerator
         });
     }
 
-    private static IEnumerable<(string implFqn, string contractFqn, int sortIndex, string displayName, string? icon, string? groupKey, string? groupFriendlyName)> FindAnnotatedSections(Compilation compilation, SourceProductionContext context)
+    private static IEnumerable<(string implFqn, string contractFqn, int sortIndex, string name, string friendlyName, string? icon, string? groupKey, string? groupFriendlyName)> FindAnnotatedSections(Compilation compilation, SourceProductionContext context)
     {
         var attr = compilation.GetTypeByMetadataName("Zafiro.UI.Shell.Utils.SectionAttribute");
         var groupAttr = compilation.GetTypeByMetadataName("Zafiro.UI.Shell.Utils.SectionGroupAttribute");
@@ -131,10 +131,19 @@ public sealed class SectionsRegistrationGenerator : IIncrementalGenerator
             }
 
             string? icon = null;
+            string? explicitName = null;
+            string? explicitFriendlyName = null;
             var sortIndex = 0;
             ITypeSymbol? contract = null;
 
             var sectionCtorArgs = sectionAttr.ConstructorArguments;
+            if (sectionCtorArgs.Length >= 1 && sectionCtorArgs[0].Value is string nameStr)
+            {
+                explicitName = nameStr;
+            }
+
+            explicitFriendlyName = GetNamedString(sectionAttr, "FriendlyName");
+
             if (sectionCtorArgs.Length >= 2 && sectionCtorArgs[1].Value is string iconStr)
             {
                 icon = iconStr;
@@ -157,9 +166,11 @@ public sealed class SectionsRegistrationGenerator : IIncrementalGenerator
             var baseName = simple.EndsWith("ViewModel", StringComparison.Ordinal)
                 ? simple.Substring(0, simple.Length - "ViewModel".Length)
                 : simple;
-            var display = ToSpaced(baseName);
+            var defaultName = ToSpaced(baseName);
+            var name = explicitName ?? defaultName;
+            var friendlyName = explicitFriendlyName ?? explicitName ?? defaultName;
 
-            yield return (implFqn, contractFqn, sortIndex, display, icon, groupKey, groupFriendlyName);
+            yield return (implFqn, contractFqn, sortIndex, name, friendlyName, icon, groupKey, groupFriendlyName);
         }
     }
 
@@ -210,4 +221,17 @@ public sealed class SectionsRegistrationGenerator : IIncrementalGenerator
     }
 
     private static string Escape(string s) => s.Replace("\\", "\\\\").Replace("\"", "\\\"");
+
+    private static string? GetNamedString(AttributeData attribute, string propertyName)
+    {
+        foreach (var arg in attribute.NamedArguments)
+        {
+            if (arg.Key == propertyName && arg.Value.Value is string s)
+            {
+                return s;
+            }
+        }
+
+        return null;
+    }
 }

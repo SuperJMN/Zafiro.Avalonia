@@ -1,6 +1,6 @@
 <Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:av="https://github.com/projektanker/icons.avalonia">
+        xmlns:ui="clr-namespace:Zafiro.UI;assembly=Zafiro.UI">
 
     <Styles.Resources>
         <ResourceDictionary>
@@ -285,9 +285,6 @@
 
             <Card Theme="{StaticResource LeftFlexHeaderCard}"
                   Header="SOME BIG HEADER IS SUPER BIG" Subheader="Some subheader">
-                <Card.HeaderStartContent>
-                    <av:Icon Value="fa-wallet" FontSize="32" />
-                </Card.HeaderStartContent>
                 <Card.HeaderEndContent>
                     <BalancedWrapGrid VerticalAlignment="Center" HorizontalSpacing="8">
                         <EnhancedButton Content="Do something" Classes="Expand CenterContent" />

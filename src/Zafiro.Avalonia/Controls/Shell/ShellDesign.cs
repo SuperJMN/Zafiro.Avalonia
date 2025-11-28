@@ -19,9 +19,9 @@ public class ShellDesign : IShell
 
     public IEnumerable<INavigationRoot> Sections =>
     [
-        new SimpleSection { Name = "Hi Test section 1. Very long for the testing", Icon = new Icon() { Source = "fa-wallet", }, ContentValue = "Test" },
-        new SimpleSection { Name = "Test section 2", Icon = new Icon() { Source = "fa-gear" } },
-        new SimpleSection { Name = "Test section 3", Icon = new Icon() { Source = "fa-user" } }
+        new SimpleSection("Test") { Name = "Hi Test section 1. Very long for the testing", Icon = new Icon() { Source = "fa-wallet", }},
+        new SimpleSection("Test") { Name = "Test section 2", Icon = new Icon() { Source = "fa-gear" } },
+        new SimpleSection("Test") { Name = "Test section 3", Icon = new Icon() { Source = "fa-user" } }
     ];
 
     public INavigationRoot SelectedSection { get; set; }
