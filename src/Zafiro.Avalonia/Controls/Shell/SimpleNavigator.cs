@@ -11,9 +11,10 @@ public class SimpleNavigator : INavigator
     {
         Content = Observable.Defer(() => Observable.Return(content));
     }
-    
+
     public IObservable<object?> Content { get; }
     public IEnhancedCommand<Result> Back { get; }
+
     public Task<Result<Unit>> Go(Func<object> factory)
     {
         throw new NotSupportedException();
@@ -47,5 +48,9 @@ public class SimpleNavigator : INavigator
     public Task<Result<Unit>> GoBackTo(string name)
     {
         throw new NotSupportedException();
+    }
+
+    public void Dispose()
+    {
     }
 }

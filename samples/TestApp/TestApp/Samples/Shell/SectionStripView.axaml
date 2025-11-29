@@ -2,10 +2,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:se="clr-namespace:Zafiro.UI.Navigation.Sections;assembly=Zafiro.UI"
              xmlns:generic="clr-namespace:System.Collections.Generic;assembly=System.Collections"
              xmlns:controls="clr-namespace:Zafiro.Avalonia.Controls;assembly=Zafiro.Avalonia"
              xmlns:shell="clr-namespace:TestApp.Samples.Shell"
+             xmlns:sections="clr-namespace:Zafiro.UI.Navigation.Sections;assembly=Zafiro.UI"
              mc:Ignorable="d" d:DesignWidth="500" d:DesignHeight="800"
              x:Class="TestApp.Samples.Shell.SectionStripView"
              x:DataType="shell:SectionStripViewModel">
@@ -17,7 +17,7 @@
                     <TextBlock Text="Basic horizontal (with overflow)" FontWeight="Bold" />
                     <SectionStrip IconOptions.Size="22" HorizontalIconLabelSpacing="10" VerticalIconLabelSpacing="10" Orientation="Horizontal" MaxItemWidth="100">
                         <SectionStrip.Sections>
-                            <generic:List x:TypeArguments="se:INavigationRoot">
+                            <generic:List x:TypeArguments="sections:ISection">
                                 <SimpleSection Name="Section1" FriendlyName="Section 1" Icon="{Icon fa-wallet}" />
                                 <SimpleSection Name="Section2" FriendlyName="Section 2" Icon="{Icon fa-wallet}" />
                                 <SimpleSection Name="Section3" FriendlyName="Section 3" Icon="{Icon fa-wallet}" />
@@ -47,7 +47,7 @@
                             </Style>
                         </SectionStrip.Styles>
                         <SectionStrip.Sections>
-                            <generic:List x:TypeArguments="se:INavigationRoot">
+                            <generic:List x:TypeArguments="sections:ISection">
                                 <SimpleSection Name="Home" FriendlyName="Home" Icon="{Icon fa-home}" />
                                 <SimpleSection Name="Search" FriendlyName="Search" Icon="{Icon fa-search}" />
                                 <SimpleSection Name="Settings" FriendlyName="Settings" Icon="{Icon fa-cog}" />

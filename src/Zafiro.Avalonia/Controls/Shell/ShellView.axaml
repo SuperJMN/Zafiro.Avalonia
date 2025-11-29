@@ -24,7 +24,7 @@
                             PaneBackground="{Binding $parent[ShellView].PaneBackground}"
                             ExpandButtonSize="{Binding $parent[ShellView].MenuButtonSize}">
                 <ShellSplitView.Content>
-                    <nav:Frame Navigator="{Binding  $parent[ShellView].Shell.SelectedSection.Navigator}" />
+                    <nav:Frame Navigator="{Binding  $parent[ShellView].Shell.SelectedSection.Value.Navigator}" />
                 </ShellSplitView.Content>
                 <ShellSplitView.Styles>
                     <ContainerQuery Name="RootPanel" Query="min-width:0">
@@ -50,7 +50,7 @@
                                   VerticalIconLabelSpacing="{Binding $parent[ShellView].SectionVerticalIconLabelSpacing}"
                                   IconSize="{Binding $parent[ShellView].MenuButtonSize}"
                                   IconMargin="{Binding $parent[ShellView].IconMargin}"
-                                  SelectedSection="{Binding $parent[ShellView].Shell.SelectedSection}" />
+                                  SelectedSection="{Binding $parent[ShellView].Shell.SelectedSection.Value, Mode=TwoWay}" />
                 </ShellSplitView.PaneContent>
             </ShellSplitView>
         </DataTemplate>
@@ -68,8 +68,8 @@
                               IconSize="{Binding $parent[ShellView].MenuButtonSize}"
                               IconMargin="{Binding $parent[ShellView].IconMargin}"
                               MaxItemWidth="{Binding $parent[ShellView].SectionMaxItemWidth}"
-                              SelectedSection="{Binding SelectedSection}" DockPanel.Dock="Bottom" />
-                <nav:Frame Navigator="{Binding Navigator}" />
+                              SelectedSection="{Binding SelectedSection, Mode=TwoWay}" DockPanel.Dock="Bottom" />
+                <nav:Frame Navigator="{Binding  $parent[ShellView].Shell.SelectedSection.Value.Navigator}" />
             </DockPanel>
         </DataTemplate>
 

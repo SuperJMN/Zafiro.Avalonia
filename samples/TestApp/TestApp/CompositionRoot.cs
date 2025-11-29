@@ -42,7 +42,7 @@ public static class CompositionRoot
             .WriteTo.Console()
             .CreateLogger();
 
-        services.AddZafiroSections(logger);
+        services.AddSectionsFromAttributes(logger);
         services.AddTransient<MainViewModel>();
         services.AddTransient<TargetViewModel>();
         services.AddSingleton<IFileSystemPicker>(_ => { return new AvaloniaFileSystemPicker(TopLevel.GetTopLevel(view).StorageProvider); });

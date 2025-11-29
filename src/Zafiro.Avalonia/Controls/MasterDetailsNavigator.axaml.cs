@@ -7,11 +7,13 @@ namespace Zafiro.Avalonia.Controls;
 
 public class MasterDetailsNavigator : TemplatedControl
 {
+    private IDisposable? subscription;
+
     public MasterDetailsNavigator()
     {
         SourceCache<MasterDetailsView, int> source = new(navigator => navigator.GetHashCode());
 
-        MessageBus.Current.Listen<RegisterNavigation>()
+        subscription = MessageBus.Current.Listen<RegisterNavigation>()
             .Do(navigation => source.AddOrUpdate(navigation.MasterDetailsView))
             .Subscribe();
 
@@ -28,12 +30,18 @@ public class MasterDetailsNavigator : TemplatedControl
         IsBackButtonDisplayed = CanNavigateBack.Select(canGoBack => canGoBack && RequiresBackButton());
     }
 
+    public IObservable<bool> IsBackButtonDisplayed { get; }
+    public IObservable<ReactiveCommand<Unit, Unit>?> Back { get; }
+    public IObservable<bool> CanNavigateBack { get; }
+
     private static bool RequiresBackButton()
     {
         return !(OperatingSystem.IsAndroid() || OperatingSystem.IsIOS());
     }
 
-    public IObservable<bool> IsBackButtonDisplayed { get; }
-    public IObservable<ReactiveCommand<Unit, Unit>?> Back { get; }
-    public IObservable<bool> CanNavigateBack { get; }
+    protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        subscription?.Dispose();
+        base.OnDetachedFromVisualTree(e);
+    }
 }

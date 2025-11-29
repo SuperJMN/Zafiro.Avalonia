@@ -10,13 +10,13 @@ public sealed class SectionGroupView : IDisposable
 {
     private readonly CompositeDisposable disposable = new();
 
-    public SectionGroupView(IGroup<INavigationRoot, string, SectionGroup> group)
+    public SectionGroupView(IGroup<ISection, string, SectionGroup> group)
     {
         Group = group.Key;
 
         group.Cache.Connect()
             .AutoRefresh(section => section.SortOrder)
-            .Sort(SortExpressionComparer<INavigationRoot>.Ascending(section => section.SortOrder))
+            .Sort(SortExpressionComparer<ISection>.Ascending(section => section.SortOrder))
             .Bind(out var sections)
             .Subscribe()
             .DisposeWith(disposable);
@@ -26,7 +26,7 @@ public sealed class SectionGroupView : IDisposable
 
     public SectionGroup Group { get; }
 
-    public ReadOnlyObservableCollection<INavigationRoot> Sections { get; }
+    public ReadOnlyObservableCollection<ISection> Sections { get; }
 
     public void Dispose()
     {

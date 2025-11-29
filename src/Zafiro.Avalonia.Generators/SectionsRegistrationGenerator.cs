@@ -31,11 +31,6 @@ public sealed class SectionsRegistrationGenerator : IIncrementalGenerator
             sb.AppendLine("        return services;");
             sb.AppendLine("    }");
             sb.AppendLine();
-            sb.AppendLine("    public static global::Microsoft.Extensions.DependencyInjection.IServiceCollection AddZafiroSections(this global::Microsoft.Extensions.DependencyInjection.IServiceCollection services, global::Serilog.ILogger? logger = null, global::System.Reactive.Concurrency.IScheduler? scheduler = null)");
-            sb.AppendLine("    {");
-            sb.AppendLine("        return AddSectionsFromAttributes(services, logger, scheduler);");
-            sb.AppendLine("    }");
-            sb.AppendLine();
             sb.AppendLine("    public static global::Microsoft.Extensions.DependencyInjection.IServiceCollection RegisterAnnotatedSections(this global::Microsoft.Extensions.DependencyInjection.IServiceCollection services)");
             sb.AppendLine("    {");
             foreach (var s in sections)
@@ -55,7 +50,7 @@ public sealed class SectionsRegistrationGenerator : IIncrementalGenerator
             sb.AppendLine();
             sb.AppendLine("    public static global::Microsoft.Extensions.DependencyInjection.IServiceCollection AddAnnotatedSections(this global::Microsoft.Extensions.DependencyInjection.IServiceCollection services, global::Serilog.ILogger? logger = null, global::System.Reactive.Concurrency.IScheduler? scheduler = null)");
             sb.AppendLine("    {");
-            sb.AppendLine("        global::Zafiro.UI.Navigation.AddNavigation.RegisterSections(services, builder =>");
+            sb.AppendLine("        global::Zafiro.UI.Navigation.NavigationServiceCollectionExtensions.AddSections(services, builder =>");
             sb.AppendLine("        {");
             foreach (var s in sections)
             {
