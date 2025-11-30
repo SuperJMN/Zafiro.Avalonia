@@ -15,28 +15,28 @@ public class SectionStripViewModel
 
     public IEnumerable<ISection> GroupedSections { get; } = new List<ISection>
     {
-        new SimpleSection
+        new SimpleSection()
         {
             Name = "Dashboard",
             FriendlyName = "Dashboard",
             Icon = new Icon("fa-tachometer-alt"),
             Group = MainGroup
         },
-        new SimpleSection
+        new SimpleSection()
         {
             Name = "Analytics",
             FriendlyName = "Analytics",
             Icon = new Icon("fa-chart-line"),
             Group = MainGroup
         },
-        new SimpleSection
+        new SimpleSection()
         {
             Name = "Users",
             FriendlyName = "Users",
             Icon = new Icon("fa-users"),
             Group = AdminGroup
         },
-        new SimpleSection
+        new SimpleSection()
         {
             Name = "Settings",
             FriendlyName = "Settings",

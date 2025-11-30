@@ -1,6 +1,7 @@
 using System.Collections.ObjectModel;
 using System.Reactive.Disposables;
 using DynamicData;
+using DynamicData.Binding;
 using Zafiro.UI.Navigation.Sections;
 
 namespace Zafiro.Avalonia.Controls;
@@ -19,7 +20,7 @@ public sealed class SectionGrouper : IDisposable
             .Group(section => section.Group)
             .Transform(group => new SectionGroupView(group))
             .DisposeMany()
-            .Bind(out var groups)
+            .SortAndBind(out var groups, SortExpressionComparer<SectionGroupView>.Ascending(w => w.Group.SortOrder))
             .Subscribe()
             .DisposeWith(disposable);
 

@@ -61,7 +61,7 @@ public class SectionStrip : TemplatedControl
 
     private readonly CompositeDisposable disposable = new();
 
-    private IEnumerable<ISection> filteredSections;
+    private IEnumerable<ISection> filteredSections = Enumerable.Empty<ISection>();
 
     private IEnumerable<SectionGroupView> sectionGroups = Enumerable.Empty<SectionGroupView>();
 
