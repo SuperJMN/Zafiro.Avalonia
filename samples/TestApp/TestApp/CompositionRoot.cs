@@ -5,6 +5,7 @@ using System.Reflection;
 using Avalonia.Controls;
 using Avalonia.Controls.Notifications;
 using Microsoft.Extensions.DependencyInjection;
+using ReactiveUI;
 using Serilog;
 using TestApp.Samples.Navigation;
 using TestApp.Shell;
@@ -42,6 +43,7 @@ public static class CompositionRoot
             .WriteTo.Console()
             .CreateLogger();
 
+        services.AddScoped<INavigator>(provider => new Navigator(provider, logger, RxApp.MainThreadScheduler));
         services.AddSectionsFromAttributes(logger);
         services.AddTransient<MainViewModel>();
         services.AddTransient<TargetViewModel>();
