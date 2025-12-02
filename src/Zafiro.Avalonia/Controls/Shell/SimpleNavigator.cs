@@ -50,6 +50,11 @@ public class SimpleNavigator : INavigator
         throw new NotSupportedException();
     }
 
+    public void SetInitialPage(Func<object> factory)
+    {
+        throw new NotImplementedException();
+    }
+
     public void Dispose()
     {
     }
