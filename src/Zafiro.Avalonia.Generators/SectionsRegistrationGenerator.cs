@@ -16,10 +16,11 @@ public sealed class SectionsRegistrationGenerator : IIncrementalGenerator
         context.RegisterSourceOutput(context.CompilationProvider, static (spc, compilation) =>
         {
             var sections = FindAnnotatedSections(compilation, spc).OrderBy(s => s.sortIndex).ToList();
+            var asm = compilation.AssemblyName ?? "Assembly";
+            var safeAsm = MakeSafeForNamespace(asm);
+            var assembliesWithRegistrations = GetAssembliesWithRegistrations(compilation, safeAsm).Distinct().OrderBy(x => x).ToList();
 
             var sb = new StringBuilder();
-            var asm = compilation.AssemblyName ?? "Assembly";
-            var safeAsm = new string(asm.Select(ch => char.IsLetterOrDigit(ch) ? ch : '_').ToArray());
             sb.AppendLine($"namespace Zafiro.UI.Shell.Utils.SectionsGen.{safeAsm};");
             sb.AppendLine();
             sb.AppendLine("public static class GeneratedSectionRegistrations");
@@ -29,6 +30,12 @@ public sealed class SectionsRegistrationGenerator : IIncrementalGenerator
             sb.AppendLine("        RegisterAnnotatedSections(services);");
             sb.AppendLine("        AddAnnotatedSections(services, logger, scheduler);");
             sb.AppendLine("        return services;");
+            sb.AppendLine("    }");
+            sb.AppendLine();
+            sb.AppendLine("    public static global::Microsoft.Extensions.DependencyInjection.IServiceCollection AddAllSectionsFromAttributes(this global::Microsoft.Extensions.DependencyInjection.IServiceCollection services, global::Serilog.ILogger? logger = null, global::System.Reactive.Concurrency.IScheduler? scheduler = null)");
+            sb.AppendLine("    {");
+            sb.AppendLine("        EnsureSectionRegistrationsAreRegistered();");
+            sb.AppendLine("        return global::Zafiro.UI.Shell.Utils.SectionRegistrationRegistry.AddAllSectionsFromRegistry(services, logger, scheduler);");
             sb.AppendLine("    }");
             sb.AppendLine();
             sb.AppendLine("    public static global::Microsoft.Extensions.DependencyInjection.IServiceCollection RegisterAnnotatedSections(this global::Microsoft.Extensions.DependencyInjection.IServiceCollection services)");
@@ -78,6 +85,21 @@ public sealed class SectionsRegistrationGenerator : IIncrementalGenerator
 
             sb.AppendLine("        }, logger: logger, scheduler: scheduler ?? global::ReactiveUI.RxApp.MainThreadScheduler);");
             sb.AppendLine("        return services;");
+            sb.AppendLine("    }");
+            sb.AppendLine();
+            sb.AppendLine("    private static void EnsureSectionRegistrationsAreRegistered()");
+            sb.AppendLine("    {");
+            foreach (var assemblyName in assembliesWithRegistrations)
+            {
+                sb.AppendLine($"        _ = typeof(global::Zafiro.UI.Shell.Utils.SectionsGen.{assemblyName}.GeneratedSectionRegistrations);");
+            }
+
+            sb.AppendLine("    }");
+            sb.AppendLine();
+            sb.AppendLine("    [global::System.Runtime.CompilerServices.ModuleInitializer]");
+            sb.AppendLine("    internal static void RegisterSectionsWithRegistry()");
+            sb.AppendLine("    {");
+            sb.AppendLine($"        global::Zafiro.UI.Shell.Utils.SectionRegistrationRegistry.Register(\"{Escape(asm)}\", static services => RegisterAnnotatedSections(services), static (services, logger, scheduler) => AddAnnotatedSections(services, logger, scheduler));");
             sb.AppendLine("    }");
             sb.AppendLine("}");
 
@@ -229,4 +251,35 @@ public sealed class SectionsRegistrationGenerator : IIncrementalGenerator
 
         return null;
     }
+
+    private static IEnumerable<string> GetAssembliesWithRegistrations(Compilation compilation, string currentAssemblySafeName)
+    {
+        var seen = new HashSet<string>(StringComparer.Ordinal);
+        if (seen.Add(currentAssemblySafeName))
+        {
+            yield return currentAssemblySafeName;
+        }
+
+        foreach (var reference in compilation.References)
+        {
+            if (compilation.GetAssemblyOrModuleSymbol(reference) is not IAssemblySymbol assemblySymbol)
+            {
+                continue;
+            }
+
+            var safeName = MakeSafeForNamespace(assemblySymbol.Name);
+            if (!seen.Add(safeName))
+            {
+                continue;
+            }
+
+            var metadataName = $"Zafiro.UI.Shell.Utils.SectionsGen.{safeName}.GeneratedSectionRegistrations";
+            if (compilation.GetTypeByMetadataName(metadataName) is not null)
+            {
+                yield return safeName;
+            }
+        }
+    }
+
+    private static string MakeSafeForNamespace(string assemblyName) => new(assemblyName.Select(ch => char.IsLetterOrDigit(ch) ? ch : '_').ToArray());
 }

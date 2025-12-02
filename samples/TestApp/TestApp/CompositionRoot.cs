@@ -44,7 +44,7 @@ public static class CompositionRoot
             .CreateLogger();
 
         services.AddScoped<INavigator>(provider => new Navigator(provider, logger, RxApp.MainThreadScheduler));
-        services.AddSectionsFromAttributes(logger);
+        services.AddAllSectionsFromAttributes(logger);
         services.AddTransient<MainViewModel>();
         services.AddTransient<TargetViewModel>();
         services.AddSingleton<IFileSystemPicker>(_ => { return new AvaloniaFileSystemPicker(TopLevel.GetTopLevel(view).StorageProvider); });
