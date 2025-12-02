@@ -34,8 +34,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestApp.Browser", "samples\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestApp.Android", "samples\TestApp\TestApp.Android\TestApp.Android.csproj", "{F7B749E2-AE30-4B7D-986F-950C95C0553E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zafiro.UI", "..\Zafiro\src\Zafiro.UI\Zafiro.UI.csproj", "{C488A471-F6E3-4E80-9ADF-60D3AA6C087A}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -82,10 +80,6 @@ Global
 		{F7B749E2-AE30-4B7D-986F-950C95C0553E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F7B749E2-AE30-4B7D-986F-950C95C0553E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F7B749E2-AE30-4B7D-986F-950C95C0553E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C488A471-F6E3-4E80-9ADF-60D3AA6C087A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C488A471-F6E3-4E80-9ADF-60D3AA6C087A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C488A471-F6E3-4E80-9ADF-60D3AA6C087A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C488A471-F6E3-4E80-9ADF-60D3AA6C087A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
