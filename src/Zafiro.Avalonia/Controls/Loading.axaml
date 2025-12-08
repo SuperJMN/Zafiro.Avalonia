@@ -14,7 +14,6 @@
                 <ControlTemplate>
                     <StackPanel x:DataType="controls:Loading" DataContext="{Binding $parent[controls:Loading]}" Spacing="10" HorizontalAlignment="Center" VerticalAlignment="Center">
                         <c:ProgressRing IsIndeterminate="True"
-                                        Foreground="{DynamicResource SystemAccentColor}"
                                         Width="{Binding ProgressIndicatorSize}"
                                         Height="{Binding ProgressIndicatorSize}" />
                         <TextBlock TextAlignment="Center" Text="{Binding LoadingText}" />
