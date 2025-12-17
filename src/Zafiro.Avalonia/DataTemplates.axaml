@@ -1,8 +1,6 @@
 <DataTemplates xmlns="https://github.com/avaloniaui"
                xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                xmlns:zslim="clr-namespace:Zafiro.Avalonia.Controls.Wizards.Slim"
-               xmlns:classic="clr-namespace:Zafiro.UI.Wizards.Classic;assembly=Zafiro.UI"
-               xmlns:c="clr-namespace:Zafiro.Avalonia.Controls.Wizards.Classic"
                xmlns:slim="clr-namespace:Zafiro.UI.Wizards.Slim;assembly=Zafiro.UI"
                xmlns:ui="clr-namespace:Zafiro.UI;assembly=Zafiro.UI">
 
@@ -12,10 +10,6 @@
 
     <DataTemplate DataType="zslim:SlimWizardNavigationHost">
         <zslim:WizardNavigator Wizard="{Binding Wizard}" Cancel="{Binding Cancel}" />
-    </DataTemplate>
-
-    <DataTemplate DataType="classic:IWizard">
-        <c:WizardControl Wizard="{Binding}" />
     </DataTemplate>
 
     <DataTemplate DataType="ui:IIcon">

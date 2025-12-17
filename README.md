@@ -18,7 +18,8 @@ https://github.com/SuperJMN-Zafiro/Zafiro.Avalonia/assets/3109851/d3d29a3e-3a35-
 
 * **MasterDetailsView**. Side list with items. Details are shown when an item is selected.
 * **AdaptiveControl**. Has 2 templates: one for portrait and another for landscape.
-### WizardControl
+
+### SlimWizard
 
 Offers a nice way to show wizards (multiple steps).
 

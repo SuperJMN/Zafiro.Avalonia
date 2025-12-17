@@ -1,8 +1,6 @@
 <Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:classic="clr-namespace:Zafiro.UI.Wizards.Classic;assembly=Zafiro.UI"
         xmlns:slim="clr-namespace:Zafiro.UI.Wizards.Slim;assembly=Zafiro.UI"
-        xmlns:classicControls="clr-namespace:Zafiro.Avalonia.Controls.Wizards.Classic"
         xmlns:slimControls="clr-namespace:Zafiro.Avalonia.Controls.Wizards.Slim">
     <Design.PreviewWith>
         <Frame Width="200" Height="200" />
@@ -36,15 +34,6 @@
                                             VerticalAlignment="Center"
                                             Content="{Binding $parent[Frame].Navigator.Content^, Converter={x:Static FrameConverters.HeaderContext}}">
                                 <ContentControl.DataTemplates>
-                                    <DataTemplate DataType="classic:IWizard">
-                                        <classicControls:WizardHeader
-                                            IsBackButtonVisible="False"
-                                            Margin="0 0 0 13"
-                                            CurrentPageIndex="{Binding PageIndex^}"
-                                            TotalPages="{Binding TotalPages}"
-                                            Back="{Binding Back}"
-                                            Title="{Binding Content.Title}" />
-                                    </DataTemplate>
                                     <DataTemplate DataType="slim:ISlimWizard">
                                         <slimControls:WizardHeader IsBackButtonVisible="False" Wizard="{Binding}" Margin="0 0 0 10" />
                                     </DataTemplate>
