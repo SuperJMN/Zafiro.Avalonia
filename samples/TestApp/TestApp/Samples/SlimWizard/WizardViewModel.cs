@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using CSharpFunctionalExtensions;
 using ReactiveUI;
 using TestApp.Samples.SlimWizard.Pages;
+using TestApp.Samples.SlimWizard.Subwizard.Pages;
 using Zafiro.Avalonia.Controls.Wizards.Slim;
 using Zafiro.Avalonia.Dialogs;
 using Zafiro.Avalonia.Dialogs.Wizards.Slim;
@@ -32,9 +33,15 @@ public class WizardViewModel : IDisposable
 
         ShowWizardInDialog = ReactiveCommand.CreateFromTask(() => CreateWizard().ShowInDialog(dialog, "This is a tasty wizard"));
         NavigateToWizard = ReactiveCommand.CreateFromTask(() => CreateWizard().Navigate(navigator));
+        NavigateToWizardWithSubwizard = ReactiveCommand.CreateFromTask(() => CreateWizardWithSubwizard(navigator).Navigate(navigator));
 
         NavigateToWizard.Merge(ShowWizardInDialog)
             .SelectMany(maybe => ShowResults(maybe).ToSignal())
+            .Subscribe()
+            .DisposeWith(disposable);
+
+        NavigateToWizardWithSubwizard
+            .SelectMany(maybe => ShowSubwizardResults(maybe).ToSignal())
             .Subscribe()
             .DisposeWith(disposable);
     }
@@ -43,15 +50,27 @@ public class WizardViewModel : IDisposable
 
     public ReactiveCommand<Unit, Maybe<(int result, string)>> ShowWizardInDialog { get; }
 
+    public ReactiveCommand<Unit, Maybe<string>> NavigateToWizardWithSubwizard { get; }
+
     public void Dispose()
     {
         NavigateToWizard.Dispose();
         ShowWizardInDialog.Dispose();
+        NavigateToWizardWithSubwizard.Dispose();
     }
 
     private Task ShowResults(Maybe<(int result, string)> maybe)
     {
         var message = maybe.Match(value => $"This is the data we gathered from it: '{value}'", () => "We got nothing, because the wizard was cancelled");
+        return notification.Show(message, "Finished");
+    }
+
+    private Task ShowSubwizardResults(Maybe<string> maybe)
+    {
+        var message = maybe.Match(
+            value => $"Wizard completed with: '{value}'",
+            () => "We got nothing, because the wizard (or a child wizard) was cancelled");
+
         return notification.Show(message, "Finished");
     }
 
@@ -67,5 +86,35 @@ public class WizardViewModel : IDisposable
             .WithCompletionFinalStep();
 
         return withCompletionFinalStep;
+    }
+
+    private static SlimWizard<string> CreateWizardWithSubwizard(INavigator navigator)
+    {
+        Task<Maybe<string>> StartChildWizardA()
+        {
+            return CreateChildWizard("A").Navigate(navigator);
+        }
+
+        Task<Maybe<string>> StartChildWizardB()
+        {
+            return CreateChildWizard("B").Navigate(navigator);
+        }
+
+        return WizardBuilder
+            .StartWith(() => new SubwizardWelcomePageViewModel(), "Wizard with subwizard")
+            .NextUnit("Start").Always()
+            .Then(_ => new SubwizardDecisionPageViewModel(StartChildWizardA, StartChildWizardB), "Choose a child wizard")
+            .NextCommand(vm => vm.RunSelectedChildWizard)
+            .Then(childResult => new SubwizardSummaryPageViewModel(childResult), "Summary")
+            .Next((_, childResult) => childResult, "Finish").Always()
+            .WithCompletionFinalStep();
+    }
+
+    private static SlimWizard<string> CreateChildWizard(string kind)
+    {
+        return WizardBuilder
+            .StartWith(() => new ChildWizardInputPageViewModel(kind), $"Child wizard {kind}")
+            .Next(vm => vm.Result!, "Finish").WhenValid()
+            .WithCommitFinalStep();
     }
 }

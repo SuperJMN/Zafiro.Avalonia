@@ -21,13 +21,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Reference Include="Avalonia.Controls">
-        <HintPath>..\..\..\..\..\..\..\..\home\jmn\.nuget\packages\avalonia\11.0.11\ref\net6.0\Avalonia.Controls.dll</HintPath>
-      </Reference>
-    </ItemGroup>
-
-    <ItemGroup>
-      <ProjectReference Include="..\..\..\Zafiro.Avalonia.FileExplorer\src\Zafiro.Avalonia.FileExplorer.NextGen\Zafiro.Avalonia.FileExplorer.NextGen.csproj" />
       <ProjectReference Include="..\..\src\Zafiro.Avalonia\Zafiro.Avalonia.csproj" />
     </ItemGroup>
 

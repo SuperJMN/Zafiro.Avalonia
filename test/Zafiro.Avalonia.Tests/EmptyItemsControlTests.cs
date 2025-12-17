@@ -1,6 +1,5 @@
 using Avalonia.Controls;
 using Zafiro.Avalonia.Controls;
-using Xunit;
 
 namespace Zafiro.Avalonia.Tests;
 
@@ -12,7 +11,7 @@ public class EmptyItemsControlTests
         var itemsControl = new ItemsControl();
         Empty.SetContent(itemsControl, "Nothing");
 
-        Assert.Contains("empty", itemsControl.Classes);
+        Assert.Contains(":empty", itemsControl.Classes);
     }
 
     [Fact]
@@ -23,6 +22,6 @@ public class EmptyItemsControlTests
 
         itemsControl.Items.Add("item");
 
-        Assert.DoesNotContain("empty", itemsControl.Classes);
+        Assert.DoesNotContain(":empty", itemsControl.Classes);
     }
 }

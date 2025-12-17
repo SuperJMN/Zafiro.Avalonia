@@ -29,6 +29,13 @@
                     <ui:Icon Source="mdi-chevron-right" />
                 </EnhancedButton.Icon>
             </EnhancedButton>
+            <EnhancedButton Content="Launch wizard with subwizard"
+                            HorizontalAlignment="Center"
+                            Command="{Binding NavigateToWizardWithSubwizard}">
+                <EnhancedButton.Icon>
+                    <ui:Icon Source="mdi-layers" />
+                </EnhancedButton.Icon>
+            </EnhancedButton>
         </UniformGrid>
     </c:HeaderedContainer>
 

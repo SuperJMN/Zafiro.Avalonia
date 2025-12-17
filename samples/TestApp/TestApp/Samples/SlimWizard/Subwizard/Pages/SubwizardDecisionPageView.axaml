@@ -1,0 +1,27 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:pages="clr-namespace:TestApp.Samples.SlimWizard.Subwizard.Pages"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="TestApp.Samples.SlimWizard.Subwizard.Pages.SubwizardDecisionPageView"
+             x:DataType="pages:SubwizardDecisionPageViewModel">
+    <StackPanel VerticalAlignment="Center" Spacing="12" HorizontalAlignment="Center" Width="420">
+        <TextBlock FontSize="16" FontWeight="Bold">Start a child wizard</TextBlock>
+        <TextBlock TextWrapping="Wrap">
+            Select which child wizard to start.
+            Clicking Next will navigate to the selected child wizard.
+        </TextBlock>
+        <StackPanel Spacing="6">
+            <RadioButton GroupName="subwizardChoice"
+                         Content="Child wizard A"
+                         IsChecked="{Binding UseChildWizardA}" />
+            <RadioButton GroupName="subwizardChoice"
+                         Content="Child wizard B"
+                         IsChecked="{Binding UseChildWizardB}" />
+        </StackPanel>
+        <TextBlock TextWrapping="Wrap" FontStyle="Italic">
+            Tip: Cancel inside the child wizard to come back here without advancing.
+        </TextBlock>
+    </StackPanel>
+</UserControl>
