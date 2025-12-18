@@ -8,6 +8,7 @@ using CSharpFunctionalExtensions;
 using Microsoft.Extensions.DependencyInjection;
 using ReactiveUI;
 using Serilog;
+using Zafiro.Avalonia.Controls.Wizards.Slim;
 using Zafiro.UI.Commands;
 using Zafiro.UI.Navigation;
 using Zafiro.UI.Wizards.Slim;
@@ -130,6 +131,125 @@ public class SlimWizardScenarioTests
 
         var result = await session.Completion;
         Assert.False(result.HasValue);
+        Assert.Same(initialContent, current);
+    }
+
+    [Fact]
+    public async Task Navigate_extension_returns_to_initial_on_finish()
+    {
+        var initialContent = new object();
+        var navigator = CreateNavigator(ImmediateScheduler.Instance);
+
+        object? current = null;
+        using var _ = navigator.Content.Subscribe(x => current = x);
+        navigator.SetInitialPage(() => initialContent);
+
+        var wizard = CreateSingleStepWizard("finished");
+
+        var completion = wizard.Navigate(navigator);
+
+        await WaitUntilAsync(() => current is SlimWizardNavigationHost, TimeSpan.FromSeconds(2));
+        Assert.IsType<SlimWizardNavigationHost>(current);
+
+        ((ICommand)wizard.Next).Execute(null);
+
+        var result = await completion;
+        Assert.True(result.HasValue);
+        Assert.Equal("finished", result.Value);
+        Assert.Same(initialContent, current);
+    }
+
+    [Fact]
+    public async Task Navigate_extension_returns_to_initial_on_cancel()
+    {
+        var initialContent = new object();
+        var navigator = CreateNavigator(ImmediateScheduler.Instance);
+
+        object? current = null;
+        using var _ = navigator.Content.Subscribe(x => current = x);
+        navigator.SetInitialPage(() => initialContent);
+
+        var wizard = CreateSingleStepWizard("finished");
+
+        var completion = wizard.Navigate(navigator);
+
+        await WaitUntilAsync(() => current is SlimWizardNavigationHost, TimeSpan.FromSeconds(2));
+        var host = Assert.IsType<SlimWizardNavigationHost>(current);
+
+        host.Cancel.Execute(null);
+
+        var result = await completion;
+        Assert.False(result.HasValue);
+        Assert.Same(initialContent, current);
+    }
+
+    [Fact]
+    public async Task Nested_wizard_using_Navigate_extension_returns_to_parent_then_initial_on_finish()
+    {
+        var initialContent = new object();
+        var navigator = CreateNavigator(ImmediateScheduler.Instance);
+
+        object? current = null;
+        using var _ = navigator.Content.Subscribe(x => current = x);
+        navigator.SetInitialPage(() => initialContent);
+
+        SlimWizard<string>? childWizard = null;
+
+        var parentSteps = new List<IWizardStep>
+        {
+            new WizardStep(
+                StepKind.Normal,
+                "Parent",
+                _ => new object(),
+                _ => ReactiveCommand.CreateFromTask(async () =>
+                {
+                    childWizard = CreateSingleStepWizard("child-result");
+
+                    var maybe = await childWizard.Navigate(navigator);
+                    return maybe.HasValue
+                        ? Result.Success((object)maybe.Value)
+                        : Result.Failure<object>("Child canceled");
+                }).Enhance(),
+                _ => Observable.Return("Parent")),
+            new WizardStep(
+                StepKind.Completion,
+                "Finish",
+                _ => new object(),
+                _ => ReactiveCommand.Create(() => Result.Success((object)"parent-finished")).Enhance(),
+                _ => Observable.Return("Finish")),
+        };
+
+        var parentWizard = new SlimWizard<string>(parentSteps, ImmediateScheduler.Instance);
+
+        var completion = parentWizard.Navigate(navigator);
+
+        await WaitUntilAsync(
+            () => current is SlimWizardNavigationHost host && ReferenceEquals(host.Wizard, parentWizard),
+            TimeSpan.FromSeconds(2));
+
+        var parentNextExecution = parentWizard.TypedNext.Execute().ToTask();
+
+        await WaitUntilAsync(
+            () => childWizard is not null
+                  && current is SlimWizardNavigationHost host
+                  && ReferenceEquals(host.Wizard, childWizard),
+            TimeSpan.FromSeconds(2));
+
+        ((ICommand)childWizard!.Next).Execute(null);
+
+        await WaitUntilAsync(
+            () => current is SlimWizardNavigationHost host && ReferenceEquals(host.Wizard, parentWizard),
+            TimeSpan.FromSeconds(2));
+
+        var parentNextResult = await parentNextExecution;
+        Assert.True(parentNextResult.IsSuccess);
+        Assert.Equal(1, parentWizard.CurrentStepIndex);
+
+        ((ICommand)parentWizard.Next).Execute(null);
+        var parentResult = await completion;
+
+        Assert.True(parentResult.HasValue);
+        Assert.Equal("parent-finished", parentResult.Value);
         Assert.Same(initialContent, current);
     }
 

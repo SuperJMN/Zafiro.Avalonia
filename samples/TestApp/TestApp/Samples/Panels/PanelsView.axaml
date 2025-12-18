@@ -6,7 +6,7 @@
              x:Class="TestApp.Samples.Panels.PanelsView">
 
     <UserControl.Styles>
-        <Style Selector="Button">
+        <Style Selector="EnhancedButton">
             <Setter Property="HorizontalAlignment" Value="Stretch" />
             <Setter Property="VerticalAlignment" Value="Stretch" />
         </Style>
