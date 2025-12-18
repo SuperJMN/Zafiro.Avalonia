@@ -18,8 +18,9 @@
                     <panels:TrueCenterPanel DockPanel.Dock="Top">
                         <EnhancedButton Theme="{StaticResource TransparentButton}"
                                         panels:TrueCenterPanel.Dock="Left"
+                                        IsVisible="{Binding $parent[WizardHeader].IsBackButtonVisible}"
                                         Opacity="{Binding $self.IsEffectivelyEnabled, Converter={x:Static OpacityConverters.BoolToOpacity}}"
-                                        Command="{Binding $parent[SlimWizardControl].Wizard.Back}">
+                                        Command="{Binding $parent[WizardHeader].Wizard.Back}">
                             <Button.Content>
                                 <DockPanel>
                                     <Image Source="{StaticResource BackArrow}" Height="16" Margin="0,0,4,0" />
@@ -28,8 +29,8 @@
                             </Button.Content>
                         </EnhancedButton>
                         <StepIndicator TrueCenterPanel.Dock="Center" x:Name="StepIndicator" HorizontalAlignment="Center"
-                                       Current="{Binding $parent[SlimWizardControl].Wizard.CurrentPage.Index}"
-                                       Total="{Binding $parent[SlimWizardControl].Wizard.TotalPages}">
+                                       Current="{Binding $parent[WizardHeader].Wizard.CurrentPage.Index}"
+                                       Total="{Binding $parent[WizardHeader].Wizard.TotalPages}">
                         </StepIndicator>
                         <TextBlock FontSize="12" VerticalAlignment="Center" panels:TrueCenterPanel.Dock="Right" Margin="5 0">
                             <TextBlock.Text>

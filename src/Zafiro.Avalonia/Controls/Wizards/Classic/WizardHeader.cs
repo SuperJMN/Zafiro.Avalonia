@@ -6,6 +6,10 @@ namespace Zafiro.Avalonia.Controls.Wizards.Classic;
 
 public class WizardHeader : TemplatedControl
 {
+    public static readonly StyledProperty<bool> IsBackButtonVisibleProperty = AvaloniaProperty.Register<WizardHeader, bool>(
+        nameof(IsBackButtonVisible),
+        defaultValue: true);
+
     public static readonly StyledProperty<Maybe<string>> TitleProperty = AvaloniaProperty.Register<WizardHeader, Maybe<string>>(
         nameof(Title));
 
@@ -17,6 +21,12 @@ public class WizardHeader : TemplatedControl
 
     public static readonly StyledProperty<IEnhancedCommand> BackProperty = AvaloniaProperty.Register<WizardHeader, IEnhancedCommand>(
         nameof(Back));
+
+    public bool IsBackButtonVisible
+    {
+        get => GetValue(IsBackButtonVisibleProperty);
+        set => SetValue(IsBackButtonVisibleProperty, value);
+    }
 
     public Maybe<string> Title
     {

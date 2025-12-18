@@ -10,6 +10,10 @@
         <zslim:SlimWizardControl Wizard="{Binding}" />
     </DataTemplate>
 
+    <DataTemplate DataType="zslim:SlimWizardNavigationHost">
+        <zslim:WizardNavigator Wizard="{Binding Wizard}" Cancel="{Binding Cancel}" />
+    </DataTemplate>
+
     <DataTemplate DataType="classic:IWizard">
         <c:WizardControl Wizard="{Binding}" />
     </DataTemplate>

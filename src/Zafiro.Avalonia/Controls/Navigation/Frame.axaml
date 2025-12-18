@@ -1,5 +1,9 @@
 <Styles xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:classic="clr-namespace:Zafiro.UI.Wizards.Classic;assembly=Zafiro.UI"
+        xmlns:slim="clr-namespace:Zafiro.UI.Wizards.Slim;assembly=Zafiro.UI"
+        xmlns:classicControls="clr-namespace:Zafiro.Avalonia.Controls.Wizards.Classic"
+        xmlns:slimControls="clr-namespace:Zafiro.Avalonia.Controls.Wizards.Slim">
     <Design.PreviewWith>
         <Frame Width="200" Height="200" />
     </Design.PreviewWith>
@@ -16,17 +20,43 @@
             <Setter Property="Template">
                 <ControlTemplate>
                     <DockPanel>
-                        <EnhancedButton Command="{Binding $parent[Frame].Navigator.Back}"
-                                        x:Name="BackButton"
-                                        DockPanel.Dock="Top"
-                                        Content="{TemplateBinding BackButtonContent}">
-                            <Button.IsVisible>
-                                <MultiBinding Converter="{x:Static BoolConverters.And}">
-                                    <Binding Path="$parent[Frame].IsBackButtonVisible" />
-                                    <Binding Path="$self.IsEffectivelyEnabled" />
-                                </MultiBinding>
-                            </Button.IsVisible>
-                        </EnhancedButton>
+                        <Grid DockPanel.Dock="Top" ColumnDefinitions="Auto *">
+                            <EnhancedButton Command="{Binding $parent[Frame].Navigator.Back}"
+                                            x:Name="BackButton"
+                                            VerticalAlignment="Center"
+                                            Content="{TemplateBinding BackButtonContent}">
+                                <Button.IsVisible>
+                                    <MultiBinding Converter="{x:Static BoolConverters.And}">
+                                        <Binding Path="$parent[Frame].IsBackButtonVisible" />
+                                        <Binding Path="$self.IsEffectivelyEnabled" />
+                                    </MultiBinding>
+                                </Button.IsVisible>
+                            </EnhancedButton>
+                            <ContentControl Grid.Column="1"
+                                            VerticalAlignment="Center"
+                                            Content="{Binding $parent[Frame].Navigator.Content^, Converter={x:Static FrameConverters.HeaderContext}}">
+                                <ContentControl.DataTemplates>
+                                    <DataTemplate DataType="classic:IWizard">
+                                        <classicControls:WizardHeader
+                                            IsBackButtonVisible="False"
+                                            Margin="0 0 0 13"
+                                            CurrentPageIndex="{Binding PageIndex^}"
+                                            TotalPages="{Binding TotalPages}"
+                                            Back="{Binding Back}"
+                                            Title="{Binding Content.Title}" />
+                                    </DataTemplate>
+                                    <DataTemplate DataType="slim:ISlimWizard">
+                                        <slimControls:WizardHeader IsBackButtonVisible="False" Wizard="{Binding}" Margin="0 0 0 10" />
+                                    </DataTemplate>
+                                    <DataTemplate DataType="slimControls:SlimWizardNavigationHost">
+                                        <slimControls:WizardHeader IsBackButtonVisible="False" Wizard="{Binding Wizard}" Margin="0 0 0 10" />
+                                    </DataTemplate>
+                                    <DataTemplate DataType="x:Object">
+                                        <Panel />
+                                    </DataTemplate>
+                                </ContentControl.DataTemplates>
+                            </ContentControl>
+                        </Grid>
                         <ContentControl Margin="{TemplateBinding Padding}" Content="{Binding $parent[Frame].Navigator.Content^,  FallbackValue='No content', TargetNullValue='Navigator.Content is a null'}" />
                     </DockPanel>
                 </ControlTemplate>

@@ -46,6 +46,7 @@
                         <panels:TrueCenterPanel>
                             <EnhancedButton panels:TrueCenterPanel.Dock="Left" Cursor="Hand" Opacity="{Binding $self.IsEffectivelyEnabled, Converter={x:Static converters:OpacityConverters.BoolToOpacity}}"
                                             Command="{Binding $parent[classic:WizardHeader].Back}"
+                                            IsVisible="{Binding $parent[classic:WizardHeader].IsBackButtonVisible}"
                                             Theme="{StaticResource TransparentButton}">
                                 <PathIcon Width="15" Data="{StaticResource LeftArrow}" />
                             </EnhancedButton>
@@ -76,5 +77,9 @@
             </Setter>
         </ControlTheme>
     </Styles.Resources>
+
+    <Style Selector="Frame classic|WizardControl classic|WizardHeader">
+        <Setter Property="IsVisible" Value="False" />
+    </Style>
 
 </Styles>
