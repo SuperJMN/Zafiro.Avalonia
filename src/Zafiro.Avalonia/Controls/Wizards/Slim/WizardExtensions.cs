@@ -1,8 +1,4 @@
-using System.Reactive;
-using System.Reactive.Disposables;
 using CSharpFunctionalExtensions;
-using Zafiro.Avalonia.Misc;
-using Zafiro.UI.Commands;
 using Zafiro.UI.Navigation;
 using Zafiro.UI.Wizards.Slim;
 
@@ -12,52 +8,21 @@ public static class WizardExtensions
 {
     public static async Task<Maybe<T>> Navigate<T>(this ISlimWizard<T> wizard, INavigator navigator, Func<ISlimWizard<T>, INavigator, Task<bool>>? cancel = null)
     {
-        var tcs = new TaskCompletionSource<Maybe<T>>();
-        var disposable = new CompositeDisposable();
         var cancelHandler = cancel ?? DefaultCancel<T>;
 
-        await navigator.Go(() =>
+        using var session = new WizardNavigationSession<T>(
+            wizard,
+            navigator,
+            cancelCommand => new SlimWizardNavigationHost(wizard, cancelCommand),
+            cancelHandler);
+
+        var startResult = await session.StartAsync();
+        if (startResult.IsFailure)
         {
-            wizard.Finished.SelectMany(async result =>
-                {
-                    var r = await navigator.GoBack().Map<Unit, T>(_ => result);
-                    if (r.IsFailure)
-                    {
-                        throw new InvalidOperationException("Failed to navigate back from wizard.");
-                    }
+            throw new InvalidOperationException($"Failed to navigate to wizard: {startResult.Error}");
+        }
 
-                    return r.Value;
-                })
-                .Take(1)
-                .Do(result => tcs.SetResult(result))
-                .Subscribe()
-                .DisposeWith(disposable);
-
-            return ApplicationUtils.ExecuteOnUIThread(() => CreateUserControl(wizard, navigator, tcs, cancelHandler));
-        });
-
-        var navigateResult = await tcs.Task;
-        disposable.Dispose();
-        return navigateResult;
-    }
-
-    private static UserControl CreateUserControl<T>(ISlimWizard<T> wizard, INavigator navigator, TaskCompletionSource<Maybe<T>> tcs, Func<ISlimWizard<T>, INavigator, Task<bool>> cancel)
-    {
-        return new UserControl
-        {
-            Content = new WizardNavigator
-            {
-                Wizard = wizard, Cancel = ReactiveCommand.CreateFromTask(async () =>
-                {
-                    var shouldClose = await cancel(wizard, navigator);
-                    if (shouldClose)
-                    {
-                        await navigator.GoBack();
-                        tcs.TrySetResult(Maybe<T>.None);
-                    }
-                }).Enhance()
-            }
-        };
+        return await session.Completion;
     }
 
     private static Task<bool> DefaultCancel<T>(ISlimWizard<T> _, INavigator navigator) => Task.FromResult(true);

@@ -1,0 +1,17 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:pages="clr-namespace:TestApp.Samples.SlimWizard.Subwizard.Pages"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="TestApp.Samples.SlimWizard.Subwizard.Pages.ChildWizardInputPageView"
+             x:DataType="pages:ChildWizardInputPageViewModel">
+    <StackPanel VerticalAlignment="Center" Spacing="10" HorizontalAlignment="Center" Width="420">
+        <TextBlock FontSize="16" FontWeight="Bold">Child wizard</TextBlock>
+        <TextBlock Text="{Binding Prompt}" TextWrapping="Wrap" />
+        <TextBox Text="{Binding Result, Mode=TwoWay}" Watermark="Type something..." />
+        <TextBlock TextWrapping="Wrap" FontStyle="Italic">
+            You can cancel this child wizard (Cancel button) to return to the parent wizard.
+        </TextBlock>
+    </StackPanel>
+</UserControl>

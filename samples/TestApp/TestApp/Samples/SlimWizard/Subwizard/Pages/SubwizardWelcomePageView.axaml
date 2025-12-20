@@ -1,0 +1,19 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:pages="clr-namespace:TestApp.Samples.SlimWizard.Subwizard.Pages"
+             mc:Ignorable="d" d:DesignWidth="500" d:DesignHeight="350"
+             x:Class="TestApp.Samples.SlimWizard.Subwizard.Pages.SubwizardWelcomePageView"
+             x:DataType="pages:SubwizardWelcomePageViewModel">
+    <StackPanel Spacing="10" VerticalAlignment="Center" HorizontalAlignment="Center">
+        <TextBlock FontSize="16" FontWeight="Bold">Wizard with subwizard</TextBlock>
+        <TextBlock TextWrapping="Wrap" Width="360">
+            This wizard starts a child wizard from one of its steps.
+            When the child wizard finishes or is cancelled, it navigates back to this wizard.
+        </TextBlock>
+        <TextBlock FontStyle="Italic" TextWrapping="Wrap" Width="360">
+            Click Next to continue.
+        </TextBlock>
+    </StackPanel>
+</UserControl>

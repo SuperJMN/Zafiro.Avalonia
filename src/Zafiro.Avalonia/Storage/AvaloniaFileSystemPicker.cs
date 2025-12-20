@@ -52,7 +52,7 @@ public class AvaloniaFileSystemPicker(IStorageProvider storageProvider) : IFileS
         return Result.Try(async () => (await storageProvider.OpenFilePickerAsync(filePickerOpenOptions)).AsEnumerable())
             .MapEach(storageFile => new MutableStorageFile(storageFile))
             .MapEach(x => x.AsReadOnly())
-            .CombineSequentially();
+            .Combine();
     }
 
     public async Task<Maybe<IEnumerable<IMutableDirectory>>> PickFolders(

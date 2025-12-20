@@ -12,11 +12,15 @@
         <Setter Property="Template">
             <ControlTemplate>
                 <DockPanel VerticalSpacing="10">
-                    <WizardHeader DockPanel.Dock="Top" />
+                    <WizardHeader DockPanel.Dock="Top" Wizard="{Binding $parent[SlimWizardControl].Wizard}" />
                     <ContentControl Padding="{TemplateBinding Padding}"
                                     Content="{Binding $parent[SlimWizardControl].Wizard.CurrentPage.Content}" />
                 </DockPanel>
             </ControlTemplate>
         </Setter>
+    </Style>
+
+    <Style Selector="Frame SlimWizardControl WizardHeader">
+        <Setter Property="IsVisible" Value="False" />
     </Style>
 </Styles>

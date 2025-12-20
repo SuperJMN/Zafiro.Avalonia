@@ -39,7 +39,6 @@
     <StyleInclude Source="Controls/AdaptiveControl.axaml" />
     <StyleInclude Source="Controls/StoppableControl.axaml" />
     <StyleInclude Source="Controls/SlimDataGrid/SlimDataGrid.axaml" />
-    <StyleInclude Source="Controls/Wizards/Classic/WizardControl.axaml" />
     <StyleInclude Source="Controls/Wizards/Slim/SlimWizardControl.axaml" />
     <StyleInclude Source="Controls/Wizards/Slim/WizardHeader.axaml" />
     <StyleInclude Source="Controls/Wizards/Slim/WizardNavigator.axaml" />
