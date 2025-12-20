@@ -3,43 +3,40 @@
 
     <Styles.Resources>
         <ControlTheme x:Key="{x:Type HeaderedContainer}" TargetType="HeaderedContainer">
-            <Setter Property="Padding" Value="10" />
-            <Setter Property="HeaderSpacing" Value="10" />
+            <Setter Property="HeaderPadding" Value="10" />
+            <Setter Property="ContentPadding" Value="10" />
             <Setter Property="Template">
                 <ControlTemplate>
-                    <Panel>
-                        <Border BorderThickness="{TemplateBinding BorderThickness}"
-                                BorderBrush="{TemplateBinding BorderBrush}"
-                                Background="{TemplateBinding Background}"
-                                CornerRadius="{TemplateBinding CornerRadius}"
-                                BoxShadow="{TemplateBinding BoxShadow}">
-                            <SmartDockPanel Margin="{TemplateBinding Padding}" VerticalSpacing="{TemplateBinding HeaderSpacing}">
-                                <ContentControl x:Name="Header"
-                                                DockPanel.Dock="Top"
-                                                Content="{TemplateBinding Header}"
-                                                Theme="{TemplateBinding HeaderTheme}"
-                                                IsVisible="{Binding $self.Content, Converter={x:Static ObjectConverters.IsNotNull}}"
-                                                ContentTemplate="{TemplateBinding HeaderTemplate}" />
-                                <ContentControl x:Name="Content"
-                                                Content="{TemplateBinding Content}"
-                                                IsVisible="{Binding $self.Content, Converter={x:Static ObjectConverters.IsNotNull}}"
-                                                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                                VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
-                                                ContentTemplate="{TemplateBinding ContentTemplate}"
-                                                Theme="{TemplateBinding ContentTheme}" />
-                            </SmartDockPanel>
-                        </Border>
-                    </Panel>
+                    <Border CornerRadius="{TemplateBinding CornerRadius}"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            BoxShadow="{TemplateBinding BoxShadow}"
+                            ClipToBounds="True">
+                        <DockPanel>
+                            <ContentPresenter x:Name="Header"
+                                              Background="{TemplateBinding HeaderBackground}"
+                                              Padding="{TemplateBinding HeaderPadding}"
+                                              DockPanel.Dock="Top"
+                                              Content="{TemplateBinding Header}"
+                                              ContentTemplate="{TemplateBinding HeaderTemplate}"
+                                              IsVisible="{Binding $parent[HeaderedContainer].Header, Converter={x:Static ObjectConverters.IsNotNull}}" />
+                            <ContentPresenter x:Name="Content"
+                                              Content="{TemplateBinding Content}"
+                                              ContentTemplate="{TemplateBinding ContentTemplate}"
+                                              Padding="{TemplateBinding ContentPadding}"
+                                              HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                              IsVisible="{Binding $parent[HeaderedContainer].Content, Converter={x:Static ObjectConverters.IsNotNull}}" />
+                        </DockPanel>
+                    </Border>
                 </ControlTemplate>
             </Setter>
-            <Style Selector="^ /template/ ContentControl#Header">
+            <Style Selector="^ /template/ ContentPresenter#Header">
                 <Setter Property="FontWeight" Value="Bold" />
             </Style>
         </ControlTheme>
 
         <ControlTheme x:Key="InlineHeaderedContainer" TargetType="HeaderedContainer">
-            <Setter Property="Padding" Value="10" />
-            <Setter Property="HeaderSpacing" Value="10" />
             <Setter Property="Template">
                 <ControlTemplate>
                     <Border BorderThickness="{TemplateBinding BorderThickness}"
@@ -47,26 +44,26 @@
                             Background="{TemplateBinding Background}"
                             CornerRadius="{TemplateBinding CornerRadius}"
                             BoxShadow="{TemplateBinding BoxShadow}">
-                        <SmartDockPanel Margin="{TemplateBinding Padding}" HorizontalSpacing="{TemplateBinding HeaderSpacing}">
-                            <ContentControl x:Name="Header"
-                                            DockPanel.Dock="Left"
-                                            Padding="{TemplateBinding HeaderPadding}"
-                                            Content="{TemplateBinding Header}"
-                                            VerticalAlignment="Center"
-                                            Theme="{TemplateBinding HeaderTheme}"
-                                            IsVisible="{Binding $parent[HeaderedContainer].Header, Converter={x:Static ObjectConverters.IsNotNull}}"
-                                            ContentTemplate="{TemplateBinding HeaderTemplate}" />
-                            <ContentControl x:Name="Content"
-                                            Content="{TemplateBinding Content}"
-                                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                            IsVisible="{Binding $parent[HeaderedContainer].Content, Converter={x:Static ObjectConverters.IsNotNull}}"
-                                            ContentTemplate="{TemplateBinding ContentTemplate}"
-                                            Theme="{TemplateBinding ContentTheme}" />
-                        </SmartDockPanel>
+                        <DockPanel>
+                            <ContentPresenter x:Name="Header"
+                                              DockPanel.Dock="Left"
+                                              Background="{TemplateBinding HeaderBackground}"
+                                              Padding="{TemplateBinding HeaderPadding}"
+                                              Content="{TemplateBinding Header}"
+                                              VerticalAlignment="Center"
+                                              ContentTemplate="{TemplateBinding HeaderTemplate}"
+                                              IsVisible="{Binding $parent[HeaderedContainer].Header, Converter={x:Static ObjectConverters.IsNotNull}}" />
+                            <ContentPresenter x:Name="Content"
+                                              Content="{TemplateBinding Content}"
+                                              Padding="{TemplateBinding ContentPadding}"
+                                              HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                              ContentTemplate="{TemplateBinding ContentTemplate}"
+                                              IsVisible="{Binding $parent[HeaderedContainer].Content, Converter={x:Static ObjectConverters.IsNotNull}}" />
+                        </DockPanel>
                     </Border>
                 </ControlTemplate>
             </Setter>
-            <Style Selector="^ /template/ ContentControl#Header">
+            <Style Selector="^ /template/ ContentPresenter#Header">
                 <Setter Property="FontWeight" Value="Bold" />
             </Style>
         </ControlTheme>
@@ -74,15 +71,18 @@
     </Styles.Resources>
     <Design.PreviewWith>
         <StackPanel Spacing="10" Margin="40">
-            <HeaderedContainer Header="HEADER" Background="Aqua" Content="HOLA" HorizontalContentAlignment="Right" HorizontalAlignment="Right" />
+            <HeaderedContainer Header="HEADER" CornerRadius="10" Background="Aquamarine" HeaderBackground="MediumAquamarine" Content="HOLA" />
+            <HeaderedContainer Width="100" Header="HEADER" CornerRadius="10" Background="Aquamarine" HeaderBackground="MediumAquamarine" Content="HOLA"
+                               HorizontalContentAlignment="Right"
+                               HorizontalAlignment="Right" />
             <HeaderedContainer Width="200" Height="200" Header="Header"
                                BorderBrush="Black" BorderThickness="2"
-                               CornerRadius="20" Padding="14 10" HeaderPadding="14 14 14 10"
+                               CornerRadius="20" HeaderPadding="14 10" ContentPadding="14 10"
                                BoxShadow="10 10 30 5 #80000000"
                                Background="Chartreuse" />
             <HeaderedContainer Width="200" Header="Header"
                                BorderBrush="Black" BorderThickness="2"
-                               CornerRadius="10" Padding="14 10" HeaderPadding="14 14 14 10"
+                               CornerRadius="10" HeaderPadding="14 14 14 10" ContentPadding="14 10"
                                Background="Chartreuse" />
             <HeaderedContainer Width="200" Height="200" Content="HELLO" Header="Header"
                                Background="Chartreuse" BorderBrush="Black" BorderThickness="1" />
@@ -93,7 +93,7 @@
                                Background="DarkGoldenrod" BorderBrush="Black" BorderThickness="1" />
             <HeaderedContainer Width="200" Height="200" Content="Content" Header="HEADER"
                                CornerRadius="10"
-                               Padding="10"
+                               HeaderPadding="10" ContentPadding="10"
                                Background="Red"
                                BorderBrush="Black" BorderThickness="1" />
             <HeaderedContainer Content="Content" Header="INLINE"
@@ -103,4 +103,5 @@
             </HeaderedContainer>
         </StackPanel>
     </Design.PreviewWith>
+
 </Styles>

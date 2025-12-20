@@ -246,7 +246,6 @@
                             <SplitView.ContentTemplate>
                                 <DataTemplate>
                                     <HeaderedContainer Header="{Binding $parent[ShellSplitView].ContentHeader}"
-                                                       HeaderSpacing="0"
                                                        Padding="0"
                                                        Content="{Binding $parent[ShellSplitView].Content}">
                                         <HeaderedContainer.HeaderTemplate>

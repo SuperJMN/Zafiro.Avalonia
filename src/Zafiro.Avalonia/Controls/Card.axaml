@@ -1,6 +1,5 @@
 <Styles xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:ui="clr-namespace:Zafiro.UI;assembly=Zafiro.UI">
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <Styles.Resources>
         <ResourceDictionary>
@@ -57,7 +56,6 @@
                                            CornerRadius="{TemplateBinding CornerRadius}"
                                            Padding="{TemplateBinding Padding}"
                                            BorderBrush="{TemplateBinding BorderBrush}"
-                                           HeaderSpacing="{TemplateBinding HeaderAndBodySpacing}"
                                            BoxShadow="{TemplateBinding BoxShadow}">
                             <HeaderedContainer.Header>
                                 <EdgePanel
@@ -186,7 +184,6 @@
                                            CornerRadius="{TemplateBinding CornerRadius}"
                                            Padding="{TemplateBinding Padding}"
                                            BorderBrush="{TemplateBinding BorderBrush}"
-                                           HeaderSpacing="{TemplateBinding HeaderAndBodySpacing}"
                                            BoxShadow="{TemplateBinding BoxShadow}">
                             <HeaderedContainer.Header>
                                 <SmartDockPanel VerticalSpacing="{Binding $parent[Card].HeaderItemsSpacing}" HorizontalSpacing="{Binding $parent[Card].HeaderItemsSpacing}">

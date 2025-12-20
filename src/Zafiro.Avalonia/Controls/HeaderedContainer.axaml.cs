@@ -24,8 +24,8 @@ public class HeaderedContainer : ContentControl
     public static readonly StyledProperty<ControlTheme> ContentThemeProperty = AvaloniaProperty.Register<HeaderedContainer, ControlTheme>(
         nameof(ContentTheme));
 
-    public static readonly StyledProperty<double> HeaderSpacingProperty = AvaloniaProperty.Register<HeaderedContainer, double>(
-        nameof(HeaderSpacing));
+    public static readonly StyledProperty<Thickness> ContentPaddingProperty = AvaloniaProperty.Register<HeaderedContainer, Thickness>(
+        nameof(ContentPadding));
 
     public static readonly StyledProperty<ControlTheme> HeaderThemeProperty = AvaloniaProperty.Register<HeaderedContainer, ControlTheme>(
         nameof(HeaderTheme));
@@ -60,7 +60,6 @@ public class HeaderedContainer : ContentControl
         set => SetValue(HeaderTemplateProperty, value);
     }
 
-    [Obsolete("Use HeadersSpacing instead.")]
     public Thickness HeaderPadding
     {
         get => GetValue(HeaderPaddingProperty);
@@ -73,9 +72,9 @@ public class HeaderedContainer : ContentControl
         set => SetValue(BoxShadowProperty, value);
     }
 
-    public double HeaderSpacing
+    public Thickness ContentPadding
     {
-        get => GetValue(HeaderSpacingProperty);
-        set => SetValue(HeaderSpacingProperty, value);
+        get => GetValue(ContentPaddingProperty);
+        set => SetValue(ContentPaddingProperty, value);
     }
 }
