@@ -23,7 +23,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <ProjectReference Include="../../../Zafiro/src/Zafiro.UI/Zafiro.UI.csproj"/>
+      <PackageReference Include="Zafiro.UI"/>
   </ItemGroup>
   <ItemGroup>
     <AdditionalFiles Include="**/*.axaml"/>
