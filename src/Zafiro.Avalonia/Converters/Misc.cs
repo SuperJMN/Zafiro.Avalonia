@@ -51,21 +51,4 @@ public class MiscConverters
     public static FuncValueConverter<int, IEnumerable<int>> Range { get; } = new(i => System.Linq.Enumerable.Range(1, i));
     public static FuncValueConverter<int, int> AddOne { get; } = new(i => i + 1);
     public static FuncValueConverter<bool, int> TrueToOne { get; } = new(i => i ? 1 : 0);
-
-    public static FuncMultiValueConverter<object, double> HeaderedContainerSpacingConverter { get; } = new FuncMultiValueConverter<object, double>(objects =>
-    {
-        var list = objects.ToList();
-        var spacing = list[0];
-        var obj = list[1];
-
-        if (spacing is double spacingValue)
-        {
-            if (obj != null)
-            {
-                return spacingValue;
-            }
-        }
-
-        return 0;
-    });
 }
