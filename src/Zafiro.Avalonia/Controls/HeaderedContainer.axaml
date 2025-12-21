@@ -7,12 +7,12 @@
             <Setter Property="ContentPadding" Value="10" />
             <Setter Property="Template">
                 <ControlTemplate>
-                    <Border CornerRadius="{TemplateBinding CornerRadius}"
-                            Background="{TemplateBinding Background}"
-                            BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}"
-                            BoxShadow="{TemplateBinding BoxShadow}"
-                            ClipToBounds="True">
+                    <OverlayBorder CornerRadius="{TemplateBinding CornerRadius}"
+                                   Background="{TemplateBinding Background}"
+                                   BorderBrush="{TemplateBinding BorderBrush}"
+                                   BorderThickness="{TemplateBinding BorderThickness}"
+                                   BoxShadow="{TemplateBinding BoxShadow}"
+                                   ClipToBounds="True">
                         <DockPanel>
                             <ContentPresenter x:Name="Header"
                                               Background="{TemplateBinding HeaderBackground}"
@@ -28,7 +28,7 @@
                                               HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                                               IsVisible="{Binding $parent[HeaderedContainer].Content, Converter={x:Static ObjectConverters.IsNotNull}}" />
                         </DockPanel>
-                    </Border>
+                    </OverlayBorder>
                 </ControlTemplate>
             </Setter>
             <Style Selector="^ /template/ ContentPresenter#Header">
@@ -71,6 +71,7 @@
     </Styles.Resources>
     <Design.PreviewWith>
         <StackPanel Spacing="10" Margin="40">
+            <HeaderedContainer Header="HEADER" CornerRadius="10" BorderBrush="LightGray" BorderThickness="2" Background="Aquamarine" HeaderBackground="MediumAquamarine" Content="HOLA" />
             <HeaderedContainer Header="HEADER" CornerRadius="10" Background="Aquamarine" HeaderBackground="MediumAquamarine" Content="HOLA" />
             <HeaderedContainer Width="100" Header="HEADER" CornerRadius="10" Background="Aquamarine" HeaderBackground="MediumAquamarine" Content="HOLA"
                                HorizontalContentAlignment="Right"
