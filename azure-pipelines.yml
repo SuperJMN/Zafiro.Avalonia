@@ -1,50 +1,42 @@
-trigger:
-  branches:
-    include: [ master ]
-pr:
-  branches:
-    include: [ master, "*" ]
+# Azure Pipelines configuration for Zafiro.Avalonia
+# Uses DotnetDeployer to publish NuGet packages
 
-pool:
-  vmImage: ubuntu-latest
+trigger:
+  - master
+  - main
 
 variables:
   - group: api-keys
-  - name: DOTNET_CLI_TELEMETRY_OPTOUT
-    value: '1'
+  - name: Agent.Source.Git.ShallowFetchDepth
+    value: 0
+
+pool:
+  vmImage: 'ubuntu-latest'
 
 steps:
-  # Full checkout + submodules
   - checkout: self
-    submodules: true
-    fetchDepth: 0
-  
-  # Install .NET 9 SDK
+    fetchDepth: 0  # Full clone for GitVersion
+
+  # Ensure .NET 10 SDK is available
   - task: UseDotNet@2
+    displayName: Install .NET 10 SDK
     inputs:
-      packageType: 'sdk'
-      version: '10.0.x'
-      displayName: 'Install .NET 10 SDK'
-  
-  # DotnetDeployer.Tool
-  - pwsh: |
-      dotnet tool install --global DotnetDeployer.Tool
-      dotnetdeployer --version
-    displayName: Install DotnetDeployer.Tool
-  
-  # NuGet packaging + publishing + GitHub release (real on master, dry-run elsewhere)
-  - pwsh: |
-      $branch   = '$(Build.SourceBranch)'
-      $isMaster = $branch -eq 'refs/heads/master'
-      Write-Host "Branch: $branch. Is master: $isMaster"
-      
-      if ($isMaster) {
-        Write-Host 'Publishing NuGet packages'
-        dotnetdeployer nuget --api-key '$(NuGetApiKey)'
-        dotnetdeployer github pages --github-token '$(GitHubApiKey)' --repository Zafiro.Avalonia.github.io --owner SuperJMN --prefix TestApp
-      } else {
-        Write-Host 'NuGet dry run (no push)'
-        dotnetdeployer nuget --api-key '$(NuGetApiKey)' --no-push
-      }
-    
-    displayName: Package, Publish and Release
+      version: '10.x'
+
+  # Install DotnetDeployer tool
+  - pwsh: dotnet tool install -g DotnetDeployer.Tool
+    displayName: Install DotnetDeployer
+
+  # Dry run: Create NuGet packages only (for PRs and non-master/main branches)
+  - pwsh: dotnetdeployer --dry-run
+    displayName: Create NuGet packages only (dry run)
+    condition: and(succeeded(), not(or(eq(variables['Build.SourceBranch'], 'refs/heads/master'), eq(variables['Build.SourceBranch'], 'refs/heads/main'))))
+    env:
+      NUGET_API_KEY: $(NugetApiKey)
+
+  # Create and Publish NuGet packages (for master/main branch only)
+  - pwsh: dotnetdeployer
+    displayName: Create and Publish NuGet packages
+    condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/master'), eq(variables['Build.SourceBranch'], 'refs/heads/main')))
+    env:
+      NUGET_API_KEY: $(NugetApiKey)
