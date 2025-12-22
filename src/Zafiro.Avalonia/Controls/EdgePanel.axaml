@@ -15,6 +15,7 @@
                     <TextBlock Background="Blue" Padding="10">ICON</TextBlock>
                 </EdgePanel.EndContent>
             </EdgePanel>
+            <EdgePanel CornerRadius="15" BorderBrush="Black" BorderThickness="1" Background="Red" Padding="15" StartContent="START" Content="CONTENT" EndContent="END"></EdgePanel>
         </StackPanel>
     </Design.PreviewWith>
 
@@ -25,26 +26,29 @@
             <Setter Property="VerticalContentAlignment" Value="Center" />
             <Setter Property="Template">
                 <ControlTemplate>
-                    <Grid Background="{TemplateBinding Background}" ColumnSpacing="{TemplateBinding Spacing}" Grid.IsSharedSizeScope="True">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition SharedSizeGroup="Icon" />
-                            <ColumnDefinition />
-                            <ColumnDefinition SharedSizeGroup="Icon" />
-                        </Grid.ColumnDefinitions>
-                        <ContentControl x:Name="StartContent"
-                                        IsVisible="{Binding $self.Content, Converter={x:Static ObjectConverters.IsNotNull}}"
-                                        ContentTemplate="{TemplateBinding StartContentTemplate}"
-                                        Content="{TemplateBinding StartContent}" />
-                        <ContentControl Grid.Column="1" x:Name="MainContent" VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
-                                        HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                        ContentTemplate="{TemplateBinding ContentTemplate}"
-                                        IsVisible="{Binding $self.Content, Converter={x:Static ObjectConverters.IsNotNull}}"
-                                        Content="{TemplateBinding Content}" />
-                        <ContentControl Grid.Column="2" x:Name="EndContent"
-                                        ContentTemplate="{TemplateBinding EndContentTemplate}"
-                                        IsVisible="{Binding $self.Content, Converter={x:Static ObjectConverters.IsNotNull}}"
-                                        Content="{TemplateBinding EndContent}" />
-                    </Grid>
+                    <Border CornerRadius="{TemplateBinding CornerRadius}" Padding="{TemplateBinding Padding}" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}">
+                        <Grid ColumnSpacing="{TemplateBinding Spacing}" Grid.IsSharedSizeScope="True">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition SharedSizeGroup="Icon" />
+                                <ColumnDefinition />
+                                <ColumnDefinition SharedSizeGroup="Icon" />
+                            </Grid.ColumnDefinitions>
+                            <ContentControl x:Name="StartContent"
+                                            IsVisible="{Binding $self.Content, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                            ContentTemplate="{TemplateBinding StartContentTemplate}"
+                                            Content="{TemplateBinding StartContent}" />
+                            <ContentControl Grid.Column="1" x:Name="MainContent" VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                            ContentTemplate="{TemplateBinding ContentTemplate}"
+                                            IsVisible="{Binding $self.Content, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                            Content="{TemplateBinding Content}" />
+                            <ContentControl Grid.Column="2" x:Name="EndContent"
+                                            ContentTemplate="{TemplateBinding EndContentTemplate}"
+                                            IsVisible="{Binding $self.Content, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                            Content="{TemplateBinding EndContent}" />
+                        </Grid>
+                    </Border>
                 </ControlTemplate>
             </Setter>
         </ControlTheme>
