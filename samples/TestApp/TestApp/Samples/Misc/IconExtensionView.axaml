@@ -2,7 +2,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:c="clr-namespace:Zafiro.Avalonia.Controls;assembly=Zafiro.Avalonia"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="TestApp.Samples.Misc.IconExtensionView">
 
@@ -10,7 +9,7 @@
         <StyleInclude Source="/Samples/SampleStyles.axaml" />
     </UserControl.Styles>
 
-    <c:HeaderedContainer Header="Simplified icon usage with IconExtension">
+    <HeaderedContainer Header="Simplified icon usage with IconExtension">
         <StackPanel Spacing="20" VerticalAlignment="Center">
             <TextBlock>The IconExtension markup extension simplifies icon usage in XAML.</TextBlock>
             <TextBlock>Instead of verbose nested elements, you can now use a simple markup extension.</TextBlock>
@@ -50,6 +49,12 @@
                 </StackPanel>
             </Grid>
 
+            <EdgePanel FontWeight="Bold" StartContent="Styling" IconOptions.Padding="10"
+                       IconOptions.Fill="Yellow"
+                       IconOptions.CornerRadius="10"
+                       IconOptions.HorizontalAlignment="Left"
+                       IconOptions.Background="Red" IconOptions.BorderBrush="Brown"
+                       IconOptions.BorderThickness="1" Content="{Icon fa-star}" />
             <Border Background="LightGray" CornerRadius="5" Padding="10">
                 <TextBlock TextWrapping="Wrap">
                     <Run FontWeight="Bold">Tip:</Run>
@@ -57,5 +62,5 @@
                 </TextBlock>
             </Border>
         </StackPanel>
-    </c:HeaderedContainer>
+    </HeaderedContainer>
 </UserControl>

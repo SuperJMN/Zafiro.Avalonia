@@ -1,4 +1,5 @@
 using Avalonia.Controls;
+using Zafiro.Avalonia.Controls;
 using Zafiro.UI;
 using ProjektankerIcon = Projektanker.Icons.Avalonia.Icon;
 
@@ -22,6 +23,8 @@ public class ProjektankerIconControlProvider : IIconControlProvider
             return null;
         }
 
-        return new ProjektankerIcon { Value = source };
+        var projektankerIcon = new ProjektankerIcon { Value = source };
+        projektankerIcon[!ProjektankerIcon.ForegroundProperty] = projektankerIcon[!IconOptions.FillProperty];
+        return projektankerIcon;
     }
 }

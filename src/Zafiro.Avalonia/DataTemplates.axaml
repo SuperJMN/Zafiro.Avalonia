@@ -13,9 +13,19 @@
     </DataTemplate>
 
     <DataTemplate DataType="ui:IIcon">
-        <Viewbox x:Name="IconViewBox" Height="{Binding $self.(IconOptions.Size)}" Width="{Binding $self.(IconOptions.Size)}">
-            <ContentControl ContentTemplate="{StaticResource IconDataTemplate}" Content="{Binding }" />
-        </Viewbox>
+        <Border x:Name="IconBorder"
+                HorizontalAlignment="{Binding $self.(IconOptions.HorizontalAlignment)}"
+                VerticalAlignment="{Binding $self.(IconOptions.VerticalAlignment)}"
+                Padding="{Binding $self.(IconOptions.Padding)}"
+                CornerRadius="{Binding $self.(IconOptions.CornerRadius)}"
+                BorderBrush="{Binding $self.(IconOptions.BorderBrush)}"
+                BorderThickness="{Binding $self.(IconOptions.BorderThickness)}"
+                Margin="{Binding $self.(IconOptions.Margin)}"
+                Background="{Binding $self.(IconOptions.Background)}">
+            <Viewbox Height="{Binding $self.(IconOptions.Size)}" Width="{Binding $self.(IconOptions.Size)}">
+                <ContentControl ContentTemplate="{StaticResource IconDataTemplate}" Content="{Binding }" />
+            </Viewbox>
+        </Border>
     </DataTemplate>
 
 </DataTemplates>
