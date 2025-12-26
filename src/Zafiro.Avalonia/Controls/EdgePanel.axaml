@@ -28,12 +28,7 @@
                 <ControlTemplate>
                     <Border CornerRadius="{TemplateBinding CornerRadius}" Padding="{TemplateBinding Padding}" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}">
-                        <Grid ColumnSpacing="{TemplateBinding Spacing}" Grid.IsSharedSizeScope="True">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition SharedSizeGroup="Icon" />
-                                <ColumnDefinition />
-                                <ColumnDefinition SharedSizeGroup="Icon" />
-                            </Grid.ColumnDefinitions>
+                        <Grid ColumnSpacing="{TemplateBinding Spacing}" ColumnDefinitions="Auto * Auto">
                             <ContentControl x:Name="StartContent"
                                             IsVisible="{Binding $self.Content, Converter={x:Static ObjectConverters.IsNotNull}}"
                                             ContentTemplate="{TemplateBinding StartContentTemplate}"
