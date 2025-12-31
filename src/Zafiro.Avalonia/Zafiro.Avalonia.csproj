@@ -8,24 +8,22 @@
     <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
     <CompilerGeneratedFilesOutputPath>$(BaseIntermediateOutputPath)Generated</CompilerGeneratedFilesOutputPath>
   </PropertyGroup>
-  <Import Project="..\Common.props"/>
-  <ItemGroup>
-    <PackageReference Include="Avalonia"/>
-    <PackageReference Include="Avalonia.Controls.DataGrid"/>
-    <PackageReference Include="CSharpFunctionalExtensions"/>
-    <PackageReference Include="FluentAvaloniaUI"/>
-    <PackageReference Include="JetBrains.Annotations"/>
-    <PackageReference Include="ReactiveProperty"/>
-    <PackageReference Include="ReactiveUI.Avalonia"/>
-    <PackageReference Include="System.Linq.Async"/>
-    <PackageReference Include="Xaml.Behaviors.Avalonia"/>
-    <PackageReference Include="ReactiveUI.SourceGenerators">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-      <PackageReference Include="Zafiro.UI"/>
-  </ItemGroup>
-  <ItemGroup>
-    <AdditionalFiles Include="**/*.axaml"/>
-  </ItemGroup>
+    <Import Project="..\Common.props"/>
+    <ItemGroup>
+        <PackageReference Include="Avalonia"/>
+        <PackageReference Include="Avalonia.Controls.DataGrid"/>
+        <PackageReference Include="CSharpFunctionalExtensions"/>
+        <PackageReference Include="FluentAvaloniaUI"/>
+        <PackageReference Include="JetBrains.Annotations"/>
+        <PackageReference Include="ReactiveProperty"/>
+        <PackageReference Include="ReactiveUI.Avalonia"/>
+        <PackageReference Include="System.Linq.Async"/>
+        <PackageReference Include="Xaml.Behaviors.Avalonia"/>
+        <PackageReference Include="ReactiveUI.SourceGenerators">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Zafiro.UI"/>
+        <AdditionalFiles Include="**/*.axaml"/>
+    </ItemGroup>
 </Project>

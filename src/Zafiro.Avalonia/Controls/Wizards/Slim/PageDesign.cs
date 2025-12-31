@@ -8,4 +8,5 @@ public class PageDesign : IPage
     public string Title { get; } = "Title";
     public IObservable<string> TitleObservable { get; } = Observable.Return("Title");
     public int Index { get; } = 2;
+    public StepKind Kind { get; } = StepKind.Normal;
 }

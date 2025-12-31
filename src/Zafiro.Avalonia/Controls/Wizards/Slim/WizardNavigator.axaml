@@ -20,7 +20,7 @@
                             <EnhancedButton Content="Cancel"
                                             HorizontalAlignment="Left"
                                             Command="{TemplateBinding Cancel}"
-                                            IsVisible="{Binding $parent[WizardNavigator].Wizard.CurrentStep.Step.Kind, Converter={x:Static converters:SlimWizardConverters.CancelVisible}}" />
+                                            IsVisible="{Binding $parent[WizardNavigator].Wizard.CurrentPage.Kind, Converter={x:Static converters:SlimWizardConverters.CancelVisible}}" />
                             <EnhancedButton Content="{Binding $parent[WizardNavigator].Wizard.Next.Text, TargetNullValue='Next'}"
                                             Command="{Binding $parent[WizardNavigator].Wizard.Next}"
                                             HorizontalAlignment="Right" />
