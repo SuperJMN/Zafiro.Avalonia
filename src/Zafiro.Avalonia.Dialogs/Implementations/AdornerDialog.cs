@@ -13,8 +13,6 @@ public class AdornerDialog : IDialog, ICloseable
     private readonly Lazy<AdornerLayer> adornerLayerLazy;
     private readonly Stack<DialogEntry> dialogs = new();
 
-    private TaskCompletionSource<bool>? currentDialog;
-
     public AdornerDialog(Func<AdornerLayer> getAdornerLayer)
     {
         adornerLayerLazy = new Lazy<AdornerLayer>(() => getAdornerLayer());
@@ -29,10 +27,8 @@ public class AdornerDialog : IDialog, ICloseable
                 var entry = dialogs.Pop();
                 entry.TitleSubscription.Dispose();
                 adornerLayerLazy.Value.Children.Remove(entry.Dialog);
+                entry.Completion.TrySetResult(true);
             }
-
-            currentDialog?.TrySetResult(true);
-            currentDialog = null;
         });
     }
 
@@ -45,10 +41,8 @@ public class AdornerDialog : IDialog, ICloseable
                 var entry = dialogs.Pop();
                 entry.TitleSubscription.Dispose();
                 adornerLayerLazy.Value.Children.Remove(entry.Dialog);
+                entry.Completion.TrySetResult(false);
             }
-
-            currentDialog?.TrySetResult(false);
-            currentDialog = null;
         });
     }
 
@@ -60,7 +54,7 @@ public class AdornerDialog : IDialog, ICloseable
 
         var showTask = await Dispatcher.UIThread.InvokeAsync(() =>
         {
-            currentDialog = new TaskCompletionSource<bool>();
+            var completion = new TaskCompletionSource<bool>();
             var options = optionsFactory(this);
 
             var dialog = new DialogViewContainer
@@ -90,13 +84,13 @@ public class AdornerDialog : IDialog, ICloseable
                 .ToBinding();
 
             adornerLayer.Children.Add(dialog);
-            dialogs.Push(new DialogEntry(dialog, titleSubscription));
+            dialogs.Push(new DialogEntry(dialog, titleSubscription, completion));
 
-            return currentDialog.Task;
+            return completion.Task;
         });
 
         return showTask;
     }
 
-    private sealed record DialogEntry(DialogViewContainer Dialog, IDisposable TitleSubscription);
+    private sealed record DialogEntry(DialogViewContainer Dialog, IDisposable TitleSubscription, TaskCompletionSource<bool> Completion);
 }
