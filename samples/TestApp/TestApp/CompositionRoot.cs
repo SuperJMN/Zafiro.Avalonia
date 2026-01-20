@@ -3,7 +3,6 @@ using System.Linq;
 using System.Reactive.Linq;
 using System.Reflection;
 using Avalonia.Controls;
-using Avalonia.Controls.Notifications;
 using Microsoft.Extensions.DependencyInjection;
 using ReactiveUI;
 using Serilog;
@@ -11,7 +10,6 @@ using TestApp.Samples.Navigation;
 using TestApp.Shell;
 using Zafiro.Avalonia;
 using Zafiro.Avalonia.Dialogs;
-using Zafiro.Avalonia.Misc;
 using Zafiro.Avalonia.Services;
 using Zafiro.Avalonia.Storage;
 using Zafiro.UI;
@@ -32,12 +30,7 @@ public static class CompositionRoot
         services.AddSingleton(DialogService.Create());
         services.AddSingleton<ILauncherService, LauncherService>();
 
-        services.AddSingleton<INotificationService>(new NotificationService(() =>
-        {
-            var topLevel = ApplicationUtils.TopLevel().GetValueOrThrow("TopLevel not ready for NotificationService");
-            var notificationManager = new WindowNotificationManager(topLevel) { Position = NotificationPosition.BottomRight };
-            return notificationManager;
-        }));
+        services.AddSingleton<INotificationService>(new NotificationService());
 
         var logger = new LoggerConfiguration()
             .WriteTo.Console()
