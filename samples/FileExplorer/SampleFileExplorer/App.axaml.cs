@@ -38,13 +38,13 @@ public class App : Application
         Log.Logger = new LoggerConfiguration()
             .WriteTo.Console()
             .CreateLogger();
-        
+
         this.Connect(
             () => new MainView(),
             mv =>
             {
                 var topLevel = TopLevel.GetTopLevel(mv)!;
-                var notificationService = new NotificationService(new WindowNotificationManager(topLevel) { Position = NotificationPosition.BottomRight });
+                var notificationService = new NotificationService();
                 var handler = LoggerExtensions.GetHandler(Log.Logger);
                 var seaweedfs = new Zafiro.FileSystem.SeaweedFS.FileSystem(new SeaweedFSClient(new System.Net.Http.HttpClient(handler)
                 {
@@ -52,7 +52,7 @@ public class App : Application
                 }));
                 var dialogService = new DesktopDialog();
                 ITransferManager transferManager = new TransferManager();
-                List<FileSystemConnection> connections = 
+                List<FileSystemConnection> connections =
                 [
                     new FileSystemConnection("local", "Local", new FileSystem(new System.IO.Abstractions.FileSystem())),
                     new FileSystemConnection("seaweedfs", "SeaweedFS", seaweedfs)
@@ -69,7 +69,7 @@ public class App : Application
             mv =>
             {
                 var topLevel = TopLevel.GetTopLevel(mv)!;
-                var notificationService = new NotificationService(new WindowNotificationManager(topLevel));
+                var notificationService = new NotificationService(NotificationPosition.BottomRight);
                 var fs = new Zafiro.FileSystem.SeaweedFS.FileSystem(new SeaweedFSClient(new System.Net.Http.HttpClient()
                 {
                     BaseAddress = new Uri("http://192.168.1.29:8888"),
