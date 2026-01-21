@@ -130,6 +130,36 @@ public static class DialogExtensions
         return await dialogService.ShowAndGetResult(viewModel, Observable.Return(title), optionsFactory, getResult);
     }
 
+    /// <summary>
+    /// Shows a dialog with the given IValidatable viewModel and returns the result when the user confirms.
+    /// Uses the viewModel's IsValid property for submit validation.
+    /// </summary>
+    public static Task<Maybe<TResult>> ShowAndGetResult<TViewModel, TResult>(this IDialog dialogService,
+        [DisallowNull] TViewModel viewModel,
+        string title,
+        Func<TViewModel, TResult> getResult) where TViewModel : IValidatable
+    {
+        return dialogService.ShowAndGetResult(viewModel, title, vm => vm.IsValid, getResult);
+    }
+
+    /// <summary>
+    /// Shows a dialog with the given IValidatable viewModel and returns the async result when the user confirms.
+    /// Uses the viewModel's IsValid property for submit validation.
+    /// </summary>
+    public static async Task<Maybe<TResult>> ShowAndGetResult<TViewModel, TResult>(this IDialog dialogService,
+        [DisallowNull] TViewModel viewModel,
+        string title,
+        Func<TViewModel, Task<TResult>> getResult) where TViewModel : IValidatable
+    {
+        Func<ICloseable, IOption[]> optionsFactory = closeable =>
+        [
+            Cancel(closeable),
+            Ok(closeable, viewModel.IsValid)
+        ];
+
+        return await dialogService.ShowAndGetResult(viewModel, Observable.Return(title), optionsFactory, getResult);
+    }
+
     public static async Task<Maybe<TResult>> ShowAndGetResult<TViewModel, TResult>(this IDialog dialogService,
         [DisallowNull] TViewModel viewModel,
         IObservable<string> title,
