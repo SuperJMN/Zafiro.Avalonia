@@ -44,11 +44,11 @@ public sealed class SectionsRegistrationGenerator : IIncrementalGenerator
             {
                 if (s.contractFqn == s.implFqn)
                 {
-                    sb.AppendLine($"        global::Microsoft.Extensions.DependencyInjection.ServiceCollectionServiceExtensions.AddScoped(services, typeof({s.implFqn}));");
+                    sb.AppendLine($"        global::Microsoft.Extensions.DependencyInjection.ServiceCollectionServiceExtensions.AddTransient(services, typeof({s.implFqn}));");
                 }
                 else
                 {
-                    sb.AppendLine($"        global::Microsoft.Extensions.DependencyInjection.ServiceCollectionServiceExtensions.AddScoped(services, typeof({s.contractFqn}), typeof({s.implFqn}));");
+                    sb.AppendLine($"        global::Microsoft.Extensions.DependencyInjection.ServiceCollectionServiceExtensions.AddTransient(services, typeof({s.contractFqn}), typeof({s.implFqn}));");
                 }
             }
 
