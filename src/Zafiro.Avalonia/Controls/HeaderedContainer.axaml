@@ -5,6 +5,7 @@
         <ControlTheme x:Key="{x:Type HeaderedContainer}" TargetType="HeaderedContainer">
             <Setter Property="HeaderPadding" Value="10" />
             <Setter Property="ContentPadding" Value="10" />
+            <Setter Property="ClipToBounds" Value="False"></Setter>
             <Setter Property="Template">
                 <ControlTemplate>
                     <OverlayBorder CornerRadius="{TemplateBinding CornerRadius}"
@@ -12,7 +13,7 @@
                                    BorderBrush="{TemplateBinding BorderBrush}"
                                    BorderThickness="{TemplateBinding BorderThickness}"
                                    BoxShadow="{TemplateBinding BoxShadow}"
-                                   ClipToBounds="True">
+                                   ClipToBounds="{TemplateBinding ClipToBounds}">
                         <DockPanel>
                             <ContentPresenter x:Name="Header"
                                               Background="{TemplateBinding HeaderBackground}"
@@ -76,10 +77,12 @@
             <HeaderedContainer Width="100" Header="HEADER" CornerRadius="10" Background="Aquamarine" HeaderBackground="MediumAquamarine" Content="HOLA"
                                HorizontalContentAlignment="Right"
                                HorizontalAlignment="Right" />
+            <Border BoxShadow="10 10 30 5 #80000000" Height="200" Width="100"></Border>
             <HeaderedContainer Width="200" Height="200" Header="Header"
                                BorderBrush="Black" BorderThickness="2"
                                CornerRadius="20" HeaderPadding="14 10" ContentPadding="14 10"
                                BoxShadow="10 10 30 5 #80000000"
+                               Margin="20"
                                Background="Chartreuse" />
             <HeaderedContainer Width="200" Header="Header"
                                BorderBrush="Black" BorderThickness="2"
@@ -101,6 +104,16 @@
                                Theme="{StaticResource InlineHeaderedContainer}"
                                Background="DarkCyan"
                                BorderBrush="Black" BorderThickness="1">
+            </HeaderedContainer>
+            <HeaderedContainer Content="Content"
+                               HeaderPadding="0"
+                               Background="DarkCyan"
+                               CornerRadius="20"
+                               BorderBrush="Black" BorderThickness="1">
+                <HeaderedContainer.Header>
+                    <TextBlock Background="Red">Header clipping</TextBlock>
+                </HeaderedContainer.Header>
+
             </HeaderedContainer>
         </StackPanel>
     </Design.PreviewWith>
