@@ -1,7 +1,5 @@
 <Styles xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:slim="clr-namespace:Zafiro.UI.Wizards.Slim;assembly=Zafiro.UI"
-        xmlns:slimControls="clr-namespace:Zafiro.Avalonia.Controls.Wizards.Slim">
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Design.PreviewWith>
         <Frame Width="200" Height="200" />
     </Design.PreviewWith>
@@ -18,35 +16,19 @@
             <Setter Property="Template">
                 <ControlTemplate>
                     <DockPanel>
-                        <Grid DockPanel.Dock="Top" ColumnDefinitions="Auto *">
-                            <EnhancedButton Command="{Binding $parent[Frame].Navigator.Back}"
+                        <DockPanel DockPanel.Dock="Top">
+                            <EnhancedButton Command="{TemplateBinding BackCommand}"
                                             x:Name="BackButton"
                                             VerticalAlignment="Center"
                                             Content="{TemplateBinding BackButtonContent}">
                                 <Button.IsVisible>
-                                    <MultiBinding Converter="{x:Static BoolConverters.And}">
-                                        <Binding Path="$parent[Frame].IsBackButtonVisible" />
-                                        <Binding Path="$self.IsEffectivelyEnabled" />
-                                    </MultiBinding>
+                                    <Binding Path="$self.IsEffectivelyEnabled" />
                                 </Button.IsVisible>
                             </EnhancedButton>
-                            <ContentControl Grid.Column="1"
-                                            VerticalAlignment="Center"
-                                            Content="{Binding $parent[Frame].Navigator.Content^, Converter={x:Static FrameConverters.HeaderContext}}">
-                                <ContentControl.DataTemplates>
-                                    <DataTemplate DataType="slim:ISlimWizard">
-                                        <slimControls:WizardHeader IsBackButtonVisible="False" Wizard="{Binding}" Margin="0 0 0 10" />
-                                    </DataTemplate>
-                                    <DataTemplate DataType="slimControls:SlimWizardNavigationHost">
-                                        <slimControls:WizardHeader IsBackButtonVisible="False" Wizard="{Binding Wizard}" Margin="0 0 0 10" />
-                                    </DataTemplate>
-                                    <DataTemplate DataType="x:Object">
-                                        <Panel />
-                                    </DataTemplate>
-                                </ContentControl.DataTemplates>
-                            </ContentControl>
-                        </Grid>
-                        <ContentControl Margin="{TemplateBinding Padding}" Content="{Binding $parent[Frame].Navigator.Content^,  FallbackValue='No content', TargetNullValue='Navigator.Content is a null'}" />
+                            <ContentPresenter Content="{TemplateBinding Header}" />
+                        </DockPanel>
+                        <ContentPresenter DockPanel.Dock="Bottom" Content="{TemplateBinding Footer}" />
+                        <ContentPresenter Margin="{TemplateBinding Padding}" Content="{TemplateBinding Content}" />
                     </DockPanel>
                 </ControlTemplate>
             </Setter>

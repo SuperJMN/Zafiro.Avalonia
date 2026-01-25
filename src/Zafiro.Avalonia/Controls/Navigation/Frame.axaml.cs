@@ -1,39 +1,55 @@
+using System.Windows.Input;
 using Avalonia.Controls.Primitives;
-using Zafiro.UI.Navigation;
 
 namespace Zafiro.Avalonia.Controls.Navigation;
 
 public class Frame : TemplatedControl
 {
-    public static readonly DirectProperty<Frame, INavigator?> NavigatorProperty = AvaloniaProperty.RegisterDirect<Frame, INavigator?>(
-        nameof(Navigator), o => o.Navigator, (o, v) => o.Navigator = v);
+    public static readonly StyledProperty<ICommand> BackCommandProperty = AvaloniaProperty.Register<Frame, ICommand>(
+        nameof(BackCommand));
 
-    public static readonly StyledProperty<bool> IsBackButtonVisibleProperty =
-        AvaloniaProperty.Register<Frame, bool>(
-            nameof(IsBackButtonVisible),
-            defaultValue: true);
+    public static readonly StyledProperty<object> ContentProperty = AvaloniaProperty.Register<Frame, object>(
+        nameof(Content));
+
 
     public static readonly StyledProperty<object> BackButtonContentProperty =
         AvaloniaProperty.Register<Frame, object>(
             nameof(BackButtonContent));
 
-    private INavigator? navigator;
 
-    public INavigator? Navigator
+    public static readonly StyledProperty<object?> HeaderProperty = AvaloniaProperty.Register<Frame, object?>(
+        nameof(Header));
+
+    public static readonly StyledProperty<object?> FooterProperty = AvaloniaProperty.Register<Frame, object?>(
+        nameof(Footer));
+
+    public ICommand BackCommand
     {
-        get => navigator;
-        set => SetAndRaise(NavigatorProperty, ref navigator, value);
+        get => GetValue(BackCommandProperty);
+        set => SetValue(BackCommandProperty, value);
     }
 
-    public bool IsBackButtonVisible
+    public object Content
     {
-        get => GetValue(IsBackButtonVisibleProperty);
-        set => SetValue(IsBackButtonVisibleProperty, value);
+        get => GetValue(ContentProperty);
+        set => SetValue(ContentProperty, value);
     }
 
     public object BackButtonContent
     {
         get => GetValue(BackButtonContentProperty);
         set => SetValue(BackButtonContentProperty, value);
+    }
+
+    public object? Header
+    {
+        get => GetValue(HeaderProperty);
+        set => SetValue(HeaderProperty, value);
+    }
+
+    public object? Footer
+    {
+        get => GetValue(FooterProperty);
+        set => SetValue(FooterProperty, value);
     }
 }
