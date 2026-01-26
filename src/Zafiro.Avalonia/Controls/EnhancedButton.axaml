@@ -144,4 +144,16 @@
             </Style>
         </ControlTheme>
     </Styles.Resources>
+    <Style Selector="EnhancedButton.Hollow">
+        <Setter Property="Tint" Value="Transparent" />
+    </Style>
+    <Style Selector="EnhancedButton.Primary">
+        <Setter Property="Tint" Value="{DynamicResource SystemChromeHighColor}" />
+    </Style>
+    <Style Selector="EnhancedButton.Secondary">
+        <Setter Property="Tint" Value="{DynamicResource SystemChromeLowColor}" />
+    </Style>
+    <Style Selector="EnhancedButton.Destructive">
+        <Setter Property="Tint" Value="{DynamicResource SystemErrorTextColor}" />
+    </Style>
 </Styles>

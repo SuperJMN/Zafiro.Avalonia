@@ -32,7 +32,7 @@ public static class WizardExtensions
             return
             [
                 new Option("Cancel", cancel, new Settings { IsCancel = true, Role = OptionRole.Cancel, IsVisible = canCancel }),
-                new Option("Back", wizard.Back, new Settings { Role = OptionRole.Primary }),
+                new Option("Back", wizard.Back, new Settings { Role = OptionRole.Secondary }),
                 new Option("Next", next, new Settings { Role = OptionRole.Primary, IsDefault = true }),
             ];
         };

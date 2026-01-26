@@ -10,16 +10,6 @@
         </slim:WizardFooter>
     </Design.PreviewWith>
 
-    <Style Selector="EnhancedButton.Hollow">
-        <Setter Property="Tint" Value="Transparent" />
-    </Style>
-    <Style Selector="EnhancedButton.Primary">
-        <Setter Property="Tint" Value="{DynamicResource SystemChromeHighColor}" />
-    </Style>
-
-    <Style Selector="EnhancedButton.Secondary">
-        <Setter Property="Tint" Value="{DynamicResource SystemChromeLowColor}" />
-    </Style>
 
     <Styles.Resources>
         <ControlTheme x:Key="{x:Type slim:WizardFooter}" TargetType="slim:WizardFooter">

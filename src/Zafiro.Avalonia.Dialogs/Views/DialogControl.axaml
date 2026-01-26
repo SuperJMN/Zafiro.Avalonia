@@ -1,7 +1,8 @@
 <Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:g="clr-namespace:System.Collections.Generic;assembly=System.Collections"
-        xmlns:dialogs="clr-namespace:Zafiro.Avalonia.Dialogs">
+        xmlns:dialogs="clr-namespace:Zafiro.Avalonia.Dialogs"
+        xmlns:behaviors="clr-namespace:Zafiro.Avalonia.Dialogs.Behaviors">
 
     <Styles.Resources>
 
@@ -28,20 +29,10 @@
                                                 IsCancel="{Binding IsCancel}"
                                                 IsDefault="{Binding IsDefault}"
                                                 Padding="16 8"
-                                                CornerRadius="4"
-                                                Tag="{Binding Role}">
-                                    <EnhancedButton.Styles>
-                                        <Style Selector="EnhancedButton[Tag=Destructive]">
-                                            <Setter Property="Tint" Value="{DynamicResource SystemErrorTextColor}" />
-                                        </Style>
-                                        <Style Selector="EnhancedButton[Tag=Cancel]">
-                                            <Setter Property="BorderThickness" Value="1" />
-                                            <Setter Property="Tint" Value="Transparent" />
-                                        </Style>
-                                        <Style Selector="EnhancedButton[Tag=Secondary]">
-                                            <Setter Property="Tint" Value="{DynamicResource ChromeDisabledHigh}" />
-                                        </Style>
-                                    </EnhancedButton.Styles>
+                                                CornerRadius="4">
+                                    <Interaction.Behaviors>
+                                        <behaviors:AddClassesForRoleBehavior Role="{Binding Role}" />
+                                    </Interaction.Behaviors>
                                 </EnhancedButton>
                             </DataTemplate>
                         </Border.DataTemplates>
@@ -87,8 +78,7 @@
                                             Spacing="8">
                                     <!-- Cancel always goes first -->
                                     <ItemsControl Classes="Horizontal" ItemsSource="{Binding $parent[DialogControl].CancelOptions}" />
-                                    <!-- Secondary after Cancel -->
-                                    <ItemsControl Classes="Horizontal" ItemsSource="{Binding $parent[DialogControl].SecondaryOptions}" />
+
                                 </StackPanel>
 
                                 <!-- Center: Info Options + Custom Footer -->
@@ -108,7 +98,9 @@
                                             Orientation="Horizontal"
                                             Classes="ButtonGroup"
                                             Spacing="8">
-                                    <!-- Primary first -->
+                                    <!-- Secondary first -->
+                                    <ItemsControl Classes="Horizontal" ItemsSource="{Binding $parent[DialogControl].SecondaryOptions}" />
+                                    <!-- Primary next -->
                                     <ItemsControl Classes="Horizontal" ItemsSource="{Binding $parent[DialogControl].PrimaryOptions}" />
                                     <!-- Destructive at the end -->
                                     <ItemsControl Classes="Horizontal" ItemsSource="{Binding $parent[DialogControl].DestructiveOptions}" />
