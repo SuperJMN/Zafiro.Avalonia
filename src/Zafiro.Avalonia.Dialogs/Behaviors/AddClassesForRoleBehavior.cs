@@ -45,7 +45,6 @@ public class AddClassesForRoleBehavior : Behavior<Control>
         AssociatedObject.Classes.Remove("Primary");
         AssociatedObject.Classes.Remove("Secondary");
         AssociatedObject.Classes.Remove("Destructive");
-        AssociatedObject.Classes.Remove("Cancel");
         AssociatedObject.Classes.Remove("Hollow");
 
         switch (role)
