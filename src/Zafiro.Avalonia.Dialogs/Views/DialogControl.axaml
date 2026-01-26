@@ -77,7 +77,7 @@
                                 <ContentPresenter Content="{TemplateBinding Content}" />
                             </ScrollViewer>
 
-                            <!-- Buttons -->
+                            <!-- Footer Area: Buttons + Custom Content -->
                             <Grid Grid.Row="2" ColumnSpacing="16" ColumnDefinitions="Auto,*,Auto" Margin="0 16 0 0">
 
                                 <!-- Cancel and Secondary on the left -->
@@ -91,11 +91,17 @@
                                     <ItemsControl Classes="Horizontal" ItemsSource="{Binding $parent[DialogControl].SecondaryOptions}" />
                                 </StackPanel>
 
-                                <!-- Info in the center -->
-                                <ItemsControl Classes="Horizontal"
-                                              Grid.Column="1"
-                                              HorizontalAlignment="Center"
-                                              ItemsSource="{Binding $parent[DialogControl].InfoOptions}" />
+                                <!-- Center: Info Options + Custom Footer -->
+                                <StackPanel Grid.Column="1"
+                                            Orientation="Horizontal"
+                                            HorizontalAlignment="Center"
+                                            Spacing="10">
+                                    <ItemsControl Classes="Horizontal"
+                                                  ItemsSource="{Binding $parent[DialogControl].InfoOptions}" />
+
+                                    <ContentPresenter Content="{Binding $parent[DialogControl].Footer}"
+                                                      IsVisible="{Binding $parent[DialogControl].HasCustomFooter}" />
+                                </StackPanel>
 
                                 <!-- Primary/Destructive on the right -->
                                 <StackPanel Grid.Column="2"

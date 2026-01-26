@@ -14,7 +14,8 @@ public static class WizardExtensions
     {
         var disposables = new CompositeDisposable();
 
-        var nextOption = new NextOption(wizard).DisposeWith(disposables);
+        // Wrapped wizard to provide footer content in a dialog-friendly way
+        var dialogHost = new DialogWizardHost(wizard);
 
         Func<ICloseable, IEnumerable<IOption>> optionsFactory = closeable =>
         {
@@ -22,16 +23,11 @@ public static class WizardExtensions
             var cancel = ReactiveCommand.Create(closeable.Dismiss, canCancel).Enhance();
             wizard.Finished.Subscribe(_ => closeable.Close()).DisposeWith(disposables);
 
-            Settings settings = new Settings
-            {
-                IsCancel = true,
-                Role = OptionRole.Cancel,
-                IsVisible = canCancel,
-            };
             return
             [
-                nextOption,
-                new Option("Cancel", cancel, settings),
+                new Option("Cancel", cancel, new Settings { IsCancel = true, Role = OptionRole.Cancel, IsVisible = canCancel }),
+                new Option("Back", wizard.Back, new Settings { Role = OptionRole.Primary }),
+                new Option("Next", wizard.Next, new Settings { Role = OptionRole.Primary, IsDefault = true }),
             ];
         };
 
@@ -47,7 +43,7 @@ public static class WizardExtensions
             .Switch()
             .DistinctUntilChanged();
 
-        var showAndGetResult = await dialog.ShowAndGetResult(wizard, dialogTitle, optionsFactory, x => x.Finished.FirstAsync().ToTask());
+        var showAndGetResult = await dialog.ShowAndGetResult(dialogHost, dialogTitle, optionsFactory, x => wizard.Finished.FirstAsync().ToTask());
 
         disposables.Dispose();
 

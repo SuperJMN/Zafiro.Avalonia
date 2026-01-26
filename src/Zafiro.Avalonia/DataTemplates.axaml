@@ -8,16 +8,21 @@
         <zslim:SlimWizardControl Wizard="{Binding}" />
     </DataTemplate>
 
-    <DataTemplate DataType="zslim:SlimWizardNavigationHost">
-        <zslim:WizardNavigator Wizard="{Binding Wizard}" Cancel="{Binding Cancel}" />
-    </DataTemplate>
 
-    <DataTemplate DataType="zslim:WizardHeaderViewModel">
+    <DataTemplate DataType="slim:WizardHeader">
         <zslim:WizardHeader Wizard="{Binding Wizard}" />
     </DataTemplate>
 
-    <DataTemplate DataType="zslim:WizardFooterViewModel">
-        <zslim:WizardFooter Host="{Binding Host}" Wizard="{Binding Host.Wizard}" />
+    <DataTemplate DataType="slim:WizardFooter">
+        <zslim:WizardFooter Wizard="{Binding Wizard}" Cancel="{Binding Cancel}" />
+    </DataTemplate>
+
+    <DataTemplate DataType="slim:DialogWizardHost">
+        <zslim:SlimWizardControl Wizard="{Binding Wizard}" />
+    </DataTemplate>
+
+    <DataTemplate DataType="slim:NavigationWizardHost">
+        <zslim:SlimWizardControl Wizard="{Binding Wizard}" />
     </DataTemplate>
 
     <DataTemplate DataType="ui:IIcon">

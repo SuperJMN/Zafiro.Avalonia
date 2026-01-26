@@ -13,7 +13,7 @@ public static class WizardExtensions
         using var session = new WizardNavigationSession<T>(
             wizard,
             navigator,
-            cancelCommand => new SlimWizardNavigationHost(wizard, cancelCommand),
+            cancelCommand => wizard,
             cancelHandler);
 
         var startResult = await session.StartAsync();

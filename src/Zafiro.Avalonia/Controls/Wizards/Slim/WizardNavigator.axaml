@@ -1,8 +1,6 @@
 <Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:controls="clr-namespace:Zafiro.Avalonia.Controls.Wizards.Slim;assembly=Zafiro.Avalonia"
-        xmlns:nav="clr-namespace:Zafiro.Avalonia.Controls.Navigation"
-        xmlns:converters="clr-namespace:Zafiro.Avalonia.Converters;assembly=Zafiro.Avalonia">
+        xmlns:controls="clr-namespace:Zafiro.Avalonia.Controls.Wizards.Slim;assembly=Zafiro.Avalonia">
     <Design.PreviewWith>
         <controls:WizardNavigator Width="500">
             <WizardNavigator.Wizard>
@@ -16,24 +14,9 @@
             <Setter Property="Padding" Value="20" />
             <Setter Property="Template">
                 <ControlTemplate>
-                    <DockPanel VerticalSpacing="20" Margin="{TemplateBinding Padding}">
-                        <Panel x:Name="ButtonsPanel" DockPanel.Dock="Bottom">
-                            <EnhancedButton Content="Cancel"
-                                            HorizontalAlignment="Left"
-                                            Command="{TemplateBinding Cancel}"
-                                            IsVisible="{Binding $parent[controls:WizardNavigator].Wizard.CurrentPage.Kind, Converter={x:Static converters:SlimWizardConverters.CancelVisible}}" />
-                            <EnhancedButton Content="{Binding $parent[controls:WizardNavigator].Wizard.Next.Text, TargetNullValue='Next'}"
-                                            Command="{Binding $parent[controls:WizardNavigator].Wizard.Next}"
-                                            HorizontalAlignment="Right" />
-                        </Panel>
-                        <SlimWizardControl Wizard="{TemplateBinding Wizard}" />
-                    </DockPanel>
+                    <SlimWizardControl Wizard="{TemplateBinding Wizard}" />
                 </ControlTemplate>
             </Setter>
         </ControlTheme>
     </Styles.Resources>
-
-    <Style Selector="nav|Frame controls|WizardNavigator /template/ Panel#ButtonsPanel">
-        <Setter Property="IsVisible" Value="False" />
-    </Style>
 </Styles>

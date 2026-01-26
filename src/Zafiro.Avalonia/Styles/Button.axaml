@@ -12,6 +12,10 @@
         <Setter Property="VerticalContentAlignment" Value="Center" />
     </Style>
 
+    <Style Selector="EnhancedButton.VisibleWhenEnabled">
+        <Setter Property="IsVisible" Value="{Binding IsEffectivelyEnabled, RelativeSource={RelativeSource Self}}" />
+    </Style>
+
     <Styles.Resources>
 
         <ControlTheme x:Key="TransparentButton" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">

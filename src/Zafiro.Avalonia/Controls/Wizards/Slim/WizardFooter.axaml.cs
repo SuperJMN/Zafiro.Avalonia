@@ -1,6 +1,7 @@
 using System.Reactive.Disposables;
 using Avalonia.Controls.Primitives;
 using Zafiro.Avalonia.Misc;
+using Zafiro.UI.Commands;
 using Zafiro.UI.Navigation;
 using Zafiro.UI.Wizards.Slim;
 
@@ -11,11 +12,11 @@ public class WizardFooter : TemplatedControl
     public static readonly StyledProperty<ISlimWizard> WizardProperty = AvaloniaProperty.Register<WizardFooter, ISlimWizard>(
         nameof(Wizard));
 
-    public static readonly StyledProperty<SlimWizardNavigationHost> HostProperty = AvaloniaProperty.Register<WizardFooter, SlimWizardNavigationHost>(
-        nameof(Host));
-
     public static readonly StyledProperty<object?> CurrentFooterProperty = AvaloniaProperty.Register<WizardFooter, object?>(
         nameof(CurrentFooter));
+
+    public static readonly StyledProperty<IEnhancedCommand?> CancelProperty = AvaloniaProperty.Register<WizardFooter, IEnhancedCommand?>(
+        nameof(Cancel));
 
     private CompositeDisposable? subscriptions;
 
@@ -25,16 +26,16 @@ public class WizardFooter : TemplatedControl
         set => SetValue(WizardProperty, value);
     }
 
-    public SlimWizardNavigationHost Host
-    {
-        get => GetValue(HostProperty);
-        set => SetValue(HostProperty, value);
-    }
-
     public object? CurrentFooter
     {
         get => GetValue(CurrentFooterProperty);
         set => SetValue(CurrentFooterProperty, value);
+    }
+
+    public IEnhancedCommand? Cancel
+    {
+        get => GetValue(CancelProperty);
+        set => SetValue(CancelProperty, value);
     }
 
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)

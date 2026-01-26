@@ -32,7 +32,16 @@ public class WizardViewModel : IDisposable
         this.notification = notification;
 
         ShowWizardInDialog = ReactiveCommand.CreateFromTask(() => CreateWizard().ShowInDialog(dialog, "This is a tasty wizard"));
-        NavigateToWizard = ReactiveCommand.CreateFromTask(() => CreateWizard().Navigate(navigator));
+        NavigateToWizard = ReactiveCommand.CreateFromTask(async () =>
+        {
+            var wizard = CreateWizard();
+            var cancel = ReactiveCommand.CreateFromTask(() => navigator.GoBack());
+            var host = new NavigationWizardHost(wizard, cancel.Enhance("Cancel", "Cancel"));
+
+            await navigator.Go(() => host);
+
+            return await wizard.Finished.Select(Maybe.From).FirstOrDefaultAsync();
+        });
         NavigateToWizardWithSubwizard = ReactiveCommand.CreateFromTask(() => CreateWizardWithSubwizard(navigator).Navigate(navigator));
 
         NavigateToWizard.Merge(ShowWizardInDialog)
