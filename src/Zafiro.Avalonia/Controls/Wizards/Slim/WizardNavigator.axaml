@@ -1,7 +1,8 @@
 <Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:controls="using:Zafiro.Avalonia.Controls.Wizards.Slim"
-        xmlns:converters="using:Zafiro.Avalonia.Converters">
+        xmlns:controls="clr-namespace:Zafiro.Avalonia.Controls.Wizards.Slim;assembly=Zafiro.Avalonia"
+        xmlns:nav="clr-namespace:Zafiro.Avalonia.Controls.Navigation"
+        xmlns:converters="clr-namespace:Zafiro.Avalonia.Converters;assembly=Zafiro.Avalonia">
     <Design.PreviewWith>
         <controls:WizardNavigator Width="500">
             <WizardNavigator.Wizard>
@@ -11,18 +12,18 @@
     </Design.PreviewWith>
 
     <Styles.Resources>
-        <ControlTheme TargetType="WizardNavigator" x:Key="{x:Type WizardNavigator}">
+        <ControlTheme TargetType="controls:WizardNavigator" x:Key="{x:Type controls:WizardNavigator}">
             <Setter Property="Padding" Value="20" />
             <Setter Property="Template">
                 <ControlTemplate>
                     <DockPanel VerticalSpacing="20" Margin="{TemplateBinding Padding}">
-                        <Panel DockPanel.Dock="Bottom">
+                        <Panel x:Name="ButtonsPanel" DockPanel.Dock="Bottom">
                             <EnhancedButton Content="Cancel"
                                             HorizontalAlignment="Left"
                                             Command="{TemplateBinding Cancel}"
-                                            IsVisible="{Binding $parent[WizardNavigator].Wizard.CurrentPage.Kind, Converter={x:Static converters:SlimWizardConverters.CancelVisible}}" />
-                            <EnhancedButton Content="{Binding $parent[WizardNavigator].Wizard.Next.Text, TargetNullValue='Next'}"
-                                            Command="{Binding $parent[WizardNavigator].Wizard.Next}"
+                                            IsVisible="{Binding $parent[controls:WizardNavigator].Wizard.CurrentPage.Kind, Converter={x:Static converters:SlimWizardConverters.CancelVisible}}" />
+                            <EnhancedButton Content="{Binding $parent[controls:WizardNavigator].Wizard.Next.Text, TargetNullValue='Next'}"
+                                            Command="{Binding $parent[controls:WizardNavigator].Wizard.Next}"
                                             HorizontalAlignment="Right" />
                         </Panel>
                         <SlimWizardControl Wizard="{TemplateBinding Wizard}" />
@@ -31,4 +32,8 @@
             </Setter>
         </ControlTheme>
     </Styles.Resources>
+
+    <Style Selector="nav|Frame controls|WizardNavigator /template/ Panel#ButtonsPanel">
+        <Setter Property="IsVisible" Value="False" />
+    </Style>
 </Styles>

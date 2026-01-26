@@ -1,9 +1,10 @@
 using Zafiro.UI.Commands;
+using Zafiro.UI.Navigation;
 using Zafiro.UI.Wizards.Slim;
 
 namespace Zafiro.Avalonia.Controls.Wizards.Slim;
 
-public sealed class SlimWizardNavigationHost : IBackCommandProvider
+public sealed class SlimWizardNavigationHost : IBackCommandProvider, IHaveHeader, IHaveFooter
 {
     public SlimWizardNavigationHost(ISlimWizard wizard, IEnhancedCommand cancel)
     {
@@ -26,6 +27,10 @@ public sealed class SlimWizardNavigationHost : IBackCommandProvider
 
     public IEnhancedCommand Back { get; }
 
+    public object Footer => new WizardFooterViewModel(this);
+
+    public object Header => new WizardHeaderViewModel(Wizard);
+
     private void ExecuteBack()
     {
         if (Wizard.Back.CanExecute(null))
@@ -40,3 +45,7 @@ public sealed class SlimWizardNavigationHost : IBackCommandProvider
         }
     }
 }
+
+public record WizardHeaderViewModel(ISlimWizard Wizard);
+
+public record WizardFooterViewModel(SlimWizardNavigationHost Host);
