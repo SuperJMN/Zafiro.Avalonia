@@ -48,23 +48,31 @@ public class WizardHeader : TemplatedControl
                 ? wizard.WhenAnyValue(x => x.CurrentPage)
                     .Select(page =>
                     {
-                        if (page?.Content is IHaveHeader h)
+                        if (page is null)
                         {
-                            return Observable.Return(h.Header);
+                            return Observable.Return<object?>(null);
                         }
 
-                        if (page is not null)
-                        {
-                            return page.TitleObservable.Select(x => (object)x);
-                        }
+                        var headerObs = GetHeaderObservable(page.Content);
+                        var titleObs = page.TitleObservable.Select(t => (object)t).StartWith((object?)null);
 
-                        return Observable.Return<object?>(null);
+                        return headerObs.CombineLatest(titleObs, (header, title) => header ?? title);
                     })
                     .Switch()
                 : Observable.Return<object?>(null))
             .Switch()
             .BindTo(this, CurrentHeaderProperty)
             .DisposeWith(subscriptions);
+    }
+
+    private static IObservable<object?> GetHeaderObservable(object content)
+    {
+        if (content is IHaveHeader h)
+        {
+            return h.Header;
+        }
+
+        return Observable.Return<object?>(null);
     }
 
     protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)

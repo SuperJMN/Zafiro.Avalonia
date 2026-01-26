@@ -63,14 +63,30 @@ public class Frame : TemplatedControl
         subscriptions = new CompositeDisposable();
 
         this.GetObservable(ContentProperty)
-            .Select(content => content is IHaveHeader haveHeader ? haveHeader.Header : null)
-            .DistinctUntilChanged()
+            .Select(content =>
+            {
+                if (content is IHaveHeader haveHeader)
+                {
+                    return haveHeader.Header.Select(x => (object?)x);
+                }
+
+                return Observable.Return<object?>(null);
+            })
+            .Switch()
             .BindTo(this, HeaderProperty)
             .DisposeWith(subscriptions);
 
         this.GetObservable(ContentProperty)
-            .Select(content => content is IHaveFooter haveFooter ? haveFooter.Footer : null)
-            .DistinctUntilChanged()
+            .Select(content =>
+            {
+                if (content is IHaveFooter haveFooter)
+                {
+                    return haveFooter.Footer.Select(x => (object?)x);
+                }
+
+                return Observable.Return<object?>(null);
+            })
+            .Switch()
             .BindTo(this, FooterProperty)
             .DisposeWith(subscriptions);
     }

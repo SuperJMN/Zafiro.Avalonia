@@ -27,9 +27,9 @@ public sealed class SlimWizardNavigationHost : IBackCommandProvider, IHaveHeader
 
     public IEnhancedCommand Back { get; }
 
-    public object Footer => new WizardFooterViewModel(this);
+    public IObservable<object> Footer => Observable.Return(new WizardFooterViewModel(this));
 
-    public object Header => new WizardHeaderViewModel(Wizard);
+    public IObservable<object> Header => Observable.Return(new WizardHeaderViewModel(Wizard));
 
     private void ExecuteBack()
     {

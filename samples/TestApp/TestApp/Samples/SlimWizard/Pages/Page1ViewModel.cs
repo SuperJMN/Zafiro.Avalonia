@@ -31,9 +31,9 @@ public partial class Page1ViewModel : ReactiveValidationObject, IHaveTitle, IHav
     public IObservable<bool> IsValid => this.IsValid();
     public IObservable<bool> IsBusy => Observable.Return(false);
     public bool AutoAdvance => false;
-    public object Footer => "This is the footer";
+    public IObservable<object> Footer => Observable.Return("This is the footer");
 
-    public object Header => "This is the header";
+    public IObservable<object> Header => Observable.Return("This is the header");
 
     // Reactive title example: reflects the current number as the user types
     public IObservable<string> Title => this

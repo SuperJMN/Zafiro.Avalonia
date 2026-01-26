@@ -46,12 +46,22 @@ public class WizardFooter : TemplatedControl
         this.GetObservable(WizardProperty)
             .Select(wizard => wizard is not null
                 ? wizard.WhenAnyValue(x => x.CurrentPage)
-                    .Select(page => page.Content)
-                    .Select(content => content is IHaveFooter h ? h.Footer : null)
+                    .Select(page => GetFooterObservable(page?.Content))
+                    .Switch()
                 : Observable.Return<object?>(null))
             .Switch()
             .BindTo(this, CurrentFooterProperty)
             .DisposeWith(subscriptions);
+    }
+
+    private static IObservable<object?> GetFooterObservable(object? content)
+    {
+        if (content is IHaveFooter h)
+        {
+            return h.Footer;
+        }
+
+        return Observable.Return<object?>(null);
     }
 
     protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)

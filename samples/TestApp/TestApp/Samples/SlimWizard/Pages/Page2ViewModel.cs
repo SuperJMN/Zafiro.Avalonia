@@ -25,9 +25,9 @@ public partial class Page2ViewModel : ReactiveValidationObject, IValidatable, IH
 
     public IObservable<bool> IsBusy => Observable.Return(false);
     public bool AutoAdvance => false;
-    public object Footer => "This is the footer of page 2";
+    public IObservable<object> Footer => Observable.Return("This is the footer of page 2");
 
-    public object Header => "This is the header of page 2";
+    public IObservable<object> Header => Observable.Return("This is the header of page 2");
 
     // Reactive title example: changes depending on whether the checkbox is checked
     public IObservable<string> Title => this
