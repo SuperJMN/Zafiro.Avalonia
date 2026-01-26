@@ -1,0 +1,36 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:slim="clr-namespace:Zafiro.Avalonia.Controls.Wizards.Slim"
+        xmlns:converters="clr-namespace:Zafiro.Avalonia.Converters;assembly=Zafiro.Avalonia">
+
+    <Design.PreviewWith>
+        <slim:WizardFooter Width="400">
+            <slim:WizardFooter.Wizard>
+                <slim:WizardDesign />
+            </slim:WizardFooter.Wizard>
+        </slim:WizardFooter>
+    </Design.PreviewWith>
+
+    <Styles.Resources>
+        <ControlTheme x:Key="{x:Type slim:WizardFooter}" TargetType="slim:WizardFooter">
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <Grid ColumnDefinitions="*, Auto, *">
+                        <EnhancedButton Content="Cancel"
+                                        Grid.Column="0"
+                                        HorizontalAlignment="Left"
+                                        Command="{Binding $parent[slim:WizardFooter].Host.Cancel}"
+                                        IsVisible="{Binding $parent[slim:WizardFooter].Wizard.CurrentPage.Kind, Converter={x:Static converters:SlimWizardConverters.CancelVisible}}" />
+
+                        <ContentPresenter Grid.Column="1" Content="{Binding $parent[slim:WizardFooter].CurrentFooter}" HorizontalAlignment="Center" />
+
+                        <EnhancedButton Content="{Binding $parent[slim:WizardFooter].Wizard.Next.Text, TargetNullValue='Next'}"
+                                        Grid.Column="2"
+                                        Command="{Binding $parent[slim:WizardFooter].Wizard.Next}"
+                                        HorizontalAlignment="Right" />
+                    </Grid>
+                </ControlTemplate>
+            </Setter>
+        </ControlTheme>
+    </Styles.Resources>
+</Styles>

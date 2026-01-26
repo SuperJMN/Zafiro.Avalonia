@@ -1,7 +1,6 @@
 <DataTemplates xmlns="https://github.com/avaloniaui"
                xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                xmlns:zslim="clr-namespace:Zafiro.Avalonia.Controls.Wizards.Slim"
-               xmlns:converters="clr-namespace:Zafiro.Avalonia.Converters"
                xmlns:slim="clr-namespace:Zafiro.UI.Wizards.Slim;assembly=Zafiro.UI"
                xmlns:ui="clr-namespace:Zafiro.UI;assembly=Zafiro.UI">
 
@@ -18,15 +17,7 @@
     </DataTemplate>
 
     <DataTemplate DataType="zslim:WizardFooterViewModel">
-        <Panel>
-            <EnhancedButton Content="Cancel"
-                            HorizontalAlignment="Left"
-                            Command="{Binding Host.Cancel}"
-                            IsVisible="{Binding Host.Wizard.CurrentPage.Kind, Converter={x:Static converters:SlimWizardConverters.CancelVisible}}" />
-            <EnhancedButton Content="{Binding Host.Wizard.Next.Text, TargetNullValue='Next'}"
-                            Command="{Binding Host.Wizard.Next}"
-                            HorizontalAlignment="Right" />
-        </Panel>
+        <zslim:WizardFooter Host="{Binding Host}" Wizard="{Binding Host.Wizard}" />
     </DataTemplate>
 
     <DataTemplate DataType="ui:IIcon">

@@ -5,10 +5,11 @@ using ReactiveUI.SourceGenerators;
 using ReactiveUI.Validation.Extensions;
 using ReactiveUI.Validation.Helpers;
 using Zafiro.UI;
+using Zafiro.UI.Navigation;
 
 namespace TestApp.Samples.SlimWizard.Pages;
 
-public partial class Page2ViewModel : ReactiveValidationObject, IValidatable, IHaveTitle
+public partial class Page2ViewModel : ReactiveValidationObject, IValidatable, IHaveTitle, IHaveHeader, IHaveFooter
 {
     [Reactive] private bool isChecked;
 
@@ -24,6 +25,9 @@ public partial class Page2ViewModel : ReactiveValidationObject, IValidatable, IH
 
     public IObservable<bool> IsBusy => Observable.Return(false);
     public bool AutoAdvance => false;
+    public object Footer => "This is the footer of page 2";
+
+    public object Header => "This is the header of page 2";
 
     // Reactive title example: changes depending on whether the checkbox is checked
     public IObservable<string> Title => this
