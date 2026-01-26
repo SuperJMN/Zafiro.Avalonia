@@ -42,4 +42,12 @@ internal static class Extensions
             _ => throw new ArgumentOutOfRangeException()
         };
     }
+
+    public static IDisposable BindTo<T>(this IObservable<T> source, AvaloniaObject target, AvaloniaProperty<T> property)
+    {
+        return source
+            .DistinctUntilChanged()
+            .ObserveOn(AvaloniaScheduler.Instance)
+            .Subscribe(value => target.SetValue(property, value));
+    }
 }

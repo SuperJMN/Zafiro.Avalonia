@@ -16,7 +16,7 @@
       <PackageReference Include="Xaml.Behaviors.Avalonia"/>
 
 
-      <PackageReference Include="Zafiro.UI"/>
+      <ProjectReference Include="..\..\..\Zafiro\src\Zafiro.UI\Zafiro.UI.csproj"/>
   </ItemGroup>
   <ItemGroup>
       <ProjectReference Include="..\Zafiro.Avalonia\Zafiro.Avalonia.csproj"/>

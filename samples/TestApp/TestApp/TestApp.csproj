@@ -32,6 +32,7 @@
         <ProjectReference Include="../../../src/Zafiro.Avalonia.Generators/Zafiro.Avalonia.Generators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false"/>
         <ProjectReference Include="..\..\..\src\Zafiro.Avalonia.Icons.Projektanker\Zafiro.Avalonia.Icons.Projektanker.csproj"/>
         <ProjectReference Include="..\..\..\src\Zafiro.Avalonia.Icons.Svg\Zafiro.Avalonia.Icons.Svg.csproj"/>
+        <ProjectReference Include="..\..\..\..\Zafiro\src\Zafiro.UI\Zafiro.UI.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
