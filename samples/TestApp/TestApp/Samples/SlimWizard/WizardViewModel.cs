@@ -92,9 +92,9 @@ public class WizardViewModel : IDisposable
             // Page1ViewModel implements IHaveTitle: if no title is provided, its reactive Title is used
             .StartWith(() => new Page1ViewModel(), "Page 1").NextWith(model => model.ReturnSomeInt.Enhance("Next"))
             // Page2ViewModel also implements IHaveTitle, so its Title is used by default
-            .Then(number => new Page2ViewModel(number)).Next((Page2ViewModel vm, int number) => (number, vm.Text ?? "")).WhenValid()
+            .Then(number => new Page2ViewModel(number)).Next((vm, number) => (result: number, vm.Text!)).WhenValid()
             // Last page with an explicit static title
-            .Then(((int, string) _) => new Page3ViewModel(), "Completed!").Next((_, val) => val, "Close").WhenValid()
+            .Then(_ => new Page3ViewModel(), "Completed!").Next((_, val) => val, "Close").WhenValid()
             .WithCompletionFinalStep();
 
         return withCompletionFinalStep;
