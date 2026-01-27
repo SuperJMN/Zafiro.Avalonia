@@ -32,7 +32,19 @@ public class WizardViewModel : IDisposable
         this.notification = notification;
 
         ShowWizardInDialog = ReactiveCommand.CreateFromTask(() => CreateWizard().ShowInDialog(dialog, "This is a tasty wizard"));
-        NavigateToWizard = ReactiveCommand.CreateFromTask(() => CreateWizard().Navigate(navigator));
+        NavigateToWizard = ReactiveCommand.CreateFromTask(async () =>
+        {
+            var wizard = CreateWizard();
+            var cancel = ReactiveCommand.CreateFromTask(() => navigator.GoBack());
+            var host = new NavigationWizardHost(wizard, cancel.Enhance("Cancel", "Cancel"));
+
+            await navigator.Go(() => host);
+
+            var result = await wizard.Finished.Select(Maybe.From).FirstOrDefaultAsync();
+            await navigator.GoBack();
+
+            return result;
+        });
         NavigateToWizardWithSubwizard = ReactiveCommand.CreateFromTask(() => CreateWizardWithSubwizard(navigator).Navigate(navigator));
 
         NavigateToWizard.Merge(ShowWizardInDialog)
@@ -83,7 +95,7 @@ public class WizardViewModel : IDisposable
             .Then(number => new Page2ViewModel(number)).Next((vm, number) => (result: number, vm.Text!)).WhenValid()
             // Last page with an explicit static title
             .Then(_ => new Page3ViewModel(), "Completed!").Next((_, val) => val, "Close").WhenValid()
-            .WithCompletionFinalStep();
+            .Build(StepKind.Completion);
 
         return withCompletionFinalStep;
     }
@@ -107,7 +119,7 @@ public class WizardViewModel : IDisposable
             .NextCommand(vm => vm.RunSelectedChildWizard)
             .Then(childResult => new SubwizardSummaryPageViewModel(childResult), "Summary")
             .Next((_, childResult) => childResult, "Finish").Always()
-            .WithCompletionFinalStep();
+            .Build(StepKind.Completion);
     }
 
     private static SlimWizard<string> CreateChildWizard(string kind)
@@ -115,6 +127,6 @@ public class WizardViewModel : IDisposable
         return WizardBuilder
             .StartWith(() => new ChildWizardInputPageViewModel(kind), $"Child wizard {kind}")
             .Next(vm => vm.Result!, "Finish").WhenValid()
-            .WithCommitFinalStep();
+            .Build();
     }
 }

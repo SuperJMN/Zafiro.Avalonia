@@ -8,10 +8,11 @@ using ReactiveUI.Validation.Extensions;
 using ReactiveUI.Validation.Helpers;
 using Zafiro.UI;
 using Zafiro.UI.Commands;
+using Zafiro.UI.Navigation;
 
 namespace TestApp.Samples.SlimWizard.Pages;
 
-public partial class Page1ViewModel : ReactiveValidationObject, IHaveTitle
+public partial class Page1ViewModel : ReactiveValidationObject, IHaveTitle, IHaveHeader, IHaveFooter
 {
     [Reactive] private int? number;
 
@@ -30,6 +31,9 @@ public partial class Page1ViewModel : ReactiveValidationObject, IHaveTitle
     public IObservable<bool> IsValid => this.IsValid();
     public IObservable<bool> IsBusy => Observable.Return(false);
     public bool AutoAdvance => false;
+    public IObservable<object> Footer => Observable.Return("This is the footer");
+
+    public IObservable<object> Header => Observable.Return("This is the header");
 
     // Reactive title example: reflects the current number as the user types
     public IObservable<string> Title => this

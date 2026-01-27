@@ -9,6 +9,7 @@
             <Setter Property="Background" Value="{DynamicResource SystemChromeLowColor}" />
             <Setter Property="MinWidth" Value="300" />
             <Setter Property="MinHeight" Value="120" />
+            <Setter Property="Padding" Value="10" />
             <Setter Property="Template">
                 <ControlTemplate>
                     <Border Background="{TemplateBinding Background}"
@@ -29,20 +30,7 @@
                                                 IsDefault="{Binding IsDefault}"
                                                 Padding="16 8"
                                                 CornerRadius="4"
-                                                Tag="{Binding Role}">
-                                    <EnhancedButton.Styles>
-                                        <Style Selector="EnhancedButton[Tag=Destructive]">
-                                            <Setter Property="Tint" Value="{DynamicResource SystemErrorTextColor}" />
-                                        </Style>
-                                        <Style Selector="EnhancedButton[Tag=Cancel]">
-                                            <Setter Property="BorderThickness" Value="1" />
-                                            <Setter Property="Tint" Value="Transparent" />
-                                        </Style>
-                                        <Style Selector="EnhancedButton[Tag=Secondary]">
-                                            <Setter Property="Tint" Value="{DynamicResource ChromeDisabledHigh}" />
-                                        </Style>
-                                    </EnhancedButton.Styles>
-                                </EnhancedButton>
+                                                EnhancedButton.Role="{Binding Role, Converter={x:Static dialogs:OptionRoleToButtonRoleConverter.Instance}}" />
                             </DataTemplate>
                         </Border.DataTemplates>
 
@@ -65,7 +53,7 @@
                             </Style>
                         </Border.Styles>
 
-                        <Grid RowDefinitions="Auto,*,Auto">
+                        <Grid RowDefinitions="Auto,*,Auto" Margin="{TemplateBinding Padding}">
                             <!-- Title -->
                             <TextBlock Grid.Row="0"
                                        FontWeight="Bold"
@@ -74,10 +62,10 @@
 
                             <!-- Content -->
                             <ScrollViewer Grid.Row="1" x:Name="DialogScrollViewer">
-                                <ContentPresenter Content="{TemplateBinding Content}" />
+                                <ContentPresenter Content="{TemplateBinding Content}" Padding="{TemplateBinding ContentPadding}" />
                             </ScrollViewer>
 
-                            <!-- Buttons -->
+                            <!-- Footer Area: Buttons + Custom Content -->
                             <Grid Grid.Row="2" ColumnSpacing="16" ColumnDefinitions="Auto,*,Auto" Margin="0 16 0 0">
 
                                 <!-- Cancel and Secondary on the left -->
@@ -87,22 +75,29 @@
                                             Spacing="8">
                                     <!-- Cancel always goes first -->
                                     <ItemsControl Classes="Horizontal" ItemsSource="{Binding $parent[DialogControl].CancelOptions}" />
-                                    <!-- Secondary after Cancel -->
-                                    <ItemsControl Classes="Horizontal" ItemsSource="{Binding $parent[DialogControl].SecondaryOptions}" />
+
                                 </StackPanel>
 
-                                <!-- Info in the center -->
-                                <ItemsControl Classes="Horizontal"
-                                              Grid.Column="1"
-                                              HorizontalAlignment="Center"
-                                              ItemsSource="{Binding $parent[DialogControl].InfoOptions}" />
+                                <!-- Center: Info Options + Custom Footer -->
+                                <StackPanel Grid.Column="1"
+                                            Orientation="Horizontal"
+                                            HorizontalAlignment="Center"
+                                            Spacing="10">
+                                    <ItemsControl Classes="Horizontal"
+                                                  ItemsSource="{Binding $parent[DialogControl].InfoOptions}" />
+
+                                    <ContentPresenter Content="{Binding $parent[DialogControl].Footer}"
+                                                      IsVisible="{Binding $parent[DialogControl].HasCustomFooter}" />
+                                </StackPanel>
 
                                 <!-- Primary/Destructive on the right -->
                                 <StackPanel Grid.Column="2"
                                             Orientation="Horizontal"
                                             Classes="ButtonGroup"
                                             Spacing="8">
-                                    <!-- Primary first -->
+                                    <!-- Secondary first -->
+                                    <ItemsControl Classes="Horizontal" ItemsSource="{Binding $parent[DialogControl].SecondaryOptions}" />
+                                    <!-- Primary next -->
                                     <ItemsControl Classes="Horizontal" ItemsSource="{Binding $parent[DialogControl].PrimaryOptions}" />
                                     <!-- Destructive at the end -->
                                     <ItemsControl Classes="Horizontal" ItemsSource="{Binding $parent[DialogControl].DestructiveOptions}" />
@@ -119,7 +114,7 @@
     <Design.PreviewWith>
         <StackPanel Spacing="20">
             <Border BorderThickness="1" BorderBrush="Black" HorizontalAlignment="Center">
-                <DialogControl Title="TITLE">
+                <DialogControl Title="TITLE" Padding="20">
                     <DialogControl.Content>
                         <TextBlock>THIS IS MY FUCKING CONTENT</TextBlock>
                     </DialogControl.Content>

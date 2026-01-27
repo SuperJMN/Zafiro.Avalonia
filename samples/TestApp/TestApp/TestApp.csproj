@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<?xml version="1.0" encoding="utf-8"?><Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
         <Nullable>enable</Nullable>
@@ -8,31 +8,32 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <AvaloniaResource Include="Assets\**"/>
+        <AvaloniaResource Include="Assets\**" />
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Avalonia"/>
-        <PackageReference Include="Avalonia.Themes.Fluent"/>
-        <PackageReference Include="Avalonia.Fonts.Inter"/>
-        <PackageReference Include="Projektanker.Icons.Avalonia.FontAwesome"/>
-        <PackageReference Include="Projektanker.Icons.Avalonia.MaterialDesign"/>
-        <PackageReference Include="Serilog.Sinks.Console"/>
+        <PackageReference Include="Avalonia" />
+        <PackageReference Include="Avalonia.Themes.Fluent" />
+        <PackageReference Include="Avalonia.Fonts.Inter" />
+        <PackageReference Include="Projektanker.Icons.Avalonia.FontAwesome" />
+        <PackageReference Include="Projektanker.Icons.Avalonia.MaterialDesign" />
+        <PackageReference Include="Serilog.Sinks.Console" />
         <PackageReference Include="ReactiveUI.SourceGenerators">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="ReactiveUI.Validation"/>
+        <PackageReference Include="ReactiveUI.Validation" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="../../../src/Zafiro.Avalonia.DataViz/Zafiro.Avalonia.DataViz.csproj"/>
-        <ProjectReference Include="../../../src/Zafiro.Avalonia.Dialogs/Zafiro.Avalonia.Dialogs.csproj"/>
-        <ProjectReference Include="../../../src/Zafiro.Avalonia/Zafiro.Avalonia.csproj"/>
-        <ProjectReference Include="../../../src/Zafiro.Avalonia.Generators/Zafiro.Avalonia.Generators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false"/>
-        <ProjectReference Include="..\..\..\src\Zafiro.Avalonia.Icons.Projektanker\Zafiro.Avalonia.Icons.Projektanker.csproj"/>
-        <ProjectReference Include="..\..\..\src\Zafiro.Avalonia.Icons.Svg\Zafiro.Avalonia.Icons.Svg.csproj"/>
-    </ItemGroup>
+        <ProjectReference Include="../../../src/Zafiro.Avalonia.DataViz/Zafiro.Avalonia.DataViz.csproj" />
+        <ProjectReference Include="../../../src/Zafiro.Avalonia.Dialogs/Zafiro.Avalonia.Dialogs.csproj" />
+        <ProjectReference Include="../../../src/Zafiro.Avalonia/Zafiro.Avalonia.csproj" />
+        <ProjectReference Include="../../../src/Zafiro.Avalonia.Generators/Zafiro.Avalonia.Generators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+        <ProjectReference Include="..\..\..\src\Zafiro.Avalonia.Icons.Projektanker\Zafiro.Avalonia.Icons.Projektanker.csproj" />
+        <ProjectReference Include="..\..\..\src\Zafiro.Avalonia.Icons.Svg\Zafiro.Avalonia.Icons.Svg.csproj" />
+        
+    <PackageReference Include="Zafiro.UI" /></ItemGroup>
 
     <ItemGroup>
         <None Update="icon.svg">

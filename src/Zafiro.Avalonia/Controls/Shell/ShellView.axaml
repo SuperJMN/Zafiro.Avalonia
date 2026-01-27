@@ -1,7 +1,6 @@
 <Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:shell="clr-namespace:Zafiro.UI.Shell;assembly=Zafiro.UI"
-        xmlns:nav="clr-namespace:Zafiro.Avalonia.Controls.Navigation">
+        xmlns:shell="clr-namespace:Zafiro.UI.Shell;assembly=Zafiro.UI">
 
     <Design.PreviewWith>
         <ShellView Width="400" Height="900">
@@ -24,7 +23,8 @@
                             PaneBackground="{Binding $parent[ShellView].PaneBackground}"
                             ExpandButtonSize="{Binding $parent[ShellView].MenuButtonSize}">
                 <ShellSplitView.Content>
-                    <nav:Frame Navigator="{Binding $parent[ShellView].Shell.SelectedSection.Value.Navigator}" />
+                    <Frame Content="{Binding $parent[ShellView].Shell.SelectedSection.Value.Navigator.Content^}"
+                           BackCommand="{Binding $parent[ShellView].Shell.SelectedSection.Value.Navigator.Back}" />
                 </ShellSplitView.Content>
                 <ShellSplitView.Styles>
                     <ContainerQuery Name="RootPanel" Query="min-width:0">
@@ -69,7 +69,8 @@
                               IconMargin="{Binding $parent[ShellView].IconMargin}"
                               MaxItemWidth="{Binding $parent[ShellView].SectionMaxItemWidth}"
                               SelectedSection="{Binding SelectedSection, Mode=TwoWay}" DockPanel.Dock="Bottom" />
-                <nav:Frame Navigator="{Binding  $parent[ShellView].Shell.SelectedSection.Value.Navigator}" />
+                <Frame Content="{Binding $parent[ShellView].Shell.SelectedSection.Value.Navigator.Content^}"
+                       BackCommand="{Binding $parent[ShellView].Shell.SelectedSection.Value.Navigator.Back}" />
             </DockPanel>
         </DataTemplate>
 

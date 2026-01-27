@@ -16,22 +16,14 @@
             <Setter Property="Template">
                 <ControlTemplate>
                     <panels:TrueCenterPanel DockPanel.Dock="Top">
-                        <EnhancedButton Theme="{StaticResource TransparentButton}"
-                                        panels:TrueCenterPanel.Dock="Left"
-                                        IsVisible="{Binding $parent[WizardHeader].IsBackButtonVisible}"
-                                        Opacity="{Binding $self.IsEffectivelyEnabled, Converter={x:Static OpacityConverters.BoolToOpacity}}"
-                                        Command="{Binding $parent[WizardHeader].Wizard.Back}">
-                            <Button.Content>
-                                <DockPanel>
-                                    <Image Source="{StaticResource BackArrow}" Height="16" Margin="0,0,4,0" />
-                                    <TextBlock>Back</TextBlock>
-                                </DockPanel>
-                            </Button.Content>
-                        </EnhancedButton>
-                        <StepIndicator TrueCenterPanel.Dock="Center" x:Name="StepIndicator" HorizontalAlignment="Center"
-                                       Current="{Binding $parent[WizardHeader].Wizard.CurrentPage.Index}"
-                                       Total="{Binding $parent[WizardHeader].Wizard.TotalPages}">
-                        </StepIndicator>
+
+                        <StackPanel TrueCenterPanel.Dock="Center" Spacing="10" Orientation="Vertical" HorizontalAlignment="Center">
+                            <StepIndicator x:Name="StepIndicator" HorizontalAlignment="Center"
+                                           Current="{Binding $parent[WizardHeader].Wizard.CurrentPage.Index}"
+                                           Total="{Binding $parent[WizardHeader].Wizard.TotalPages}">
+                            </StepIndicator>
+                            <ContentPresenter Content="{Binding $parent[WizardHeader].CurrentHeader}" HorizontalAlignment="Center" />
+                        </StackPanel>
                         <TextBlock FontSize="12" VerticalAlignment="Center" panels:TrueCenterPanel.Dock="Right" Margin="5 0">
                             <TextBlock.Text>
                                 <MultiBinding StringFormat="Step {0} of {1}">

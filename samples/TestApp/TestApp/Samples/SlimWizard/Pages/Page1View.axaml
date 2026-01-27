@@ -6,7 +6,7 @@
              xmlns:pages1="clr-namespace:TestApp.Samples.SlimWizard.Pages"
              mc:Ignorable="d" d:DesignWidth="500" d:DesignHeight="350"
              x:Class="TestApp.Samples.SlimWizard.Pages.Page1View"
-             x:DataType="pages1:Page1ViewModel">
+             x:DataType="pages1:Page1ViewModel" Padding="20">
     <controls:Loading IsLoading="{Binding ReturnSomeInt.IsExecuting^}">
         <StackPanel Spacing="10" VerticalAlignment="Center" HorizontalAlignment="Center">
             <TextBlock>

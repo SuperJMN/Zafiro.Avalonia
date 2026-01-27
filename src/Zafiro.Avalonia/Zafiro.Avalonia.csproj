@@ -23,7 +23,8 @@
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Zafiro.UI"/>
+
         <AdditionalFiles Include="**/*.axaml"/>
+        <PackageReference Include="Zafiro.UI"/>
     </ItemGroup>
 </Project>
