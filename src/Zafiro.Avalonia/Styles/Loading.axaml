@@ -1,18 +1,7 @@
 <Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:c="clr-namespace:FluentAvalonia.UI.Controls;assembly=FluentAvalonia">
-    <Design.PreviewWith>
-        <Border Padding="20">
-            <Loading  IsLoading="True" VerticalContentAlignment="Center" HorizontalContentAlignment="Center">
-                <Border Width="400" Height="400" Background="Red">
-                    <TextBlock>
-                        This is the content
-                    </TextBlock>
-                </Border>
-            </Loading>
-        </Border>
-    </Design.PreviewWith>
-    
+
     <Styles.Resources>
         <ControlTheme x:Key="LoadingCover" TargetType="{x:Type Loading}">
             <Setter Property="LoadingTemplate">
@@ -29,8 +18,8 @@
             <Setter Property="Template">
                 <ControlTemplate>
                     <Panel>
-                        <ContentPresenter 
-                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}" 
+                        <ContentPresenter
+                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
                             HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                             Content="{TemplateBinding Content}" Opacity="{Binding !$parent[Loading].IsLoading, Converter={x:Static OpacityConverters.BoolToOpacity}}" />
                         <ContentControl IsVisible="{TemplateBinding IsLoading}" Template="{TemplateBinding LoadingTemplate}" />
@@ -39,5 +28,33 @@
             </Setter>
         </ControlTheme>
     </Styles.Resources>
+
+
+    <Design.PreviewWith>
+        <StackPanel>
+            <Border Padding="20">
+                <Loading Theme="{StaticResource LoadingCover}" IsLoading="True" VerticalContentAlignment="Center" HorizontalContentAlignment="Center">
+                    <Border Width="400" Height="400" Background="Red">
+                        <TextBlock>
+                            This is the content
+                        </TextBlock>
+                    </Border>
+                </Loading>
+            </Border>
+            <ThemeVariantScope RequestedThemeVariant="Dark">
+                <Border Padding="20" Background="Black">
+                    <Loading Theme="{StaticResource LoadingCover}" IsLoading="True" VerticalContentAlignment="Center" HorizontalContentAlignment="Center">
+                        <Border Width="400" Height="400" Background="Red">
+                            <TextBlock>
+                                This is the content
+                            </TextBlock>
+                        </Border>
+                    </Loading>
+                </Border>
+            </ThemeVariantScope>
+        </StackPanel>
+
+    </Design.PreviewWith>
+
 
 </Styles>
