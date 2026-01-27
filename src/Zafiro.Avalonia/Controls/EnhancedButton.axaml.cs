@@ -18,6 +18,10 @@ public class EnhancedButton : Button
     public static readonly StyledProperty<Color> TintProperty = AvaloniaProperty.Register<EnhancedButton, Color>(
         nameof(Tint));
 
+    public static readonly AttachedProperty<ButtonRole> RoleProperty = AvaloniaProperty.RegisterAttached<EnhancedButton, Control, ButtonRole>("Role");
+
+    public static readonly AttachedProperty<ButtonIntent> IntentProperty = AvaloniaProperty.RegisterAttached<EnhancedButton, Control, ButtonIntent>("Intent");
+
     readonly SerialDisposable commandExecutionSubscription = new();
     private bool isCommandRunning;
 
@@ -43,6 +47,26 @@ public class EnhancedButton : Button
     {
         get => isCommandRunning;
         private set => SetAndRaise(IsCommandRunningProperty, ref isCommandRunning, value);
+    }
+
+    public static void SetRole(Control element, ButtonRole value)
+    {
+        element.SetValue(RoleProperty, value);
+    }
+
+    public static ButtonRole GetRole(Control element)
+    {
+        return element.GetValue(RoleProperty);
+    }
+
+    public static void SetIntent(Control element, ButtonIntent value)
+    {
+        element.SetValue(IntentProperty, value);
+    }
+
+    public static ButtonIntent GetIntent(Control element)
+    {
+        return element.GetValue(IntentProperty);
     }
 
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
