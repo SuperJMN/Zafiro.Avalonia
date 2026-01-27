@@ -6,6 +6,7 @@
 
     <Styles.Resources>
         <ControlTheme TargetType="Frame" x:Key="{x:Type Frame}">
+            <Setter Property="Padding" Value="10"></Setter>
             <Setter Property="BackButtonContent">
                 <Setter.Value>
                     <Template>
@@ -15,7 +16,7 @@
             </Setter>
             <Setter Property="Template">
                 <ControlTemplate>
-                    <DockPanel>
+                    <DockPanel Margin="{TemplateBinding Padding}">
                         <DockPanel DockPanel.Dock="Top">
                             <EnhancedButton Command="{TemplateBinding BackCommand}"
                                             x:Name="BackButton"

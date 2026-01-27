@@ -1,6 +1,7 @@
 <Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:shell="clr-namespace:Zafiro.UI.Shell;assembly=Zafiro.UI">
+        xmlns:shell="clr-namespace:Zafiro.UI.Shell;assembly=Zafiro.UI"
+        xmlns:nav="clr-namespace:Zafiro.Avalonia.Controls.Navigation">
 
     <Design.PreviewWith>
         <ShellView Width="400" Height="900">
@@ -24,7 +25,11 @@
                             ExpandButtonSize="{Binding $parent[ShellView].MenuButtonSize}">
                 <ShellSplitView.Content>
                     <Frame Content="{Binding $parent[ShellView].Shell.SelectedSection.Value.Navigator.Content^}"
-                           BackCommand="{Binding $parent[ShellView].Shell.SelectedSection.Value.Navigator.Back}" />
+                           BackCommand="{Binding $parent[ShellView].Shell.SelectedSection.Value.Navigator.Back}">
+                        <Interaction.Behaviors>
+                            <nav:AutoHeaderFooterBehavior />
+                        </Interaction.Behaviors>
+                    </Frame>
                 </ShellSplitView.Content>
                 <ShellSplitView.Styles>
                     <ContainerQuery Name="RootPanel" Query="min-width:0">
@@ -70,7 +75,11 @@
                               MaxItemWidth="{Binding $parent[ShellView].SectionMaxItemWidth}"
                               SelectedSection="{Binding SelectedSection, Mode=TwoWay}" DockPanel.Dock="Bottom" />
                 <Frame Content="{Binding $parent[ShellView].Shell.SelectedSection.Value.Navigator.Content^}"
-                       BackCommand="{Binding $parent[ShellView].Shell.SelectedSection.Value.Navigator.Back}" />
+                       BackCommand="{Binding $parent[ShellView].Shell.SelectedSection.Value.Navigator.Back}">
+                    <Interaction.Behaviors>
+                        <nav:AutoHeaderFooterBehavior />
+                    </Interaction.Behaviors>
+                </Frame>
             </DockPanel>
         </DataTemplate>
 

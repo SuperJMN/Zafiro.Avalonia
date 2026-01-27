@@ -1,8 +1,5 @@
-using System.Reactive.Disposables;
 using System.Windows.Input;
 using Avalonia.Controls.Primitives;
-using Zafiro.Avalonia.Misc;
-using Zafiro.UI.Navigation;
 
 namespace Zafiro.Avalonia.Controls.Navigation;
 
@@ -22,8 +19,6 @@ public class Frame : TemplatedControl
 
     public static readonly StyledProperty<object?> FooterProperty =
         AvaloniaProperty.Register<Frame, object?>(nameof(Footer));
-
-    CompositeDisposable? subscriptions;
 
     public ICommand BackCommand
     {
@@ -53,49 +48,5 @@ public class Frame : TemplatedControl
     {
         get => GetValue(FooterProperty);
         set => SetValue(FooterProperty, value);
-    }
-
-    protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
-    {
-        base.OnAttachedToVisualTree(e);
-
-        subscriptions?.Dispose();
-        subscriptions = new CompositeDisposable();
-
-        this.GetObservable(ContentProperty)
-            .Select(content =>
-            {
-                if (content is IHaveHeader haveHeader)
-                {
-                    return haveHeader.Header.Select(x => (object?)x);
-                }
-
-                return Observable.Return<object?>(null);
-            })
-            .Switch()
-            .BindTo(this, HeaderProperty)
-            .DisposeWith(subscriptions);
-
-        this.GetObservable(ContentProperty)
-            .Select(content =>
-            {
-                if (content is IHaveFooter haveFooter)
-                {
-                    return haveFooter.Footer.Select(x => (object?)x);
-                }
-
-                return Observable.Return<object?>(null);
-            })
-            .Switch()
-            .BindTo(this, FooterProperty)
-            .DisposeWith(subscriptions);
-    }
-
-    protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
-    {
-        subscriptions?.Dispose();
-        subscriptions = null;
-
-        base.OnDetachedFromVisualTree(e);
     }
 }
