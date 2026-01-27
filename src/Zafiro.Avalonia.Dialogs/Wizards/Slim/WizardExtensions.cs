@@ -26,13 +26,13 @@ public static class WizardExtensions
 
             var next = ReactiveCommand.CreateFromObservable(
                     () => ((IReactiveCommand<Unit, Unit>)wizard.Next).Execute(Unit.Default),
-                    wizard.WhenAnyValue(x => x.Next).SelectMany(cmd => ((IReactiveCommand)cmd).CanExecute))
+                    wizard.WhenAnyValue(x => x.Next).SelectMany(cmd => cmd.CanExecuteObservable))
                 .Enhance("Next");
 
             return
             [
                 new Option("Cancel", cancel, new Settings { IsCancel = true, Role = OptionRole.Cancel, IsVisible = canCancel }),
-                new Option("Back", wizard.Back, new Settings { Role = OptionRole.Secondary }),
+                new Option("Back", wizard.Back, new Settings { Role = OptionRole.Secondary, IsVisible = wizard.Back.CanExecuteObservable }),
                 new Option("Next", next, new Settings { Role = OptionRole.Primary, IsDefault = true }),
             ];
         };

@@ -3,9 +3,9 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:dialogs="clr-namespace:TestApp.Samples.Dialogs"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             mc:Ignorable="d"
              x:Class="TestApp.Samples.Dialogs.MyView"
-             x:DataType="dialogs:MyViewModel">
+             x:DataType="dialogs:MyViewModel" Padding="20">
     <DockPanel>
         <EnhancedButton Margin="20" HorizontalAlignment="Center" Command="{Binding OpenAnotherDialog}" Content="Open another dialog" DockPanel.Dock="Bottom" />
         <TextBox Theme="{StaticResource EnhancedTextBox}" VerticalAlignment="Center" Width="200" Text="{Binding Text, Mode=TwoWay}" Watermark="Enter something" />

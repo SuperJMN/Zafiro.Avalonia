@@ -12,7 +12,10 @@ public class DialogControl : ContentControl
 
     public static readonly StyledProperty<IEnumerable<IOption>?> OptionsProperty = AvaloniaProperty.Register<DialogControl, IEnumerable<IOption>?>(
         nameof(Options),
-        defaultValue: []);
+        []);
+
+    public static readonly StyledProperty<Thickness> ContentPaddingProperty = AvaloniaProperty.Register<DialogControl, Thickness>(
+        nameof(ContentPadding));
 
     private static readonly DirectProperty<DialogControl, IEnumerable<IOption>> PrimaryOptionsProperty =
         AvaloniaProperty.RegisterDirect<DialogControl, IEnumerable<IOption>>(
@@ -73,6 +76,12 @@ public class DialogControl : ContentControl
                 Footer = f;
                 HasCustomFooter = f is not null;
             });
+    }
+
+    public Thickness ContentPadding
+    {
+        get => GetValue(ContentPaddingProperty);
+        set => SetValue(ContentPaddingProperty, value);
     }
 
     public string? Title

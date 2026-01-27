@@ -9,6 +9,7 @@
             <Setter Property="Background" Value="{DynamicResource SystemChromeLowColor}" />
             <Setter Property="MinWidth" Value="300" />
             <Setter Property="MinHeight" Value="120" />
+            <Setter Property="Padding" Value="10" />
             <Setter Property="Template">
                 <ControlTemplate>
                     <Border Background="{TemplateBinding Background}"
@@ -52,7 +53,7 @@
                             </Style>
                         </Border.Styles>
 
-                        <Grid RowDefinitions="Auto,*,Auto">
+                        <Grid RowDefinitions="Auto,*,Auto" Margin="{TemplateBinding Padding}">
                             <!-- Title -->
                             <TextBlock Grid.Row="0"
                                        FontWeight="Bold"
@@ -61,7 +62,7 @@
 
                             <!-- Content -->
                             <ScrollViewer Grid.Row="1" x:Name="DialogScrollViewer">
-                                <ContentPresenter Content="{TemplateBinding Content}" />
+                                <ContentPresenter Content="{TemplateBinding Content}" Padding="{TemplateBinding ContentPadding}" />
                             </ScrollViewer>
 
                             <!-- Footer Area: Buttons + Custom Content -->
@@ -113,7 +114,7 @@
     <Design.PreviewWith>
         <StackPanel Spacing="20">
             <Border BorderThickness="1" BorderBrush="Black" HorizontalAlignment="Center">
-                <DialogControl Title="TITLE">
+                <DialogControl Title="TITLE" Padding="20">
                     <DialogControl.Content>
                         <TextBlock>THIS IS MY FUCKING CONTENT</TextBlock>
                     </DialogControl.Content>

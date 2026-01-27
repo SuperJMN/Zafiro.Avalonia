@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:pages="clr-namespace:TestApp.Samples.SlimWizard.Pages"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             Padding="20"
              x:Class="TestApp.Samples.SlimWizard.Pages.Page2View" x:DataType="pages:Page2ViewModel">
 
     <UserControl.Styles>
