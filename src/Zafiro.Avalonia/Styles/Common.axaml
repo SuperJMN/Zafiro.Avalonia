@@ -115,6 +115,10 @@
         <Setter Property="BorderThickness" Value="{StaticResource CardBorderThickness}" />
     </Style>
 
+    <Style Selector=":is(TopLevel)">
+        <Setter Property="IconOptions.Fill" Value="{DynamicResource SystemBaseHighColor}" />
+    </Style>
+
     <Design.PreviewWith>
         <StackPanel>
             <HeaderedContentControl Header="Hola">
