@@ -1,4 +1,3 @@
-
 using Zafiro.UI.Commands;
 
 namespace Zafiro.Avalonia.Dialogs;
@@ -10,7 +9,7 @@ public interface IOption<T, Q> : IOption
 
 public interface IOption
 {
-    string Title { get; }
+    IObservable<string> Title { get; }
 
     IEnhancedCommand Command { get; }
 

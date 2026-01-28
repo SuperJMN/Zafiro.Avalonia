@@ -7,7 +7,7 @@ namespace Zafiro.Avalonia.Dialogs.Implementations;
 
 public class DesktopDialog : IDialog
 {
-    public async Task<bool> Show(object viewModel, IObservable<string> title, Func<ICloseable, IEnumerable<IOption>> optionsFactory)
+    public async Task<bool> Show<TViewModel>(TViewModel viewModel, IObservable<string> title, Func<TViewModel, ICloseable, IEnumerable<IOption>> optionsFactory)
     {
         if (viewModel == null) throw new ArgumentNullException(nameof(viewModel));
         if (title == null) throw new ArgumentNullException(nameof(title));
@@ -29,7 +29,7 @@ public class DesktopDialog : IDialog
                 .Subscribe(t => Dispatcher.UIThread.Post(() => window.Title = t ?? string.Empty));
 
             var closeable = new CloseableWrapper(window);
-            var options = optionsFactory(closeable);
+            var options = optionsFactory(viewModel, closeable);
 
             window.Content = new DialogControl
             {

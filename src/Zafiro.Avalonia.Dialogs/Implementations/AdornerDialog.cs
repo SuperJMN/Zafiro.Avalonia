@@ -46,7 +46,7 @@ public class AdornerDialog : IDialog, ICloseable
         });
     }
 
-    public async Task<bool> Show(object viewModel, IObservable<string> title, Func<ICloseable, IEnumerable<IOption>> optionsFactory)
+    public async Task<bool> Show<TViewModel>(TViewModel viewModel, IObservable<string> title, Func<TViewModel, ICloseable, IEnumerable<IOption>> optionsFactory)
     {
         if (viewModel == null) throw new ArgumentNullException(nameof(viewModel));
         if (title == null) throw new ArgumentNullException(nameof(title));
@@ -55,7 +55,7 @@ public class AdornerDialog : IDialog, ICloseable
         var showTask = await Dispatcher.UIThread.InvokeAsync(() =>
         {
             var completion = new TaskCompletionSource<bool>();
-            var options = optionsFactory(this);
+            var options = optionsFactory(viewModel, this);
 
             var dialog = new DialogViewContainer
             {

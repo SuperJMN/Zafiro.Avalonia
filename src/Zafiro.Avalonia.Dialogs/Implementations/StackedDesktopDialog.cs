@@ -11,7 +11,7 @@ public class StackedDesktopDialog : IDialog
     private static readonly Stack<DialogContext> DialogStack = new();
     private static IDisposable? titleSubscription;
 
-    public async Task<bool> Show(object viewModel, IObservable<string> title, Func<ICloseable, IEnumerable<IOption>> optionsFactory)
+    public async Task<bool> Show<TViewModel>(TViewModel viewModel, IObservable<string> title, Func<TViewModel, ICloseable, IEnumerable<IOption>> optionsFactory)
     {
         if (viewModel == null) throw new ArgumentNullException(nameof(viewModel));
         if (title == null) throw new ArgumentNullException(nameof(title));
@@ -23,7 +23,7 @@ public class StackedDesktopDialog : IDialog
 
             var completionSource = new TaskCompletionSource<bool>();
             var closeable = new DialogCloseable(completionSource, true);
-            var options = optionsFactory(closeable).ToList();
+            var options = optionsFactory(viewModel, closeable).ToList();
 
             // Create a context instance for the current dialog
             var dialogContext = new DialogContext(viewModel, title, options, completionSource);
