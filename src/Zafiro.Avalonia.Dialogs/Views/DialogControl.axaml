@@ -23,7 +23,7 @@
                         </Border.Padding>
                         <Border.DataTemplates>
                             <DataTemplate DataType="dialogs:IOption">
-                                <EnhancedButton Content="{Binding Title}"
+                                <EnhancedButton Content="{Binding Title^}"
                                                 Command="{Binding Command}"
                                                 IsVisible="{Binding IsVisible^}"
                                                 IsCancel="{Binding IsCancel}"

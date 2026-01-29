@@ -8,6 +8,7 @@ public class SubmitterViewModel
 {
     public SubmitterViewModel()
     {
+        IEnhancedCommand<Result> p = EnhancedCommand.CreateWithResult(() => Result.Success(1)).AsResult();
         Submit = ReactiveCommand.Create(() => Result.Success(1)).Enhance();
     }
 
