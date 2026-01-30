@@ -42,10 +42,10 @@
         </ControlTheme>
 
         <ControlTheme x:Key="CardOverlayBorder" TargetType="OverlayBorder" BasedOn="{StaticResource {x:Type OverlayBorder}}">
-            <Setter Property="Background" Value="{StaticResource CardBackground}" />
-            <Setter Property="CornerRadius" Value="8" />
-            <Setter Property="BorderBrush" Value="{DynamicResource CardBorder}" />
-            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Border.Background" Value="{StaticResource CardBackground}" />
+            <Setter Property="Border.CornerRadius" Value="8" />
+            <Setter Property="Border.BorderBrush" Value="{DynamicResource CardBorder}" />
+            <Setter Property="Border.BorderThickness" Value="1" />
             <Setter Property="Padding" Value="15" />
         </ControlTheme>
 
