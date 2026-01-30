@@ -6,14 +6,7 @@
 
     <Styles.Resources>
         <ControlTheme TargetType="Frame" x:Key="{x:Type Frame}">
-            <Setter Property="Padding" Value="10"></Setter>
-            <Setter Property="BackButtonContent">
-                <Setter.Value>
-                    <Template>
-                        <Image Source="{StaticResource BackArrow}" />
-                    </Template>
-                </Setter.Value>
-            </Setter>
+            <Setter Property="Padding" Value="10" />
             <Setter Property="Template">
                 <ControlTemplate>
                     <DockPanel Margin="{TemplateBinding Padding}">
