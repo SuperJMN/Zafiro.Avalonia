@@ -1,0 +1,89 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
+             x:Class="TestApp.Samples.Controls.HeaderedContainerView">
+
+    <UserControl.Styles>
+        <!-- Base shared style - applies to ANY control with .Card class -->
+        <Style Selector=":is(Control).Card">
+            <Setter Property="Border.BorderThickness" Value="2" />
+            <Setter Property="Border.CornerRadius" Value="12" />
+            <Setter Property="Border.Padding" Value="16" />
+        </Style>
+
+        <!-- Color variants - ONE style governs ALL control types! -->
+        <Style Selector=":is(Control).Card.Green">
+            <Setter Property="Border.BorderBrush" Value="#4CAF50" />
+            <Setter Property="Border.Background" Value="#E8F5E9" />
+        </Style>
+
+        <Style Selector=":is(Control).Card.Red">
+            <Setter Property="Border.BorderBrush" Value="#F44336" />
+            <Setter Property="Border.Background" Value="#FFEBEE" />
+        </Style>
+
+        <Style Selector=":is(Control).Card.Blue">
+            <Setter Property="Border.BorderBrush" Value="#2196F3" />
+            <Setter Property="Border.Background" Value="#E3F2FD" />
+        </Style>
+    </UserControl.Styles>
+
+    <StackPanel Spacing="16" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="20">
+        <TextBlock Text="🎨 Extreme Style Reuse: ONE style for ALL controls" FontWeight="Bold" FontSize="16" />
+        <TextBlock Text="The same .Card.Green/.Card.Red/.Card.Blue classes apply to Border, HeaderedContainer, EdgePanel, and OverlayBorder"
+                   TextWrapping="Wrap" MaxWidth="600" Opacity="0.7" />
+
+        <!-- GREEN VARIANT -->
+        <TextBlock Text="Green variant:" FontWeight="SemiBold" Margin="0,10,0,0" />
+        <WrapPanel>
+            <Border Classes="Card Green" Margin="4">
+                <TextBlock Text="Border" />
+            </Border>
+            <HeaderedContainer Classes="Card Green" Header="HeaderedContainer" Margin="4">
+                <TextBlock Text="Content" />
+            </HeaderedContainer>
+            <EdgePanel Classes="Card Green" Margin="4">
+                <TextBlock Text="EdgePanel" />
+            </EdgePanel>
+            <OverlayBorder Classes="Card Green" Margin="4">
+                <TextBlock Text="OverlayBorder" />
+            </OverlayBorder>
+        </WrapPanel>
+
+        <!-- RED VARIANT -->
+        <TextBlock Text="Red variant:" FontWeight="SemiBold" Margin="0,10,0,0" />
+        <WrapPanel>
+            <Border Classes="Card Red" Margin="4">
+                <TextBlock Text="Border" />
+            </Border>
+            <HeaderedContainer Classes="Card Red" Header="HeaderedContainer" Margin="4">
+                <TextBlock Text="Content" />
+            </HeaderedContainer>
+            <EdgePanel Classes="Card Red" Margin="4">
+                <TextBlock Text="EdgePanel" />
+            </EdgePanel>
+            <OverlayBorder Classes="Card Red" Margin="4">
+                <TextBlock Text="OverlayBorder" />
+            </OverlayBorder>
+        </WrapPanel>
+
+        <!-- BLUE VARIANT -->
+        <TextBlock Text="Blue variant:" FontWeight="SemiBold" Margin="0,10,0,0" />
+        <WrapPanel>
+            <Border Classes="Card Blue" Margin="4">
+                <TextBlock Text="Border" />
+            </Border>
+            <HeaderedContainer Classes="Card Blue" Header="HeaderedContainer" Margin="4">
+                <TextBlock Text="Content" />
+            </HeaderedContainer>
+            <EdgePanel Classes="Card Blue" Margin="4">
+                <TextBlock Text="EdgePanel" />
+            </EdgePanel>
+            <OverlayBorder Classes="Card Blue" Margin="4">
+                <TextBlock Text="OverlayBorder" />
+            </OverlayBorder>
+        </WrapPanel>
+    </StackPanel>
+</UserControl>

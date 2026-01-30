@@ -6,7 +6,14 @@ namespace Zafiro.Avalonia.Controls;
 
 public class HeaderedContainer : ContentControl
 {
-    public static readonly StyledProperty<IBrush> HeaderBackgroundProperty = AvaloniaProperty.Register<HeaderedContainer, IBrush>(
+    public new static readonly StyledProperty<IBrush?> BackgroundProperty = Border.BackgroundProperty.AddOwner<HeaderedContainer>();
+    public new static readonly StyledProperty<IBrush?> BorderBrushProperty = Border.BorderBrushProperty.AddOwner<HeaderedContainer>();
+    public new static readonly StyledProperty<Thickness> BorderThicknessProperty = Border.BorderThicknessProperty.AddOwner<HeaderedContainer>();
+    public new static readonly StyledProperty<CornerRadius> CornerRadiusProperty = Border.CornerRadiusProperty.AddOwner<HeaderedContainer>();
+    public new static readonly StyledProperty<Thickness> PaddingProperty = Decorator.PaddingProperty.AddOwner<HeaderedContainer>();
+    public static readonly StyledProperty<BoxShadows> BoxShadowProperty = Border.BoxShadowProperty.AddOwner<HeaderedContainer>();
+
+    public static readonly StyledProperty<IBrush?> HeaderBackgroundProperty = AvaloniaProperty.Register<HeaderedContainer, IBrush?>(
         nameof(HeaderBackground));
 
     public static readonly StyledProperty<object> HeaderProperty = AvaloniaProperty.Register<HeaderedContainer, object>(
@@ -18,9 +25,6 @@ public class HeaderedContainer : ContentControl
     public static readonly StyledProperty<Thickness> HeaderPaddingProperty = AvaloniaProperty.Register<HeaderedContainer, Thickness>(
         nameof(HeaderPadding));
 
-    public static readonly StyledProperty<BoxShadows> BoxShadowProperty = AvaloniaProperty.Register<HeaderedContainer, BoxShadows>(
-        nameof(BoxShadow));
-
     public static readonly StyledProperty<ControlTheme> ContentThemeProperty = AvaloniaProperty.Register<HeaderedContainer, ControlTheme>(
         nameof(ContentTheme));
 
@@ -29,6 +33,37 @@ public class HeaderedContainer : ContentControl
 
     public static readonly StyledProperty<ControlTheme> HeaderThemeProperty = AvaloniaProperty.Register<HeaderedContainer, ControlTheme>(
         nameof(HeaderTheme));
+
+    public new IBrush? Background
+    {
+        get => GetValue(BackgroundProperty);
+        set => SetValue(BackgroundProperty, value);
+    }
+
+    public new IBrush? BorderBrush
+    {
+        get => GetValue(BorderBrushProperty);
+        set => SetValue(BorderBrushProperty, value);
+    }
+
+    public new Thickness BorderThickness
+    {
+        get => GetValue(BorderThicknessProperty);
+        set => SetValue(BorderThicknessProperty, value);
+    }
+
+    public new CornerRadius CornerRadius
+    {
+        get => GetValue(CornerRadiusProperty);
+        set => SetValue(CornerRadiusProperty, value);
+    }
+
+    public new Thickness Padding
+    {
+        get => GetValue(PaddingProperty);
+        set => SetValue(PaddingProperty, value);
+    }
+
 
     public ControlTheme HeaderTheme
     {
@@ -42,7 +77,7 @@ public class HeaderedContainer : ContentControl
         set => SetValue(ContentThemeProperty, value);
     }
 
-    public IBrush HeaderBackground
+    public IBrush? HeaderBackground
     {
         get => GetValue(HeaderBackgroundProperty);
         set => SetValue(HeaderBackgroundProperty, value);
@@ -76,5 +111,15 @@ public class HeaderedContainer : ContentControl
     {
         get => GetValue(ContentPaddingProperty);
         set => SetValue(ContentPaddingProperty, value);
+    }
+
+    protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
+    {
+        base.OnPropertyChanged(change);
+
+        if (change.Property == PaddingProperty)
+        {
+            SetValue(ContentPaddingProperty, change.NewValue);
+        }
     }
 }
