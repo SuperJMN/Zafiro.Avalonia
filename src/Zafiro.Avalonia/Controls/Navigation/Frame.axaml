@@ -1,32 +1,60 @@
 <Styles xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:navigation="clr-namespace:Zafiro.Avalonia.Controls.Navigation">
     <Design.PreviewWith>
-        <Frame Width="200" Height="200" />
+        <navigation:Frame Width="200" Height="200" />
     </Design.PreviewWith>
 
     <Styles.Resources>
-        <ControlTheme TargetType="Frame" x:Key="{x:Type Frame}">
+        <ControlTheme TargetType="navigation:Frame" x:Key="{x:Type navigation:Frame}">
             <Setter Property="Padding" Value="10" />
             <Setter Property="Template">
                 <ControlTemplate>
-                    <DockPanel Margin="{TemplateBinding Padding}">
-                        <DockPanel DockPanel.Dock="Top">
-                            <EnhancedButton Command="{TemplateBinding BackCommand}"
-                                            x:Name="BackButton"
-                                            VerticalAlignment="Center">
-                                <Button.IsVisible>
-                                    <Binding Path="$self.IsEffectivelyEnabled" />
-                                </Button.IsVisible>
-                            </EnhancedButton>
-                            <ContentPresenter x:Name="Content" Content="{TemplateBinding Header}" />
+                    <OverlayBorder CornerRadius="{TemplateBinding CornerRadius}"
+                                   Background="{TemplateBinding Background}"
+                                   BorderBrush="{TemplateBinding BorderBrush}"
+                                   BorderThickness="{TemplateBinding BorderThickness}"
+                                   BoxShadow="{TemplateBinding BoxShadow}"
+                                   ClipToBounds="{TemplateBinding ClipToBounds}">
+                        <DockPanel>
+                            
+                            <!-- Header Area: Back Button + Header Content -->
+                            <Border DockPanel.Dock="Top" 
+                                    Background="{TemplateBinding HeaderBackground}" 
+                                    Padding="{TemplateBinding EffectiveHeaderPadding}">
+                                <DockPanel LastChildFill="True">
+                                    <EnhancedButton Command="{TemplateBinding BackCommand}"
+                                                    x:Name="BackButton"
+                                                    VerticalAlignment="Center">
+                                        <Button.IsVisible>
+                                            <Binding Path="$self.IsEffectivelyEnabled" />
+                                        </Button.IsVisible>
+                                    </EnhancedButton>
+                                    <ContentPresenter x:Name="Header" 
+                                                      Content="{TemplateBinding Header}" 
+                                                      VerticalAlignment="Center" />
+                                </DockPanel>
+                            </Border>
+
+                            <!-- Footer Area -->
+                            <ContentPresenter x:Name="Footer" 
+                                              DockPanel.Dock="Bottom" 
+                                              Background="{TemplateBinding FooterBackground}"
+                                              Padding="{TemplateBinding EffectiveFooterPadding}"
+                                              Content="{TemplateBinding Footer}" />
+
+                            <!-- Main Content Area -->
+                            <ContentPresenter x:Name="Content" 
+                                              Background="{TemplateBinding ContentBackground}"
+                                              Padding="{TemplateBinding EffectiveContentPadding}"
+                                              Content="{TemplateBinding Content}" />
                         </DockPanel>
-                        <ContentPresenter x:Name="Footer" DockPanel.Dock="Bottom" Content="{TemplateBinding Footer}" />
-                        <ContentPresenter x:Name="Header" Margin="{TemplateBinding Padding}" Content="{TemplateBinding Content}" />
-                    </DockPanel>
+                    </OverlayBorder>
                 </ControlTemplate>
             </Setter>
             <Style Selector="^ /template/ EnhancedButton#BackButton">
                 <Setter Property="Height" Value="40" />
+                <Setter Property="Margin" Value="0 0 8 0" /> <!-- Added spacing between back button and header title -->
                 <Setter Property="Content">
                     <Setter.Value>
                         <Template>

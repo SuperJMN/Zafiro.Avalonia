@@ -1,0 +1,136 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:navigation="clr-namespace:Zafiro.Avalonia.Controls.Navigation;assembly=Zafiro.Avalonia"
+             mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="800"
+             x:Class="TestApp.Samples.Controls.FrameStylingView">
+
+    <ScrollViewer Padding="20">
+        <StackPanel Spacing="30">
+            <TextBlock Text="🖼️ Frame Styling Demo" FontSize="24" FontWeight="Bold" />
+
+            <!-- SECTION 1: Padding Model -->
+            <StackPanel Spacing="10">
+                <TextBlock Text="1. Padding Model" FontSize="18" FontWeight="SemiBold" />
+                <TextBlock Text="Padding applies uniformly (10), but can be overridden per section." Opacity="0.7" />
+
+                <WrapPanel>
+                    <!-- Uniform -->
+                    <navigation:Frame Width="250" Height="200" Margin="10"
+                                      Header="Uniform Padding (20)"
+                                      Content="Content Area"
+                                      Footer="Footer Area"
+                                      Padding="20"
+                                      BorderBrush="Gray" BorderThickness="1">
+                        <navigation:Frame.Background>
+                            <SolidColorBrush Color="#EEEEEE" />
+                        </navigation:Frame.Background>
+                    </navigation:Frame>
+
+                    <!-- Overrides -->
+                    <navigation:Frame Width="250" Height="200" Margin="10"
+                                      Header="Mixed Paddings"
+                                      Content="Content (0)"
+                                      Footer="Footer (20)"
+                                      Padding="10"
+                                      HeaderPadding="20"
+                                      ContentPadding="0"
+                                      FooterPadding="20"
+                                      BorderBrush="Gray" BorderThickness="1"
+                                      Background="#EEEEEE" />
+                </WrapPanel>
+            </StackPanel>
+
+            <!-- SECTION 2: Background Model -->
+            <StackPanel Spacing="10">
+                <TextBlock Text="2. Background Model" FontSize="18" FontWeight="SemiBold" />
+                <TextBlock Text="Independent backgrounds for Header, Content, and Footer (supports transparency)." Opacity="0.7" />
+
+                <WrapPanel>
+                    <!-- Distinct Backgrounds -->
+                    <navigation:Frame Width="250" Height="200" Margin="10"
+                                      Header="Header BG"
+                                      Content="Content BG"
+                                      Footer="Footer BG"
+                                      Padding="10"
+                                      HeaderBackground="#FFCDD2"
+                                      ContentBackground="#E1BEE7"
+                                      FooterBackground="#BBDEFB"
+                                      Background="White"
+                                      BorderBrush="Gray" BorderThickness="1" />
+
+                    <!-- Layering/Transparency -->
+                    <navigation:Frame Width="250" Height="200" Margin="10"
+                                      Header="Transparent Layers"
+                                      Content="Content (Light)"
+                                      Footer="Footer (Dark)"
+                                      Padding="10"
+                                      BorderBrush="Black" BorderThickness="2"
+                                      CornerRadius="8">
+                        <navigation:Frame.Background>
+                            <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
+                                <GradientStop Color="#FF9800" Offset="0" />
+                                <GradientStop Color="#9C27B0" Offset="1" />
+                            </LinearGradientBrush>
+                        </navigation:Frame.Background>
+
+                        <navigation:Frame.HeaderBackground>
+                            <SolidColorBrush Color="Black" Opacity="0.2" />
+                        </navigation:Frame.HeaderBackground>
+
+                        <navigation:Frame.ContentBackground>
+                            <SolidColorBrush Color="White" Opacity="0.4" />
+                        </navigation:Frame.ContentBackground>
+
+                        <navigation:Frame.FooterBackground>
+                            <SolidColorBrush Color="Black" Opacity="0.4" />
+                        </navigation:Frame.FooterBackground>
+                    </navigation:Frame>
+                </WrapPanel>
+            </StackPanel>
+
+            <!-- SECTION 3: Integration -->
+            <StackPanel Spacing="10">
+                <TextBlock Text="3. Integration with Content" FontSize="18" FontWeight="SemiBold" />
+
+                <navigation:Frame Width="300" Height="250" Margin="10"
+                                  Padding="0"
+                                  BorderBrush="#4CAF50" BorderThickness="2" CornerRadius="12"
+                                  Background="White"
+                                  ClipToBounds="True">
+                    <navigation:Frame.Header>
+                        <TextBlock Text="Card Title" FontWeight="Bold" FontSize="16" />
+                    </navigation:Frame.Header>
+                    <navigation:Frame.HeaderBackground>
+                        <SolidColorBrush Color="#E8F5E9" />
+                    </navigation:Frame.HeaderBackground>
+                    <navigation:Frame.HeaderPadding>
+                        <Thickness>16</Thickness>
+                    </navigation:Frame.HeaderPadding>
+
+                    <navigation:Frame.Content>
+                        <StackPanel Spacing="8">
+                            <TextBlock Text="Main content goes here." />
+                            <TextBlock Text="It has its own padding (16)." />
+                            <Button Content="Action" />
+                        </StackPanel>
+                    </navigation:Frame.Content>
+                    <navigation:Frame.ContentPadding>
+                        <Thickness>16</Thickness>
+                    </navigation:Frame.ContentPadding>
+
+                    <navigation:Frame.Footer>
+                        <TextBlock Text="Last updated: Just now" FontStyle="Italic" FontSize="11" />
+                    </navigation:Frame.Footer>
+                    <navigation:Frame.FooterBackground>
+                        <SolidColorBrush Color="#F1F8E9" />
+                    </navigation:Frame.FooterBackground>
+                    <navigation:Frame.FooterPadding>
+                        <Thickness>16,8</Thickness>
+                    </navigation:Frame.FooterPadding>
+                </navigation:Frame>
+            </StackPanel>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>
