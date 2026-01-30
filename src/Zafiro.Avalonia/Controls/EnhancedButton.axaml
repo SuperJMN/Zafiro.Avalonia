@@ -10,6 +10,8 @@
                                 HorizontalContentAlignment="Left" Icon="{Icon fa-wallet}" Content="This is the new button">
                 </EnhancedButton>
                 <EnhancedButton Width="400"
+                                BoxShadow="5 5 5 0 #44000000"
+                                ClipToBounds="False"
                                 HorizontalContentAlignment="Left" Content="No icon">
                 </EnhancedButton>
                 <EnhancedButton Width="400"
@@ -20,7 +22,7 @@
                                 Tint="Blue"
                                 HorizontalContentAlignment="Left" Icon="{Icon fa-wallet}" FontFamily="Times" FontSize="40" Content="This is the new button">
                 </EnhancedButton>
-                <BackgroundOverlappingBorder Padding="0" Width="50" Height="50" CornerRadius="20" Background="#00DAFF" BorderThickness="10" BorderBrush="#77FFFD00" />
+                <OverlayBorder Padding="0" Width="50" Height="50" CornerRadius="20" Background="#00DAFF" BorderThickness="10" BorderBrush="#77FFFD00" />
                 <EnhancedButton BorderThickness="10"
                                 Tint="Red"
                                 HorizontalContentAlignment="Left" Icon="{Icon fa-wallet}" FontFamily="Times" FontSize="26" Content="This is the new button" />
@@ -54,15 +56,16 @@
             <Setter Property="Template">
                 <ControlTemplate>
                     <Panel HorizontalAlignment="{TemplateBinding HorizontalAlignment}">
-                        <BackgroundOverlappingBorder x:Name="MainBorder" BorderThickness="{TemplateBinding BorderThickness}"
-                                                     Padding="{TemplateBinding Padding}"
-                                                     CornerRadius="{TemplateBinding CornerRadius}">
-                            <BackgroundOverlappingBorder.Background>
+                        <OverlayBorder x:Name="MainBorder" BorderThickness="{TemplateBinding BorderThickness}"
+                                       Padding="{TemplateBinding Padding}"
+                                       BoxShadow="{TemplateBinding BoxShadow}"
+                                       CornerRadius="{TemplateBinding CornerRadius}">
+                            <OverlayBorder.Background>
                                 <SolidColorBrush Color="{Binding $parent[EnhancedButton].Tint}" />
-                            </BackgroundOverlappingBorder.Background>
-                            <BackgroundOverlappingBorder.BorderBrush>
+                            </OverlayBorder.Background>
+                            <OverlayBorder.BorderBrush>
                                 <SolidColorBrush Color="{DynamicResource SystemBaseHighColor}" Opacity="0.6" />
-                            </BackgroundOverlappingBorder.BorderBrush>
+                            </OverlayBorder.BorderBrush>
                             <SmartDockPanel HorizontalSpacing="{Binding $parent[EnhancedButton].Spacing}">
                                 <Panel VerticalAlignment="Center" x:Name="IconPanel">
                                     <Panel.IsVisible>
@@ -120,11 +123,11 @@
                                                   Content="{TemplateBinding Content}"
                                                   ContentTemplate="{TemplateBinding ContentTemplate}" />
                             </SmartDockPanel>
-                        </BackgroundOverlappingBorder>
+                        </OverlayBorder>
                     </Panel>
                 </ControlTemplate>
             </Setter>
-            <Style Selector="^ /template/ BackgroundOverlappingBorder#MainBorder">
+            <Style Selector="^ /template/ OverlayBorder#MainBorder">
                 <Setter Property="Transitions">
                     <Setter.Value>
                         <Transitions>
@@ -133,14 +136,14 @@
                     </Setter.Value>
                 </Setter>
             </Style>
-            <Style Selector="^:pointerover /template/ BackgroundOverlappingBorder#MainBorder">
+            <Style Selector="^:pointerover /template/ OverlayBorder#MainBorder">
                 <Setter Property="Opacity" Value="0.7" />
             </Style>
-            <Style Selector="^:pressed /template/ BackgroundOverlappingBorder#MainBorder">
+            <Style Selector="^:pressed /template/ OverlayBorder#MainBorder">
                 <Setter Property="Opacity" Value="0.7" />
                 <Setter Property="RenderTransform" Value="scale(0.99)" />
             </Style>
-            <Style Selector="^:disabled /template/ BackgroundOverlappingBorder#MainBorder">
+            <Style Selector="^:disabled /template/ OverlayBorder#MainBorder">
                 <Setter Property="Opacity" Value="0.5" />
             </Style>
         </ControlTheme>

@@ -22,8 +22,17 @@ public class EnhancedButton : Button
 
     public static readonly AttachedProperty<ButtonIntent> IntentProperty = AvaloniaProperty.RegisterAttached<EnhancedButton, Control, ButtonIntent>("Intent");
 
+    public static readonly StyledProperty<BoxShadows> BoxShadowProperty = AvaloniaProperty.Register<EnhancedButton, BoxShadows>(
+        nameof(BoxShadow));
+
     readonly SerialDisposable commandExecutionSubscription = new();
     private bool isCommandRunning;
+
+    public BoxShadows BoxShadow
+    {
+        get => GetValue(BoxShadowProperty);
+        set => SetValue(BoxShadowProperty, value);
+    }
 
     public Color Tint
     {
