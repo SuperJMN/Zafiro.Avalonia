@@ -20,8 +20,7 @@
                         <DockPanel DockPanel.Dock="Top">
                             <EnhancedButton Command="{TemplateBinding BackCommand}"
                                             x:Name="BackButton"
-                                            VerticalAlignment="Center"
-                                            Content="{TemplateBinding BackButtonContent}">
+                                            VerticalAlignment="Center">
                                 <Button.IsVisible>
                                     <Binding Path="$self.IsEffectivelyEnabled" />
                                 </Button.IsVisible>
@@ -35,6 +34,13 @@
             </Setter>
             <Style Selector="^ /template/ EnhancedButton#BackButton">
                 <Setter Property="Height" Value="40" />
+                <Setter Property="Content">
+                    <Setter.Value>
+                        <Template>
+                            <Image Source="{StaticResource BackArrow}" />
+                        </Template>
+                    </Setter.Value>
+                </Setter>
             </Style>
         </ControlTheme>
     </Styles.Resources>

@@ -11,9 +11,6 @@ public class Frame : TemplatedControl
     public static readonly StyledProperty<object> ContentProperty =
         AvaloniaProperty.Register<Frame, object>(nameof(Content));
 
-    public static readonly StyledProperty<object> BackButtonContentProperty =
-        AvaloniaProperty.Register<Frame, object>(nameof(BackButtonContent));
-
     public static readonly StyledProperty<object?> HeaderProperty =
         AvaloniaProperty.Register<Frame, object?>(nameof(Header));
 
@@ -30,12 +27,6 @@ public class Frame : TemplatedControl
     {
         get => GetValue(ContentProperty);
         set => SetValue(ContentProperty, value);
-    }
-
-    public object BackButtonContent
-    {
-        get => GetValue(BackButtonContentProperty);
-        set => SetValue(BackButtonContentProperty, value);
     }
 
     public object? Header
