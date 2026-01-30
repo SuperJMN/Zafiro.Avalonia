@@ -2,7 +2,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
+             mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="800"
              x:Class="TestApp.Samples.Controls.HeaderedContainerView">
 
     <UserControl.Styles>
@@ -13,7 +13,7 @@
             <Setter Property="Border.Padding" Value="16" />
         </Style>
 
-        <!-- Color variants - ONE style governs ALL control types! -->
+        <!-- Color variants -->
         <Style Selector=":is(Control).Card.Green">
             <Setter Property="Border.BorderBrush" Value="#4CAF50" />
             <Setter Property="Border.Background" Value="#E8F5E9" />
@@ -30,60 +30,210 @@
         </Style>
     </UserControl.Styles>
 
-    <StackPanel Spacing="16" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="20">
-        <TextBlock Text="🎨 Extreme Style Reuse: ONE style for ALL controls" FontWeight="Bold" FontSize="16" />
-        <TextBlock Text="The same .Card.Green/.Card.Red/.Card.Blue classes apply to Border, HeaderedContainer, EdgePanel, and OverlayBorder"
-                   TextWrapping="Wrap" MaxWidth="600" Opacity="0.7" />
+    <ScrollViewer>
+        <StackPanel Spacing="24" HorizontalAlignment="Center" Margin="20">
 
-        <!-- GREEN VARIANT -->
-        <TextBlock Text="Green variant:" FontWeight="SemiBold" Margin="0,10,0,0" />
-        <WrapPanel>
-            <Border Classes="Card Green" Margin="4">
-                <TextBlock Text="Border" />
-            </Border>
-            <HeaderedContainer Classes="Card Green" Header="HeaderedContainer" Margin="4">
-                <TextBlock Text="Content" />
-            </HeaderedContainer>
-            <EdgePanel Classes="Card Green" Margin="4">
-                <TextBlock Text="EdgePanel" />
-            </EdgePanel>
-            <OverlayBorder Classes="Card Green" Margin="4">
-                <TextBlock Text="OverlayBorder" />
-            </OverlayBorder>
-        </WrapPanel>
+            <!-- SECTION 1: New Padding Model -->
+            <StackPanel Spacing="8">
+                <TextBlock Text="📐 New Padding Model" FontWeight="Bold" FontSize="18" />
+                <TextBlock Text="Padding applies uniformly to both header and content. HeaderPadding/ContentPadding are optional overrides."
+                           TextWrapping="Wrap" MaxWidth="700" Opacity="0.7" />
 
-        <!-- RED VARIANT -->
-        <TextBlock Text="Red variant:" FontWeight="SemiBold" Margin="0,10,0,0" />
-        <WrapPanel>
-            <Border Classes="Card Red" Margin="4">
-                <TextBlock Text="Border" />
-            </Border>
-            <HeaderedContainer Classes="Card Red" Header="HeaderedContainer" Margin="4">
-                <TextBlock Text="Content" />
-            </HeaderedContainer>
-            <EdgePanel Classes="Card Red" Margin="4">
-                <TextBlock Text="EdgePanel" />
-            </EdgePanel>
-            <OverlayBorder Classes="Card Red" Margin="4">
-                <TextBlock Text="OverlayBorder" />
-            </OverlayBorder>
-        </WrapPanel>
+                <WrapPanel Margin="0,8,0,0">
+                    <!-- Uniform padding -->
+                    <HeaderedContainer Header="Uniform Padding=16"
+                                       Padding="16"
+                                       Background="#E3F2FD"
+                                       HeaderBackground="#BBDEFB"
+                                       BorderBrush="#2196F3"
+                                       BorderThickness="2"
+                                       CornerRadius="8"
+                                       Margin="4">
+                        <TextBlock Text="Same padding everywhere" />
+                    </HeaderedContainer>
 
-        <!-- BLUE VARIANT -->
-        <TextBlock Text="Blue variant:" FontWeight="SemiBold" Margin="0,10,0,0" />
-        <WrapPanel>
-            <Border Classes="Card Blue" Margin="4">
-                <TextBlock Text="Border" />
-            </Border>
-            <HeaderedContainer Classes="Card Blue" Header="HeaderedContainer" Margin="4">
-                <TextBlock Text="Content" />
-            </HeaderedContainer>
-            <EdgePanel Classes="Card Blue" Margin="4">
-                <TextBlock Text="EdgePanel" />
-            </EdgePanel>
-            <OverlayBorder Classes="Card Blue" Margin="4">
-                <TextBlock Text="OverlayBorder" />
-            </OverlayBorder>
-        </WrapPanel>
-    </StackPanel>
+                    <!-- Header override -->
+                    <HeaderedContainer Header="Padding=16, HeaderPadding=24"
+                                       Padding="16"
+                                       HeaderPadding="24"
+                                       Background="#E8F5E9"
+                                       HeaderBackground="#C8E6C9"
+                                       BorderBrush="#4CAF50"
+                                       BorderThickness="2"
+                                       CornerRadius="8"
+                                       Margin="4">
+                        <TextBlock Text="Header has more padding" />
+                    </HeaderedContainer>
+
+                    <!-- Content override -->
+                    <HeaderedContainer Header="Padding=16, ContentPadding=8"
+                                       Padding="16"
+                                       ContentPadding="8"
+                                       Background="#FFEBEE"
+                                       HeaderBackground="#FFCDD2"
+                                       BorderBrush="#F44336"
+                                       BorderThickness="2"
+                                       CornerRadius="8"
+                                       Margin="4">
+                        <TextBlock Text="Content has less padding" />
+                    </HeaderedContainer>
+
+                    <!-- Both overrides -->
+                    <HeaderedContainer Header="HeaderPadding=24, ContentPadding=8"
+                                       Padding="16"
+                                       HeaderPadding="24"
+                                       ContentPadding="8"
+                                       Background="#FFF3E0"
+                                       HeaderBackground="#FFE0B2"
+                                       BorderBrush="#FF9800"
+                                       BorderThickness="2"
+                                       CornerRadius="8"
+                                       Margin="4">
+                        <TextBlock Text="Both overridden" />
+                    </HeaderedContainer>
+                </WrapPanel>
+            </StackPanel>
+
+            <!-- SECTION 2: Background Model -->
+            <StackPanel Spacing="8">
+                <TextBlock Text="🎨 Background Model" FontWeight="Bold" FontSize="18" />
+                <TextBlock Text="Background covers the whole control. HeaderBackground/ContentBackground cover their respective zones (ignoring padding)."
+                           TextWrapping="Wrap" MaxWidth="700" Opacity="0.7" />
+
+                <WrapPanel Margin="0,8,0,0">
+                    <!-- Only Background -->
+                    <HeaderedContainer Header="Only Background"
+                                       Padding="16"
+                                       Background="#B39DDB"
+                                       BorderBrush="#7E57C2"
+                                       BorderThickness="2"
+                                       CornerRadius="8"
+                                       Margin="4">
+                        <TextBlock Text="Single color for all" />
+                    </HeaderedContainer>
+
+                    <!-- Background + HeaderBackground -->
+                    <HeaderedContainer Header="Background + HeaderBackground"
+                                       Padding="16"
+                                       Background="#E1BEE7"
+                                       HeaderBackground="#CE93D8"
+                                       BorderBrush="#AB47BC"
+                                       BorderThickness="2"
+                                       CornerRadius="8"
+                                       Margin="4">
+                        <TextBlock Text="Header has distinct color" />
+                    </HeaderedContainer>
+
+                    <!-- Background + ContentBackground -->
+                    <HeaderedContainer Header="Background + ContentBackground"
+                                       Padding="16"
+                                       Background="#C5CAE9"
+                                       ContentBackground="#9FA8DA"
+                                       BorderBrush="#5C6BC0"
+                                       BorderThickness="2"
+                                       CornerRadius="8"
+                                       Margin="4">
+                        <TextBlock Text="Content has distinct color" />
+                    </HeaderedContainer>
+
+                    <!-- With transparency - the Background shines through! -->
+                    <HeaderedContainer Header="Gradient + Tints"
+                                       Padding="16"
+                                       BorderBrush="#6A1B9A"
+                                       BorderThickness="2"
+                                       CornerRadius="8"
+                                       Margin="4">
+                        <HeaderedContainer.Background>
+                            <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
+                                <GradientStop Color="#FF6F00" Offset="0" />
+                                <GradientStop Color="#E91E63" Offset="1" />
+                            </LinearGradientBrush>
+                        </HeaderedContainer.Background>
+                        <HeaderedContainer.HeaderBackground>
+                            <SolidColorBrush Color="#000000" Opacity="0.35" />
+                        </HeaderedContainer.HeaderBackground>
+                        <HeaderedContainer.ContentBackground>
+                            <SolidColorBrush Color="#FFFFFF" Opacity="0.5" />
+                        </HeaderedContainer.ContentBackground>
+                        <TextBlock Text="Gradient shows through!" />
+                    </HeaderedContainer>
+
+                    <!-- Practical use: darken header, lighten content -->
+                    <HeaderedContainer Header="Dark header, light content"
+                                       Padding="16"
+                                       Background="#2196F3"
+                                       BorderBrush="#0D47A1"
+                                       BorderThickness="2"
+                                       CornerRadius="8"
+                                       Margin="4">
+                        <HeaderedContainer.HeaderBackground>
+                            <SolidColorBrush Color="#000000" Opacity="0.4" />
+                        </HeaderedContainer.HeaderBackground>
+                        <HeaderedContainer.ContentBackground>
+                            <SolidColorBrush Color="#FFFFFF" Opacity="0.6" />
+                        </HeaderedContainer.ContentBackground>
+                        <TextBlock Text="Same base, different shades" />
+                    </HeaderedContainer>
+                </WrapPanel>
+            </StackPanel>
+            <!-- SECTION 3: Style Reuse -->
+            <StackPanel Spacing="8">
+                <TextBlock Text="🎨 Style Reuse: ONE style for ALL controls" FontWeight="Bold" FontSize="18" />
+                <TextBlock Text="The same .Card.Green/.Card.Red/.Card.Blue classes apply to Border, HeaderedContainer, EdgePanel, and OverlayBorder"
+                           TextWrapping="Wrap" MaxWidth="700" Opacity="0.7" />
+
+                <!-- GREEN VARIANT -->
+                <TextBlock Text="Green variant:" FontWeight="SemiBold" Margin="0,8,0,0" />
+                <WrapPanel>
+                    <Border Classes="Card Green" Margin="4">
+                        <TextBlock Text="Border" />
+                    </Border>
+                    <HeaderedContainer Classes="Card Green" Header="HeaderedContainer" Margin="4">
+                        <TextBlock Text="Content" />
+                    </HeaderedContainer>
+                    <EdgePanel Classes="Card Green" Margin="4">
+                        <TextBlock Text="EdgePanel" />
+                    </EdgePanel>
+                    <OverlayBorder Classes="Card Green" Margin="4">
+                        <TextBlock Text="OverlayBorder" />
+                    </OverlayBorder>
+                </WrapPanel>
+
+                <!-- RED VARIANT -->
+                <TextBlock Text="Red variant:" FontWeight="SemiBold" Margin="0,8,0,0" />
+                <WrapPanel>
+                    <Border Classes="Card Red" Margin="4">
+                        <TextBlock Text="Border" />
+                    </Border>
+                    <HeaderedContainer Classes="Card Red" Header="HeaderedContainer" Margin="4">
+                        <TextBlock Text="Content" />
+                    </HeaderedContainer>
+                    <EdgePanel Classes="Card Red" Margin="4">
+                        <TextBlock Text="EdgePanel" />
+                    </EdgePanel>
+                    <OverlayBorder Classes="Card Red" Margin="4">
+                        <TextBlock Text="OverlayBorder" />
+                    </OverlayBorder>
+                </WrapPanel>
+
+                <!-- BLUE VARIANT -->
+                <TextBlock Text="Blue variant:" FontWeight="SemiBold" Margin="0,8,0,0" />
+                <WrapPanel>
+                    <Border Classes="Card Blue" Margin="4">
+                        <TextBlock Text="Border" />
+                    </Border>
+                    <HeaderedContainer Classes="Card Blue" Header="HeaderedContainer" Margin="4">
+                        <TextBlock Text="Content" />
+                    </HeaderedContainer>
+                    <EdgePanel Classes="Card Blue" Margin="4">
+                        <TextBlock Text="EdgePanel" />
+                    </EdgePanel>
+                    <OverlayBorder Classes="Card Blue" Margin="4">
+                        <TextBlock Text="OverlayBorder" />
+                    </OverlayBorder>
+                </WrapPanel>
+            </StackPanel>
+
+        </StackPanel>
+    </ScrollViewer>
 </UserControl>

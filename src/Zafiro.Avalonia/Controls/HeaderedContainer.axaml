@@ -3,8 +3,7 @@
 
     <Styles.Resources>
         <ControlTheme x:Key="{x:Type HeaderedContainer}" TargetType="HeaderedContainer">
-            <Setter Property="HeaderPadding" Value="10" />
-            <Setter Property="ContentPadding" Value="10" />
+            <Setter Property="Padding" Value="10" />
             <Setter Property="ClipToBounds" Value="False"></Setter>
             <Setter Property="Template">
                 <ControlTemplate>
@@ -17,15 +16,16 @@
                         <DockPanel>
                             <ContentPresenter x:Name="Header"
                                               Background="{TemplateBinding HeaderBackground}"
-                                              Padding="{TemplateBinding HeaderPadding}"
+                                              Padding="{TemplateBinding EffectiveHeaderPadding}"
                                               DockPanel.Dock="Top"
                                               Content="{TemplateBinding Header}"
                                               ContentTemplate="{TemplateBinding HeaderTemplate}"
                                               IsVisible="{Binding $parent[HeaderedContainer].Header, Converter={x:Static ObjectConverters.IsNotNull}}" />
                             <ContentPresenter x:Name="Content"
+                                              Background="{TemplateBinding ContentBackground}"
                                               Content="{TemplateBinding Content}"
                                               ContentTemplate="{TemplateBinding ContentTemplate}"
-                                              Padding="{TemplateBinding ContentPadding}"
+                                              Padding="{TemplateBinding EffectiveContentPadding}"
                                               HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                                               IsVisible="{Binding $parent[HeaderedContainer].Content, Converter={x:Static ObjectConverters.IsNotNull}}" />
                         </DockPanel>
@@ -49,14 +49,15 @@
                             <ContentPresenter x:Name="Header"
                                               DockPanel.Dock="Left"
                                               Background="{TemplateBinding HeaderBackground}"
-                                              Padding="{TemplateBinding HeaderPadding}"
+                                              Padding="{TemplateBinding EffectiveHeaderPadding}"
                                               Content="{TemplateBinding Header}"
                                               VerticalAlignment="Center"
                                               ContentTemplate="{TemplateBinding HeaderTemplate}"
                                               IsVisible="{Binding $parent[HeaderedContainer].Header, Converter={x:Static ObjectConverters.IsNotNull}}" />
                             <ContentPresenter x:Name="Content"
+                                              Background="{TemplateBinding ContentBackground}"
                                               Content="{TemplateBinding Content}"
-                                              Padding="{TemplateBinding ContentPadding}"
+                                              Padding="{TemplateBinding EffectiveContentPadding}"
                                               HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                                               ContentTemplate="{TemplateBinding ContentTemplate}"
                                               IsVisible="{Binding $parent[HeaderedContainer].Content, Converter={x:Static ObjectConverters.IsNotNull}}" />
