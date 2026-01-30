@@ -8,11 +8,11 @@
             <Setter Property="ClipToBounds" Value="False"></Setter>
             <Setter Property="Template">
                 <ControlTemplate>
-                    <OverlayBorder CornerRadius="{TemplateBinding (Border.CornerRadius)}"
-                                   Background="{TemplateBinding (Border.Background)}"
-                                   BorderBrush="{TemplateBinding (Border.BorderBrush)}"
-                                   BorderThickness="{TemplateBinding (Border.BorderThickness)}"
-                                   BoxShadow="{TemplateBinding (Border.BoxShadow)}"
+                    <OverlayBorder CornerRadius="{TemplateBinding CornerRadius}"
+                                   Background="{TemplateBinding Background}"
+                                   BorderBrush="{TemplateBinding BorderBrush}"
+                                   BorderThickness="{TemplateBinding BorderThickness}"
+                                   BoxShadow="{TemplateBinding BoxShadow}"
                                    ClipToBounds="{TemplateBinding ClipToBounds}">
                         <DockPanel>
                             <ContentPresenter x:Name="Header"
@@ -40,11 +40,11 @@
         <ControlTheme x:Key="InlineHeaderedContainer" TargetType="HeaderedContainer">
             <Setter Property="Template">
                 <ControlTemplate>
-                    <Border BorderThickness="{TemplateBinding (Border.BorderThickness)}"
-                            BorderBrush="{TemplateBinding (Border.BorderBrush)}"
-                            Background="{TemplateBinding (Border.Background)}"
-                            CornerRadius="{TemplateBinding (Border.CornerRadius)}"
-                            BoxShadow="{TemplateBinding (Border.BoxShadow)}">
+                    <Border BorderThickness="{TemplateBinding BorderThickness}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            BoxShadow="{TemplateBinding BoxShadow}">
                         <DockPanel>
                             <ContentPresenter x:Name="Header"
                                               DockPanel.Dock="Left"

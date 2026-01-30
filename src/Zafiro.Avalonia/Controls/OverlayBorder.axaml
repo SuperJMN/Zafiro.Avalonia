@@ -11,18 +11,18 @@
                 <ControlTemplate>
                     <Panel ClipToBounds="False">
                         <!-- Shadow layer (no clipping) -->
-                        <Border Background="{TemplateBinding (Border.Background)}"
+                        <Border Background="{TemplateBinding Background}"
                                 IsHitTestVisible="False"
-                                CornerRadius="{TemplateBinding (Border.CornerRadius)}"
-                                BorderThickness="{TemplateBinding (Border.BorderThickness)}"
-                                BorderBrush="{TemplateBinding (Border.Background)}"
-                                BoxShadow="{TemplateBinding (Border.BoxShadow)}" />
+                                CornerRadius="{TemplateBinding CornerRadius}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                BorderBrush="{TemplateBinding Background}"
+                                BoxShadow="{TemplateBinding BoxShadow}" />
 
                         <!-- Content layer with clipping -->
-                        <Border Background="{TemplateBinding (Border.Background)}"
-                                CornerRadius="{TemplateBinding (Border.CornerRadius)}"
+                        <Border Background="{TemplateBinding Background}"
+                                CornerRadius="{TemplateBinding CornerRadius}"
                                 Padding="{TemplateBinding Padding}"
-                                BorderThickness="{TemplateBinding (Border.BorderThickness)}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
                                 ClipToBounds="True">
                             <ContentPresenter Content="{TemplateBinding Content}"
                                               ContentTemplate="{TemplateBinding ContentTemplate}"
@@ -31,10 +31,10 @@
                         </Border>
 
                         <!-- Overlay border -->
-                        <Border BorderBrush="{TemplateBinding (Border.BorderBrush)}"
+                        <Border BorderBrush="{TemplateBinding BorderBrush}"
                                 IsHitTestVisible="False"
-                                BorderThickness="{TemplateBinding (Border.BorderThickness)}"
-                                CornerRadius="{TemplateBinding (Border.CornerRadius)}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="{TemplateBinding CornerRadius}"
                                 Background="Transparent" />
                     </Panel>
                 </ControlTemplate>

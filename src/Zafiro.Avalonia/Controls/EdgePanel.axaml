@@ -26,8 +26,8 @@
             <Setter Property="VerticalContentAlignment" Value="Center" />
             <Setter Property="Template">
                 <ControlTemplate>
-                    <Border CornerRadius="{TemplateBinding (Border.CornerRadius)}" Padding="{TemplateBinding Padding}" Background="{TemplateBinding (Border.Background)}" BorderBrush="{TemplateBinding (Border.BorderBrush)}"
-                            BorderThickness="{TemplateBinding (Border.BorderThickness)}">
+                    <Border CornerRadius="{TemplateBinding CornerRadius}" Padding="{TemplateBinding Padding}" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}">
                         <Grid ColumnSpacing="{TemplateBinding Spacing}" ColumnDefinitions="Auto * Auto">
                             <ContentControl x:Name="StartContent"
                                             IsVisible="{Binding $self.Content, Converter={x:Static ObjectConverters.IsNotNull}}"
