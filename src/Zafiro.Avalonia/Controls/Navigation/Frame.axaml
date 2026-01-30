@@ -26,10 +26,10 @@
                                     <Binding Path="$self.IsEffectivelyEnabled" />
                                 </Button.IsVisible>
                             </EnhancedButton>
-                            <ContentPresenter Content="{TemplateBinding Header}" />
+                            <ContentPresenter x:Name="Content" Content="{TemplateBinding Header}" />
                         </DockPanel>
-                        <ContentPresenter DockPanel.Dock="Bottom" Content="{TemplateBinding Footer}" />
-                        <ContentPresenter Margin="{TemplateBinding Padding}" Content="{TemplateBinding Content}" />
+                        <ContentPresenter x:Name="Footer" DockPanel.Dock="Bottom" Content="{TemplateBinding Footer}" />
+                        <ContentPresenter x:Name="Header" Margin="{TemplateBinding Padding}" Content="{TemplateBinding Content}" />
                     </DockPanel>
                 </ControlTemplate>
             </Setter>
