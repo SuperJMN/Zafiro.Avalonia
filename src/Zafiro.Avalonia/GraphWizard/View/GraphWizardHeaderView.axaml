@@ -1,0 +1,32 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:view="clr-namespace:Zafiro.Avalonia.Wizards.Graph.View">
+
+    <Design.PreviewWith>
+        <view:GraphWizardHeaderView Width="600">
+            <view:GraphWizardHeaderView.Wizard>
+                <view:GraphWizardDesign />
+            </view:GraphWizardHeaderView.Wizard>
+        </view:GraphWizardHeaderView>
+    </Design.PreviewWith>
+
+    <ControlTheme x:Key="{x:Type view:GraphWizardHeaderView}" TargetType="view:GraphWizardHeaderView">
+        <Setter Property="Wizard" Value="{Binding Wizard}" />
+        <Setter Property="Background" Value="{DynamicResource SystemChromeLowColor}" />
+        <Setter Property="Padding" Value="10" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Border Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}" Margin="10">
+                    <ContentPresenter Content="{Binding $parent[view:GraphWizardHeaderView].CurrentHeader}">
+                        <ContentPresenter.DataTemplates>
+                            <DataTemplate DataType="x:String">
+                                <TextBlock Text="{Binding}" />
+                            </DataTemplate>
+                        </ContentPresenter.DataTemplates>
+                    </ContentPresenter>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+</ResourceDictionary>

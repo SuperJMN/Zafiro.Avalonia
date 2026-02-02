@@ -1,0 +1,41 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:view="clr-namespace:Zafiro.Avalonia.Wizards.Graph.View">
+
+    <Design.PreviewWith>
+        <view:GraphWizardFooterView Width="600">
+            <view:GraphWizardFooterView.Wizard>
+                <view:GraphWizardDesign />
+            </view:GraphWizardFooterView.Wizard>
+        </view:GraphWizardFooterView>
+    </Design.PreviewWith>
+
+    <ControlTheme x:Key="{x:Type view:GraphWizardFooterView}" TargetType="view:GraphWizardFooterView">
+        <Setter Property="Wizard" Value="{Binding Wizard}" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Border Padding="10" Background="{DynamicResource SystemChromeMediumColor}">
+                    <Grid ColumnDefinitions="Auto, *, Auto">
+                        <EnhancedButton Grid.Column="0"
+                                        Command="{Binding $parent[view:GraphWizardFooterView].Wizard.Cancel}"
+                                        Content="Cancel"
+                                        Classes="Secondary" />
+
+                        <ContentPresenter Grid.Column="1" Content="{Binding $parent[view:GraphWizardFooterView].CurrentFooter}"
+                                          HorizontalAlignment="Center" VerticalAlignment="Center" />
+
+                        <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right" Spacing="10">
+                            <EnhancedButton Command="{Binding $parent[view:GraphWizardFooterView].Wizard.Back}"
+                                            Content="Back"
+                                            Classes="VisibleWhenEnabled Secondary" />
+                            <EnhancedButton Command="{Binding $parent[view:GraphWizardFooterView].Wizard.Next}"
+                                            Content="{Binding $parent[view:GraphWizardFooterView].Wizard.NextTitle^}"
+                                            Classes="Primary" />
+                        </StackPanel>
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+</ResourceDictionary>
