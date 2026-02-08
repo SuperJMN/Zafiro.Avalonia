@@ -2,6 +2,7 @@ namespace Zafiro.Avalonia.Controls;
 
 public enum ButtonRole
 {
+    None,
     Primary,
     Secondary,
     Ghost,

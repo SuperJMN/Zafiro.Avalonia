@@ -1,7 +1,6 @@
 <Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:controls="clr-namespace:FluentAvalonia.UI.Controls;assembly=FluentAvalonia"
-        xmlns:zc="clr-namespace:Zafiro.Avalonia.Controls"
         xmlns:zconv="clr-namespace:Zafiro.Avalonia.Converters">
     <Design.PreviewWith>
         <Border Padding="20">
@@ -148,19 +147,19 @@
             </Style>
         </ControlTheme>
     </Styles.Resources>
-    <Style Selector="zc|EnhancedButton[(zc|EnhancedButton.Role)=Ghost]">
+    <Style Selector="EnhancedButton[Role=Ghost]">
         <Setter Property="Tint" Value="Transparent" />
     </Style>
-    <Style Selector="zc|EnhancedButton[(zc|EnhancedButton.Role)=Primary]">
+    <Style Selector="EnhancedButton[Role=Primary]">
         <Setter Property="Tint" Value="{DynamicResource SystemChromeHighColor}" />
     </Style>
-    <Style Selector="zc|EnhancedButton[(zc|EnhancedButton.Role)=Secondary]">
+    <Style Selector="EnhancedButton[Role=Secondary]">
         <Setter Property="Tint" Value="{DynamicResource SystemChromeLowColor}" />
     </Style>
-    <Style Selector="zc|EnhancedButton[(zc|EnhancedButton.Role)=Destructive]">
+    <Style Selector="EnhancedButton[Role=Destructive]">
         <Setter Property="Tint" Value="{DynamicResource SystemErrorTextColor}" />
     </Style>
-    <Style Selector="zc|EnhancedButton[(zc|EnhancedButton.Role)=Link]">
+    <Style Selector="EnhancedButton[Role=Link]">
         <Setter Property="Tint" Value="Transparent" />
     </Style>
 </Styles>

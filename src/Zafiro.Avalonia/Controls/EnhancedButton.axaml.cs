@@ -18,7 +18,7 @@ public class EnhancedButton : Button
     public static readonly StyledProperty<Color> TintProperty = AvaloniaProperty.Register<EnhancedButton, Color>(
         nameof(Tint));
 
-    public static readonly AttachedProperty<ButtonRole> RoleProperty = AvaloniaProperty.RegisterAttached<EnhancedButton, Control, ButtonRole>("Role");
+    public static readonly StyledProperty<ButtonRole> RoleProperty = AvaloniaProperty.Register<EnhancedButton, ButtonRole>(nameof(Role));
 
     public static readonly AttachedProperty<ButtonIntent> IntentProperty = AvaloniaProperty.RegisterAttached<EnhancedButton, Control, ButtonIntent>("Intent");
 
@@ -58,15 +58,12 @@ public class EnhancedButton : Button
         private set => SetAndRaise(IsCommandRunningProperty, ref isCommandRunning, value);
     }
 
-    public static void SetRole(Control element, ButtonRole value)
+    public ButtonRole Role
     {
-        element.SetValue(RoleProperty, value);
+        get => GetValue(RoleProperty);
+        set => SetValue(RoleProperty, value);
     }
 
-    public static ButtonRole GetRole(Control element)
-    {
-        return element.GetValue(RoleProperty);
-    }
 
     public static void SetIntent(Control element, ButtonIntent value)
     {

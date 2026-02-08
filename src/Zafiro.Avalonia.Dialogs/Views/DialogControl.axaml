@@ -30,7 +30,7 @@
                                                 IsDefault="{Binding IsDefault}"
                                                 Padding="16 8"
                                                 CornerRadius="4"
-                                                EnhancedButton.Role="{Binding Role, Converter={x:Static dialogs:OptionRoleToButtonRoleConverter.Instance}}" />
+                                                Role="{Binding Role, Converter={x:Static dialogs:OptionRoleToButtonRoleConverter.Instance}}" />
                             </DataTemplate>
                         </Border.DataTemplates>
 
