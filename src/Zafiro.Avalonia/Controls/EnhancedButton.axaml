@@ -147,19 +147,4 @@
             </Style>
         </ControlTheme>
     </Styles.Resources>
-    <Style Selector="EnhancedButton[Role=Ghost]">
-        <Setter Property="Tint" Value="Transparent" />
-    </Style>
-    <Style Selector="EnhancedButton[Role=Primary]">
-        <Setter Property="Tint" Value="{DynamicResource SystemChromeHighColor}" />
-    </Style>
-    <Style Selector="EnhancedButton[Role=Secondary]">
-        <Setter Property="Tint" Value="{DynamicResource SystemChromeLowColor}" />
-    </Style>
-    <Style Selector="EnhancedButton[Role=Destructive]">
-        <Setter Property="Tint" Value="{DynamicResource SystemErrorTextColor}" />
-    </Style>
-    <Style Selector="EnhancedButton[Role=Link]">
-        <Setter Property="Tint" Value="Transparent" />
-    </Style>
 </Styles>

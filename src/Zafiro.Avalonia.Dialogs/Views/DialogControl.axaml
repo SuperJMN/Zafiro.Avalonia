@@ -51,6 +51,23 @@
                                 <Setter Property="Spacing" Value="10" />
                                 <Setter Property="Orientation" Value="Horizontal" />
                             </Style>
+
+                            <!-- Role-based styles for dialog buttons -->
+                            <Style Selector="EnhancedButton[Role=Ghost]">
+                                <Setter Property="Tint" Value="Transparent" />
+                            </Style>
+                            <Style Selector="EnhancedButton[Role=Primary]">
+                                <Setter Property="Tint" Value="{DynamicResource SystemChromeHighColor}" />
+                            </Style>
+                            <Style Selector="EnhancedButton[Role=Secondary]">
+                                <Setter Property="Tint" Value="{DynamicResource SystemChromeLowColor}" />
+                            </Style>
+                            <Style Selector="EnhancedButton[Role=Destructive]">
+                                <Setter Property="Tint" Value="{DynamicResource SystemErrorTextColor}" />
+                            </Style>
+                            <Style Selector="EnhancedButton[Role=Link]">
+                                <Setter Property="Tint" Value="Transparent" />
+                            </Style>
                         </Border.Styles>
 
                         <Grid RowDefinitions="Auto,*,Auto" Margin="{TemplateBinding Padding}">
