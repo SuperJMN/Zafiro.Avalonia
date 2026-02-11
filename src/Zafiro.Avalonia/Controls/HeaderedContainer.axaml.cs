@@ -6,11 +6,6 @@ namespace Zafiro.Avalonia.Controls;
 
 public class HeaderedContainer : ContentControl
 {
-    public new static readonly StyledProperty<IBrush?> BackgroundProperty = Border.BackgroundProperty.AddOwner<HeaderedContainer>();
-    public new static readonly StyledProperty<IBrush?> BorderBrushProperty = Border.BorderBrushProperty.AddOwner<HeaderedContainer>();
-    public new static readonly StyledProperty<Thickness> BorderThicknessProperty = Border.BorderThicknessProperty.AddOwner<HeaderedContainer>();
-    public new static readonly StyledProperty<CornerRadius> CornerRadiusProperty = Border.CornerRadiusProperty.AddOwner<HeaderedContainer>();
-    public new static readonly StyledProperty<Thickness> PaddingProperty = Decorator.PaddingProperty.AddOwner<HeaderedContainer>();
     public static readonly StyledProperty<BoxShadows> BoxShadowProperty = Border.BoxShadowProperty.AddOwner<HeaderedContainer>();
 
     public static readonly StyledProperty<IBrush?> HeaderBackgroundProperty = AvaloniaProperty.Register<HeaderedContainer, IBrush?>(
@@ -37,6 +32,12 @@ public class HeaderedContainer : ContentControl
     public static readonly StyledProperty<ControlTheme> HeaderThemeProperty = AvaloniaProperty.Register<HeaderedContainer, ControlTheme>(
         nameof(HeaderTheme));
 
+    public static readonly StyledProperty<string> HeaderClassesProperty = AvaloniaProperty.Register<HeaderedContainer, string>(
+        nameof(HeaderClasses));
+
+    public static readonly StyledProperty<string> ContentClassesProperty = AvaloniaProperty.Register<HeaderedContainer, string>(
+        nameof(ContentClasses));
+
     public static readonly DirectProperty<HeaderedContainer, Thickness> EffectiveHeaderPaddingProperty =
         AvaloniaProperty.RegisterDirect<HeaderedContainer, Thickness>(
             nameof(EffectiveHeaderPadding),
@@ -46,36 +47,6 @@ public class HeaderedContainer : ContentControl
         AvaloniaProperty.RegisterDirect<HeaderedContainer, Thickness>(
             nameof(EffectiveContentPadding),
             o => o.EffectiveContentPadding);
-
-    public new IBrush? Background
-    {
-        get => GetValue(BackgroundProperty);
-        set => SetValue(BackgroundProperty, value);
-    }
-
-    public new IBrush? BorderBrush
-    {
-        get => GetValue(BorderBrushProperty);
-        set => SetValue(BorderBrushProperty, value);
-    }
-
-    public new Thickness BorderThickness
-    {
-        get => GetValue(BorderThicknessProperty);
-        set => SetValue(BorderThicknessProperty, value);
-    }
-
-    public new CornerRadius CornerRadius
-    {
-        get => GetValue(CornerRadiusProperty);
-        set => SetValue(CornerRadiusProperty, value);
-    }
-
-    public new Thickness Padding
-    {
-        get => GetValue(PaddingProperty);
-        set => SetValue(PaddingProperty, value);
-    }
 
     public ControlTheme HeaderTheme
     {
@@ -131,6 +102,18 @@ public class HeaderedContainer : ContentControl
         set => SetValue(ContentPaddingProperty, value);
     }
 
+    public string HeaderClasses
+    {
+        get => GetValue(HeaderClassesProperty);
+        set => SetValue(HeaderClassesProperty, value);
+    }
+
+    public string ContentClasses
+    {
+        get => GetValue(ContentClassesProperty);
+        set => SetValue(ContentClassesProperty, value);
+    }
+
     /// <summary>
     /// Gets the effective padding for the header. Returns HeaderPadding if set, otherwise falls back to Padding.
     /// </summary>
@@ -145,15 +128,20 @@ public class HeaderedContainer : ContentControl
     {
         base.OnPropertyChanged(change);
 
-        // Notify that effective paddings may have changed
         if (change.Property == PaddingProperty || change.Property == HeaderPaddingProperty)
         {
-            RaisePropertyChanged(EffectiveHeaderPaddingProperty, default, EffectiveHeaderPadding);
+            var oldValue = change.Property == HeaderPaddingProperty
+                ? (Thickness?)change.OldValue ?? Padding
+                : HeaderPadding ?? (Thickness)change.OldValue!;
+            RaisePropertyChanged(EffectiveHeaderPaddingProperty, oldValue, EffectiveHeaderPadding);
         }
 
         if (change.Property == PaddingProperty || change.Property == ContentPaddingProperty)
         {
-            RaisePropertyChanged(EffectiveContentPaddingProperty, default, EffectiveContentPadding);
+            var oldValue = change.Property == ContentPaddingProperty
+                ? (Thickness?)change.OldValue ?? Padding
+                : ContentPadding ?? (Thickness)change.OldValue!;
+            RaisePropertyChanged(EffectiveContentPaddingProperty, oldValue, EffectiveContentPadding);
         }
     }
 }

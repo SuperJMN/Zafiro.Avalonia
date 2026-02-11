@@ -28,6 +28,16 @@
             <Setter Property="Border.BorderBrush" Value="#2196F3" />
             <Setter Property="Border.Background" Value="#E3F2FD" />
         </Style>
+
+        <Style Selector="TextBlock.RedText">
+            <Setter Property="Foreground" Value="Red" />
+            <Setter Property="FontWeight" Value="Bold" />
+        </Style>
+
+        <Style Selector="TextBlock.BlueText">
+            <Setter Property="Foreground" Value="Blue" />
+            <Setter Property="FontStyle" Value="Italic" />
+        </Style>
     </UserControl.Styles>
 
     <ScrollViewer>
@@ -234,6 +244,29 @@
                 </WrapPanel>
             </StackPanel>
 
+            <!-- SECTION 4: Class Forwarding -->
+            <StackPanel Spacing="8">
+                <TextBlock Text="⚡ Class Forwarding" FontWeight="Bold" FontSize="18" />
+                <TextBlock Text="Apply classes directly to content parts without wrapping in TextBlock."
+                           TextWrapping="Wrap" MaxWidth="700" Opacity="0.7" />
+
+                <WrapPanel>
+                    <HeaderedContainer Header="HeaderClasses='RedText'"
+                                       HeaderClasses="RedText"
+                                       ContentClasses="BlueText"
+                                       Content="ContentClasses='BlueText'"
+                                       Padding="16"
+                                       BorderBrush="Black"
+                                       BorderThickness="1"
+                                       CornerRadius="8"
+                                       Margin="4" />
+
+                    <EdgePanel Margin="4" Padding="10" Background="LightGray" CornerRadius="5"
+                               StartContent="Start (Red)" StartContentClasses="RedText"
+                               Content="Center (Blue)" ContentClasses="BlueText"
+                               EndContent="End (Red)" EndContentClasses="RedText" />
+                </WrapPanel>
+            </StackPanel>
         </StackPanel>
     </ScrollViewer>
 </UserControl>

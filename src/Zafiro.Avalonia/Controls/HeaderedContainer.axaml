@@ -14,15 +14,18 @@
                                    BoxShadow="{TemplateBinding BoxShadow}"
                                    ClipToBounds="{TemplateBinding ClipToBounds}">
                         <DockPanel>
+
                             <ContentPresenter x:Name="Header"
                                               Background="{TemplateBinding HeaderBackground}"
                                               Padding="{TemplateBinding EffectiveHeaderPadding}"
+                                              ClassAssist.ChildClasses="{TemplateBinding HeaderClasses}"
                                               DockPanel.Dock="Top"
                                               Content="{TemplateBinding Header}"
                                               ContentTemplate="{TemplateBinding HeaderTemplate}"
                                               IsVisible="{Binding $parent[HeaderedContainer].Header, Converter={x:Static ObjectConverters.IsNotNull}}" />
                             <ContentPresenter x:Name="Content"
                                               Background="{TemplateBinding ContentBackground}"
+                                              ClassAssist.ChildClasses="{TemplateBinding ContentClasses}"
                                               Content="{TemplateBinding Content}"
                                               ContentTemplate="{TemplateBinding ContentTemplate}"
                                               Padding="{TemplateBinding EffectiveContentPadding}"
@@ -49,6 +52,7 @@
                             <ContentPresenter x:Name="Header"
                                               DockPanel.Dock="Left"
                                               Background="{TemplateBinding HeaderBackground}"
+                                              ClassAssist.ChildClasses="{TemplateBinding HeaderClasses}"
                                               Padding="{TemplateBinding EffectiveHeaderPadding}"
                                               Content="{TemplateBinding Header}"
                                               VerticalAlignment="Center"
@@ -56,6 +60,7 @@
                                               IsVisible="{Binding $parent[HeaderedContainer].Header, Converter={x:Static ObjectConverters.IsNotNull}}" />
                             <ContentPresenter x:Name="Content"
                                               Background="{TemplateBinding ContentBackground}"
+                                              ClassAssist.ChildClasses="{TemplateBinding ContentClasses}"
                                               Content="{TemplateBinding Content}"
                                               Padding="{TemplateBinding EffectiveContentPadding}"
                                               HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"

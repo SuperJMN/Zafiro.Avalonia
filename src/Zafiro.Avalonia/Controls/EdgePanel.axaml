@@ -29,19 +29,22 @@
                     <Border CornerRadius="{TemplateBinding CornerRadius}" Padding="{TemplateBinding Padding}" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}">
                         <Grid ColumnSpacing="{TemplateBinding Spacing}" ColumnDefinitions="Auto * Auto">
-                            <ContentControl x:Name="StartContent"
-                                            IsVisible="{Binding $self.Content, Converter={x:Static ObjectConverters.IsNotNull}}"
-                                            ContentTemplate="{TemplateBinding StartContentTemplate}"
-                                            Content="{TemplateBinding StartContent}" />
-                            <ContentControl Grid.Column="1" x:Name="MainContent" VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
-                                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                            ContentTemplate="{TemplateBinding ContentTemplate}"
-                                            IsVisible="{Binding $self.Content, Converter={x:Static ObjectConverters.IsNotNull}}"
-                                            Content="{TemplateBinding Content}" />
-                            <ContentControl Grid.Column="2" x:Name="EndContent"
-                                            ContentTemplate="{TemplateBinding EndContentTemplate}"
-                                            IsVisible="{Binding $self.Content, Converter={x:Static ObjectConverters.IsNotNull}}"
-                                            Content="{TemplateBinding EndContent}" />
+                            <ContentPresenter x:Name="StartContent"
+                                              ClassAssist.ChildClasses="{TemplateBinding StartContentClasses}"
+                                              IsVisible="{Binding $self.Content, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                              ContentTemplate="{TemplateBinding StartContentTemplate}"
+                                              Content="{TemplateBinding StartContent}" />
+                            <ContentPresenter Grid.Column="1" x:Name="MainContent" VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                              ClassAssist.ChildClasses="{TemplateBinding ContentClasses}"
+                                              HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                              ContentTemplate="{TemplateBinding ContentTemplate}"
+                                              IsVisible="{Binding $self.Content, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                              Content="{TemplateBinding Content}" />
+                            <ContentPresenter Grid.Column="2" x:Name="EndContent"
+                                              ClassAssist.ChildClasses="{TemplateBinding EndContentClasses}"
+                                              ContentTemplate="{TemplateBinding EndContentTemplate}"
+                                              IsVisible="{Binding $self.Content, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                              Content="{TemplateBinding EndContent}" />
                         </Grid>
                     </Border>
                 </ControlTemplate>
