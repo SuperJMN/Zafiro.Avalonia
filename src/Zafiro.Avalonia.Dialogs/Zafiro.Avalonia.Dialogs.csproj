@@ -1,5 +1,4 @@
-﻿
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
@@ -14,7 +13,6 @@
         <PackageReference Include="ReactiveUI"/>
         <PackageReference Include="ReactiveUI.SourceGenerators"/>
         <PackageReference Include="Xaml.Behaviors.Avalonia"/>
-        <ProjectReference Include="../../../Zafiro/src/Zafiro.UI/Zafiro.UI.csproj"/>
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\Zafiro.Avalonia\Zafiro.Avalonia.csproj"/>

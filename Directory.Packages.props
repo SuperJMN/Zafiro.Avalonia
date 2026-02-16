@@ -46,5 +46,6 @@
     <PackageVersion Include="Xaml.Behaviors.Interactions.Events" Version="11.3.8.2"/>
     <PackageVersion Include="xunit" Version="2.5.3"/>
     <PackageVersion Include="xunit.runner.visualstudio" Version="2.5.3"/>
+    <PackageVersion Include="Zafiro.UI" Version="45.0.10"/>
   </ItemGroup>
 </Project>

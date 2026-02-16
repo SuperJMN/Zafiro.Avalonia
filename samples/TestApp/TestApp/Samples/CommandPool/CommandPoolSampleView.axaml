@@ -8,12 +8,13 @@
              x:Class="TestApp.Samples.CommandPool.CommandPoolSampleView"
              x:DataType="commandPool:CommandPoolSampleViewModel">
 
+    <UserControl.Resources>
+        <controls:CommandPoolMonitor x:Key="PoolObserver" PoolName="SamplePool" />
+    </UserControl.Resources>
+
     <!-- behaviors alias removed as it's no longer needed for behaviors, but we need controls -->
 
     <Grid RowDefinitions="Auto, Auto, *">
-
-        <!-- Monitor placed in the visual tree (it's invisible by default as it has no template) -->
-        <controls:CommandPoolMonitor x:Name="PoolObserver" PoolName="SamplePool" IsVisible="False" />
 
         <StackPanel Spacing="10" Margin="10">
             <TextBlock Classes="H1" Text="Command Pool Sample" />
@@ -24,23 +25,23 @@
                     <TextBlock Classes="H3" Text="Pool Statistics" />
                     <Grid ColumnDefinitions="Auto, 10, Auto, 10, Auto, 10, Auto" RowDefinitions="Auto, Auto">
                         <TextBlock Grid.Column="0" Text="Total:" FontWeight="Bold" />
-                        <TextBlock Grid.Column="0" Grid.Row="1" Text="{Binding #PoolObserver.TotalCount}" />
+                        <TextBlock Grid.Column="0" Grid.Row="1" Text="{Binding TotalCount^, Source={StaticResource PoolObserver}}" />
 
                         <TextBlock Grid.Column="2" Text="Pending:" FontWeight="Bold" />
-                        <TextBlock Grid.Column="2" Grid.Row="1" Text="{Binding #PoolObserver.PendingCount}" />
+                        <TextBlock Grid.Column="2" Grid.Row="1" Text="{Binding PendingCount^, Source={StaticResource PoolObserver}}" />
 
                         <TextBlock Grid.Column="4" Text="Executing:" FontWeight="Bold" />
-                        <TextBlock Grid.Column="4" Grid.Row="1" Text="{Binding #PoolObserver.ExecutingCount}" />
+                        <TextBlock Grid.Column="4" Grid.Row="1" Text="{Binding ExecutingCount^, Source={StaticResource PoolObserver}}" />
 
                         <TextBlock Grid.Column="6" Text="Completed:" FontWeight="Bold" />
-                        <TextBlock Grid.Column="6" Grid.Row="1" Text="{Binding #PoolObserver.CompletedCount}" />
+                        <TextBlock Grid.Column="6" Grid.Row="1" Text="{Binding CompletedCount^, Source={StaticResource PoolObserver}}" />
                     </Grid>
 
-                    <ProgressBar Maximum="{Binding #PoolObserver.TotalCount}"
-                                 Value="{Binding #PoolObserver.CompletedCount}"
+                    <ProgressBar Maximum="{Binding TotalCount^, Source={StaticResource PoolObserver}}"
+                                 Value="{Binding CompletedCount^, Source={StaticResource PoolObserver}}"
                                  Height="10" />
 
-                    <TextBlock Text="{Binding #PoolObserver.IsExecuting, StringFormat='Is Executing: {0}'}" />
+                    <TextBlock Text="{Binding IsExecuting^, Source={StaticResource PoolObserver}, StringFormat='Is Executing: {0}'}" />
                 </StackPanel>
             </Border>
 

@@ -1,136 +1,42 @@
 using Zafiro.Avalonia.Behaviors;
+using Zafiro.Reactive;
 
 namespace Zafiro.Avalonia.Controls;
 
-public class CommandPoolMonitor : Control
+public class CommandPoolMonitor : ReactiveObject
 {
-    public static readonly StyledProperty<string> PoolNameProperty =
-        AvaloniaProperty.Register<CommandPoolMonitor, string>(nameof(PoolName), "Default");
+    private string? poolName;
 
-    public static readonly DirectProperty<CommandPoolMonitor, bool> IsExecutingProperty =
-        AvaloniaProperty.RegisterDirect<CommandPoolMonitor, bool>(nameof(IsExecuting), o => o.IsExecuting);
-
-    public static readonly DirectProperty<CommandPoolMonitor, int> ExecutingCountProperty =
-        AvaloniaProperty.RegisterDirect<CommandPoolMonitor, int>(nameof(ExecutingCount), o => o.ExecutingCount);
-
-    public static readonly DirectProperty<CommandPoolMonitor, int> PendingCountProperty =
-        AvaloniaProperty.RegisterDirect<CommandPoolMonitor, int>(nameof(PendingCount), o => o.PendingCount);
-
-    public static readonly DirectProperty<CommandPoolMonitor, int> TotalCountProperty =
-        AvaloniaProperty.RegisterDirect<CommandPoolMonitor, int>(nameof(TotalCount), o => o.TotalCount);
-
-    public static readonly DirectProperty<CommandPoolMonitor, int> CompletedCountProperty =
-        AvaloniaProperty.RegisterDirect<CommandPoolMonitor, int>(nameof(CompletedCount), o => o.CompletedCount);
-
-    private int completedCount;
-    private int executingCount;
-    private bool isExecuting;
-    private int pendingCount;
-
-    private IDisposable? subscription;
-    private int totalCount;
-
-    public string PoolName
+    public CommandPoolMonitor()
     {
-        get => GetValue(PoolNameProperty);
-        set => SetValue(PoolNameProperty, value);
-    }
-
-    public bool IsExecuting
-    {
-        get => isExecuting;
-        private set => SetAndRaise(IsExecutingProperty, ref isExecuting, value);
-    }
-
-    public int ExecutingCount
-    {
-        get => executingCount;
-        private set => SetAndRaise(ExecutingCountProperty, ref executingCount, value);
-    }
-
-    public int PendingCount
-    {
-        get => pendingCount;
-        private set => SetAndRaise(PendingCountProperty, ref pendingCount, value);
-    }
-
-    public int TotalCount
-    {
-        get => totalCount;
-        private set => SetAndRaise(TotalCountProperty, ref totalCount, value);
-    }
-
-    public int CompletedCount
-    {
-        get => completedCount;
-        private set => SetAndRaise(CompletedCountProperty, ref completedCount, value);
-    }
-
-    protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
-    {
-        base.OnPropertyChanged(change);
-
-        if (change.Property == PoolNameProperty)
-        {
-            UpdateSubscription(change.GetNewValue<string>());
-        }
-    }
-
-    private void UpdateSubscription(string? poolName)
-    {
-        subscription?.Dispose();
-
-        if (string.IsNullOrEmpty(poolName))
-        {
-            return;
-        }
-
-        var weakSelf = new WeakReference<CommandPoolMonitor>(this);
-
-        subscription = Observable.Return(CommandPool.Get(poolName))
-            .Where(p => p != null)
-            .Merge(CommandPool.PoolCreated.Where(p => p.Name == poolName))
-            .Take(1)
-            .SelectMany(pool =>
+        var pool = this.WhenAnyValue(x => x.PoolName)
+            .WhereNotNull()
+            .Select(name =>
             {
-                if (pool is null)
-                {
-                    return Observable.Empty<(int Executing, int Pending, int Total, int Completed)>();
-                }
+                var existing = Observable.Return(CommandPool.Get(name)).WhereNotNull();
+                var created = CommandPool.PoolCreated.Where(p => p.Name == name);
 
-                return Observable.CombineLatest(
-                    pool.ExecutingCountObservable,
-                    pool.PendingCountObservable,
-                    pool.TotalCountObservable,
-                    pool.CompletedCountObservable,
-                    (executing, pending, total, completed) => (Executing: executing, Pending: pending, Total: total, Completed: completed));
+                return existing.Merge(created).Take(1);
             })
-            .ObserveOn(AvaloniaScheduler.Instance)
-            .Subscribe(tuple =>
-            {
-                if (weakSelf.TryGetTarget(out var self))
-                {
-                    self.ExecutingCount = tuple.Executing;
-                    self.IsExecuting = tuple.Executing > 0;
-                    self.PendingCount = tuple.Pending;
-                    self.TotalCount = tuple.Total;
-                    self.CompletedCount = tuple.Completed;
-                }
-            });
+            .Switch()
+            .ReplayLastActive();
+
+        IsExecuting = pool.Select(x => x.IsExecutingObservable).Switch().DistinctUntilChanged().ReplayLastActive();
+        ExecutingCount = pool.Select(x => x.ExecutingCountObservable).Switch().DistinctUntilChanged().ReplayLastActive();
+        PendingCount = pool.Select(x => x.PendingCountObservable).Switch().DistinctUntilChanged().ReplayLastActive();
+        TotalCount = pool.Select(x => x.TotalCountObservable).Switch().DistinctUntilChanged().ReplayLastActive();
+        CompletedCount = pool.Select(x => x.CompletedCountObservable).Switch().DistinctUntilChanged().ReplayLastActive();
     }
 
-    protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
+    public string? PoolName
     {
-        base.OnAttachedToVisualTree(e);
-        if (subscription == null)
-        {
-            UpdateSubscription(PoolName);
-        }
+        get => poolName;
+        set => this.RaiseAndSetIfChanged(ref poolName, value);
     }
 
-    protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
-    {
-        base.OnDetachedFromVisualTree(e);
-        subscription?.Dispose();
-    }
+    public IObservable<bool> IsExecuting { get; }
+    public IObservable<int> ExecutingCount { get; }
+    public IObservable<int> PendingCount { get; }
+    public IObservable<int> TotalCount { get; }
+    public IObservable<int> CompletedCount { get; }
 }
