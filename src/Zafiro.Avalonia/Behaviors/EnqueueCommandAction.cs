@@ -90,6 +90,8 @@ public class EnqueueCommandAction : StyledElementAction
     public static readonly DirectProperty<EnqueueCommandAction, int> PoolCompletedCountProperty =
         AvaloniaProperty.RegisterDirect<EnqueueCommandAction, int>(nameof(PoolCompletedCount), o => o.PoolCompletedCount);
 
+    private readonly CompositeDisposable pendingJobs = new();
+
     private bool isPoolExecuting;
     private int poolCompletedCount;
     private int poolExecutingCount;
@@ -248,6 +250,7 @@ public class EnqueueCommandAction : StyledElementAction
             });
     }
 
+
     /// <inheritdoc />
     public override object? Execute(object? sender, object? parameter)
     {
@@ -275,7 +278,25 @@ public class EnqueueCommandAction : StyledElementAction
         var commandParameter = CommandParameter;
         var work = CreateWork(command, commandParameter);
 
-        pool.Enqueue(work);
+        var job = pool.Enqueue(work);
+
+        if (sender is Visual visual)
+        {
+            var composite = new CompositeDisposable(job);
+            Observable.FromEventPattern<VisualTreeAttachmentEventArgs>(
+                    h => visual.DetachedFromVisualTree += h,
+                    h => visual.DetachedFromVisualTree -= h)
+                .Take(1)
+                .Subscribe(_ => composite.Dispose())
+                .DisposeWith(composite);
+
+            pendingJobs.Add(composite);
+        }
+        else
+        {
+            pendingJobs.Add(job);
+        }
+
         return true;
     }
 
