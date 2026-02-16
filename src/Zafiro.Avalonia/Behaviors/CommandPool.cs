@@ -1,5 +1,6 @@
 using System.Collections.Concurrent;
 using System.Reactive;
+using System.Reactive.Disposables;
 using System.Reactive.Subjects;
 
 namespace Zafiro.Avalonia.Behaviors;
@@ -34,18 +35,7 @@ public sealed class CommandPool : IDisposable
         subscription = queue
             .Select(work =>
             {
-                var trackedWork = Observable.Create<Unit>(observer =>
-                {
-                    UpdateExecuting(1);
-                    UpdatePending(-1);
-                    return work
-                        .Do(_ => { }, () =>
-                        {
-                            UpdateExecuting(-1);
-                            UpdateCompleted(1);
-                        })
-                        .Subscribe(observer);
-                });
+                var trackedWork = work;
 
                 return delayBetween > TimeSpan.Zero
                     ? trackedWork.Concat(Observable.Timer(delayBetween).Select(_ => Unit.Default))
@@ -158,11 +148,12 @@ public sealed class CommandPool : IDisposable
     /// <summary>
     /// Enqueues a cold observable for execution within this pool's concurrency limit.
     /// </summary>
-    public void Enqueue(IObservable<Unit> work)
+    /// <returns>An <see cref="IDisposable"/> that, when disposed, will remove the meaningful statistics contribution of the job.</returns>
+    public IDisposable Enqueue(IObservable<Unit> work)
     {
-        UpdateTotal(1);
-        UpdatePending(1);
-        queue.OnNext(work);
+        var job = new CommandPoolJob(work, this);
+        queue.OnNext(job.Run());
+        return job;
     }
 
     /// <summary>
@@ -184,6 +175,101 @@ public sealed class CommandPool : IDisposable
             {
                 removed.Dispose();
             }
+        }
+    }
+
+    private class CommandPoolJob : IDisposable
+    {
+        private readonly CommandPool pool;
+        private readonly object syncRoot = new();
+        private readonly IObservable<Unit> work;
+        private JobState state;
+        private IDisposable? subscription;
+
+        public CommandPoolJob(IObservable<Unit> work, CommandPool pool)
+        {
+            this.work = work;
+            this.pool = pool;
+            pool.UpdateTotal(1);
+            pool.UpdatePending(1);
+            state = JobState.Pending;
+        }
+
+        public void Dispose()
+        {
+            lock (syncRoot)
+            {
+                if (state == JobState.Disposed)
+                {
+                    return;
+                }
+
+                if (state == JobState.Pending)
+                {
+                    pool.UpdatePending(-1);
+                    pool.UpdateTotal(-1);
+                }
+                else if (state == JobState.Executing)
+                {
+                    pool.UpdateExecuting(-1);
+                    pool.UpdateTotal(-1);
+                    subscription?.Dispose();
+                }
+                else if (state == JobState.Completed)
+                {
+                    pool.UpdateCompleted(-1);
+                    pool.UpdateTotal(-1);
+                }
+
+                state = JobState.Disposed;
+            }
+        }
+
+        public IObservable<Unit> Run()
+        {
+            return Observable.Create<Unit>(observer =>
+            {
+                lock (syncRoot)
+                {
+                    if (state == JobState.Disposed)
+                    {
+                        observer.OnCompleted();
+                        return Disposable.Empty;
+                    }
+
+                    state = JobState.Executing;
+                    pool.UpdatePending(-1);
+                    pool.UpdateExecuting(1);
+                }
+
+                subscription = work.Subscribe(
+                    observer.OnNext,
+                    observer.OnError,
+                    () =>
+                    {
+                        lock (syncRoot)
+                        {
+                            if (state == JobState.Executing)
+                            {
+                                state = JobState.Completed;
+                                pool.UpdateExecuting(-1);
+                                pool.UpdateCompleted(1);
+                            }
+                        }
+
+                        observer.OnCompleted();
+                    });
+
+                return Disposable.Create(() => { subscription?.Dispose(); });
+            });
+        }
+
+        private enum JobState
+        {
+            Pending,
+            Executing,
+            Completed,
+            Disposed
         }
     }
 }
