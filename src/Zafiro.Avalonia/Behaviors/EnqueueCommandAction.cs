@@ -61,6 +61,46 @@ public class EnqueueCommandAction : StyledElementAction
         AvaloniaProperty.Register<EnqueueCommandAction, double>(nameof(DelayBetweenSeconds), 0);
 
     /// <summary>
+    /// Identifies the <see cref="IsPoolExecuting"/> avalonia property.
+    /// </summary>
+    public static readonly DirectProperty<EnqueueCommandAction, bool> IsPoolExecutingProperty =
+        AvaloniaProperty.RegisterDirect<EnqueueCommandAction, bool>(nameof(IsPoolExecuting), o => o.IsPoolExecuting);
+
+    /// <summary>
+    /// Identifies the <see cref="PoolExecutingCount"/> avalonia property.
+    /// </summary>
+    public static readonly DirectProperty<EnqueueCommandAction, int> PoolExecutingCountProperty =
+        AvaloniaProperty.RegisterDirect<EnqueueCommandAction, int>(nameof(PoolExecutingCount), o => o.PoolExecutingCount);
+
+    /// <summary>
+    /// Identifies the <see cref="PoolPendingCount"/> avalonia property.
+    /// </summary>
+    public static readonly DirectProperty<EnqueueCommandAction, int> PoolPendingCountProperty =
+        AvaloniaProperty.RegisterDirect<EnqueueCommandAction, int>(nameof(PoolPendingCount), o => o.PoolPendingCount);
+
+    /// <summary>
+    /// Identifies the <see cref="PoolTotalCount"/> avalonia property.
+    /// </summary>
+    public static readonly DirectProperty<EnqueueCommandAction, int> PoolTotalCountProperty =
+        AvaloniaProperty.RegisterDirect<EnqueueCommandAction, int>(nameof(PoolTotalCount), o => o.PoolTotalCount);
+
+    /// <summary>
+    /// Identifies the <see cref="PoolCompletedCount"/> avalonia property.
+    /// </summary>
+    public static readonly DirectProperty<EnqueueCommandAction, int> PoolCompletedCountProperty =
+        AvaloniaProperty.RegisterDirect<EnqueueCommandAction, int>(nameof(PoolCompletedCount), o => o.PoolCompletedCount);
+
+    private readonly CompositeDisposable pendingJobs = new();
+
+    private bool isPoolExecuting;
+    private int poolCompletedCount;
+    private int poolExecutingCount;
+    private int poolPendingCount;
+
+    private IDisposable? poolSubscription;
+    private int poolTotalCount;
+
+    /// <summary>
     /// Gets or sets the command to execute. This is an avalonia property.
     /// </summary>
     public ICommand? Command
@@ -110,6 +150,113 @@ public class EnqueueCommandAction : StyledElementAction
         set => SetValue(DelayBetweenSecondsProperty, value);
     }
 
+    /// <summary>
+    /// Gets a value indicating whether the pool is currently executing any command.
+    /// </summary>
+    public bool IsPoolExecuting
+    {
+        get => isPoolExecuting;
+        private set => SetAndRaise(IsPoolExecutingProperty, ref isPoolExecuting, value);
+    }
+
+    /// <summary>
+    /// Gets the number of commands currently executing in the pool.
+    /// </summary>
+    public int PoolExecutingCount
+    {
+        get => poolExecutingCount;
+        private set => SetAndRaise(PoolExecutingCountProperty, ref poolExecutingCount, value);
+    }
+
+    /// <summary>
+    /// Gets the number of commands currently pending in the pool.
+    /// </summary>
+    public int PoolPendingCount
+    {
+        get => poolPendingCount;
+        private set => SetAndRaise(PoolPendingCountProperty, ref poolPendingCount, value);
+    }
+
+    /// <summary>
+    /// Gets the total number of commands registered in the pool.
+    /// </summary>
+    public int PoolTotalCount
+    {
+        get => poolTotalCount;
+        private set => SetAndRaise(PoolTotalCountProperty, ref poolTotalCount, value);
+    }
+
+    /// <summary>
+    /// Gets the number of commands completed in the pool.
+    /// </summary>
+    public int PoolCompletedCount
+    {
+        get => poolCompletedCount;
+        private set => SetAndRaise(PoolCompletedCountProperty, ref poolCompletedCount, value);
+    }
+
+
+    /// <inheritdoc />
+    protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
+    {
+        base.OnPropertyChanged(change);
+
+        if (change.Property == PoolNameProperty)
+        {
+            UpdateSubscription(change.GetNewValue<string>());
+        }
+    }
+
+    private void UpdateSubscription(string? poolName)
+    {
+        poolSubscription?.Dispose();
+
+        PoolExecutingCount = 0;
+        IsPoolExecuting = false;
+        PoolPendingCount = 0;
+        PoolTotalCount = 0;
+        PoolCompletedCount = 0;
+
+        if (string.IsNullOrEmpty(poolName))
+        {
+            return;
+        }
+
+        var weakSelf = new WeakReference<EnqueueCommandAction>(this);
+
+        poolSubscription = Observable.Return(CommandPool.Get(poolName))
+            .Where(p => p != null)
+            .Merge(CommandPool.PoolCreated.Where(p => p.Name == poolName))
+            .Take(1)
+            .SelectMany(pool =>
+            {
+                if (pool is null)
+                {
+                    return Observable.Empty<(int Executing, int Pending, int Total, int Completed)>();
+                }
+
+                return Observable.CombineLatest(
+                    pool.ExecutingCountObservable,
+                    pool.PendingCountObservable,
+                    pool.TotalCountObservable,
+                    pool.CompletedCountObservable,
+                    (executing, pending, total, completed) => (Executing: executing, Pending: pending, Total: total, Completed: completed));
+            })
+            .ObserveOn(AvaloniaScheduler.Instance)
+            .Subscribe(tuple =>
+            {
+                if (weakSelf.TryGetTarget(out var self))
+                {
+                    self.PoolExecutingCount = tuple.Executing;
+                    self.IsPoolExecuting = tuple.Executing > 0;
+                    self.PoolPendingCount = tuple.Pending;
+                    self.PoolTotalCount = tuple.Total;
+                    self.PoolCompletedCount = tuple.Completed;
+                }
+            });
+    }
+
+
     /// <inheritdoc />
     public override object? Execute(object? sender, object? parameter)
     {
@@ -126,12 +273,36 @@ public class EnqueueCommandAction : StyledElementAction
 
         var pool = CommandPool.GetOrCreate(PoolName, MaxConcurrency, TimeSpan.FromSeconds(DelayBetweenSeconds));
 
+        // Initial subscription if not already set up (e.g. if created via Execute without PropertyChanged trigger or default Name)
+        if (poolSubscription == null)
+        {
+            UpdateSubscription(PoolName);
+        }
+
         // Capture CommandParameter here on the UI thread — accessing AvaloniaProperties
         // from a background thread (e.g. after Observable.Timer) would throw.
         var commandParameter = CommandParameter;
         var work = CreateWork(command, commandParameter);
 
-        pool.Enqueue(work);
+        var job = pool.Enqueue(work);
+
+        if (sender is Visual visual)
+        {
+            var composite = new CompositeDisposable(job);
+            Observable.FromEventPattern<VisualTreeAttachmentEventArgs>(
+                    h => visual.DetachedFromVisualTree += h,
+                    h => visual.DetachedFromVisualTree -= h)
+                .Take(1)
+                .Subscribe(_ => composite.Dispose())
+                .DisposeWith(composite);
+
+            pendingJobs.Add(composite);
+        }
+        else
+        {
+            pendingJobs.Add(job);
+        }
+
         return true;
     }
 
