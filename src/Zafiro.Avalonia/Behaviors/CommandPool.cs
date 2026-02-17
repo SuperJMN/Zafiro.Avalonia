@@ -244,7 +244,20 @@ public sealed class CommandPool : IDisposable
 
                 subscription = work.Subscribe(
                     observer.OnNext,
-                    observer.OnError,
+                    error =>
+                    {
+                        lock (syncRoot)
+                        {
+                            if (state == JobState.Executing)
+                            {
+                                state = JobState.Completed;
+                                pool.UpdateExecuting(-1);
+                                pool.UpdateCompleted(1); // Or should we track failed jobs separately? For now completed means "done" even if failed.
+                            }
+                        }
+
+                        observer.OnError(error);
+                    },
                     () =>
                     {
                         lock (syncRoot)

@@ -211,6 +211,12 @@ public class EnqueueCommandAction : StyledElementAction
     {
         poolSubscription?.Dispose();
 
+        PoolExecutingCount = 0;
+        IsPoolExecuting = false;
+        PoolPendingCount = 0;
+        PoolTotalCount = 0;
+        PoolCompletedCount = 0;
+
         if (string.IsNullOrEmpty(poolName))
         {
             return;
