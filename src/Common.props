@@ -7,10 +7,11 @@
 	<PropertyGroup>
 		<PackageId>$(MSBuildProjectName)</PackageId>
 		<Authors>SuperJMN</Authors>
-        <Description>The Crema for Avalonia</Description>
+        <Description>UI components, controls, dialogs, behaviors, and helpers for Avalonia applications. Includes reactive patterns, cross-platform support (desktop, mobile, browser), and source generators.</Description>
 		<PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
-		<PackageReleaseNotes>Crema all around</PackageReleaseNotes>
-        <PackageTags>XAML Cross-Platform Avalonia</PackageTags>
+		<PackageReleaseNotes>See https://github.com/SuperJMN/Zafiro.Avalonia/commits/master</PackageReleaseNotes>
+        <PackageTags>Avalonia UI Controls Dialogs ReactiveUI XAML Cross-Platform MVVM Components</PackageTags>
+		<PackageProjectUrl>https://github.com/SuperJMN/Zafiro.Avalonia</PackageProjectUrl>
 		<Product>Zafiro</Product>
 		<Company>José Manuel Nieto (@SuperJMN)</Company>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
