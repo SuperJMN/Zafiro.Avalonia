@@ -231,9 +231,11 @@ public static class DialogExtensions
         });
     }
 
-    public static async Task<Maybe<bool>> ShowConfirmation(this IDialog dialogService, string title, string text, string yesText = "Yes", string noText = "No")
+    public static async Task<Maybe<bool>> ShowConfirmation(this IDialog dialogService, string title, string text, string yesText = "Yes", string noText = "No", bool yesIsPrimary = true)
     {
         var result = false;
+        var yesRole = yesIsPrimary ? OptionRole.Primary : OptionRole.Secondary;
+        var noRole = yesIsPrimary ? OptionRole.Secondary : OptionRole.Primary;
 
         var show = await dialogService.Show(new MessageDialogViewModel(text), title, (_, closeable) =>
         {
@@ -243,13 +245,13 @@ public static class DialogExtensions
                 {
                     result = true;
                     closeable.Close();
-                }).Enhance(), new Settings()),
+                }).Enhance(), new Settings { Role = yesRole }),
 
                 new Option(noText, ReactiveCommand.Create(() =>
                 {
                     result = false;
                     closeable.Close();
-                }).Enhance(), new Settings())
+                }).Enhance(), new Settings { Role = noRole })
             ];
         });
 
