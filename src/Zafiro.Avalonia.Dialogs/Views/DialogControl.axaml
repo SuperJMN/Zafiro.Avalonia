@@ -1,200 +1,83 @@
 <Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:g="clr-namespace:System.Collections.Generic;assembly=System.Collections"
-        xmlns:dialogs="clr-namespace:Zafiro.Avalonia.Dialogs">
+        xmlns:generic="clr-namespace:System.Collections.Generic;assembly=System.Collections"
+        xmlns:dialogs="clr-namespace:Zafiro.Avalonia.Dialogs;assembly=Zafiro.Avalonia.Dialogs"
+        x:CompileBindings="True">
+    <Design.PreviewWith>
+        <DialogControl Content="This is the content of the dialog">
+            <DialogControl.Options>
+                <generic:List x:TypeArguments="IOption">
+                    <OptionDesign Title="Primary" Role="Primary" />
+                    <OptionDesign Title="Secondary" Role="Secondary" />
+                    <!-- <OptionDesign Title="Cancel" Role="Cancel" /> -->
+                    <!-- <OptionDesign Title="Destructive" Role="Destructive" /> -->
+                    <!-- <OptionDesign Title="Info" Role="Info" /> -->
+                </generic:List>
+            </DialogControl.Options>
+        </DialogControl>
+    </Design.PreviewWith>
 
-    <Styles.Resources>
-
-        <ControlTheme TargetType="DialogControl" x:Key="{x:Type DialogControl}">
-            <Setter Property="Background" Value="{DynamicResource SystemChromeLowColor}" />
-            <Setter Property="MinWidth" Value="300" />
-            <Setter Property="MinHeight" Value="120" />
-            <Setter Property="Padding" Value="10" />
-            <Setter Property="Template">
-                <ControlTemplate>
-                    <Border Background="{TemplateBinding Background}"
-                            BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}">
-                        <Border.Padding>
-                            <MultiBinding Converter="{x:Static dialogs:ResponsivePaddingConverter.Instance}" ConverterParameter="0.04,6,20">
-                                <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="Bounds.Width" />
-                                <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="Bounds.Height" />
-                            </MultiBinding>
-                        </Border.Padding>
-                        <Border.DataTemplates>
-                            <DataTemplate DataType="dialogs:IOption">
-                                <EnhancedButton Content="{Binding Title^}"
-                                                Icon="{Binding Icon}"
-                                                Command="{Binding Command}"
-                                                IsVisible="{Binding IsVisible^}"
+    <Style Selector="DialogControl">
+        <Setter Property="Width" Value="448" />
+        <Setter Property="MaxHeight" Value="700" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <DockPanel VerticalSpacing="24">
+                    <ItemsControl ItemsSource="{TemplateBinding Options}" DockPanel.Dock="Bottom" IsVisible="{TemplateBinding Options, Converter={x:Static Enumerable.NotEmpty}}">
+                        <ItemsControl.ItemContainerTheme>
+                            <ControlTheme TargetType="ContentPresenter">
+                                <Setter Property="IsVisible" Value="{Binding IsVisible^, DataType=IOption}" />
+                            </ControlTheme>
+                        </ItemsControl.ItemContainerTheme>
+                        <ItemsControl.Styles>
+                            <Style Selector="ItemsControl UniformGrid.OptionsPanel">
+                                <Setter Property="Columns" Value="1" />
+                            </Style>
+                            <Style Selector="ItemsControl[ItemCount=1] UniformGrid.OptionsPanel">
+                                <Setter Property="Rows" Value="1" />
+                                <Setter Property="Columns" Value="0" />
+                            </Style>
+                            <Style Selector="ItemsControl[ItemCount=2] UniformGrid.OptionsPanel">
+                                <Setter Property="Rows" Value="1" />
+                                <Setter Property="Columns" Value="0" />
+                            </Style>
+                        </ItemsControl.Styles>
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <UniformGrid Classes="OptionsPanel" ColumnSpacing="10" RowSpacing="10" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate DataType="IOption">
+                                <EnhancedButton Height="52" HorizontalAlignment="Stretch"
                                                 IsCancel="{Binding IsCancel}"
                                                 IsDefault="{Binding IsDefault}"
-                                                Padding="16 8"
-                                                CornerRadius="4"
-                                                Role="{Binding Role, Converter={x:Static dialogs:OptionRoleToButtonRoleConverter.Instance}}" />
+                                                Role="{Binding Role, Converter={x:Static dialogs:OptionRoleToButtonRoleConverter.Instance}}"
+                                                Content="{Binding Title^}" Command="{Binding Command}">
+                                    <Interaction.Behaviors>
+                                        <BindingTriggerBehavior Binding="{Binding Role}" Value="Primary">
+                                            <AddClassAction ClassName="Primary" />
+                                        </BindingTriggerBehavior>
+                                        <BindingTriggerBehavior Binding="{Binding Role}" Value="Secondary">
+                                            <AddClassAction ClassName="Secondary" />
+                                        </BindingTriggerBehavior>
+                                        <BindingTriggerBehavior Binding="{Binding Role}" Value="Cancel">
+                                            <AddClassAction ClassName="Cancel" />
+                                        </BindingTriggerBehavior>
+                                        <BindingTriggerBehavior Binding="{Binding Role}" Value="Destructive">
+                                            <AddClassAction ClassName="Destructive" />
+                                        </BindingTriggerBehavior>
+                                        <BindingTriggerBehavior Binding="{Binding Role}" Value="Info">
+                                            <AddClassAction ClassName="Info" />
+                                        </BindingTriggerBehavior>
+                                    </Interaction.Behaviors>
+                                </EnhancedButton>
                             </DataTemplate>
-                        </Border.DataTemplates>
-
-                        <Border.Styles>
-                            <Style Selector="ItemsControl:empty">
-                                <Setter Property="IsVisible" Value="False" />
-                            </Style>
-                            <Style Selector="ItemsControl.Horizontal">
-                                <Setter Property="ItemsPanel">
-                                    <Setter.Value>
-                                        <ItemsPanelTemplate>
-                                            <StackPanel Classes="ButtonGroup" />
-                                        </ItemsPanelTemplate>
-                                    </Setter.Value>
-                                </Setter>
-                            </Style>
-                            <Style Selector="StackPanel.ButtonGroup">
-                                <Setter Property="Spacing" Value="10" />
-                                <Setter Property="Orientation" Value="Horizontal" />
-                            </Style>
-
-                            <!-- Role-based styles for dialog buttons -->
-                            <Style Selector="EnhancedButton[Role=Ghost]">
-                                <Setter Property="Tint" Value="Transparent" />
-                            </Style>
-                            <Style Selector="EnhancedButton[Role=Primary]">
-                                <Setter Property="Tint" Value="{DynamicResource SystemChromeHighColor}" />
-                            </Style>
-                            <Style Selector="EnhancedButton[Role=Secondary]">
-                                <Setter Property="Tint" Value="{DynamicResource SystemChromeLowColor}" />
-                            </Style>
-                            <Style Selector="EnhancedButton[Role=Destructive]">
-                                <Setter Property="Tint" Value="{DynamicResource SystemErrorTextColor}" />
-                            </Style>
-                            <Style Selector="EnhancedButton[Role=Link]">
-                                <Setter Property="Tint" Value="Transparent" />
-                            </Style>
-                        </Border.Styles>
-
-                        <Grid RowDefinitions="Auto,*,Auto" Margin="{TemplateBinding Padding}">
-                            <!-- Header (Icon + Title) -->
-                            <StackPanel Grid.Row="0" Margin="0 0 0 10" Spacing="8">
-                                <ContentPresenter HorizontalAlignment="Center" Content="{TemplateBinding Icon}" IsVisible="{TemplateBinding Icon, Converter={x:Static ObjectConverters.IsNotNull}}" VerticalAlignment="Center" />
-                                <TextBlock FontWeight="Bold"
-                                           VerticalAlignment="Center"
-                                           Text="{Binding $parent[DialogControl].Title}" IsVisible="{Binding $self.Text, Converter={x:Static ObjectConverters.IsNotNull}}" />
-                            </StackPanel>
-
-                            <!-- Content -->
-                            <ScrollViewer Grid.Row="1" x:Name="DialogScrollViewer">
-                                <ContentPresenter Content="{TemplateBinding Content}" Padding="{TemplateBinding ContentPadding}" />
-                            </ScrollViewer>
-
-                            <!-- Footer Area: Buttons + Custom Content -->
-                            <Grid Grid.Row="2" ColumnSpacing="16" ColumnDefinitions="Auto,*,Auto" Margin="0 16 0 0">
-
-                                <!-- Cancel and Secondary on the left -->
-                                <StackPanel Grid.Column="0"
-                                            Classes="ButtonGroup"
-                                            Orientation="Horizontal"
-                                            Spacing="8">
-                                    <!-- Cancel always goes first -->
-                                    <ItemsControl Classes="Horizontal" ItemsSource="{Binding $parent[DialogControl].CancelOptions}" />
-
-                                </StackPanel>
-
-                                <!-- Center: Info Options + Custom Footer -->
-                                <StackPanel Grid.Column="1"
-                                            Orientation="Horizontal"
-                                            HorizontalAlignment="Center"
-                                            Spacing="10">
-                                    <ItemsControl Classes="Horizontal"
-                                                  ItemsSource="{Binding $parent[DialogControl].InfoOptions}" />
-
-                                    <ContentPresenter Content="{Binding $parent[DialogControl].Footer}"
-                                                      IsVisible="{Binding $parent[DialogControl].HasCustomFooter}" />
-                                </StackPanel>
-
-                                <!-- Primary/Destructive on the right -->
-                                <StackPanel Grid.Column="2"
-                                            Orientation="Horizontal"
-                                            Classes="ButtonGroup"
-                                            Spacing="8">
-                                    <!-- Secondary first -->
-                                    <ItemsControl Classes="Horizontal" ItemsSource="{Binding $parent[DialogControl].SecondaryOptions}" />
-                                    <!-- Primary next -->
-                                    <ItemsControl Classes="Horizontal" ItemsSource="{Binding $parent[DialogControl].PrimaryOptions}" />
-                                    <!-- Destructive at the end -->
-                                    <ItemsControl Classes="Horizontal" ItemsSource="{Binding $parent[DialogControl].DestructiveOptions}" />
-                                </StackPanel>
-                            </Grid>
-                        </Grid>
-                    </Border>
-                </ControlTemplate>
-            </Setter>
-
-            <Style Selector="^[Tone=Success]">
-                <Setter Property="BorderBrush" Value="{DynamicResource SuccessColor}" />
-                <Setter Property="BorderThickness" Value="2" />
-            </Style>
-            <Style Selector="^[Tone=Warning]">
-                <Setter Property="BorderBrush" Value="{DynamicResource WarningColor}" />
-                <Setter Property="BorderThickness" Value="2" />
-            </Style>
-            <Style Selector="^[Tone=Error]">
-                <Setter Property="BorderBrush" Value="{DynamicResource ErrorColor}" />
-                <Setter Property="BorderThickness" Value="2" />
-            </Style>
-            <Style Selector="^[Tone=Information]">
-                <Setter Property="BorderBrush" Value="{DynamicResource InfoColor}" />
-                <Setter Property="BorderThickness" Value="2" />
-            </Style>
-        </ControlTheme>
-
-    </Styles.Resources>
-
-    <Design.PreviewWith>
-        <StackPanel Spacing="20">
-            <Border BorderThickness="1" BorderBrush="Black" HorizontalAlignment="Center">
-                <DialogControl Title="TITLE" Padding="20">
-                    <DialogControl.Content>
-                        <TextBlock>THIS IS MY AWESOME CONTENT</TextBlock>
-                    </DialogControl.Content>
-                    <DialogControl.Options>
-                        <g:List x:TypeArguments="dialogs:IOption">
-                            <dialogs:OptionDesign Role="Cancel" Title="Cancel" />
-                            <dialogs:OptionDesign Role="Primary" Title="Next" />
-                        </g:List>
-                    </DialogControl.Options>
-                </DialogControl>
-            </Border>
-            <Border BorderThickness="1" BorderBrush="Black" HorizontalAlignment="Center">
-                <DialogControl Title="TITLE" Width="300">
-                    <DialogControl.Content>
-                        <TextBlock>THIS IS MY AWESOME CONTENT AND IT'S TOO WIDE TO FIT</TextBlock>
-                    </DialogControl.Content>
-                    <DialogControl.Options>
-                        <g:List x:TypeArguments="dialogs:IOption">
-                            <dialogs:OptionDesign Role="Cancel" Title="Cancel" />
-                            <dialogs:OptionDesign Role="Primary" Title="Next" />
-                        </g:List>
-                    </DialogControl.Options>
-                </DialogControl>
-            </Border>
-            <Border BorderThickness="1" BorderBrush="Black">
-                <DialogControl Title="TITLE" Width="700" Height="400">
-                    <DialogControl.Content>
-                        <TextBlock TextWrapping="Wrap">
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed diam arcu, tristique in elit sed, vehicula facilisis nulla. Ut porttitor nisl fringilla, scelerisque urna at, feugiat elit. Duis vel lacinia quam. Pellentesque placerat ultrices leo at consequat. Aliquam et felis id nisl pulvinar mattis vitae ut elit. Morbi lacinia, nulla a ultricies consectetur, ipsum est aliquet sapien, sed maximus nulla mauris a dolor. Aenean efficitur pulvinar augue vel laoreet. Maecenas eu turpis urna. Nulla non est ac justo tempus iaculis ac ac metus. Suspendisse facilisis erat enim, sed accumsan risus viverra ut. Quisque condimentum sapien odio, ut euismod lacus egestas ut. Pellentesque malesuada libero arcu, id convallis urna ultricies ut. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Quisque venenatis varius leo, eu rhoncus elit. Fusce porta magna diam, a euismod leo molestie non. Aliquam varius purus lectus, eget auctor tortor tristique at.
-
-                            Phasellus at urna leo. Praesent eu condimentum odio. Aliquam consequat odio eu pharetra suscipit. Aliquam erat volutpat. Morbi mollis convallis eros, non tincidunt felis aliquam a. Morbi gravida pharetra mollis. Sed ac finibus elit. Nam erat quam, consectetur eget dapibus ac, placerat suscipit nibh. Praesent in ullamcorper ipsum. Mauris eget odio sed nibh euismod porttitor eget id ipsum. Nunc ultrices nisi non tincidunt placerat. Ut arcu augue, cursus sed orci non, laoreet ullamcorper eros. Curabitur iaculis magna non imperdiet placerat.
-
-                            Aliquam interdum velit ex, et rhoncus sem accumsan quis. Vivamus tristique id nisi quis interdum. Pellentesque vel urna diam. Aenean consequat libero nec aliquam facilisis. Sed ullamcorper justo eu nibh bibendum eleifend. Nulla dignissim lacus orci. Donec tempus porta posuere. Fusce nec metus sed velit eleifend scelerisque id eget lacus. Donec ut est eget diam lobortis volutpat. Sed mollis magna id orci lobortis, at porttitor mauris euismod. Aenean mattis in ipsum quis luctus. Nulla posuere justo orci, sit amet gravida quam ornare non. Nulla maximus elementum dolor nec tincidunt.
-                        </TextBlock>
-                    </DialogControl.Content>
-                    <DialogControl.Options>
-                        <g:List x:TypeArguments="dialogs:IOption">
-                            <dialogs:OptionDesign Role="Cancel" Title="Cancel" />
-                            <dialogs:OptionDesign Role="Primary" Title="Next" />
-                        </g:List>
-                    </DialogControl.Options>
-                </DialogControl>
-            </Border>
-        </StackPanel>
-    </Design.PreviewWith>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                    <ContentPresenter Padding="20" DockPanel.Dock="Top" Content="{TemplateBinding Content}" />
+                </DockPanel>
+            </ControlTemplate>
+        </Setter>
+    </Style>
 </Styles>
