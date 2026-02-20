@@ -9,4 +9,5 @@ public class Settings
     public IObservable<bool> IsVisible { get; init; } = Observable.Return(true);
 
     public OptionRole Role { get; init; }
+    public object? Icon { get; init; }
 }

@@ -11,9 +11,8 @@ public class StackedDesktopDialog : IDialog
     private static readonly Stack<DialogContext> DialogStack = new();
     private static IDisposable? titleSubscription;
 
-    public async Task<bool> Show<TViewModel>(TViewModel viewModel, IObservable<string> title, Func<TViewModel, ICloseable, IEnumerable<IOption>> optionsFactory)
+    public async Task<bool> Show<TViewModel>(TViewModel? viewModel, IObservable<string> title, Func<TViewModel?, ICloseable, IEnumerable<IOption>> optionsFactory, object? icon = null, DialogTone tone = DialogTone.Neutral)
     {
-        if (viewModel == null) throw new ArgumentNullException(nameof(viewModel));
         if (title == null) throw new ArgumentNullException(nameof(title));
         if (optionsFactory == null) throw new ArgumentNullException(nameof(optionsFactory));
 
@@ -26,7 +25,7 @@ public class StackedDesktopDialog : IDialog
             var options = optionsFactory(viewModel, closeable).ToList();
 
             // Create a context instance for the current dialog
-            var dialogContext = new DialogContext(viewModel, title, options, completionSource);
+            var dialogContext = new DialogContext(viewModel, title, options, completionSource, icon, tone);
 
             // Add the dialog to the stack
             DialogStack.Push(dialogContext);
@@ -93,22 +92,28 @@ public class StackedDesktopDialog : IDialog
             dialogWindow.Content = new DialogControl
             {
                 Content = dialogContext.ViewModel,
-                Options = dialogContext.Options
+                Options = dialogContext.Options,
+                Icon = dialogContext.Icon,
+                Tone = dialogContext.Tone
             };
         }
     }
 
     private class DialogContext
     {
-        public DialogContext(object viewModel, IObservable<string> title, IEnumerable<IOption> options, TaskCompletionSource<bool> completionSource)
+        public DialogContext(object? viewModel, IObservable<string> title, IEnumerable<IOption> options, TaskCompletionSource<bool> completionSource, object? icon, DialogTone tone)
         {
             ViewModel = viewModel;
             Title = title;
             Options = options;
             CompletionSource = completionSource;
+            Icon = icon;
+            Tone = tone;
         }
 
-        public object ViewModel { get; }
+        public object? ViewModel { get; }
+        public object? Icon { get; }
+        public DialogTone Tone { get; }
         public IObservable<string> Title { get; }
         public IEnumerable<IOption> Options { get; }
         public TaskCompletionSource<bool> CompletionSource { get; }

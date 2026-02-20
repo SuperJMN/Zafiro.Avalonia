@@ -7,9 +7,8 @@ namespace Zafiro.Avalonia.Dialogs.Implementations;
 
 public class DesktopDialog : IDialog
 {
-    public async Task<bool> Show<TViewModel>(TViewModel viewModel, IObservable<string> title, Func<TViewModel, ICloseable, IEnumerable<IOption>> optionsFactory)
+    public async Task<bool> Show<TViewModel>(TViewModel? viewModel, IObservable<string> title, Func<TViewModel?, ICloseable, IEnumerable<IOption>> optionsFactory, object? icon = null, DialogTone tone = DialogTone.Neutral)
     {
-        if (viewModel == null) throw new ArgumentNullException(nameof(viewModel));
         if (title == null) throw new ArgumentNullException(nameof(title));
         if (optionsFactory == null) throw new ArgumentNullException(nameof(optionsFactory));
 
@@ -34,7 +33,9 @@ public class DesktopDialog : IDialog
             window.Content = new DialogControl
             {
                 Content = viewModel,
-                Options = options
+                Options = options,
+                Icon = icon,
+                Tone = tone
             };
 
             var result = await window.ShowDialog<bool?>(mainWindow).ConfigureAwait(false);

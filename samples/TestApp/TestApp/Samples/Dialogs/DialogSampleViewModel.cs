@@ -9,7 +9,9 @@ using Zafiro.Avalonia.Dialogs;
 using Zafiro.Avalonia.MigrateToZafiro;
 using Zafiro.CSharpFunctionalExtensions;
 using Zafiro.UI;
+using Zafiro.UI.Commands;
 using Zafiro.UI.Shell.Utils;
+using Option = Zafiro.Avalonia.Dialogs.Option;
 
 namespace TestApp.Samples.Dialogs;
 
@@ -21,7 +23,7 @@ public class DialogSampleViewModel : IViewModel
     {
         ShowDialog = ReactiveCommand.CreateFromTask(async () =>
         {
-            return await dialogService.ShowAndGetResult(new MyViewModel(dialogService), "Dale durity", model => model.IsValid(),
+            return await dialogService.ShowAndGetResult(new MyViewModel(dialogService), "Dale durity", model => model!.IsValid(),
                 model => model.Text);
         });
 
@@ -46,6 +48,9 @@ public class DialogSampleViewModel : IViewModel
             })
             .Subscribe();
         BigDialog = ReactiveCommand.CreateFromTask(() => dialogService.Show(new BigView(), "Big", Observable.Return(true)));
+        ShowWarningDialog = ReactiveCommand.CreateFromTask(() => dialogService.ShowMessage("Warning", "This is a warning message!", icon: "⚠️", tone: DialogTone.Warning));
+        ShowErrorDialog = ReactiveCommand.CreateFromTask(() => dialogService.ShowMessage("Error", "This is an error message!", icon: "❌", tone: DialogTone.Error));
+        ShowParameterlessDialog = ReactiveCommand.CreateFromTask(() => dialogService.Show("Parameterless", closeable => [new Option("Got it!", ReactiveCommand.Create(closeable.Close).Enhance(), new Settings { Icon = "✔️", IsDefault = true })], icon: "💡", tone: DialogTone.Success));
     }
 
     public ReactiveCommand<Unit, Maybe<int>> WithSubmitResult { get; set; }
@@ -55,6 +60,12 @@ public class DialogSampleViewModel : IViewModel
     public ReactiveCommand<Unit, Unit> ShowMessage { get; set; }
 
     public ReactiveCommand<Unit, Maybe<string>> ShowDialog { get; set; }
+
+    public ReactiveCommand<Unit, Unit> ShowWarningDialog { get; set; }
+
+    public ReactiveCommand<Unit, Unit> ShowErrorDialog { get; set; }
+
+    public ReactiveCommand<Unit, bool> ShowParameterlessDialog { get; set; }
 
     private static Task OnShowMessage(IDialog dialogService)
     {

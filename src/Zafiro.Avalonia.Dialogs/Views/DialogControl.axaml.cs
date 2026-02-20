@@ -10,6 +10,12 @@ public class DialogControl : ContentControl
     public static readonly StyledProperty<string?> TitleProperty = AvaloniaProperty.Register<DialogControl, string?>(
         nameof(Title));
 
+    public static readonly StyledProperty<object?> IconProperty = AvaloniaProperty.Register<DialogControl, object?>(
+        nameof(Icon));
+
+    public static readonly StyledProperty<DialogTone> ToneProperty = AvaloniaProperty.Register<DialogControl, DialogTone>(
+        nameof(Tone), DialogTone.Neutral);
+
     public static readonly StyledProperty<IEnumerable<IOption>?> OptionsProperty = AvaloniaProperty.Register<DialogControl, IEnumerable<IOption>?>(
         nameof(Options),
         []);
@@ -88,6 +94,18 @@ public class DialogControl : ContentControl
     {
         get => GetValue(TitleProperty);
         set => SetValue(TitleProperty, value);
+    }
+
+    public object? Icon
+    {
+        get => GetValue(IconProperty);
+        set => SetValue(IconProperty, value);
+    }
+
+    public DialogTone Tone
+    {
+        get => GetValue(ToneProperty);
+        set => SetValue(ToneProperty, value);
     }
 
     public IEnumerable<IOption>? Options

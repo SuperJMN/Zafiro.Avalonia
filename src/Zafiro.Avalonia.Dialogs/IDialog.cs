@@ -2,5 +2,5 @@
 
 public interface IDialog
 {
-    Task<bool> Show<TViewModel>(TViewModel viewModel, IObservable<string> title, Func<TViewModel, ICloseable, IEnumerable<IOption>> optionsFactory);
+    Task<bool> Show<TViewModel>(TViewModel? viewModel, IObservable<string> title, Func<TViewModel?, ICloseable, IEnumerable<IOption>> optionsFactory, object? icon = null, DialogTone tone = DialogTone.Neutral);
 }

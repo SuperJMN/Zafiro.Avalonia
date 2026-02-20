@@ -46,9 +46,8 @@ public class AdornerDialog : IDialog, ICloseable
         });
     }
 
-    public async Task<bool> Show<TViewModel>(TViewModel viewModel, IObservable<string> title, Func<TViewModel, ICloseable, IEnumerable<IOption>> optionsFactory)
+    public async Task<bool> Show<TViewModel>(TViewModel? viewModel, IObservable<string> title, Func<TViewModel?, ICloseable, IEnumerable<IOption>> optionsFactory, object? icon = null, DialogTone tone = DialogTone.Neutral)
     {
-        if (viewModel == null) throw new ArgumentNullException(nameof(viewModel));
         if (title == null) throw new ArgumentNullException(nameof(title));
         if (optionsFactory == null) throw new ArgumentNullException(nameof(optionsFactory));
 
@@ -63,6 +62,8 @@ public class AdornerDialog : IDialog, ICloseable
                 {
                     Content = viewModel,
                     Options = options,
+                    Icon = icon,
+                    Tone = tone
                 },
                 Close = ReactiveCommand.Create(() => Dismiss()),
             };

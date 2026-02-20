@@ -24,6 +24,7 @@
                         <Border.DataTemplates>
                             <DataTemplate DataType="dialogs:IOption">
                                 <EnhancedButton Content="{Binding Title^}"
+                                                Icon="{Binding Icon}"
                                                 Command="{Binding Command}"
                                                 IsVisible="{Binding IsVisible^}"
                                                 IsCancel="{Binding IsCancel}"
@@ -71,11 +72,13 @@
                         </Border.Styles>
 
                         <Grid RowDefinitions="Auto,*,Auto" Margin="{TemplateBinding Padding}">
-                            <!-- Title -->
-                            <TextBlock Grid.Row="0"
-                                       FontWeight="Bold"
-                                       Margin="0 0 0 10"
-                                       Text="{Binding $parent[DialogControl].Title}" IsVisible="{Binding $self.Text, Converter={x:Static ObjectConverters.IsNotNull}}" />
+                            <!-- Header (Icon + Title) -->
+                            <StackPanel Grid.Row="0" Margin="0 0 0 10" Spacing="8">
+                                <ContentPresenter HorizontalAlignment="Center" Content="{TemplateBinding Icon}" IsVisible="{TemplateBinding Icon, Converter={x:Static ObjectConverters.IsNotNull}}" VerticalAlignment="Center" />
+                                <TextBlock FontWeight="Bold"
+                                           VerticalAlignment="Center"
+                                           Text="{Binding $parent[DialogControl].Title}" IsVisible="{Binding $self.Text, Converter={x:Static ObjectConverters.IsNotNull}}" />
+                            </StackPanel>
 
                             <!-- Content -->
                             <ScrollViewer Grid.Row="1" x:Name="DialogScrollViewer">
@@ -124,6 +127,23 @@
                     </Border>
                 </ControlTemplate>
             </Setter>
+
+            <Style Selector="^[Tone=Success]">
+                <Setter Property="BorderBrush" Value="{DynamicResource SuccessColor}" />
+                <Setter Property="BorderThickness" Value="2" />
+            </Style>
+            <Style Selector="^[Tone=Warning]">
+                <Setter Property="BorderBrush" Value="{DynamicResource WarningColor}" />
+                <Setter Property="BorderThickness" Value="2" />
+            </Style>
+            <Style Selector="^[Tone=Error]">
+                <Setter Property="BorderBrush" Value="{DynamicResource ErrorColor}" />
+                <Setter Property="BorderThickness" Value="2" />
+            </Style>
+            <Style Selector="^[Tone=Information]">
+                <Setter Property="BorderBrush" Value="{DynamicResource InfoColor}" />
+                <Setter Property="BorderThickness" Value="2" />
+            </Style>
         </ControlTheme>
 
     </Styles.Resources>
@@ -133,7 +153,7 @@
             <Border BorderThickness="1" BorderBrush="Black" HorizontalAlignment="Center">
                 <DialogControl Title="TITLE" Padding="20">
                     <DialogControl.Content>
-                        <TextBlock>THIS IS MY FUCKING CONTENT</TextBlock>
+                        <TextBlock>THIS IS MY AWESOME CONTENT</TextBlock>
                     </DialogControl.Content>
                     <DialogControl.Options>
                         <g:List x:TypeArguments="dialogs:IOption">
@@ -146,7 +166,7 @@
             <Border BorderThickness="1" BorderBrush="Black" HorizontalAlignment="Center">
                 <DialogControl Title="TITLE" Width="300">
                     <DialogControl.Content>
-                        <TextBlock>THIS IS MY FUCKING CONTENT AND IT'S TOO WIDE TO FIT</TextBlock>
+                        <TextBlock>THIS IS MY AWESOME CONTENT AND IT'S TOO WIDE TO FIT</TextBlock>
                     </DialogControl.Content>
                     <DialogControl.Options>
                         <g:List x:TypeArguments="dialogs:IOption">

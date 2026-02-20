@@ -13,4 +13,5 @@ public class OptionDesign : IOption
     public bool IsCancel { get; set; }
     public IObservable<bool> IsVisible { get; set; }
     public OptionRole Role { get; set; }
+    public object? Icon { get; set; }
 }
