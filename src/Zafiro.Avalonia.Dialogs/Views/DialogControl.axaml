@@ -4,7 +4,7 @@
         xmlns:dialogs="clr-namespace:Zafiro.Avalonia.Dialogs;assembly=Zafiro.Avalonia.Dialogs"
         x:CompileBindings="True">
     <Design.PreviewWith>
-        <DialogControl Content="This is the content of the dialog">
+        <DialogControl Content="This is the content of the dialog" Icon="{Icon fa-wallet}">
             <DialogControl.Options>
                 <generic:List x:TypeArguments="IOption">
                     <OptionDesign Title="Primary" Role="Primary" />
@@ -22,7 +22,7 @@
         <Setter Property="MaxHeight" Value="700" />
         <Setter Property="Template">
             <ControlTemplate>
-                <DockPanel VerticalSpacing="24">
+                <DockPanel VerticalSpacing="8">
                     <ItemsControl ItemsSource="{TemplateBinding Options}" DockPanel.Dock="Bottom" IsVisible="{TemplateBinding Options, Converter={x:Static Enumerable.NotEmpty}}">
                         <ItemsControl.ItemContainerTheme>
                             <ControlTheme TargetType="ContentPresenter">
@@ -75,7 +75,10 @@
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
-                    <ContentPresenter Padding="20" DockPanel.Dock="Top" Content="{TemplateBinding Content}" />
+                    <StackPanel Margin="20" Spacing="20">
+                        <ContentPresenter DockPanel.Dock="Top" Content="{TemplateBinding Icon}" HorizontalAlignment="Center" IconOptions.Size="40" />
+                        <ContentPresenter Content="{TemplateBinding Content}" />
+                    </StackPanel>
                 </DockPanel>
             </ControlTemplate>
         </Setter>

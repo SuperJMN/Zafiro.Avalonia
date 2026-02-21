@@ -17,7 +17,11 @@
                 </EnhancedButton>
                 <EnhancedButton Icon="{Icon fa-wallet}" />
                 <EnhancedButton Icon="{Icon mdi-close}" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch">Button with icon</EnhancedButton>
-                <EnhancedButton Content="Shadow Button" />
+                <EnhancedButton Classes="Primary">Primary</EnhancedButton>
+                <EnhancedButton Classes="Secondary">Secondary</EnhancedButton>
+                <EnhancedButton Classes="Cancel">Cancel</EnhancedButton>
+                <EnhancedButton Classes="Destructive">Destructive</EnhancedButton>
+                <EnhancedButton Classes="Info">Info</EnhancedButton>
             </StackPanel>
         </Border>
     </Design.PreviewWith>
@@ -30,7 +34,9 @@
             <Setter Property="VerticalAlignment" Value="Top" />
             <Setter Property="Padding" Value="8" />
             <Setter Property="BorderThickness" Value="1" />
-            <Setter Property="BorderBrush" Value="{DynamicResource SystemControlForegroundTransparentBrush}" />
+            <Setter Property="BorderBrush">
+                <SolidColorBrush Color="{StaticResource SystemBaseHighColor}" Opacity="0.2" />
+            </Setter>
             <Setter Property="Background" Value="{DynamicResource SystemControlBackgroundBaseLowBrush}" />
             <Setter Property="CornerRadius" Value="6" />
             <Setter Property="ClipToBounds" Value="False" />
@@ -94,21 +100,21 @@
                 <Setter Property="Opacity" Value="0.5" />
             </Style>
             <Style Selector="^.Primary">
-                <Setter Property="Tint" Value="{DynamicResource SystemAccentColor}" />
+                <Setter Property="Background" Value="{DynamicResource SystemAccentColor}" />
                 <Setter Property="Foreground" Value="{DynamicResource AccentButtonForeground}" />
             </Style>
             <Style Selector="^.Secondary">
-                <Setter Property="Tint" Value="{DynamicResource SystemBaseLowColor}" />
+                <Setter Property="Background" Value="{DynamicResource SystemBaseLowColor}" />
             </Style>
             <Style Selector="^.Cancel">
-                <Setter Property="Tint" Value="Transparent" />
+                <Setter Property="Background" Value="Transparent" />
             </Style>
             <Style Selector="^.Destructive">
-                <Setter Property="Tint" Value="Crimson" />
+                <Setter Property="Background" Value="Crimson" />
                 <Setter Property="Foreground" Value="White" />
             </Style>
             <Style Selector="^.Info">
-                <Setter Property="Tint" Value="{DynamicResource SystemAccentColor}" />
+                <Setter Property="Background" Value="{DynamicResource SystemAccentColor}" />
                 <Setter Property="Foreground" Value="{DynamicResource AccentButtonForeground}" />
             </Style>
         </ControlTheme>
