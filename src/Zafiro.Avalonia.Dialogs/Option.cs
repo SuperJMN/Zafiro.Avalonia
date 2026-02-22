@@ -13,6 +13,7 @@ public class Option<T, Q> : IOption<T, Q>
         IsCancel = settings.IsCancel;
         IsVisible = settings.IsVisible;
         Role = settings.Role;
+        Icon = settings.Icon;
     }
 
     public Option(string title, IEnhancedCommand<T, Q> command, Settings settings) : this(Observable.Return(title), command, settings)
@@ -25,6 +26,7 @@ public class Option<T, Q> : IOption<T, Q>
     public bool IsCancel { get; }
     public IObservable<bool> IsVisible { get; }
     public OptionRole Role { get; }
+    public object? Icon { get; }
     public IEnhancedCommand<T, Q> TypedCommand => (IEnhancedCommand<T, Q>)Command;
 }
 
@@ -38,6 +40,7 @@ public class Option : IOption
         IsCancel = settings.IsCancel;
         IsVisible = settings.IsVisible;
         Role = settings.Role;
+        Icon = settings.Icon;
     }
 
     public Option(string title, IEnhancedCommand command, Settings settings) : this(Observable.Return(title), command, settings)
@@ -50,4 +53,5 @@ public class Option : IOption
     public bool IsCancel { get; }
     public IObservable<bool> IsVisible { get; }
     public OptionRole Role { get; }
+    public object? Icon { get; }
 }

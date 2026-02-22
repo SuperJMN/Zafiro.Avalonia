@@ -3,6 +3,7 @@ using Avalonia;
 using Avalonia.Controls.Primitives;
 using Avalonia.Layout;
 using Avalonia.Threading;
+using CSharpFunctionalExtensions;
 using ReactiveUI;
 using Zafiro.Avalonia.Dialogs.Views;
 
@@ -46,10 +47,8 @@ public class AdornerDialog : IDialog, ICloseable
         });
     }
 
-    public async Task<bool> Show<TViewModel>(TViewModel viewModel, IObservable<string> title, Func<TViewModel, ICloseable, IEnumerable<IOption>> optionsFactory)
+    public async Task<bool> Show<TViewModel>(Maybe<TViewModel> viewModel, Maybe<IObservable<string>> title, Func<Maybe<TViewModel>, ICloseable, IEnumerable<IOption>> optionsFactory, Maybe<object> icon = default, DialogTone tone = DialogTone.Neutral)
     {
-        if (viewModel == null) throw new ArgumentNullException(nameof(viewModel));
-        if (title == null) throw new ArgumentNullException(nameof(title));
         if (optionsFactory == null) throw new ArgumentNullException(nameof(optionsFactory));
 
         var showTask = await Dispatcher.UIThread.InvokeAsync(() =>
@@ -61,14 +60,16 @@ public class AdornerDialog : IDialog, ICloseable
             {
                 Content = new DialogControl()
                 {
-                    Content = viewModel,
+                    Content = viewModel.GetValueOrDefault(),
                     Options = options,
+                    Icon = icon.GetValueOrDefault(),
+                    Tone = tone
                 },
                 Close = ReactiveCommand.Create(() => Dismiss()),
             };
 
             // Update the title reactively while the dialog is visible
-            var titleSubscription = title
+            var titleSubscription = title.GetValueOrDefault(Observable.Never<string>())
                 .Subscribe(t => Dispatcher.UIThread.Post(() => dialog.Title = t ?? string.Empty));
 
             var adornerLayer = adornerLayerLazy.Value;

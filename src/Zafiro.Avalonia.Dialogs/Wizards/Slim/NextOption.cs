@@ -30,4 +30,5 @@ public partial class NextOption : ReactiveObject, IOption, IDisposable
     public bool IsCancel { get; } = false;
     public IObservable<bool> IsVisible { get; } = Observable.Return(true);
     public OptionRole Role { get; } = OptionRole.Primary;
+    public object? Icon { get; }
 }

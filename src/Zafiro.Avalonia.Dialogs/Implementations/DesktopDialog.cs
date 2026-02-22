@@ -1,5 +1,7 @@
-﻿using Avalonia.Controls;
+﻿using System.Reactive.Linq;
+using Avalonia.Controls;
 using Avalonia.Threading;
+using CSharpFunctionalExtensions;
 using Zafiro.Avalonia.Dialogs.Views;
 using Zafiro.Avalonia.Misc;
 
@@ -7,10 +9,8 @@ namespace Zafiro.Avalonia.Dialogs.Implementations;
 
 public class DesktopDialog : IDialog
 {
-    public async Task<bool> Show<TViewModel>(TViewModel viewModel, IObservable<string> title, Func<TViewModel, ICloseable, IEnumerable<IOption>> optionsFactory)
+    public async Task<bool> Show<TViewModel>(Maybe<TViewModel> viewModel, Maybe<IObservable<string>> title, Func<Maybe<TViewModel>, ICloseable, IEnumerable<IOption>> optionsFactory, Maybe<object> icon = default, DialogTone tone = DialogTone.Neutral)
     {
-        if (viewModel == null) throw new ArgumentNullException(nameof(viewModel));
-        if (title == null) throw new ArgumentNullException(nameof(title));
         if (optionsFactory == null) throw new ArgumentNullException(nameof(optionsFactory));
 
         var showTask = await Dispatcher.UIThread.InvokeAsync(async () =>
@@ -25,7 +25,7 @@ public class DesktopDialog : IDialog
                 SizeToContent = SizeToContent.WidthAndHeight,
             };
 
-            using var titleSubscription = title
+            using var titleSubscription = title.GetValueOrDefault(Observable.Never<string>())
                 .Subscribe(t => Dispatcher.UIThread.Post(() => window.Title = t ?? string.Empty));
 
             var closeable = new CloseableWrapper(window);
@@ -33,8 +33,10 @@ public class DesktopDialog : IDialog
 
             window.Content = new DialogControl
             {
-                Content = viewModel,
-                Options = options
+                Content = viewModel.GetValueOrDefault(),
+                Options = options,
+                Icon = icon.GetValueOrDefault(),
+                Tone = tone
             };
 
             var result = await window.ShowDialog<bool?>(mainWindow).ConfigureAwait(false);

@@ -19,6 +19,7 @@ public interface IOption
     public IObservable<bool> IsVisible { get; }
 
     public OptionRole Role { get; }
+    public object? Icon { get; }
 }
 
 public enum OptionRole

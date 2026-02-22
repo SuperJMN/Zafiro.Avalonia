@@ -1,56 +1,47 @@
 ﻿<Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:dialogs="clr-namespace:Zafiro.Avalonia.Dialogs"
-        xmlns:generic="clr-namespace:System.Collections.Generic;assembly=System.Collections"
-        xmlns:views="clr-namespace:Zafiro.Avalonia.Dialogs.Views">
+        xmlns:generic="clr-namespace:System.Collections.Generic;assembly=System.Collections">
     <Design.PreviewWith>
-        <StackPanel>
-            <Border Width="700" Height="700">
-                <Border BorderBrush="Black" BorderThickness="1">
-                    <views:DialogViewContainer Title="Title" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
-                        <DialogControl>
-                            <DialogControl.Options>
-                                <generic:List x:TypeArguments="dialogs:IOption">
-                                    <dialogs:OptionDesign Role="Cancel" Title="Cancel" />
-                                    <dialogs:OptionDesign Role="Primary" Title="Next" />
-                                </generic:List>
-                            </DialogControl.Options>
-                            <TextBlock TextWrapping="Wrap">
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed diam arcu, tristique in elit sed, vehicula facilisis nulla. Ut porttitor nisl fringilla, scelerisque urna at, feugiat elit. Duis vel lacinia quam. Pellentesque placerat ultrices leo at consequat. Aliquam et felis id nisl pulvinar mattis vitae ut elit. Morbi lacinia, nulla a ultricies consectetur, ipsum est aliquet sapien, sed maximus nulla mauris a dolor. Aenean efficitur pulvinar augue vel laoreet. Maecenas eu turpis urna. Nulla non est ac justo tempus iaculis ac ac metus. Suspendisse facilisis erat enim, sed accumsan risus viverra ut. Quisque condimentum sapien odio, ut euismod lacus egestas ut. Pellentesque malesuada libero arcu, id convallis urna ultricies ut. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Quisque venenatis varius leo, eu rhoncus elit. Fusce porta magna diam, a euismod leo molestie non. Aliquam varius purus lectus, eget auctor tortor tristique at.
-
-                                Phasellus at urna leo. Praesent eu condimentum odio. Aliquam consequat odio eu pharetra suscipit. Aliquam erat volutpat. Morbi mollis convallis eros, non tincidunt felis aliquam a. Morbi gravida pharetra mollis. Sed ac finibus elit. Nam erat quam, consectetur eget dapibus ac, placerat suscipit nibh. Praesent in ullamcorper ipsum. Mauris eget odio sed nibh euismod porttitor eget id ipsum. Nunc ultrices nisi non tincidunt placerat. Ut arcu augue, cursus sed orci non, laoreet ullamcorper eros. Curabitur iaculis magna non imperdiet placerat.
-
-                                Aliquam interdum velit ex, et rhoncus sem accumsan quis. Vivamus tristique id nisi quis interdum. Pellentesque vel urna diam. Aenean consequat libero nec aliquam facilisis. Sed ullamcorper justo eu nibh bibendum eleifend. Nulla dignissim lacus orci. Donec tempus porta posuere. Fusce nec metus sed velit eleifend scelerisque id eget lacus. Donec ut est eget diam lobortis volutpat. Sed mollis magna id orci lobortis, at porttitor mauris euismod. Aenean mattis in ipsum quis luctus. Nulla posuere justo orci, sit amet gravida quam ornare non. Nulla maximus elementum dolor nec tincidunt.
-                            </TextBlock>
-                        </DialogControl>
-                    </views:DialogViewContainer>
-                </Border>
-            </Border>
-            <Border Width="700" Height="700">
-                <Border Width="300" Height="400">
-                    <TextBlock>HOLA COLEGAS</TextBlock>
-                </Border>
-            </Border>
-        </StackPanel>
+        <DialogViewContainer Width="500" Height="500" Title="Nice Dialog">
+            <DialogControl Content="Some This is some text that gives context to the user about the dialog. It can be multiple lines and contain important information that the user needs to know before taking an action.">
+                <DialogControl.Options>
+                    <generic:List x:TypeArguments="IOption">
+                        <OptionDesign Title="Primary" Role="Primary" />
+                        <OptionDesign Title="Secondary" Role="Secondary" />
+                    </generic:List>
+                </DialogControl.Options>
+            </DialogControl>
+        </DialogViewContainer>
     </Design.PreviewWith>
 
     <Style Selector="DialogViewContainer">
         <Setter Property="Template">
             <ControlTemplate>
                 <Panel>
-                    <Border Background="Black" Opacity="0.4" />
-                    <OverlayBorder Classes="Card" VerticalAlignment="Center" HorizontalAlignment="Center">
-                        <DockPanel>
-                            <Panel DockPanel.Dock="Top">
-                                <TextBlock VerticalAlignment="Center" FontWeight="Bold" TextAlignment="Center" Text="{TemplateBinding Title}" />
-                                <EnhancedButton Theme="{StaticResource TransparentButton}" IconOptions.Size="24" Content="{Icon mdi-close}"
-                                                HorizontalAlignment="Right" Command="{TemplateBinding Close}">
-
-                                </EnhancedButton>
+                    <Border Background="{DynamicResource SystemBaseHighColor}" Opacity="0.2" />
+                    <Border Padding="10"
+                            BorderThickness="1"
+                            BorderBrush="Black"
+                            Background="{DynamicResource SystemAltHighColor}"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center">
+                        <StackPanel Spacing="20">
+                            <Panel>
+                                <TextBlock IsVisible="{TemplateBinding Title, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" VerticalAlignment="Center" FontSize="20" HorizontalAlignment="Center" FontWeight="Bold"
+                                           Classes="Size-XL Weight-Bold Center" Text="{TemplateBinding Title}" />
+                                <EnhancedButton Command="{TemplateBinding Close}"
+                                                IsCancel="True"
+                                                Padding="0"
+                                                Background="Transparent"
+                                                BorderBrush="Transparent"
+                                                IconOptions.Size="24"
+                                                Foreground="{DynamicResource Dimmed}"
+                                                HorizontalAlignment="Right"
+                                                Icon="{Icon mdi-close}" />
                             </Panel>
                             <ContentPresenter Content="{TemplateBinding Content}" />
-                        </DockPanel>
-                    </OverlayBorder>
+                        </StackPanel>
+                    </Border>
                 </Panel>
             </ControlTemplate>
         </Setter>
