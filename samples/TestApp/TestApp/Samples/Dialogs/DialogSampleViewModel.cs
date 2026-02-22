@@ -23,8 +23,8 @@ public class DialogSampleViewModel : IViewModel
     {
         ShowDialog = ReactiveCommand.CreateFromTask(async () =>
         {
-            return await dialogService.ShowAndGetResult(new MyViewModel(dialogService), "Dale durity", model => model!.IsValid(),
-                model => model.Text);
+            return await dialogService.ShowAndGetResult(Maybe<MyViewModel>.From(new MyViewModel(dialogService)), "Dale durity", model => model.Value.IsValid(),
+                model => model.Value.Text);
         });
 
         ShowDialog
@@ -38,7 +38,7 @@ public class DialogSampleViewModel : IViewModel
             .Subscribe();
 
         ShowMessage = ReactiveCommand.CreateFromTask(() => OnShowMessage(dialogService));
-        WithSubmitResult = ReactiveCommand.CreateFromTask(() => dialogService.ShowAndGetResult(new SubmitterViewModel(), "My View", model => model.Submit));
+        WithSubmitResult = ReactiveCommand.CreateFromTask(() => dialogService.ShowAndGetResult(Maybe<SubmitterViewModel>.From(new SubmitterViewModel()), "My View", model => model.Value.Submit));
 
         WithSubmitResult.Values()
             .SelectMany(async i =>
@@ -47,7 +47,7 @@ public class DialogSampleViewModel : IViewModel
                 return Unit.Default;
             })
             .Subscribe();
-        BigDialog = ReactiveCommand.CreateFromTask(() => dialogService.Show(new BigView(), "Big", Observable.Return(true)));
+        BigDialog = ReactiveCommand.CreateFromTask(() => dialogService.Show(Maybe<BigView>.From(new BigView()), "Big", Observable.Return(true)));
         ShowWarningDialog = ReactiveCommand.CreateFromTask(() => dialogService.ShowMessage("Warning", "This is a warning message!", icon: "⚠️", tone: DialogTone.Warning));
         ShowErrorDialog = ReactiveCommand.CreateFromTask(() => dialogService.ShowMessage("Error", "This is an error message!", icon: "❌", tone: DialogTone.Error));
         ShowParameterlessDialog = ReactiveCommand.CreateFromTask(() => dialogService.Show("Parameterless", closeable => [new Option("Got it!", ReactiveCommand.Create(closeable.Close).Enhance(), new Settings { Icon = "✔️", IsDefault = true })], icon: "💡", tone: DialogTone.Success));

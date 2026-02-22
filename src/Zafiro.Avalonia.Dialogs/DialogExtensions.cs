@@ -1,5 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using System.Reactive.Linq;
+﻿using System.Reactive.Linq;
 using CSharpFunctionalExtensions;
 using ReactiveUI;
 using Zafiro.Avalonia.Dialogs.Views;
@@ -13,51 +12,51 @@ public static class DialogExtensions
 {
     #region Show Overloads
 
-    public static Task<bool> Show<TViewModel>(this IDialog dialog, TViewModel? viewModel, string title, Func<TViewModel?, ICloseable, IEnumerable<IOption>> optionsFactory, object? icon = null, DialogTone tone = DialogTone.Neutral) where TViewModel : class
+    public static Task<bool> Show<TViewModel>(this IDialog dialog, Maybe<TViewModel> viewModel, string title, Func<Maybe<TViewModel>, ICloseable, IEnumerable<IOption>> optionsFactory, Maybe<object> icon = default, DialogTone tone = DialogTone.Neutral) where TViewModel : class
     {
-        return dialog.Show(viewModel, Observable.Return(title), optionsFactory, icon, tone);
+        return dialog.Show(viewModel, Maybe<IObservable<string>>.From(Observable.Return(title)), optionsFactory, icon, tone);
     }
 
-    public static Task<bool> Show<TViewModel>(this IDialog dialog, TViewModel viewModel, Func<TViewModel?, ICloseable, IEnumerable<IOption>> optionsFactory, object? icon = null, DialogTone tone = DialogTone.Neutral) where TViewModel : class, IHaveTitle
+    public static Task<bool> Show<TViewModel>(this IDialog dialog, Maybe<TViewModel> viewModel, Func<Maybe<TViewModel>, ICloseable, IEnumerable<IOption>> optionsFactory, Maybe<object> icon = default, DialogTone tone = DialogTone.Neutral) where TViewModel : class, IHaveTitle
     {
-        return dialog.Show(viewModel, viewModel.Title, optionsFactory, icon, tone);
+        return dialog.Show(viewModel, Maybe<IObservable<string>>.From(viewModel.Value.Title), optionsFactory, icon, tone);
     }
 
-    public static Task<bool> Show<TViewModel>(this IDialog dialog, TViewModel? viewModel, string title, Func<ICloseable, IEnumerable<IOption>> optionsFactory, object? icon = null, DialogTone tone = DialogTone.Neutral) where TViewModel : class
+    public static Task<bool> Show<TViewModel>(this IDialog dialog, Maybe<TViewModel> viewModel, string title, Func<ICloseable, IEnumerable<IOption>> optionsFactory, Maybe<object> icon = default, DialogTone tone = DialogTone.Neutral) where TViewModel : class
     {
-        return dialog.Show(viewModel, Observable.Return(title), (_, closeable) => optionsFactory(closeable), icon, tone);
+        return dialog.Show(viewModel, Maybe<IObservable<string>>.From(Observable.Return(title)), (_, closeable) => optionsFactory(closeable), icon, tone);
     }
 
-    public static Task<bool> Show<TViewModel>(this IDialog dialog, TViewModel viewModel, Func<ICloseable, IEnumerable<IOption>> optionsFactory, object? icon = null, DialogTone tone = DialogTone.Neutral) where TViewModel : class, IHaveTitle
+    public static Task<bool> Show<TViewModel>(this IDialog dialog, Maybe<TViewModel> viewModel, Func<ICloseable, IEnumerable<IOption>> optionsFactory, Maybe<object> icon = default, DialogTone tone = DialogTone.Neutral) where TViewModel : class, IHaveTitle
     {
-        return dialog.Show(viewModel, viewModel.Title, (_, closeable) => optionsFactory(closeable), icon, tone);
+        return dialog.Show(viewModel, Maybe<IObservable<string>>.From(viewModel.Value.Title), (_, closeable) => optionsFactory(closeable), icon, tone);
     }
 
-    public static Task<bool> Show(this IDialog dialog, string title, Func<ICloseable, IEnumerable<IOption>> optionsFactory, object? icon = null, DialogTone tone = DialogTone.Neutral)
+    public static Task<bool> Show(this IDialog dialog, string title, Func<ICloseable, IEnumerable<IOption>> optionsFactory, Maybe<object> icon = default, DialogTone tone = DialogTone.Neutral)
     {
-        return dialog.Show((object?)null, Observable.Return(title), (_, closeable) => optionsFactory(closeable), icon, tone);
+        return dialog.Show(Maybe<object>.None, Maybe<IObservable<string>>.From(Observable.Return(title)), (_, closeable) => optionsFactory(closeable), icon, tone);
     }
 
-    public static Task<bool> Show(this IDialog dialog, IObservable<string> title, Func<ICloseable, IEnumerable<IOption>> optionsFactory, object? icon = null, DialogTone tone = DialogTone.Neutral)
+    public static Task<bool> Show(this IDialog dialog, Maybe<IObservable<string>> title, Func<ICloseable, IEnumerable<IOption>> optionsFactory, Maybe<object> icon = default, DialogTone tone = DialogTone.Neutral)
     {
-        return dialog.Show((object?)null, title, (_, closeable) => optionsFactory(closeable), icon, tone);
+        return dialog.Show(Maybe<object>.None, title, (_, closeable) => optionsFactory(closeable), icon, tone);
     }
 
     #endregion
 
     #region ShowOk / ShowOkCancel
 
-    public static Task ShowOk<TViewModel>(this IDialog dialogService, TViewModel? viewModel, string title, Func<TViewModel?, IObservable<bool>>? canSubmit = null, object? icon = null, DialogTone tone = DialogTone.Neutral) where TViewModel : class
+    public static Task ShowOk<TViewModel>(this IDialog dialogService, Maybe<TViewModel> viewModel, string title, Func<Maybe<TViewModel>, IObservable<bool>>? canSubmit = null, Maybe<object> icon = default, DialogTone tone = DialogTone.Neutral) where TViewModel : class
     {
-        return dialogService.ShowOk(viewModel, Observable.Return(title), canSubmit, icon, tone);
+        return dialogService.ShowOk(viewModel, Maybe<IObservable<string>>.From(Observable.Return(title)), canSubmit, icon, tone);
     }
 
-    public static Task ShowOk<TViewModel>(this IDialog dialogService, TViewModel viewModel, Func<TViewModel?, IObservable<bool>>? canSubmit = null, object? icon = null, DialogTone tone = DialogTone.Neutral) where TViewModel : class, IHaveTitle
+    public static Task ShowOk<TViewModel>(this IDialog dialogService, Maybe<TViewModel> viewModel, Func<Maybe<TViewModel>, IObservable<bool>>? canSubmit = null, Maybe<object> icon = default, DialogTone tone = DialogTone.Neutral) where TViewModel : class, IHaveTitle
     {
-        return dialogService.ShowOk(viewModel, viewModel.Title, canSubmit, icon, tone);
+        return dialogService.ShowOk(viewModel, Maybe<IObservable<string>>.From(viewModel.Value.Title), canSubmit, icon, tone);
     }
 
-    public static Task ShowOk<TViewModel>(this IDialog dialogService, TViewModel? viewModel, IObservable<string> title, Func<TViewModel?, IObservable<bool>>? canSubmit = null, object? icon = null, DialogTone tone = DialogTone.Neutral) where TViewModel : class
+    public static Task ShowOk<TViewModel>(this IDialog dialogService, Maybe<TViewModel> viewModel, Maybe<IObservable<string>> title, Func<Maybe<TViewModel>, IObservable<bool>>? canSubmit = null, Maybe<object> icon = default, DialogTone tone = DialogTone.Neutral) where TViewModel : class
     {
         return dialogService.Show(viewModel, title, (vm, closeable) =>
         {
@@ -66,26 +65,26 @@ public static class DialogExtensions
         }, icon, tone);
     }
 
-    public static Task ShowOk(this IDialog dialogService, string title, IObservable<bool>? canSubmit = null, object? icon = null, DialogTone tone = DialogTone.Neutral)
+    public static Task ShowOk(this IDialog dialogService, string title, IObservable<bool>? canSubmit = null, Maybe<object> icon = default, DialogTone tone = DialogTone.Neutral)
     {
-        return dialogService.ShowOk((object?)null, Observable.Return(title), _ => canSubmit ?? Observable.Return(true), icon, tone);
+        return dialogService.ShowOk(Maybe<object>.None, Maybe<IObservable<string>>.From(Observable.Return(title)), _ => canSubmit ?? Observable.Return(true), icon, tone);
     }
 
     public static Task Show<TViewModel>(this IDialog dialogService,
-        TViewModel? viewModel,
+        Maybe<TViewModel> viewModel,
         string title,
         IObservable<bool>? canSubmit,
-        object? icon = null,
+        Maybe<object> icon = default,
         DialogTone tone = DialogTone.Neutral) where TViewModel : class
     {
-        return dialogService.Show(viewModel, Observable.Return(title), canSubmit, icon, tone);
+        return dialogService.Show(viewModel, Maybe<IObservable<string>>.From(Observable.Return(title)), canSubmit, icon, tone);
     }
 
     public static Task Show<TViewModel>(this IDialog dialogService,
-        TViewModel? viewModel,
-        IObservable<string> title,
+        Maybe<TViewModel> viewModel,
+        Maybe<IObservable<string>> title,
         IObservable<bool>? canSubmit,
-        object? icon = null,
+        Maybe<object> icon = default,
         DialogTone tone = DialogTone.Neutral) where TViewModel : class
     {
         return dialogService.Show(viewModel, title, (_, closeable) =>
@@ -100,11 +99,11 @@ public static class DialogExtensions
     #region ShowAndGetResult
 
     public static async Task<Maybe<TResult>> ShowAndGetResult<TViewModel, TResult>(this IDialog dialogService,
-        [DisallowNull] TViewModel viewModel,
-        IObservable<string> title,
-        Func<TViewModel?, ICloseable, IEnumerable<IOption>> optionsFactory,
-        Func<TViewModel, Task<TResult>> getResult,
-        object? icon = null,
+        Maybe<TViewModel> viewModel,
+        Maybe<IObservable<string>> title,
+        Func<Maybe<TViewModel>, ICloseable, IEnumerable<IOption>> optionsFactory,
+        Func<Maybe<TViewModel>, Task<TResult>> getResult,
+        Maybe<object> icon = default,
         DialogTone tone = DialogTone.Neutral) where TViewModel : class
     {
         var isSuccess = await dialogService.Show(viewModel, title, optionsFactory, icon, tone);
@@ -117,87 +116,87 @@ public static class DialogExtensions
     }
 
     public static Task<Maybe<TResult>> ShowAndGetResult<TViewModel, TResult>(this IDialog dialogService,
-        [DisallowNull] TViewModel viewModel,
-        IObservable<string> title,
+        Maybe<TViewModel> viewModel,
+        Maybe<IObservable<string>> title,
         Func<ICloseable, IEnumerable<IOption>> optionsFactory,
-        Func<TViewModel, Task<TResult>> getResult,
-        object? icon = null,
+        Func<Maybe<TViewModel>, Task<TResult>> getResult,
+        Maybe<object> icon = default,
         DialogTone tone = DialogTone.Neutral) where TViewModel : class
     {
         return dialogService.ShowAndGetResult(viewModel, title, (_, closeable) => optionsFactory(closeable), getResult, icon, tone);
     }
 
     public static Task<Maybe<TResult>> ShowAndGetResult<TViewModel, TResult>(this IDialog dialogService,
-        [DisallowNull] TViewModel viewModel,
+        Maybe<TViewModel> viewModel,
         string title,
-        Func<TViewModel?, ICloseable, IEnumerable<IOption>> optionsFactory,
-        Func<TViewModel, Task<TResult>> getResult,
-        object? icon = null,
+        Func<Maybe<TViewModel>, ICloseable, IEnumerable<IOption>> optionsFactory,
+        Func<Maybe<TViewModel>, Task<TResult>> getResult,
+        Maybe<object> icon = default,
         DialogTone tone = DialogTone.Neutral) where TViewModel : class
     {
-        return dialogService.ShowAndGetResult(viewModel, Observable.Return(title), optionsFactory, getResult, icon, tone);
+        return dialogService.ShowAndGetResult(viewModel, Maybe<IObservable<string>>.From(Observable.Return(title)), optionsFactory, getResult, icon, tone);
     }
 
     public static Task<Maybe<TResult>> ShowAndGetResult<TViewModel, TResult>(this IDialog dialogService,
-        [DisallowNull] TViewModel viewModel,
-        IObservable<string> title,
-        Func<TViewModel?, ICloseable, IEnumerable<IOption>> optionsFactory,
-        Func<TViewModel, TResult> getResult,
-        object? icon = null,
+        Maybe<TViewModel> viewModel,
+        Maybe<IObservable<string>> title,
+        Func<Maybe<TViewModel>, ICloseable, IEnumerable<IOption>> optionsFactory,
+        Func<Maybe<TViewModel>, TResult> getResult,
+        Maybe<object> icon = default,
         DialogTone tone = DialogTone.Neutral) where TViewModel : class
     {
         return dialogService.ShowAndGetResult(viewModel, title, optionsFactory, vm => Task.FromResult(getResult(vm)), icon, tone);
     }
 
     public static Task<Maybe<TResult>> ShowAndGetResult<TViewModel, TResult>(this IDialog dialogService,
-        [DisallowNull] TViewModel viewModel,
+        Maybe<TViewModel> viewModel,
         string title,
-        Func<TViewModel?, ICloseable, IEnumerable<IOption>> optionsFactory,
-        Func<TViewModel, TResult> getResult,
-        object? icon = null,
+        Func<Maybe<TViewModel>, ICloseable, IEnumerable<IOption>> optionsFactory,
+        Func<Maybe<TViewModel>, TResult> getResult,
+        Maybe<object> icon = default,
         DialogTone tone = DialogTone.Neutral) where TViewModel : class
     {
-        return dialogService.ShowAndGetResult(viewModel, Observable.Return(title), optionsFactory, vm => Task.FromResult(getResult(vm)), icon, tone);
+        return dialogService.ShowAndGetResult(viewModel, Maybe<IObservable<string>>.From(Observable.Return(title)), optionsFactory, vm => Task.FromResult(getResult(vm)), icon, tone);
     }
 
     // Convenience for IValidatable
     public static async Task<Maybe<TResult>> ShowAndGetResult<TViewModel, TResult>(this IDialog dialogService,
-        [DisallowNull] TViewModel viewModel,
+        Maybe<TViewModel> viewModel,
         string title,
-        Func<TViewModel, Task<TResult>> getResult,
-        object? icon = null,
+        Func<Maybe<TViewModel>, Task<TResult>> getResult,
+        Maybe<object> icon = default,
         DialogTone tone = DialogTone.Neutral) where TViewModel : class, IValidatable
     {
-        return await dialogService.ShowAndGetResult(viewModel, Observable.Return(title), (vm, closeable) =>
+        return await dialogService.ShowAndGetResult(viewModel, Maybe<IObservable<string>>.From(Observable.Return(title)), (vm, closeable) =>
         [
             Cancel(closeable),
-            Ok(closeable, vm!.IsValid)
+            Ok(closeable, vm.Value.IsValid)
         ], getResult, icon, tone);
     }
 
     public static async Task<Maybe<TResult>> ShowAndGetResult<TViewModel, TResult>(this IDialog dialogService,
-        [DisallowNull] TViewModel viewModel,
+        Maybe<TViewModel> viewModel,
         string title,
-        Func<TViewModel, TResult> getResult,
-        object? icon = null,
+        Func<Maybe<TViewModel>, TResult> getResult,
+        Maybe<object> icon = default,
         DialogTone tone = DialogTone.Neutral) where TViewModel : class, IValidatable
     {
-        return await dialogService.ShowAndGetResult(viewModel, Observable.Return(title), (vm, closeable) =>
+        return await dialogService.ShowAndGetResult(viewModel, Maybe<IObservable<string>>.From(Observable.Return(title)), (vm, closeable) =>
         [
             Cancel(closeable),
-            Ok(closeable, vm!.IsValid)
+            Ok(closeable, vm.Value.IsValid)
         ], vm => Task.FromResult(getResult(vm)), icon, tone);
     }
 
     public static async Task<Maybe<TResult>> ShowAndGetResult<TViewModel, TResult>(this IDialog dialogService,
-        [DisallowNull] TViewModel viewModel,
+        Maybe<TViewModel> viewModel,
         string title,
-        Func<TViewModel?, IObservable<bool>> isValid,
-        Func<TViewModel, TResult> getResult,
-        object? icon = null,
+        Func<Maybe<TViewModel>, IObservable<bool>> isValid,
+        Func<Maybe<TViewModel>, TResult> getResult,
+        Maybe<object> icon = default,
         DialogTone tone = DialogTone.Neutral) where TViewModel : class
     {
-        return await dialogService.ShowAndGetResult(viewModel, Observable.Return(title), (vm, closeable) =>
+        return await dialogService.ShowAndGetResult(viewModel, Maybe<IObservable<string>>.From(Observable.Return(title)), (vm, closeable) =>
         [
             Cancel(closeable),
             Ok(closeable, isValid(vm))
@@ -206,10 +205,10 @@ public static class DialogExtensions
 
     // Command Result Variant
     public static async Task<Maybe<TResult>> ShowAndGetResult<TViewModel, TResult>(this IDialog dialogService,
-        [DisallowNull] TViewModel viewModel,
-        IObservable<string> title,
-        Func<TViewModel, IEnhancedCommand<Result<TResult>>> getResultCommand,
-        object? icon = null,
+        Maybe<TViewModel> viewModel,
+        Maybe<IObservable<string>> title,
+        Func<Maybe<TViewModel>, IEnhancedCommand<Result<TResult>>> getResultCommand,
+        Maybe<object> icon = default,
         DialogTone tone = DialogTone.Neutral) where TViewModel : class
     {
         var command = getResultCommand(viewModel);
@@ -239,22 +238,22 @@ public static class DialogExtensions
     }
 
     public static Task<Maybe<TResult>> ShowAndGetResult<TViewModel, TResult>(this IDialog dialogService,
-        [DisallowNull] TViewModel viewModel,
+        Maybe<TViewModel> viewModel,
         string title,
-        Func<TViewModel, IEnhancedCommand<Result<TResult>>> getResultCommand,
-        object? icon = null,
+        Func<Maybe<TViewModel>, IEnhancedCommand<Result<TResult>>> getResultCommand,
+        Maybe<object> icon = default,
         DialogTone tone = DialogTone.Neutral) where TViewModel : class
     {
-        return dialogService.ShowAndGetResult(viewModel, Observable.Return(title), getResultCommand, icon, tone);
+        return dialogService.ShowAndGetResult(viewModel, Maybe<IObservable<string>>.From(Observable.Return(title)), getResultCommand, icon, tone);
     }
 
     #endregion
 
     #region Specialized Dialogs
 
-    public static Task ShowMessage(this IDialog dialogService, string title, string text, string okText = "OK", object? icon = null, DialogTone tone = DialogTone.Information)
+    public static Task ShowMessage(this IDialog dialogService, string title, string text, string okText = "OK", Maybe<object> icon = default, DialogTone tone = DialogTone.Information)
     {
-        var messageDialogViewModel = new MessageDialogViewModel(text);
+        var messageDialogViewModel = Maybe<MessageDialogViewModel>.From(new MessageDialogViewModel(text));
 
         return dialogService.Show(messageDialogViewModel, title, (_, closeable) =>
         {
@@ -268,13 +267,13 @@ public static class DialogExtensions
         }, icon, tone);
     }
 
-    public static async Task<Maybe<bool>> ShowConfirmation(this IDialog dialogService, string title, string text, string yesText = "Yes", string noText = "No", bool yesIsPrimary = true, object? icon = null, DialogTone tone = DialogTone.Neutral)
+    public static async Task<Maybe<bool>> ShowConfirmation(this IDialog dialogService, string title, string text, string yesText = "Yes", string noText = "No", bool yesIsPrimary = true, Maybe<object> icon = default, DialogTone tone = DialogTone.Neutral)
     {
         var result = false;
         var yesRole = yesIsPrimary ? OptionRole.Primary : OptionRole.Secondary;
         var noRole = yesIsPrimary ? OptionRole.Secondary : OptionRole.Primary;
 
-        var show = await dialogService.Show(new MessageDialogViewModel(text), title, (_, closeable) =>
+        var show = await dialogService.Show(Maybe<MessageDialogViewModel>.From(new MessageDialogViewModel(text)), title, (_, closeable) =>
         {
             return
             [

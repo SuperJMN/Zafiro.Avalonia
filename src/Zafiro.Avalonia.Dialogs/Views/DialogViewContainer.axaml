@@ -27,7 +27,8 @@
                             VerticalAlignment="Center">
                         <StackPanel Spacing="20">
                             <Panel>
-                                <TextBlock VerticalAlignment="Center" FontSize="20" HorizontalAlignment="Center" FontWeight="Bold" Classes="Size-XL Weight-Bold Center" Text="{TemplateBinding Title}" />
+                                <TextBlock IsVisible="{TemplateBinding Title, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" VerticalAlignment="Center" FontSize="20" HorizontalAlignment="Center" FontWeight="Bold"
+                                           Classes="Size-XL Weight-Bold Center" Text="{TemplateBinding Title}" />
                                 <EnhancedButton Command="{TemplateBinding Close}"
                                                 IsCancel="True"
                                                 Padding="0"

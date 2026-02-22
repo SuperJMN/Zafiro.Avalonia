@@ -49,7 +49,7 @@ public static class WizardExtensions
             .Switch()
             .DistinctUntilChanged();
 
-        var showAndGetResult = await dialog.ShowAndGetResult(dialogHost, dialogTitle, optionsFactory, x => wizard.Finished.FirstAsync().ToTask());
+        var showAndGetResult = await dialog.ShowAndGetResult(Maybe<DialogWizardHost>.From(dialogHost), Maybe<IObservable<string>>.From(dialogTitle), (_, closeable) => optionsFactory(closeable), x => wizard.Finished.FirstAsync().ToTask());
 
         disposables.Dispose();
 
