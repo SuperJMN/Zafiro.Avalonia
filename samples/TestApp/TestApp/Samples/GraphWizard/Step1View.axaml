@@ -1,0 +1,19 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:graphWizard="clr-namespace:TestApp.Samples.GraphWizard"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="TestApp.Samples.GraphWizard.Step1View"
+             x:DataType="graphWizard:Step1ViewModel">
+    <StackPanel Spacing="10" VerticalAlignment="Center" HorizontalAlignment="Center">
+        <TextBlock Text="Welcome! Please make a choice to determine your path." />
+        <StackPanel Orientation="Horizontal" Spacing="20" HorizontalAlignment="Center">
+            <Button Command="{Binding ChooseA}" Content="Option A" />
+            <Button Command="{Binding ChooseB}" Content="Option B" />
+        </StackPanel>
+        <TextBlock Text="{Binding Choice, StringFormat='Current Choice: {0}'}"
+                   IsVisible="{Binding Choice, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                   HorizontalAlignment="Center" />
+    </StackPanel>
+</UserControl>

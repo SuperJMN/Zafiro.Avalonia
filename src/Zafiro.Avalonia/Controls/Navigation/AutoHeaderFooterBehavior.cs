@@ -9,6 +9,10 @@ public class AutoHeaderFooterBehavior : Behavior<Frame>
 {
     private CompositeDisposable? subscriptions;
 
+    public AutoHeaderFooterBehavior()
+    {
+    }
+
     protected override void OnAttachedToVisualTree()
     {
         subscriptions?.Dispose();

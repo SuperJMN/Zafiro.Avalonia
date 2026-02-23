@@ -20,12 +20,17 @@ public static class DialogExtensions
 
     public static Task<bool> Show<TViewModel>(this IDialog dialog, TViewModel? viewModel, string title, Func<TViewModel, ICloseable, IEnumerable<IOption>> optionsFactory, object? icon = null, DialogTone tone = DialogTone.Neutral) where TViewModel : class
     {
-        return dialog.Show(viewModel.ToMaybe(), Title(title), (vm, closeable) => optionsFactory(vm.GetValueOrDefault(), closeable), icon.ToMaybe(), tone);
+        return dialog.Show(viewModel.ToMaybe(), Title(title), (vm, closeable) => optionsFactory(vm.GetValueOrDefault()!, closeable), icon.ToMaybe(), tone);
+    }
+
+    public static Task<bool> Show<TViewModel>(this IDialog dialog, TViewModel? viewModel, IObservable<string> title, Func<TViewModel, ICloseable, IEnumerable<IOption>> optionsFactory, object? icon = null, DialogTone tone = DialogTone.Neutral) where TViewModel : class
+    {
+        return dialog.Show(viewModel.ToMaybe(), title.ToMaybe(), (vm, closeable) => optionsFactory(vm.GetValueOrDefault()!, closeable), icon.ToMaybe(), tone);
     }
 
     public static Task<bool> Show<TViewModel>(this IDialog dialog, TViewModel viewModel, Func<TViewModel, ICloseable, IEnumerable<IOption>> optionsFactory, object? icon = null, DialogTone tone = DialogTone.Neutral) where TViewModel : class, IHaveTitle
     {
-        return dialog.Show(viewModel.ToMaybe(), viewModel.Title.ToMaybe(), (vm, closeable) => optionsFactory(vm.GetValueOrDefault(), closeable), icon.ToMaybe(), tone);
+        return dialog.Show(viewModel.ToMaybe(), viewModel.Title.ToMaybe(), (vm, closeable) => optionsFactory(vm.GetValueOrDefault()!, closeable), icon.ToMaybe(), tone);
     }
 
     public static Task<bool> Show<TViewModel>(this IDialog dialog, TViewModel? viewModel, string title, Func<ICloseable, IEnumerable<IOption>> optionsFactory, object? icon = null, DialogTone tone = DialogTone.Neutral) where TViewModel : class
@@ -110,7 +115,7 @@ public static class DialogExtensions
         object? icon = null,
         DialogTone tone = DialogTone.Neutral) where TViewModel : class
     {
-        var isSuccess = await dialogService.Show(viewModel.ToMaybe(), title.ToMaybe(), (vm, c) => optionsFactory(vm.GetValueOrDefault(), c), icon.ToMaybe(), tone);
+        var isSuccess = await dialogService.Show(viewModel.ToMaybe(), title.ToMaybe(), (vm, c) => optionsFactory(vm.GetValueOrDefault()!, c), icon.ToMaybe(), tone);
         if (isSuccess)
         {
             return await getResult(viewModel);

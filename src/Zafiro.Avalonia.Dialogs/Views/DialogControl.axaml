@@ -4,14 +4,14 @@
         xmlns:dialogs="clr-namespace:Zafiro.Avalonia.Dialogs;assembly=Zafiro.Avalonia.Dialogs"
         x:CompileBindings="True">
     <Design.PreviewWith>
-        <DialogControl Content="This is the content of the dialog" Icon="{Icon fa-wallet}">
+        <DialogControl Content="This is the content of the dialog" Icon="{Icon fa-wallet}" Title="Dialog Title">
             <DialogControl.Options>
-                <generic:List x:TypeArguments="IOption">
-                    <OptionDesign Title="Primary" Role="Primary" />
-                    <OptionDesign Title="Secondary" Role="Secondary" />
-                    <!-- <OptionDesign Title="Cancel" Role="Cancel" /> -->
-                    <!-- <OptionDesign Title="Destructive" Role="Destructive" /> -->
-                    <!-- <OptionDesign Title="Info" Role="Info" /> -->
+                <generic:List x:TypeArguments="dialogs:IOption">
+                    <dialogs:OptionDesign Title="Primary" Role="Primary" />
+                    <dialogs:OptionDesign Title="Secondary" Role="Secondary" />
+                    <!-- <dialogs:OptionDesign Title="Cancel" Role="Cancel" /> -->
+                    <!-- <dialogs:OptionDesign Title="Destructive" Role="Destructive" /> -->
+                    <!-- <dialogs:OptionDesign Title="Info" Role="Info" /> -->
                 </generic:List>
             </DialogControl.Options>
         </DialogControl>
@@ -19,14 +19,14 @@
 
     <Style Selector="DialogControl">
         <Setter Property="Width" Value="448" />
-        <Setter Property="MaxHeight" Value="700" />
+        <Setter Property="MaxHeight" Value="700" /> 
         <Setter Property="Template">
             <ControlTemplate>
                 <DockPanel VerticalSpacing="8">
                     <ItemsControl ItemsSource="{TemplateBinding Options}" DockPanel.Dock="Bottom" IsVisible="{TemplateBinding Options, Converter={x:Static Enumerable.NotEmpty}}">
                         <ItemsControl.ItemContainerTheme>
                             <ControlTheme TargetType="ContentPresenter">
-                                <Setter Property="IsVisible" Value="{Binding IsVisible^, DataType=IOption}" />
+                                <Setter Property="IsVisible" Value="{Binding IsVisible^, DataType=dialogs:IOption}" />
                             </ControlTheme>
                         </ItemsControl.ItemContainerTheme>
                         <ItemsControl.Styles>
@@ -48,7 +48,7 @@
                             </ItemsPanelTemplate>
                         </ItemsControl.ItemsPanel>
                         <ItemsControl.ItemTemplate>
-                            <DataTemplate DataType="IOption">
+                            <DataTemplate DataType="dialogs:IOption">
                                 <EnhancedButton Height="52" HorizontalAlignment="Stretch"
                                                 IsCancel="{Binding IsCancel}"
                                                 IsDefault="{Binding IsDefault}"
@@ -75,8 +75,18 @@
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
+                    
+                    <ContentPresenter DockPanel.Dock="Bottom" Content="{TemplateBinding Footer}" IsVisible="{TemplateBinding HasCustomFooter}" />
+
                     <StackPanel Margin="20" Spacing="20">
                         <ContentPresenter DockPanel.Dock="Top" Content="{TemplateBinding Icon}" HorizontalAlignment="Center" IconOptions.Size="40" />
+                        
+                        <TextBlock FontWeight="Bold"
+                                   FontSize="20"
+                                   HorizontalAlignment="Center"
+                                   Text="{TemplateBinding Title}" 
+                                   IsVisible="{TemplateBinding Title, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+                                   
                         <ContentPresenter Content="{TemplateBinding Content}" />
                     </StackPanel>
                 </DockPanel>

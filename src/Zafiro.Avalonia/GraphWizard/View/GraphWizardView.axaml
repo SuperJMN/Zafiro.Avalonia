@@ -1,0 +1,37 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:view="clr-namespace:Zafiro.Avalonia.Wizards.Graph.View"
+        xmlns:core="clr-namespace:Zafiro.Avalonia.Wizards.Graph.Core">
+
+    <Design.PreviewWith>
+        <view:GraphWizardView Width="500" Height="400">
+            <!-- Design preview would go here -->
+        </view:GraphWizardView>
+    </Design.PreviewWith>
+
+    <Style Selector="view|GraphWizardView">
+        <Setter Property="Template">
+            <ControlTemplate>
+                <DockPanel x:DataType="core:IGraphWizard">
+                    <ContentControl x:Name="HeaderContainer"
+                                    DockPanel.Dock="Top"
+                                    Content="{Binding Header^}" />
+                    <ContentControl x:Name="FooterContainer"
+                                    DockPanel.Dock="Bottom"
+                                    Content="{Binding Footer^}" />
+                    <TransitioningContentControl Content="{Binding CurrentStep.Content}"
+                                                 Margin="20" />
+                </DockPanel>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+
+    <!-- Hide internal header/footer when hosted in a Frame (which handles them via forwarding) -->
+    <Style Selector="Frame view|GraphWizardView ContentControl#HeaderContainer">
+        <Setter Property="IsVisible" Value="False" />
+    </Style>
+    <Style Selector="Frame view|GraphWizardView ContentControl#FooterContainer">
+        <Setter Property="IsVisible" Value="False" />
+    </Style>
+
+</Styles>

@@ -1,0 +1,35 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:graphWizard="clr-namespace:TestApp.Samples.GraphWizard"
+             xmlns:c="clr-namespace:Zafiro.Avalonia.Controls;assembly=Zafiro.Avalonia"
+             xmlns:ui="clr-namespace:Zafiro.UI;assembly=Zafiro.UI"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="TestApp.Samples.GraphWizard.GraphWizardGenericSampleView"
+             x:DataType="graphWizard:GraphWizardGenericSampleViewModel">
+
+    <UserControl.Styles>
+        <StyleInclude Source="/Samples/SampleStyles.axaml" />
+    </UserControl.Styles>
+
+    <c:HeaderedContainer Header="Generic Graph Wizard (Typed Results)">
+        <UniformGrid RowSpacing="20" Columns="1" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <EnhancedButton Content="Launch inside Dialog"
+                            HorizontalAlignment="Center"
+                            Command="{Binding ShowWizardInDialog}">
+                <EnhancedButton.Icon>
+                    <ui:Icon Source="fa-window-maximize" />
+                </EnhancedButton.Icon>
+            </EnhancedButton>
+            <EnhancedButton Content="Launch in new page"
+                            HorizontalAlignment="Center"
+                            Command="{Binding NavigateToWizard}">
+                <EnhancedButton.Icon>
+                    <ui:Icon Source="mdi-chevron-right" />
+                </EnhancedButton.Icon>
+            </EnhancedButton>
+        </UniformGrid>
+    </c:HeaderedContainer>
+
+</UserControl>
