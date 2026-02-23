@@ -1,5 +1,6 @@
 ﻿using System.Reactive.Linq;
 using Avalonia;
+using Avalonia.Controls.Notifications;
 using Avalonia.Controls.Primitives;
 using Avalonia.Layout;
 using Avalonia.Threading;
@@ -85,6 +86,15 @@ public class AdornerDialog : IDialog, ICloseable
                 .ToBinding();
 
             adornerLayer.Children.Add(dialog);
+
+            // Automatically push WindowNotificationManager to the top
+            var wnm = adornerLayer.Children.OfType<WindowNotificationManager>().FirstOrDefault();
+            if (wnm != null)
+            {
+                adornerLayer.Children.Remove(wnm);
+                adornerLayer.Children.Add(wnm);
+            }
+
             dialogs.Push(new DialogEntry(dialog, titleSubscription, completion));
 
             return completion.Task;
