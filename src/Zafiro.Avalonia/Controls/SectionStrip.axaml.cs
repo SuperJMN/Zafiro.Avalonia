@@ -59,6 +59,9 @@ public class SectionStrip : TemplatedControl
     public static readonly StyledProperty<ControlTheme?> GroupHeaderThemeProperty = AvaloniaProperty.Register<SectionStrip, ControlTheme?>(
         nameof(GroupHeaderTheme));
 
+    public static readonly StyledProperty<double> GroupSpacingProperty = AvaloniaProperty.Register<SectionStrip, double>(
+        nameof(GroupSpacing));
+
     private readonly CompositeDisposable disposable = new();
 
     private IEnumerable<ISection> filteredSections = Enumerable.Empty<ISection>();
@@ -81,6 +84,12 @@ public class SectionStrip : TemplatedControl
             .DisposeWith(disposable);
 
         SectionGroups = sectionGrouper.SectionGroups;
+    }
+
+    public double GroupSpacing
+    {
+        get => GetValue(GroupSpacingProperty);
+        set => SetValue(GroupSpacingProperty, value);
     }
 
     public Thickness IconMargin

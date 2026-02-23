@@ -3,8 +3,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:s="clr-namespace:TestApp.Shell"
-             xmlns:shell="clr-namespace:Zafiro.Avalonia.Controls.Shell;assembly=Zafiro.Avalonia"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="TestApp.Shell.MainView" x:DataType="s:MainViewModel">
-    <shell:ShellView ForceDesktopLayout="True" OpenPaneLength="250" Shell="{Binding Shell}" />
+    <ShellView DataContext="{Binding Shell}" />
 </UserControl>

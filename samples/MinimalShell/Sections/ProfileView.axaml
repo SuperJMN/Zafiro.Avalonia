@@ -1,0 +1,10 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:sections="clr-namespace:MinimalShell.Sections"
+             x:Class="MinimalShell.Sections.ProfileView" x:DataType="sections:ProfileViewModel">
+    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="12">
+        <PathIcon Data="{StaticResource fa-user}" Height="64" Width="64" />
+        <TextBlock Text="{Binding UserName}" FontSize="22" FontWeight="SemiBold" HorizontalAlignment="Center" />
+        <TextBlock Text="{Binding Email}" FontSize="14" Opacity="0.6" HorizontalAlignment="Center" />
+    </StackPanel>
+</UserControl>
