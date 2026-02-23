@@ -39,7 +39,13 @@ public static class ApplicationUtils
 
     public static Maybe<Control> CurrentContent()
     {
-        return MainWindow().Select(ContentControl (window) => window).Or(MainView().Select(visual => (ContentControl)visual)).Map(visual => (Control)visual.Content);
+        if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktopLifetime)
+        {
+            var activeWindow = desktopLifetime.Windows.FirstOrDefault(w => w.IsActive) ?? desktopLifetime.MainWindow;
+            return activeWindow != null ? (Control)activeWindow.Content! : Maybe<Control>.None;
+        }
+
+        return MainView().Select(visual => (ContentControl)visual).Map(visual => (Control)visual.Content!);
     }
 
     public static Maybe<AdornerLayer> CurrentAdornerLayer()

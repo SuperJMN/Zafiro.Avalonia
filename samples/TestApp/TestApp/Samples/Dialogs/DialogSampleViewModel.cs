@@ -38,6 +38,7 @@ public class DialogSampleViewModel : IViewModel
             .Subscribe();
 
         ShowMessage = ReactiveCommand.CreateFromTask(() => OnShowMessage(dialogService));
+        ShowNotificationWhileDialogOpen = ReactiveCommand.CreateFromTask(() => OnShowNotificationWhileDialogOpen(dialogService, notificationService));
         WithSubmitResult = ReactiveCommand.CreateFromTask(() => dialogService.ShowAndGetResult(new SubmitterViewModel(), "My View", model => model.Submit));
 
         WithSubmitResult.Values()
@@ -59,6 +60,8 @@ public class DialogSampleViewModel : IViewModel
 
     public ReactiveCommand<Unit, Unit> ShowMessage { get; set; }
 
+    public ReactiveCommand<Unit, Unit> ShowNotificationWhileDialogOpen { get; set; }
+
     public ReactiveCommand<Unit, Maybe<string>> ShowDialog { get; set; }
 
     public ReactiveCommand<Unit, Unit> ShowWarningDialog { get; set; }
@@ -70,5 +73,15 @@ public class DialogSampleViewModel : IViewModel
     private static Task OnShowMessage(IDialog dialogService)
     {
         return dialogService.ShowMessage("Dialog Title", "Hi, this is the text of the dialog. The View is connected to the ViewModel using a DataTemplate");
+    }
+
+    private static Task OnShowNotificationWhileDialogOpen(IDialog dialogService, INotificationService notificationService)
+    {
+        // Trigger a notification after a 2-second delay
+        Task.Delay(TimeSpan.FromSeconds(2))
+            .ContinueWith(_ => notificationService.Show("I should be ON TOP of the dark overlay!", "Notification Layer Test"));
+
+        // Meanwhile, show a dialog that covers the screen
+        return dialogService.ShowMessage("Testing Notifications", "A notification will appear in 2 seconds. It should be fully visible and NOT covered by the dark overlay.");
     }
 }
