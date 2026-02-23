@@ -138,7 +138,13 @@
                                               ItemContainerTheme="{Binding $parent[SectionStrip].ItemContainerTheme, TargetNullValue={StaticResource {x:Type controls:SectionStripItem}}}"
                                               SelectedValue="{Binding $parent[SectionStrip].SelectedSection, Mode=TwoWay}"
                                               ItemsSource="{Binding Sections}"
-                                              ItemTemplate="{Binding $parent[SectionStrip].ItemTemplate, TargetNullValue={StaticResource HorizontalItem}}" />
+                                              ItemTemplate="{Binding $parent[SectionStrip].ItemTemplate, TargetNullValue={StaticResource HorizontalItem}}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Spacing="{Binding $parent[SectionStrip].ItemSpacing}" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </controls:SectionStripListBox>
             </StackPanel>
         </DataTemplate>
 
@@ -146,7 +152,8 @@
             <Setter Property="HorizontalIconLabelSpacing" Value="10" />
             <Setter Property="VerticalIconLabelSpacing" Value="4" />
             <Setter Property="ItemPadding" Value="5" />
-            <Setter Property="Padding" Value="10"></Setter>
+            <Setter Property="Padding" Value="10" />
+            <Setter Property="GroupSpacing" Value="15" />
             <Style Selector="^ /template/ ListBox">
                 <Setter Property="Background" Value="Transparent" />
             </Style>
@@ -160,7 +167,7 @@
                             <ItemsControl Padding="{TemplateBinding Padding}" ItemsSource="{TemplateBinding SectionGroups}">
                                 <ItemsControl.ItemsPanel>
                                     <ItemsPanelTemplate>
-                                        <StackPanel Spacing="{Binding $parent[SectionStrip].ItemSpacing}" />
+                                        <StackPanel Spacing="{Binding $parent[SectionStrip].GroupSpacing}" />
                                     </ItemsPanelTemplate>
                                 </ItemsControl.ItemsPanel>
                                 <ItemsControl.ItemTemplate>

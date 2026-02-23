@@ -1,125 +1,30 @@
-<Styles xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:shell="clr-namespace:Zafiro.UI.Shell;assembly=Zafiro.UI"
-        xmlns:nav="clr-namespace:Zafiro.Avalonia.Controls.Navigation">
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:shell="clr-namespace:Zafiro.UI.Shell;assembly=Zafiro.UI"
+             xmlns:nav="clr-namespace:Zafiro.Avalonia.Controls.Navigation"
+             xmlns:local="clr-namespace:Zafiro.Avalonia.Controls.Shell"
+             mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="600"
+             x:Class="Zafiro.Avalonia.Controls.Shell.ShellView" x:DataType="shell:IShell">
 
-    <Design.PreviewWith>
-        <ShellView Width="400" Height="900">
-            <ShellView.Shell>
-                <ShellDesign />
-            </ShellView.Shell>
-        </ShellView>
-    </Design.PreviewWith>
+    <Design.DataContext>
+        <local:ShellDesign />
+    </Design.DataContext>
 
-    <Styles.Resources>
-        <DataTemplate x:Key="DesktopTemplate" DataType="shell:IShell">
-            <ShellSplitView x:Name="ShellSplitView"
-                            ToggleButtonTheme="{Binding $parent[ShellView].ToggleButtonTheme}"
-                            PageTransition="{Binding $parent[ShellView].PageTransition}"
-                            IsPaneOpen="{Binding $parent[ShellView].IsPaneOpen, Mode=TwoWay}"
-                            OpenPaneLength="{Binding $parent[ShellView].OpenPaneLength}"
-                            PaneHeader="{Binding Header}"
-                            ContentHeader="{Binding ContentHeader^}"
-                            ContentHeaderTemplate="{Binding $parent[ShellView].HeaderContentTemplate}"
-                            PaneBackground="{Binding $parent[ShellView].PaneBackground}"
-                            ExpandButtonSize="{Binding $parent[ShellView].MenuButtonSize}">
-                <ShellSplitView.Content>
-                    <Frame Content="{Binding $parent[ShellView].Shell.SelectedSection.Value.Navigator.Content^}"
-                           BackCommand="{Binding $parent[ShellView].Shell.SelectedSection.Value.Navigator.Back}">
-                        <Interaction.Behaviors>
-                            <nav:AutoHeaderFooterBehavior />
-                        </Interaction.Behaviors>
-                    </Frame>
-                </ShellSplitView.Content>
-                <ShellSplitView.Styles>
-                    <ContainerQuery Name="RootPanel" Query="min-width:0">
-                        <Style Selector="ShellSplitView">
-                            <Setter Property="DisplayMode" Value="Overlay" />
-                        </Style>
-                    </ContainerQuery>
-                    <ContainerQuery Name="RootPanel" Query="min-width:600">
-                        <Style Selector="ShellSplitView">
-                            <Setter Property="DisplayMode" Value="CompactOverlay" />
-                        </Style>
-                    </ContainerQuery>
-                    <ContainerQuery Name="RootPanel" Query="min-width:800">
-                        <Style Selector="ShellSplitView">
-                            <Setter Property="DisplayMode" Value="CompactInline" />
-                        </Style>
-                    </ContainerQuery>
-                </ShellSplitView.Styles>
-                <ShellSplitView.PaneContent>
-                    <SectionStrip Sections="{Binding Sections}"
-                                  ItemPadding="{Binding $parent[ShellView].SectionItemPadding}"
-                                  HorizontalIconLabelSpacing="{Binding $parent[ShellView].SectionHorizontalIconLabelSpacing}"
-                                  VerticalIconLabelSpacing="{Binding $parent[ShellView].SectionVerticalIconLabelSpacing}"
-                                  IconSize="{Binding $parent[ShellView].MenuButtonSize}"
-                                  IconMargin="{Binding $parent[ShellView].IconMargin}"
-                                  SelectedSection="{Binding $parent[ShellView].Shell.SelectedSection.Value, Mode=TwoWay}" />
-                </ShellSplitView.PaneContent>
-            </ShellSplitView>
-        </DataTemplate>
+    <Grid ColumnDefinitions="Auto *">
+        <!-- Sidebar -->
+        <SectionStrip Grid.Column="0"
+                      Sections="{Binding Sections}"
+                      SelectedSection="{Binding SelectedSection.Value, Mode=TwoWay}" />
 
-        <DataTemplate x:Key="MobileTemplate" DataType="shell:IShell">
-            <DockPanel>
-                <ContentControl DockPanel.Dock="Top"
-                                Content="{Binding ContentHeader^}"
-                                ContentTemplate="{Binding $parent[ShellView].HeaderContentTemplate}" />
-                <SectionStrip Sections="{Binding Sections}"
-                              Orientation="Horizontal"
-                              ItemPadding="{Binding $parent[ShellView].SectionItemPadding}"
-                              HorizontalIconLabelSpacing="{Binding $parent[ShellView].SectionHorizontalIconLabelSpacing}"
-                              VerticalIconLabelSpacing="{Binding $parent[ShellView].SectionVerticalIconLabelSpacing}"
-                              IconSize="{Binding $parent[ShellView].MenuButtonSize}"
-                              IconMargin="{Binding $parent[ShellView].IconMargin}"
-                              MaxItemWidth="{Binding $parent[ShellView].SectionMaxItemWidth}"
-                              SelectedSection="{Binding SelectedSection, Mode=TwoWay}" DockPanel.Dock="Bottom" />
-                <Frame Content="{Binding $parent[ShellView].Shell.SelectedSection.Value.Navigator.Content^}"
-                       BackCommand="{Binding $parent[ShellView].Shell.SelectedSection.Value.Navigator.Back}">
-                    <Interaction.Behaviors>
-                        <nav:AutoHeaderFooterBehavior />
-                    </Interaction.Behaviors>
-                </Frame>
-            </DockPanel>
-        </DataTemplate>
-
-        <DataTemplate x:Key="HeaderContentTemplate">
-            <ContentControl
-                TextElement.FontWeight="Bold"
-                TextElement.FontSize="18"
-                TextBlock.TextTrimming="CharacterEllipsis" Content="{Binding}" VerticalAlignment="Center" HorizontalAlignment="Center" />
-        </DataTemplate>
-
-        <ControlTheme x:Key="{x:Type ShellView}" TargetType="ShellView">
-            <Setter Property="PaneBackground" Value="{DynamicResource SystemControlPageBackgroundChromeLowBrush}" />
-            <Setter Property="MenuButtonSize" Value="42" />
-            <Setter Property="OpenPaneLength" Value="250" />
-            <Setter Property="ToggleButtonTheme" Value="{StaticResource HamburguerMenuToggleButton}" />
-            <Setter Property="IsPaneOpen" Value="True" />
-            <Setter Property="HeaderContentTemplate" Value="{StaticResource HeaderContentTemplate}" />
-            <Setter Property="SectionHorizontalIconLabelSpacing" Value="0" />
-            <Setter Property="SectionVerticalIconLabelSpacing" Value="0" />
-            <Setter Property="IconMargin" Value="8" />
-            <Setter Property="SectionMaxItemWidth" Value="110" />
-            <Setter Property="SectionItemPadding" Value="5" />
-            <Setter Property="Template">
-                <ControlTemplate>
-                    <Panel Container.Name="RootPanel" Container.Sizing="WidthAndHeight">
-                        <ContentControl x:Name="Content" Content="{TemplateBinding Shell}" ContentTemplate="{StaticResource DesktopTemplate}" />
-                    </Panel>
-                </ControlTemplate>
-            </Setter>
-            <ContainerQuery Name="RootPanel" Query="min-width:0">
-                <Style Selector="ContentControl#Content">
-                    <Setter Property="ContentTemplate" Value="{StaticResource MobileTemplate}" />
-                </Style>
-            </ContainerQuery>
-            <ContainerQuery Name="RootPanel" Query="min-width:450">
-                <Style Selector="ContentControl#Content">
-                    <Setter Property="ContentTemplate" Value="{StaticResource DesktopTemplate}" />
-                </Style>
-            </ContainerQuery>
-        </ControlTheme>
-    </Styles.Resources>
-
-</Styles>
+        <!-- Content -->
+        <Frame Grid.Column="1"
+               Content="{Binding SelectedSection.Value.Navigator.Content^}"
+               BackCommand="{Binding SelectedSection.Value.Navigator.Back}">
+            <Interaction.Behaviors>
+                <nav:AutoHeaderFooterBehavior />
+            </Interaction.Behaviors>
+        </Frame>
+    </Grid>
+</UserControl>

@@ -1,0 +1,9 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:sections="clr-namespace:MinimalShell.Sections"
+             x:Class="MinimalShell.Sections.SettingsView" x:DataType="sections:SettingsViewModel">
+    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="8">
+        <PathIcon Data="{StaticResource fa-gear}" Height="48" Width="48" />
+        <TextBlock Text="{Binding Description}" FontSize="18" FontWeight="Light" HorizontalAlignment="Center" />
+    </StackPanel>
+</UserControl>
