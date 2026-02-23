@@ -41,6 +41,13 @@ public class NotificationService : INotificationService
         // Only after OnApplyTemplate() does _items point to the actual visual Panel.Children.
         // Without this call, notifications are added to the orphan list and never displayed.
         wnm.ApplyTemplate();
+
+        // Clean up when the window closes to avoid retaining closed windows and stale managers.
+        if (topLevel is Window window)
+        {
+            window.Closed += (_, _) => managers.TryRemove(topLevel, out _);
+        }
+
         return wnm;
     }
 
