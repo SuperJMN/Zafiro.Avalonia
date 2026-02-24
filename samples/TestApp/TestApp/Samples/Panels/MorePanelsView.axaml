@@ -2,57 +2,126 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="450"
+             mc:Ignorable="d" d:DesignWidth="700" d:DesignHeight="900"
              x:Class="TestApp.Samples.Panels.MorePanelsView">
 
-    <UserControl.Resources>
-        <ControlTheme x:Key="{x:Type Button}" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
-            <Setter Property="HorizontalContentAlignment" Value="Center" />
-            <Setter Property="VerticalContentAlignment" Value="Center" />
+    <UserControl.Styles>
+        <Style Selector="EnhancedButton">
             <Setter Property="HorizontalAlignment" Value="Stretch" />
             <Setter Property="VerticalAlignment" Value="Stretch" />
-        </ControlTheme>
-    </UserControl.Resources>
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+        </Style>
+    </UserControl.Styles>
 
+    <ScrollViewer>
+        <StackPanel Spacing="30" Margin="20">
 
-    <UniformGrid Columns="1" RowSpacing="50">
-        <DockPanel VerticalSpacing="10" HorizontalSpacing="20">
-            <EnhancedButton IsVisible="True" Content="Top" DockPanel.Dock="Top" />
-            <EnhancedButton IsVisible="True" Content="Top" DockPanel.Dock="Top" />
-            <EnhancedButton IsVisible="True" Content="Bottom" DockPanel.Dock="Bottom" />
-            <EnhancedButton IsVisible="True" Content="Bottom" DockPanel.Dock="Bottom" />
-            <EnhancedButton IsVisible="True" Content="Left" DockPanel.Dock="Left" />
-            <EnhancedButton IsVisible="True" Content="Left" DockPanel.Dock="Left" />
-            <EnhancedButton IsVisible="True" Content="Right" DockPanel.Dock="Right" />
-            <EnhancedButton IsVisible="True" Content="Right" DockPanel.Dock="Right" />
-            <EnhancedButton IsVisible="True" Content="FILL" />
-        </DockPanel>
-        <SmartDockPanel VerticalSpacing="10" HorizontalSpacing="20">
-            <EnhancedButton IsVisible="True" Content="Top" DockPanel.Dock="Top" />
-            <EnhancedButton IsVisible="True" Content="Top" DockPanel.Dock="Top" />
-            <EnhancedButton IsVisible="True" Content="Bottom" DockPanel.Dock="Bottom" />
-            <EnhancedButton IsVisible="True" Content="Bottom" DockPanel.Dock="Bottom" />
-            <EnhancedButton IsVisible="True" Content="Left" DockPanel.Dock="Left" />
-            <EnhancedButton IsVisible="True" Content="Left" DockPanel.Dock="Left" />
-            <EnhancedButton IsVisible="False" Content="Right" DockPanel.Dock="Right" />
-            <EnhancedButton IsVisible="True" Content="Right" DockPanel.Dock="Right" />
-            <EnhancedButton IsVisible="True" Content="FILL" />
-        </SmartDockPanel>
+            <!-- ═══════════════════════════════════════════════════ -->
+            <!-- SmartDockPanel Showcase                            -->
+            <!-- ═══════════════════════════════════════════════════ -->
 
-        <StackPanel Spacing="8">
-            <TextBlock Text="UniformStripPanel" FontWeight="Bold" />
-            <UniformStripPanel ItemMinWidth="96" ItemMaxWidth="144" ItemSpacing="8" Height="48">
-                <EnhancedButton Content="One" />
-                <EnhancedButton Content="Two" />
-                <EnhancedButton Content="Three" />
-                <EnhancedButton Content="Four" />
-                <EnhancedButton Content="Five" />
-                <EnhancedButton Content="Six" />
-                <EnhancedButton Content="Seven" />
-                <EnhancedButton Content="Eight" />
-                <EnhancedButton Content="Nine" />
-                <EnhancedButton Content="Ten" />
-            </UniformStripPanel>
+            <TextBlock Text="SmartDockPanel Showcase" FontSize="20" FontWeight="Bold" />
+
+            <!-- 1. Basic: Top + Bottom + Fill with vertical spacing -->
+            <StackPanel Spacing="4">
+                <TextBlock Text="1. Top + Bottom + Fill (VerticalSpacing=10)" FontWeight="SemiBold" />
+                <TextBlock Text="Spacing appears only between the three children." Opacity="0.6" FontSize="12" />
+                <Border BorderBrush="Gray" BorderThickness="1" CornerRadius="4">
+                    <SmartDockPanel Height="150" VerticalSpacing="10">
+                        <EnhancedButton DockPanel.Dock="Top" Content="Top" />
+                        <EnhancedButton DockPanel.Dock="Bottom" Content="Bottom" />
+                        <EnhancedButton Content="Fill" />
+                    </SmartDockPanel>
+                </Border>
+            </StackPanel>
+
+            <!-- 2. Left + Right + Fill with horizontal spacing -->
+            <StackPanel Spacing="4">
+                <TextBlock Text="2. Left + Right + Fill (HorizontalSpacing=10)" FontWeight="SemiBold" />
+                <TextBlock Text="Spacing appears only between the three children." Opacity="0.6" FontSize="12" />
+                <Border BorderBrush="Gray" BorderThickness="1" CornerRadius="4">
+                    <SmartDockPanel Height="80" HorizontalSpacing="10">
+                        <EnhancedButton DockPanel.Dock="Left" Content="Left" Width="80" />
+                        <EnhancedButton DockPanel.Dock="Right" Content="Right" Width="80" />
+                        <EnhancedButton Content="Fill" />
+                    </SmartDockPanel>
+                </Border>
+            </StackPanel>
+
+            <!-- 3. All four sides + Fill -->
+            <StackPanel Spacing="4">
+                <TextBlock Text="3. All four sides + Fill (Spacing=10)" FontWeight="SemiBold" />
+                <TextBlock Text="Fill is inset with uniform gaps on every side." Opacity="0.6" FontSize="12" />
+                <Border BorderBrush="Gray" BorderThickness="1" CornerRadius="4">
+                    <SmartDockPanel Height="200" VerticalSpacing="10" HorizontalSpacing="10">
+                        <EnhancedButton DockPanel.Dock="Top" Content="Top" />
+                        <EnhancedButton DockPanel.Dock="Bottom" Content="Bottom" />
+                        <EnhancedButton DockPanel.Dock="Left" Content="Left" Width="60" />
+                        <EnhancedButton DockPanel.Dock="Right" Content="Right" Width="60" />
+                        <EnhancedButton Content="Fill" />
+                    </SmartDockPanel>
+                </Border>
+            </StackPanel>
+
+            <!-- 4. Smart visibility: hidden children collapse spacing -->
+            <StackPanel Spacing="4">
+                <TextBlock Text="4. Hidden children collapse spacing" FontWeight="SemiBold" />
+                <TextBlock Text="Two top buttons are hidden → no extra gaps appear." Opacity="0.6" FontSize="12" />
+                <Border BorderBrush="Gray" BorderThickness="1" CornerRadius="4">
+                    <SmartDockPanel Height="120" VerticalSpacing="10">
+                        <EnhancedButton DockPanel.Dock="Top" Content="Top (visible)" />
+                        <EnhancedButton DockPanel.Dock="Top" Content="Hidden 1" IsVisible="False" />
+                        <EnhancedButton DockPanel.Dock="Top" Content="Hidden 2" IsVisible="False" />
+                        <EnhancedButton Content="Fill" />
+                    </SmartDockPanel>
+                </Border>
+            </StackPanel>
+
+            <!-- 5. Multiple same-side docks -->
+            <StackPanel Spacing="4">
+                <TextBlock Text="5. Multiple Top docks + Fill (VerticalSpacing=8)" FontWeight="SemiBold" />
+                <TextBlock Text="Spacing between each pair of consecutive top-docked children." Opacity="0.6" FontSize="12" />
+                <Border BorderBrush="Gray" BorderThickness="1" CornerRadius="4">
+                    <SmartDockPanel Height="180" VerticalSpacing="8">
+                        <EnhancedButton DockPanel.Dock="Top" Content="Top 1" />
+                        <EnhancedButton DockPanel.Dock="Top" Content="Top 2" />
+                        <EnhancedButton DockPanel.Dock="Top" Content="Top 3" />
+                        <EnhancedButton Content="Fill" />
+                    </SmartDockPanel>
+                </Border>
+            </StackPanel>
+
+            <!-- 6. Comparison: DockPanel vs SmartDockPanel with a hidden child -->
+            <StackPanel Spacing="4">
+                <TextBlock Text="6. DockPanel vs SmartDockPanel (hidden child)" FontWeight="SemiBold" />
+                <TextBlock Text="DockPanel keeps spacing even for hidden items. SmartDockPanel collapses it." Opacity="0.6" FontSize="12" />
+                <UniformGrid Columns="2" ColumnSpacing="20">
+                    <StackPanel Spacing="4">
+                        <TextBlock Text="DockPanel" HorizontalAlignment="Center" Opacity="0.5" FontSize="11" />
+                        <Border BorderBrush="Gray" BorderThickness="1" CornerRadius="4">
+                            <DockPanel Height="120" VerticalSpacing="10">
+                                <EnhancedButton DockPanel.Dock="Top" Content="Top" />
+                                <EnhancedButton DockPanel.Dock="Top" Content="Hidden" IsVisible="False" />
+                                <EnhancedButton DockPanel.Dock="Top" Content="Top" />
+                                <EnhancedButton Content="Fill" />
+                            </DockPanel>
+                        </Border>
+                    </StackPanel>
+                    <StackPanel Spacing="4">
+                        <TextBlock Text="SmartDockPanel" HorizontalAlignment="Center" Opacity="0.5" FontSize="11" />
+                        <Border BorderBrush="Gray" BorderThickness="1" CornerRadius="4">
+                            <SmartDockPanel Height="120" VerticalSpacing="10">
+                                <EnhancedButton DockPanel.Dock="Top" Content="Top" />
+                                <EnhancedButton DockPanel.Dock="Top" Content="Hidden" IsVisible="False" />
+                                <EnhancedButton DockPanel.Dock="Top" Content="Top" />
+                                <EnhancedButton Content="Fill" />
+                            </SmartDockPanel>
+                        </Border>
+                    </StackPanel>
+                </UniformGrid>
+            </StackPanel>
+
         </StackPanel>
-    </UniformGrid>
+    </ScrollViewer>
 </UserControl>

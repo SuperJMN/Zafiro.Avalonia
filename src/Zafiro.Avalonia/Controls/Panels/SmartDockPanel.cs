@@ -90,8 +90,13 @@ namespace Zafiro.Avalonia.Controls.Panels
             var accumulatedWidth = 0d;
             var accumulatedHeight = 0d;
 
-            var hasVisibleHorizontal = false;
-            var hasVisibleVertical = false;
+            // Side-specific flags to track spacing between same-side docked children.
+            // Spacing in the loop is applied only between children docked on the same side
+            // (e.g. Top–Top, Left–Left), NOT between opposite sides (Top–Bottom).
+            var hasVisibleLeft = false;
+            var hasVisibleRight = false;
+            var hasVisibleTop = false;
+            var hasVisibleBottom = false;
             var childrenCount = LastChildFill ? Children.Count - 1 : Children.Count;
 
             for (var index = 0; index < childrenCount; ++index)
@@ -111,29 +116,35 @@ namespace Zafiro.Avalonia.Controls.Panels
                 switch (DockPanel.GetDock(child))
                 {
                     case Dock.Left:
+                        parentHeight = Math.Max(parentHeight, accumulatedHeight + childDesiredSize.Height);
+                        if (hasVisibleLeft)
+                            accumulatedWidth += HorizontalSpacing;
+                        accumulatedWidth += childDesiredSize.Width;
+                        hasVisibleLeft = true;
+                        break;
+
                     case Dock.Right:
                         parentHeight = Math.Max(parentHeight, accumulatedHeight + childDesiredSize.Height);
-                        // Add spacing before this element if we already have a visible horizontal element
-                        if (hasVisibleHorizontal)
-                        {
+                        if (hasVisibleRight)
                             accumulatedWidth += HorizontalSpacing;
-                        }
-
                         accumulatedWidth += childDesiredSize.Width;
-                        hasVisibleHorizontal = true;
+                        hasVisibleRight = true;
                         break;
 
                     case Dock.Top:
+                        parentWidth = Math.Max(parentWidth, accumulatedWidth + childDesiredSize.Width);
+                        if (hasVisibleTop)
+                            accumulatedHeight += VerticalSpacing;
+                        accumulatedHeight += childDesiredSize.Height;
+                        hasVisibleTop = true;
+                        break;
+
                     case Dock.Bottom:
                         parentWidth = Math.Max(parentWidth, accumulatedWidth + childDesiredSize.Width);
-                        // Add spacing before this element if we already have a visible vertical element
-                        if (hasVisibleVertical)
-                        {
+                        if (hasVisibleBottom)
                             accumulatedHeight += VerticalSpacing;
-                        }
-
                         accumulatedHeight += childDesiredSize.Height;
-                        hasVisibleVertical = true;
+                        hasVisibleBottom = true;
                         break;
                 }
             }
@@ -144,28 +155,16 @@ namespace Zafiro.Avalonia.Controls.Panels
 
                 if (child.IsVisible)
                 {
-                    // Check what type of dock was used last to apply appropriate spacing
-                    bool needsHorizontalSpacing = false;
-                    bool needsVerticalSpacing = false;
-
-                    // Look for the last visible docked child to determine spacing
-                    for (var i = childrenCount - 1; i >= 0; i--)
-                    {
-                        if (Children[i].IsVisible)
-                        {
-                            var lastDock = DockPanel.GetDock(Children[i]);
-                            if (lastDock == Dock.Left || lastDock == Dock.Right)
-                                needsHorizontalSpacing = true;
-                            if (lastDock == Dock.Top || lastDock == Dock.Bottom)
-                                needsVerticalSpacing = true;
-                            break;
-                        }
-                    }
-
-                    // Apply spacing if needed
-                    if (needsHorizontalSpacing)
+                    // The fill child needs spacing toward each occupied side.
+                    if (hasVisibleLeft || hasVisibleRight)
                         accumulatedWidth += HorizontalSpacing;
-                    if (needsVerticalSpacing)
+                    if (hasVisibleTop || hasVisibleBottom)
+                        accumulatedHeight += VerticalSpacing;
+
+                    // If both sides in an axis are occupied, the fill needs spacing on BOTH sides.
+                    if (hasVisibleLeft && hasVisibleRight)
+                        accumulatedWidth += HorizontalSpacing;
+                    if (hasVisibleTop && hasVisibleBottom)
                         accumulatedHeight += VerticalSpacing;
 
                     var childConstraint = new Size(
@@ -188,7 +187,8 @@ namespace Zafiro.Avalonia.Controls.Panels
         /// <summary>
         /// SmartDockPanel computes a position and final size for each of its children based upon their
         /// <see cref="Dock" /> enum and sizing properties.
-        /// Spacing is only applied between consecutive visible children.
+        /// Spacing is only applied between consecutive visible children on the same side,
+        /// and between docked children and the fill child.
         /// </summary>
         /// <param name="finalSize">Size that SmartDockPanel will assume to position children.</param>
         protected override Size ArrangeOverride(Size finalSize)
@@ -198,14 +198,12 @@ namespace Zafiro.Avalonia.Controls.Panels
 
             var currentBounds = new Rect(finalSize);
             var childrenCount = LastChildFill ? Children.Count - 1 : Children.Count;
-            // Flags to control spacing between successive docked elements (orientation based)
-            var hasAnyHorizontal = false;
-            var hasAnyVertical = false;
-            // Flags to know which sides are occupied for spacing around fill element
-            var hasLeftDock = false;
-            var hasRightDock = false;
-            var hasTopDock = false;
-            var hasBottomDock = false;
+
+            // Side-specific flags for spacing between same-side docked elements
+            var hasAnyLeft = false;
+            var hasAnyRight = false;
+            var hasAnyTop = false;
+            var hasAnyBottom = false;
 
             for (var index = 0; index < childrenCount; ++index)
             {
@@ -220,7 +218,7 @@ namespace Zafiro.Avalonia.Controls.Panels
                 switch (dock)
                 {
                     case Dock.Left:
-                        spacingToApply = hasAnyHorizontal ? HorizontalSpacing : 0;
+                        spacingToApply = hasAnyLeft ? HorizontalSpacing : 0;
                         currentBounds = new Rect(
                             currentBounds.X + spacingToApply,
                             currentBounds.Y,
@@ -235,12 +233,11 @@ namespace Zafiro.Avalonia.Controls.Panels
                             currentBounds.Y,
                             Math.Max(0, currentBounds.Width - width),
                             currentBounds.Height);
-                        hasAnyHorizontal = true;
-                        hasLeftDock = true;
+                        hasAnyLeft = true;
                         break;
 
                     case Dock.Top:
-                        spacingToApply = hasAnyVertical ? VerticalSpacing : 0;
+                        spacingToApply = hasAnyTop ? VerticalSpacing : 0;
                         currentBounds = new Rect(
                             currentBounds.X,
                             currentBounds.Y + spacingToApply,
@@ -255,12 +252,11 @@ namespace Zafiro.Avalonia.Controls.Panels
                             currentBounds.Y + height,
                             currentBounds.Width,
                             Math.Max(0, currentBounds.Height - height));
-                        hasAnyVertical = true;
-                        hasTopDock = true;
+                        hasAnyTop = true;
                         break;
 
                     case Dock.Right:
-                        spacingToApply = hasAnyHorizontal ? HorizontalSpacing : 0;
+                        spacingToApply = hasAnyRight ? HorizontalSpacing : 0;
                         currentBounds = currentBounds.WithWidth(Math.Max(0, currentBounds.Width - spacingToApply));
 
                         width = Math.Min(child.DesiredSize.Width, currentBounds.Width);
@@ -271,12 +267,11 @@ namespace Zafiro.Avalonia.Controls.Panels
                             currentBounds.Height));
 
                         currentBounds = currentBounds.WithWidth(Math.Max(0, currentBounds.Width - width));
-                        hasAnyHorizontal = true;
-                        hasRightDock = true;
+                        hasAnyRight = true;
                         break;
 
                     case Dock.Bottom:
-                        spacingToApply = hasAnyVertical ? VerticalSpacing : 0;
+                        spacingToApply = hasAnyBottom ? VerticalSpacing : 0;
                         currentBounds = currentBounds.WithHeight(Math.Max(0, currentBounds.Height - spacingToApply));
 
                         height = Math.Min(child.DesiredSize.Height, currentBounds.Height);
@@ -287,8 +282,7 @@ namespace Zafiro.Avalonia.Controls.Panels
                             height));
 
                         currentBounds = currentBounds.WithHeight(Math.Max(0, currentBounds.Height - height));
-                        hasAnyVertical = true;
-                        hasBottomDock = true;
+                        hasAnyBottom = true;
                         break;
                 }
             }
@@ -301,7 +295,7 @@ namespace Zafiro.Avalonia.Controls.Panels
                     var adjustedBounds = currentBounds;
 
                     // Horizontal spacing: leave gap next to occupied sides
-                    if (hasLeftDock)
+                    if (hasAnyLeft)
                     {
                         adjustedBounds = new Rect(
                             adjustedBounds.X + HorizontalSpacing,
@@ -310,7 +304,7 @@ namespace Zafiro.Avalonia.Controls.Panels
                             adjustedBounds.Height);
                     }
 
-                    if (hasRightDock)
+                    if (hasAnyRight)
                     {
                         adjustedBounds = new Rect(
                             adjustedBounds.X,
@@ -320,8 +314,7 @@ namespace Zafiro.Avalonia.Controls.Panels
                     }
 
                     // Vertical spacing: gap adjacent to top/bottom docked elements.
-                    // Top dock consumes space at top, so shift Y down for top gap; bottom gap just reduces height.
-                    if (hasTopDock)
+                    if (hasAnyTop)
                     {
                         adjustedBounds = new Rect(
                             adjustedBounds.X,
@@ -330,7 +323,7 @@ namespace Zafiro.Avalonia.Controls.Panels
                             Math.Max(0, adjustedBounds.Height - VerticalSpacing));
                     }
 
-                    if (hasBottomDock)
+                    if (hasAnyBottom)
                     {
                         adjustedBounds = new Rect(
                             adjustedBounds.X,
