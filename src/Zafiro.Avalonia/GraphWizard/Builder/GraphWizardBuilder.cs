@@ -4,22 +4,11 @@ using Zafiro.Avalonia.Wizards.Graph.Core;
 namespace Zafiro.Avalonia.Wizards.Graph.Builder;
 
 /// <summary>
-/// Provides a fluent API for building wizard nodes and graph flows.
-/// Use <see cref="Define{TModel}(TModel, string)"/> or <see cref="Define{TModel}(TModel, IObservable{string})"/> 
-/// to start building a wizard node.
+/// Provides the builder API for untyped graph wizards.
+/// For typed graph wizards, prefer <see cref="Core.GraphWizard.For{TResult}"/>.
 /// </summary>
-public class GraphWizardBuilder
+public static class GraphWizardBuilder
 {
-    /// <summary>
-    /// Creates a typed builder context where the wizard result type is specified once and reused for all nodes.
-    /// </summary>
-    /// <typeparam name="TResult">The type of result the wizard will produce.</typeparam>
-    /// <returns>A typed builder context for constructing result-producing graph wizards.</returns>
-    public static TypedGraphWizardBuilder<TResult> For<TResult>()
-    {
-        return new TypedGraphWizardBuilder<TResult>();
-    }
-
     /// <summary>
     /// Starts building a wizard node with a static title.
     /// </summary>
@@ -29,12 +18,12 @@ public class GraphWizardBuilder
     /// <returns>A <see cref="NodeBuilder{TModel}"/> to configure the node further.</returns>
     /// <example>
     /// <code>
-    /// var node = GraphWizardBuilder.Define(viewModel, "Step 1")
+    /// var node = GraphWizardBuilder.Step(viewModel, "Step 1")
     ///     .Next(vm => nextNode)
     ///     .Build();
     /// </code>
     /// </example>
-    public static NodeBuilder<TModel> Define<TModel>(TModel model, string title)
+    public static NodeBuilder<TModel> Step<TModel>(TModel model, string title)
     {
         return new NodeBuilder<TModel>(model, title);
     }
@@ -48,19 +37,19 @@ public class GraphWizardBuilder
     /// <returns>A <see cref="NodeBuilder{TModel}"/> to configure the node further.</returns>
     /// <example>
     /// <code>
-    /// var node = GraphWizardBuilder.Define(viewModel, viewModel.WhenAnyValue(x => x.DynamicTitle))
+    /// var node = GraphWizardBuilder.Step(viewModel, viewModel.WhenAnyValue(x => x.DynamicTitle))
     ///     .Next(vm => nextNode)
     ///     .Build();
     /// </code>
     /// </example>
-    public static NodeBuilder<TModel> Define<TModel>(TModel model, IObservable<string> title)
+    public static NodeBuilder<TModel> Step<TModel>(TModel model, IObservable<string> title)
     {
         return new NodeBuilder<TModel>(model, title);
     }
 }
 
 /// <summary>
-/// Interface for building wizard nodes.
+/// Interface for building untyped wizard nodes.
 /// </summary>
 /// <typeparam name="TModel">The type of the model for the node being built.</typeparam>
 public interface INodeBuilder<out TModel>
@@ -73,8 +62,8 @@ public interface INodeBuilder<out TModel>
 }
 
 /// <summary>
-/// Fluent builder for configuring wizard nodes.
-/// Provides methods to define navigation logic and validation.
+/// Fluent builder for configuring untyped wizard nodes.
+/// Use this when the flow does not need to produce a typed result.
 /// </summary>
 /// <typeparam name="TModel">The type of the view model or content for this node.</typeparam>
 public class NodeBuilder<TModel> : INodeBuilder<TModel>
@@ -224,7 +213,7 @@ public class NodeBuilder<TModel> : INodeBuilder<TModel>
     /// <returns>This builder instance for method chaining.</returns>
     /// <example>
     /// <code>
-    /// var finalNode = GraphWizardBuilder.Define(completionViewModel, "Finished")
+    /// var finalNode = GraphWizardBuilder.Step(completionViewModel, "Finished")
     ///     .Finish(canExecute: vm.WhenAnyValue(x => x.AllCompleted))
     ///     .Build();
     /// </code>

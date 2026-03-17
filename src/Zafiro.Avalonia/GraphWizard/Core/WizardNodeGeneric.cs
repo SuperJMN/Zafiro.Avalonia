@@ -5,7 +5,7 @@ namespace Zafiro.Avalonia.Wizards.Graph.Core;
 
 /// <summary>
 /// Default implementation of <see cref="IWizardNode{TResult}"/>.
-/// Typically created via <see cref="Builder.GraphWizardBuilderGeneric"/> or <see cref="Builder.GraphWizardBuilder.For{TResult}"/> rather than directly.
+/// Typically created via <see cref="GraphWizard.For{TResult}"/> rather than directly.
 /// </summary>
 /// <typeparam name="TResult">The type of result the wizard will produce.</typeparam>
 public class WizardNodeGeneric<TResult> : IWizardNode<TResult>

@@ -3,12 +3,12 @@ using System.Reactive.Linq;
 using CSharpFunctionalExtensions;
 using ReactiveUI;
 using Zafiro.Avalonia.Dialogs;
-using Zafiro.Avalonia.Wizards.Graph.Builder;
 using Zafiro.Avalonia.Wizards.Graph.Core;
 using Zafiro.Reactive;
 using Zafiro.UI;
 using Zafiro.UI.Navigation;
 using Zafiro.UI.Shell.Utils;
+using WizardGraph = Zafiro.Avalonia.Wizards.Graph.Core.GraphWizard;
 
 namespace TestApp.Samples.GraphWizard;
 
@@ -53,18 +53,18 @@ public class GraphWizardGenericSampleViewModel : ReactiveObject
 
     private GraphWizard<string> CreateGenericWizard()
     {
-        var graph = GraphWizardBuilder.For<string>();
+        var graph = WizardGraph.For<string>();
         var step1 = new Step1ViewModel();
         var step2A = new GenericStepViewModel("You selected Option A. Click Finish to return 'A'.");
         var step2B = new GenericStepViewModel("You selected Option B. Click Finish to return 'B'.");
 
         var node2A = graph
-            .Define(step2A, "Option A")
+            .Step(step2A, "Option A")
             .Finish(vm => "A", nextLabel: "Finish (Return A)")
             .Build();
 
         var node2B = graph
-            .Define(step2B, "Option B")
+            .Step(step2B, "Option B")
             .Finish(vm => "B", nextLabel: "Finish (Return B)")
             .Build();
 
@@ -77,7 +77,7 @@ public class GraphWizardGenericSampleViewModel : ReactiveObject
             });
 
         var node1 = graph
-            .Define(step1, "Selection")
+            .Step(step1, "Selection")
             .Next(vm => vm.Choice == "A" ? node2A : node2B,
                 canExecute: step1.WhenAnyValue(x => x.Choice).NotNull(),
                 nextLabel: dynamicLabel)

@@ -1,8 +1,8 @@
 using System.Reactive.Linq;
 using System.Reactive.Threading.Tasks;
 using ReactiveUI;
-using Zafiro.Avalonia.Wizards.Graph.Builder;
 using Zafiro.Avalonia.Wizards.Graph.Core;
+using WizardGraph = Zafiro.Avalonia.Wizards.Graph.Core.GraphWizard;
 
 namespace Zafiro.Avalonia.Tests;
 
@@ -11,13 +11,13 @@ public class GraphWizardBuilderTests
     [Fact]
     public async Task Typed_builder_context_allows_defining_nodes_without_repeating_result_type()
     {
-        var graph = GraphWizardBuilder.For<string>();
+        var graph = WizardGraph.For<string>();
 
-        var finalNode = graph.Define(new object(), "Finish")
+        var finalNode = graph.Step(new object(), "Finish")
             .Finish(_ => "done")
             .Build();
 
-        var startNode = graph.Define(new object(), "Start")
+        var startNode = graph.Step(new object(), "Start")
             .Next(_ => finalNode)
             .Build();
 
@@ -35,7 +35,7 @@ public class GraphWizardBuilderTests
     [Fact]
     public async Task Typed_builder_context_can_start_a_typed_flow()
     {
-        var graph = GraphWizardBuilder.For<string>();
+        var graph = WizardGraph.For<string>();
         var node = graph.StartWith(new StepModel("start"), "Start")
             .Step(new StepModel("finish"), "Finish")
             .Finish(model => model.Value);
@@ -55,21 +55,21 @@ public class GraphWizardBuilderTests
     public async Task Typed_builder_supports_branching_to_path_a_and_finishes()
     {
         var start = new BranchModel();
-        var graph = GraphWizardBuilder.For<string>();
+        var graph = WizardGraph.For<string>();
 
-        var endNode = graph.Define(new object(), "End")
+        var endNode = graph.Step(new object(), "End")
             .Finish(_ => "done")
             .Build();
 
-        var nodeA = graph.Define(new object(), "Path A")
+        var nodeA = graph.Step(new object(), "Path A")
             .Next(_ => endNode)
             .Build();
 
-        var nodeB = graph.Define(new object(), "Path B")
+        var nodeB = graph.Step(new object(), "Path B")
             .Next(_ => endNode)
             .Build();
 
-        var startNode = graph.Define(start, "Start")
+        var startNode = graph.Step(start, "Start")
             .Next(vm => vm.Choice == "A" ? nodeA : nodeB,
                 canExecute: start.WhenAnyValue(x => x.Choice).Select(x => x is not null))
             .Build();
@@ -96,21 +96,21 @@ public class GraphWizardBuilderTests
     public async Task Typed_builder_supports_branching_to_path_b_and_finishes()
     {
         var start = new BranchModel();
-        var graph = GraphWizardBuilder.For<string>();
+        var graph = WizardGraph.For<string>();
 
-        var endNode = graph.Define(new object(), "End")
+        var endNode = graph.Step(new object(), "End")
             .Finish(_ => "done")
             .Build();
 
-        var nodeA = graph.Define(new object(), "Path A")
+        var nodeA = graph.Step(new object(), "Path A")
             .Next(_ => endNode)
             .Build();
 
-        var nodeB = graph.Define(new object(), "Path B")
+        var nodeB = graph.Step(new object(), "Path B")
             .Next(_ => endNode)
             .Build();
 
-        var startNode = graph.Define(start, "Start")
+        var startNode = graph.Step(start, "Start")
             .Next(vm => vm.Choice == "A" ? nodeA : nodeB,
                 canExecute: start.WhenAnyValue(x => x.Choice).Select(x => x is not null))
             .Build();

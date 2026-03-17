@@ -25,6 +25,6 @@
 
         <AdditionalFiles Include="**/*.axaml"/>
 
-        <ProjectReference Include="../../../Zafiro/src/Zafiro.UI/Zafiro.UI.csproj"/>
+        <PackageReference Include="Zafiro.UI"/>
     </ItemGroup>
 </Project>

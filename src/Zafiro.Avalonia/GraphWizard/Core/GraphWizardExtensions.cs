@@ -6,7 +6,7 @@ namespace Zafiro.Avalonia.Wizards.Graph.Core;
 public static class GraphWizardExtensions
 {
     /// <summary>
-    /// Creates a GraphWizard with a custom Next button title.
+    /// Creates an untyped graph wizard with a custom Next button title.
     /// </summary>
     /// <param name="wizard">The wizard instance.</param>
     /// <param name="nextTitle">The title for the Next button.</param>
@@ -17,7 +17,7 @@ public static class GraphWizardExtensions
     }
 
     /// <summary>
-    /// Creates a GraphWizard with a custom Next button title observable.
+    /// Creates an untyped graph wizard with a custom Next button title observable.
     /// </summary>
     /// <param name="wizard">The wizard instance.</param>
     /// <param name="nextTitle">An observable that emits the title for the Next button.</param>
@@ -28,7 +28,7 @@ public static class GraphWizardExtensions
     }
 
     /// <summary>
-    /// Navigates to the wizard and automatically goes back when the wizard finishes.
+    /// Navigates to an untyped wizard and automatically goes back when it finishes.
     /// </summary>
     /// <param name="wizard">The wizard to navigate to.</param>
     /// <param name="navigator">The navigator to use for navigation.</param>
@@ -46,7 +46,7 @@ public static class GraphWizardExtensions
     }
 
     /// <summary>
-    /// Navigates to the wizard and returns its result when finished.
+    /// Navigates to a typed wizard and returns its result when finished.
     /// Automatically goes back when the wizard finishes or is cancelled.
     /// </summary>
     /// <typeparam name="TResult">The type of the wizard result.</typeparam>

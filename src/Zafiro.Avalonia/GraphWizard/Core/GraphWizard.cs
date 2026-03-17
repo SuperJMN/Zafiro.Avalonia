@@ -1,5 +1,6 @@
 using System.Reactive;
 using System.Reactive.Subjects;
+using Zafiro.Avalonia.Wizards.Graph.Builder;
 using Zafiro.UI.Navigation;
 
 namespace Zafiro.Avalonia.Wizards.Graph.Core;
@@ -85,28 +86,46 @@ public class GraphWizard : ReactiveObject, IHaveHeader, IHaveFooter, IGraphWizar
     /// <inheritdoc />
     IObservable<object> IHaveHeader.Header => Observable.Return(new GraphWizardHeader(this)).Select(x => (object)x);
 
+    /// <summary>
+    /// Creates a typed graph wizard flow where the result type is fixed once for the whole wizard.
+    /// </summary>
+    /// <example>
+    /// <code>
+    /// var flow = GraphWizard.For&lt;string&gt;();
+    /// var start = flow.Step(stepVm, "Start")
+    ///     .Next(_ => nextNode)
+    ///     .Build();
+    /// </code>
+    /// </example>
+    public static GraphWizardFlow<TResult> For<TResult>()
+    {
+        return new GraphWizardFlow<TResult>();
+    }
+
     protected virtual void OnCancel() => FinishedBase.OnNext(Unit.Default);
 
     protected virtual ReactiveCommand<Unit, Unit> CreateNextCommand()
     {
         return ReactiveCommand.CreateFromTask(async () =>
-        {
-            if (CurrentStep is not IWizardNode step) return;
-
-            var result = await step.Next.Execute();
-            if (result.IsSuccess)
             {
-                if (result.Value != null)
+                if (CurrentStep is not IWizardNode step) return;
+
+                var result = await step.Next.Execute();
+                if (result.IsSuccess)
                 {
-                    stack.Push(CurrentStep);
-                    CurrentStep = result.Value;
+                    if (result.Value != null)
+                    {
+                        stack.Push(CurrentStep);
+                        CurrentStep = result.Value;
+                    }
+                    else
+                    {
+                        FinishedBase.OnNext(Unit.Default);
+                    }
                 }
-                else
-                {
-                    FinishedBase.OnNext(Unit.Default);
-                }
-            }
-        }, this.WhenAnyValue(x => x.CurrentStep).SelectMany(x => (x as IWizardNode)?.Next.CanExecute ?? Observable.Return(false)));
+            },
+            this.WhenAnyValue(x => x.CurrentStep)
+                .SelectMany(x => (x as IWizardNode)?.Next.CanExecute ?? Observable.Return(false)));
     }
 
     /// <summary>

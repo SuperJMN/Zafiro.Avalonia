@@ -4,9 +4,9 @@ using Zafiro.Avalonia.Wizards.Graph.Core;
 namespace Zafiro.Avalonia.Wizards.Graph.Builder;
 
 /// <summary>
-/// Provides a fluent API for building wizard nodes with typed results.
+/// Internal fluent API for building typed wizard steps.
 /// </summary>
-public static class GraphWizardBuilderGeneric
+internal static class TypedWizardStepBuilder
 {
     /// <summary>
     /// Starts building a wizard node with a static title that will produce a typed result.
@@ -16,9 +16,9 @@ public static class GraphWizardBuilderGeneric
     /// <param name="model">The view model or content to display in this wizard step.</param>
     /// <param name="title">The static title for this step.</param>
     /// <returns>A <see cref="NodeBuilder{TModel,TResult}"/> to configure the node further.</returns>
-    public static NodeBuilder<TModel, TResult> Define<TModel, TResult>(TModel model, string title)
+    public static TypedWizardStepBuilderCore<TModel, TResult> Step<TModel, TResult>(TModel model, string title)
     {
-        return new NodeBuilder<TModel, TResult>(model, title);
+        return new TypedWizardStepBuilderCore<TModel, TResult>(model, title);
     }
 
     /// <summary>
@@ -29,9 +29,10 @@ public static class GraphWizardBuilderGeneric
     /// <param name="model">The view model or content to display in this wizard step.</param>
     /// <param name="title">An observable that emits the title for this step.</param>
     /// <returns>A <see cref="NodeBuilder{TModel,TResult}"/> to configure the node further.</returns>
-    public static NodeBuilder<TModel, TResult> Define<TModel, TResult>(TModel model, IObservable<string> title)
+    public static TypedWizardStepBuilderCore<TModel, TResult> Step<TModel, TResult>(TModel model,
+        IObservable<string> title)
     {
-        return new NodeBuilder<TModel, TResult>(model, title);
+        return new TypedWizardStepBuilderCore<TModel, TResult>(model, title);
     }
 }
 
@@ -40,7 +41,7 @@ public static class GraphWizardBuilderGeneric
 /// </summary>
 /// <typeparam name="TModel">The type of the view model or content for this node.</typeparam>
 /// <typeparam name="TResult">The type of result the wizard will produce.</typeparam>
-public class NodeBuilder<TModel, TResult>
+internal class TypedWizardStepBuilderCore<TModel, TResult>
 {
     private readonly TModel model;
     private IObservable<bool> canNext = Observable.Return(true);
@@ -51,13 +52,13 @@ public class NodeBuilder<TModel, TResult>
     private IObservable<string>? nextLabel;
     private IObservable<string> title;
 
-    public NodeBuilder(TModel model, string title)
+    public TypedWizardStepBuilderCore(TModel model, string title)
     {
         this.model = model;
         this.title = Observable.Return(title);
     }
 
-    public NodeBuilder(TModel model, IObservable<string> title)
+    public TypedWizardStepBuilderCore(TModel model, IObservable<string> title)
     {
         this.model = model;
         this.title = title;
@@ -77,7 +78,8 @@ public class NodeBuilder<TModel, TResult>
     /// <param name="nextSelector">Function that returns the next node.</param>
     /// <param name="canExecute">Optional observable controlling when Next can execute.</param>
     /// <param name="nextLabel">Optional label for the Next button.</param>
-    public NodeBuilder<TModel, TResult> Next(Func<TModel, IWizardNode<TResult>?> nextSelector, IObservable<bool>? canExecute = null, string? nextLabel = null)
+    public TypedWizardStepBuilderCore<TModel, TResult> Next(Func<TModel, IWizardNode<TResult>?> nextSelector,
+        IObservable<bool>? canExecute = null, string? nextLabel = null)
     {
         this.nextFactory = m =>
         {
@@ -103,7 +105,8 @@ public class NodeBuilder<TModel, TResult>
     /// <summary>
     /// Defines navigation to the next node in the wizard with a dynamic Next button label.
     /// </summary>
-    public NodeBuilder<TModel, TResult> Next(Func<TModel, IWizardNode<TResult>?> nextSelector, IObservable<bool>? canExecute, IObservable<string> nextLabel)
+    public TypedWizardStepBuilderCore<TModel, TResult> Next(Func<TModel, IWizardNode<TResult>?> nextSelector,
+        IObservable<bool>? canExecute, IObservable<string> nextLabel)
     {
         this.nextFactory = m =>
         {
@@ -129,7 +132,9 @@ public class NodeBuilder<TModel, TResult>
     /// <param name="nextSelector">Async function that returns the next node.</param>
     /// <param name="canExecute">Optional observable controlling when Next can execute.</param>
     /// <param name="nextLabel">Optional label for the Next button.</param>
-    public NodeBuilder<TModel, TResult> Next(Func<TModel, Task<Result<IWizardNode<TResult>?>>> nextSelector, IObservable<bool>? canExecute = null, string? nextLabel = null)
+    public TypedWizardStepBuilderCore<TModel, TResult> Next(
+        Func<TModel, Task<Result<IWizardNode<TResult>?>>> nextSelector, IObservable<bool>? canExecute = null,
+        string? nextLabel = null)
     {
         this.nextFactory = async m =>
         {
@@ -160,7 +165,9 @@ public class NodeBuilder<TModel, TResult>
     /// <summary>
     /// Defines asynchronous navigation to the next node in the wizard with a dynamic Next button label.
     /// </summary>
-    public NodeBuilder<TModel, TResult> Next(Func<TModel, Task<Result<IWizardNode<TResult>?>>> nextSelector, IObservable<bool>? canExecute, IObservable<string> nextLabel)
+    public TypedWizardStepBuilderCore<TModel, TResult> Next(
+        Func<TModel, Task<Result<IWizardNode<TResult>?>>> nextSelector, IObservable<bool>? canExecute,
+        IObservable<string> nextLabel)
     {
         this.nextFactory = async m =>
         {
@@ -191,7 +198,8 @@ public class NodeBuilder<TModel, TResult>
     /// <param name="resultSelector">Function that extracts the result from the model.</param>
     /// <param name="canExecute">Optional observable controlling when the wizard can finish.</param>
     /// <param name="nextLabel">Optional label for the Finish button.</param>
-    public NodeBuilder<TModel, TResult> Finish(Func<TModel, TResult> resultSelector, IObservable<bool>? canExecute = null, string? nextLabel = null)
+    public TypedWizardStepBuilderCore<TModel, TResult> Finish(Func<TModel, TResult> resultSelector,
+        IObservable<bool>? canExecute = null, string? nextLabel = null)
     {
         this.nextFactory = m =>
         {
@@ -215,7 +223,8 @@ public class NodeBuilder<TModel, TResult>
     /// <summary>
     /// Marks this node as the final step that produces the wizard result with a dynamic Finish button label.
     /// </summary>
-    public NodeBuilder<TModel, TResult> Finish(Func<TModel, TResult> resultSelector, IObservable<bool>? canExecute, IObservable<string> nextLabel)
+    public TypedWizardStepBuilderCore<TModel, TResult> Finish(Func<TModel, TResult> resultSelector,
+        IObservable<bool>? canExecute, IObservable<string> nextLabel)
     {
         this.nextFactory = m =>
         {
@@ -239,7 +248,8 @@ public class NodeBuilder<TModel, TResult>
     /// <param name="resultSelector">Async function that extracts the result from the model.</param>
     /// <param name="canExecute">Optional observable controlling when the wizard can finish.</param>
     /// <param name="nextLabel">Optional label for the Finish button.</param>
-    public NodeBuilder<TModel, TResult> Finish(Func<TModel, Task<Result<TResult>>> resultSelector, IObservable<bool>? canExecute = null, string? nextLabel = null)
+    public TypedWizardStepBuilderCore<TModel, TResult> Finish(Func<TModel, Task<Result<TResult>>> resultSelector,
+        IObservable<bool>? canExecute = null, string? nextLabel = null)
     {
         this.nextFactory = async m =>
         {
@@ -265,7 +275,8 @@ public class NodeBuilder<TModel, TResult>
     /// <summary>
     /// Marks this node as the final step that produces the wizard result asynchronously with a dynamic Finish button label.
     /// </summary>
-    public NodeBuilder<TModel, TResult> Finish(Func<TModel, Task<Result<TResult>>> resultSelector, IObservable<bool>? canExecute, IObservable<string> nextLabel)
+    public TypedWizardStepBuilderCore<TModel, TResult> Finish(Func<TModel, Task<Result<TResult>>> resultSelector,
+        IObservable<bool>? canExecute, IObservable<string> nextLabel)
     {
         this.nextFactory = async m =>
         {
