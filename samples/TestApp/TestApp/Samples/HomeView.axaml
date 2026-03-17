@@ -1,0 +1,97 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:samples="clr-namespace:TestApp.Samples"
+             xmlns:i="https://github.com/projektanker/icons.avalonia"
+             mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="700"
+             x:Class="TestApp.Samples.HomeView" x:DataType="samples:HomeViewModel">
+
+    <DockPanel>
+        <!-- Header: Title + Search -->
+        <StackPanel DockPanel.Dock="Top" Spacing="16" Margin="32,24,32,0">
+            <Grid>
+                <TextBlock Text="Zafiro.Avalonia Components"
+                           Classes="Size-XL Weight-Bold"
+                           HorizontalAlignment="Center" />
+                <Button Command="{Binding State.ToggleTheme}"
+                        Classes="Ghost"
+                        HorizontalAlignment="Right"
+                        ToolTip.Tip="Toggle Theme">
+                    <Panel>
+                        <i:Icon Value="fa-solid fa-moon" IsVisible="{Binding !State.IsDarkTheme}" />
+                        <i:Icon Value="fa-solid fa-sun" IsVisible="{Binding State.IsDarkTheme}" />
+                    </Panel>
+                </Button>
+            </Grid>
+
+            <TextBox Text="{Binding State.SearchText, Mode=TwoWay}"
+                     Watermark="Search components..."
+                     HorizontalAlignment="Stretch"
+                     MaxWidth="500"
+                     HorizontalContentAlignment="Center" />
+        </StackPanel>
+
+        <!-- Category Chips -->
+        <ScrollViewer DockPanel.Dock="Top" HorizontalScrollBarVisibility="Auto"
+                      VerticalScrollBarVisibility="Disabled" Margin="32,12,32,0">
+            <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center">
+                <EnhancedButton Content="All"
+                                Command="{Binding ClearCategory}"
+                                Classes="Ghost" />
+                <ItemsControl ItemsSource="{Binding Categories}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal" Spacing="8" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate x:DataType="x:String">
+                            <EnhancedButton Content="{Binding}"
+                                            Command="{Binding $parent[UserControl].((samples:HomeViewModel)DataContext).SelectCategory}"
+                                            CommandParameter="{Binding}"
+                                            Classes="Ghost" />
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- Card Grid -->
+        <ScrollViewer Margin="24,16,24,24">
+            <ItemsControl ItemsSource="{Binding FilteredSamples}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel Orientation="Horizontal" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="samples:SampleCard">
+                        <Button Theme="{StaticResource TransparentButton}"
+                                Margin="8"
+                                Command="{Binding $parent[UserControl].((samples:HomeViewModel)DataContext).NavigateToSample}"
+                                CommandParameter="{Binding}">
+                            <Border Classes="Card Elevate" Padding="16" CornerRadius="8"
+                                    Width="240" Height="140"
+                                    Cursor="Hand"
+                                    Background="{DynamicResource SystemRegionBrush}">
+                                <StackPanel Spacing="8">
+                                    <i:Icon Value="{Binding Icon}" FontSize="28"
+                                            HorizontalAlignment="Left" />
+                                    <TextBlock Text="{Binding Name}"
+                                               Classes="Weight-Bold Size-M" />
+                                    <TextBlock Text="{Binding Description}"
+                                               Classes="Size-S Text-Muted"
+                                               MaxLines="2" TextTrimming="CharacterEllipsis" />
+                                    <TextBlock Text="{Binding Category}"
+                                               Classes="Size-XS Text-Muted"
+                                               Opacity="0.6" />
+                                </StackPanel>
+                            </Border>
+                        </Button>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+    </DockPanel>
+</UserControl>

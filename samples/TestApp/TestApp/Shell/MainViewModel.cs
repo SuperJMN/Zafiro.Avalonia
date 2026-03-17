@@ -1,8 +1,8 @@
-using Zafiro.UI.Shell;
+using Zafiro.UI.Navigation;
 
 namespace TestApp.Shell;
 
-public class MainViewModel(IShell shell)
+public class MainViewModel(INavigator navigator)
 {
-    public IShell Shell { get; set; } = shell;
+    public INavigator Navigator { get; } = navigator;
 }
