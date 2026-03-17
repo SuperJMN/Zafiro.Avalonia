@@ -30,7 +30,27 @@ The main class that orchestrates the wizard flow:
 
 The recommended way to create wizard nodes is through the fluent builder API.
 
+For typed wizards, prefer fixing the result type once:
+
+```csharp
+var graph = GraphWizardBuilder.For<string>();
+```
+
 #### Main Methods
+
+##### `For<TResult>()`
+
+Creates a typed builder context that avoids repeating `TResult` on every `Define(...)`.
+
+```csharp
+var graph = GraphWizardBuilder.For<string>();
+
+var endNode = graph.Define(endVm, "Completed")
+    .Finish(vm => "done")
+    .Build();
+```
+
+---
 
 ##### `Define<TModel>(model, title)`
 
@@ -68,6 +88,13 @@ var nodeBuilder = GraphWizardBuilder.Define(
     viewModel, 
     viewModel.WhenAnyValue(x => x.DynamicTitle)
 );
+```
+
+For typed wizards:
+
+```csharp
+var graph = GraphWizardBuilder.For<string>();
+var nodeBuilder = graph.Define(viewModel, "My Step");
 ```
 
 ---

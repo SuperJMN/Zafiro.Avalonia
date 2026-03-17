@@ -20,7 +20,8 @@ public class GraphWizardGenericSampleViewModel : ReactiveObject
     private readonly INavigator navigator;
     private readonly INotificationService notificationService;
 
-    public GraphWizardGenericSampleViewModel(INavigator navigator, IDialog dialog, INotificationService notificationService)
+    public GraphWizardGenericSampleViewModel(INavigator navigator, IDialog dialog,
+        INotificationService notificationService)
     {
         this.navigator = navigator;
         this.dialog = dialog;
@@ -52,17 +53,18 @@ public class GraphWizardGenericSampleViewModel : ReactiveObject
 
     private GraphWizard<string> CreateGenericWizard()
     {
+        var graph = GraphWizardBuilder.For<string>();
         var step1 = new Step1ViewModel();
         var step2A = new GenericStepViewModel("You selected Option A. Click Finish to return 'A'.");
         var step2B = new GenericStepViewModel("You selected Option B. Click Finish to return 'B'.");
 
-        var node2A = GraphWizardBuilderGeneric
-            .Define<GenericStepViewModel, string>(step2A, "Option A")
+        var node2A = graph
+            .Define(step2A, "Option A")
             .Finish(vm => "A", nextLabel: "Finish (Return A)")
             .Build();
 
-        var node2B = GraphWizardBuilderGeneric
-            .Define<GenericStepViewModel, string>(step2B, "Option B")
+        var node2B = graph
+            .Define(step2B, "Option B")
             .Finish(vm => "B", nextLabel: "Finish (Return B)")
             .Build();
 
@@ -74,8 +76,8 @@ public class GraphWizardGenericSampleViewModel : ReactiveObject
                 _ => "Select an option"
             });
 
-        var node1 = GraphWizardBuilderGeneric
-            .Define<Step1ViewModel, string>(step1, "Selection")
+        var node1 = graph
+            .Define(step1, "Selection")
             .Next(vm => vm.Choice == "A" ? node2A : node2B,
                 canExecute: step1.WhenAnyValue(x => x.Choice).NotNull(),
                 nextLabel: dynamicLabel)

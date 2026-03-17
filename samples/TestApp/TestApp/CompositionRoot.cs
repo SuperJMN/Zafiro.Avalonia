@@ -38,7 +38,8 @@ public static class CompositionRoot
         services.AddSingleton<INotificationService>(new NotificationService());
         services.AddTransient<MainViewModel>();
         services.AddTransient<TargetViewModel>();
-        services.AddSingleton<IFileSystemPicker>(_ => new AvaloniaFileSystemPicker(TopLevel.GetTopLevel(view).StorageProvider));
+        services.AddSingleton<IFileSystemPicker>(_ =>
+            new AvaloniaFileSystemPicker(TopLevel.GetTopLevel(view).StorageProvider));
 
         // Build sample cards from [Section]/[SectionGroup] attributes.
         var cards = BuildSampleCards();

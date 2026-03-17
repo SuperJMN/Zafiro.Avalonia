@@ -11,6 +11,16 @@ namespace Zafiro.Avalonia.Wizards.Graph.Builder;
 public class GraphWizardBuilder
 {
     /// <summary>
+    /// Creates a typed builder context where the wizard result type is specified once and reused for all nodes.
+    /// </summary>
+    /// <typeparam name="TResult">The type of result the wizard will produce.</typeparam>
+    /// <returns>A typed builder context for constructing result-producing graph wizards.</returns>
+    public static TypedGraphWizardBuilder<TResult> For<TResult>()
+    {
+        return new TypedGraphWizardBuilder<TResult>();
+    }
+
+    /// <summary>
     /// Starts building a wizard node with a static title.
     /// </summary>
     /// <typeparam name="TModel">The type of the view model or content for this step.</typeparam>
@@ -72,7 +82,10 @@ public class NodeBuilder<TModel> : INodeBuilder<TModel>
     private readonly TModel model;
     private readonly IObservable<string> title;
     private IObservable<bool> canNext = Observable.Return(true);
-    private Func<TModel, Task<Result<IWizardNode?>>> nextFactory = _ => Task.FromResult(Result.Success<IWizardNode?>(null));
+
+    private Func<TModel, Task<Result<IWizardNode?>>> nextFactory = _ =>
+        Task.FromResult(Result.Success<IWizardNode?>(null));
+
     private IObservable<string>? nextLabel;
 
     /// <summary>
@@ -130,7 +143,8 @@ public class NodeBuilder<TModel> : INodeBuilder<TModel>
     /// }, canExecute: vm.WhenAnyValue(x => x.IsValid))
     /// </code>
     /// </example>
-    public NodeBuilder<TModel> Next(Func<TModel, Task<Result<IWizardNode?>>> nextSelector, IObservable<bool>? canExecute = null, string? nextLabel = null)
+    public NodeBuilder<TModel> Next(Func<TModel, Task<Result<IWizardNode?>>> nextSelector,
+        IObservable<bool>? canExecute = null, string? nextLabel = null)
     {
         this.nextFactory = nextSelector;
         if (canExecute != null)
@@ -149,7 +163,8 @@ public class NodeBuilder<TModel> : INodeBuilder<TModel>
     /// <summary>
     /// Defines asynchronous navigation logic for this node with a dynamic Next button label.
     /// </summary>
-    public NodeBuilder<TModel> Next(Func<TModel, Task<Result<IWizardNode?>>> nextSelector, IObservable<bool>? canExecute, IObservable<string> nextLabel)
+    public NodeBuilder<TModel> Next(Func<TModel, Task<Result<IWizardNode?>>> nextSelector,
+        IObservable<bool>? canExecute, IObservable<string> nextLabel)
     {
         this.nextFactory = nextSelector;
         if (canExecute != null)
@@ -182,7 +197,8 @@ public class NodeBuilder<TModel> : INodeBuilder<TModel>
     ///       canExecute: vm.WhenAnyValue(x => x.Choice).NotNull())
     /// </code>
     /// </example>
-    public NodeBuilder<TModel> Next(Func<TModel, IWizardNode?> nextSelector, IObservable<bool>? canExecute = null, string? nextLabel = null)
+    public NodeBuilder<TModel> Next(Func<TModel, IWizardNode?> nextSelector, IObservable<bool>? canExecute = null,
+        string? nextLabel = null)
     {
         return Next(m => Task.FromResult(Result.Success(nextSelector(m))), canExecute, nextLabel);
     }
@@ -190,7 +206,8 @@ public class NodeBuilder<TModel> : INodeBuilder<TModel>
     /// <summary>
     /// Defines synchronous navigation logic for this node with a dynamic Next button label.
     /// </summary>
-    public NodeBuilder<TModel> Next(Func<TModel, IWizardNode?> nextSelector, IObservable<bool>? canExecute, IObservable<string> nextLabel)
+    public NodeBuilder<TModel> Next(Func<TModel, IWizardNode?> nextSelector, IObservable<bool>? canExecute,
+        IObservable<string> nextLabel)
     {
         return Next(m => Task.FromResult(Result.Success(nextSelector(m))), canExecute, nextLabel);
     }
