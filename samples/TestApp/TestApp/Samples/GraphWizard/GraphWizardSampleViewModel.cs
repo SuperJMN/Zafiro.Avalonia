@@ -2,12 +2,12 @@ using System.Reactive;
 using System.Reactive.Linq;
 using ReactiveUI;
 using Zafiro.Avalonia.Dialogs;
-using Zafiro.Avalonia.Wizards.Graph.Builder;
 using Zafiro.Avalonia.Wizards.Graph.Core;
 using Zafiro.Reactive;
 using Zafiro.UI;
 using Zafiro.UI.Navigation;
 using Zafiro.UI.Shell.Utils;
+using WizardGraph = Zafiro.Avalonia.Wizards.Graph.Core.GraphWizard;
 
 namespace TestApp.Samples.GraphWizard;
 
@@ -44,21 +44,23 @@ public class GraphWizardSampleViewModel : ReactiveObject
 
     private static GraphWizard<string> CreateWizard()
     {
+        var graph = WizardGraph.For<string>();
+
         // 1. Define End Nodes (typed)
         var end = new GenericStepViewModel("Finished!");
-        var endNode = GraphWizardBuilderGeneric.Define<GenericStepViewModel, string>(end, "End")
+        var endNode = graph.Step(end, "End")
             .Finish(vm => "Done", nextLabel: "Finish!")
             .Build();
 
         // 2. Define Branch B (typed)
         var stepB = new GenericStepViewModel("You chose path B");
-        var nodeB = GraphWizardBuilderGeneric.Define<GenericStepViewModel, string>(stepB, "Path B")
+        var nodeB = graph.Step(stepB, "Path B")
             .Next(vm => endNode, nextLabel: "Complete B")
             .Build();
 
         // 3. Define Branch A (typed)
         var stepA = new GenericStepViewModel("You chose path A");
-        var nodeA = GraphWizardBuilderGeneric.Define<GenericStepViewModel, string>(stepA, "Path A")
+        var nodeA = graph.Step(stepA, "Path A")
             .Next(vm => endNode, nextLabel: "Complete A")
             .Build();
 
@@ -74,7 +76,7 @@ public class GraphWizardSampleViewModel : ReactiveObject
                 _ => "Choose (Select logic)"
             });
 
-        var startNode = GraphWizardBuilderGeneric.Define<Step1ViewModel, string>(start, "Start")
+        var startNode = graph.Step(start, "Start")
             .Next(vm => vm.Choice == "A" ? nodeA : nodeB,
                 canExecute: start.WhenAnyValue(x => x.Choice).NotNull(),
                 nextLabel: dynamicLabel)

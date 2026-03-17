@@ -24,6 +24,7 @@
         </PackageReference>
 
         <AdditionalFiles Include="**/*.axaml"/>
+
         <PackageReference Include="Zafiro.UI"/>
     </ItemGroup>
 </Project>

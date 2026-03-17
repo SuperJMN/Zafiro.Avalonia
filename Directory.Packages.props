@@ -16,7 +16,7 @@
     <PackageVersion Include="Avalonia.iOS" Version="$(AvaloniaVersion)"/>
     <PackageVersion Include="Avalonia.ReactiveUI" Version="11.3.8"/>
     <PackageVersion Include="Avalonia.Themes.Fluent" Version="$(AvaloniaVersion)"/>
-    <PackageVersion Include="AvaloniaUI.DiagnosticsSupport" Version="2.1.1"/>
+    <PackageVersion Include="AvaloniaUI.DiagnosticsSupport" Version="2.2.0-beta3"/>
     <PackageVersion Include="coverlet.collector" Version="6.0.4"/>
     <PackageVersion Include="CSharpFunctionalExtensions" Version="3.6.0"/>
     <PackageVersion Include="Deadpikle.AvaloniaProgressRing" Version="0.10.10"/>

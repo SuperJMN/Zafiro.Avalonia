@@ -6,6 +6,7 @@ namespace Zafiro.Avalonia.Wizards.Graph.Core;
 /// <summary>
 /// A graph-based wizard that allows multi-step workflows with conditional branching and returns a typed result.
 /// Unlike linear wizards, each step can lead to different subsequent steps based on user choices.
+/// Typical flows are created with <see cref="GraphWizard.For{TResult}"/> and then passed to this type.
 /// </summary>
 /// <typeparam name="TResult">The type of the result that the wizard will produce upon completion.</typeparam>
 public class GraphWizard<TResult> : GraphWizard
@@ -20,7 +21,8 @@ public class GraphWizard<TResult> : GraphWizard
     /// Optional custom title for the Next button. Can be a static title or a dynamic observable.
     /// Defaults to "Next" if not specified.
     /// </param>
-    public GraphWizard(IWizardNode<TResult> initialNode, IObservable<string>? nextTitle = null) : base(initialNode, nextTitle)
+    public GraphWizard(IWizardNode<TResult> initialNode, IObservable<string>? nextTitle = null) : base(initialNode,
+        nextTitle)
     {
         Finished = finished.AsObservable();
     }
@@ -40,28 +42,30 @@ public class GraphWizard<TResult> : GraphWizard
     protected override ReactiveCommand<Unit, Unit> CreateNextCommand()
     {
         return ReactiveCommand.CreateFromTask(async () =>
-        {
-            if (CurrentStep is not IWizardNode<TResult> step) return;
-
-            var result = await step.Next.Execute();
-            if (result.IsSuccess)
             {
-                var wizardResult = result.Value;
+                if (CurrentStep is not IWizardNode<TResult> step) return;
 
-                if (wizardResult.IsFinished)
+                var result = await step.Next.Execute();
+                if (result.IsSuccess)
                 {
-                    // Wizard completed with a result
-                    finished.OnNext(wizardResult.Result);
-                    finished.OnCompleted();
-                    FinishedBase.OnNext(Unit.Default);
+                    var wizardResult = result.Value;
+
+                    if (wizardResult.IsFinished)
+                    {
+                        // Wizard completed with a result
+                        finished.OnNext(wizardResult.Result);
+                        finished.OnCompleted();
+                        FinishedBase.OnNext(Unit.Default);
+                    }
+                    else if (wizardResult.NextNode != null)
+                    {
+                        // Navigate to next node
+                        NavigateTo(wizardResult.NextNode);
+                    }
                 }
-                else if (wizardResult.NextNode != null)
-                {
-                    // Navigate to next node
-                    NavigateTo(wizardResult.NextNode);
-                }
-            }
-        }, this.WhenAnyValue(x => x.CurrentStep).SelectMany(x => (x as IWizardNode<TResult>)?.Next.CanExecute ?? Observable.Return(false)));
+            },
+            this.WhenAnyValue(x => x.CurrentStep)
+                .SelectMany(x => (x as IWizardNode<TResult>)?.Next.CanExecute ?? Observable.Return(false)));
     }
 }
 

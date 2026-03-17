@@ -15,8 +15,6 @@
     </ItemGroup>
     <ItemGroup>
         <PackageReference Include="Avalonia.Desktop"/>
-        <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
-        <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="AvaloniaUI.DiagnosticsSupport"/>
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="../TestApp/TestApp.csproj"/>
