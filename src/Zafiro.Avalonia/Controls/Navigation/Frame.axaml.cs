@@ -2,6 +2,7 @@ using System.Windows.Input;
 using Avalonia.Controls.Metadata;
 using Avalonia.Controls.Presenters;
 using Avalonia.Controls.Primitives;
+using Avalonia.Interactivity;
 using Avalonia.Media;
 
 namespace Zafiro.Avalonia.Controls.Navigation;
@@ -175,6 +176,29 @@ public class Frame : TemplatedControl
         if (change.Property == PaddingProperty || change.Property == FooterPaddingProperty)
         {
             RaisePropertyChanged(EffectiveFooterPaddingProperty, default, EffectiveFooterPadding);
+        }
+    }
+
+    protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnAttachedToVisualTree(e);
+        var topLevel = TopLevel.GetTopLevel(this);
+        topLevel?.AddHandler(TopLevel.BackRequestedEvent, OnSystemBackRequested);
+    }
+
+    protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        var topLevel = TopLevel.GetTopLevel(this);
+        topLevel?.RemoveHandler(TopLevel.BackRequestedEvent, OnSystemBackRequested);
+        base.OnDetachedFromVisualTree(e);
+    }
+
+    private void OnSystemBackRequested(object? sender, RoutedEventArgs e)
+    {
+        if (BackCommand?.CanExecute(null) == true)
+        {
+            BackCommand.Execute(null);
+            e.Handled = true;
         }
     }
 }

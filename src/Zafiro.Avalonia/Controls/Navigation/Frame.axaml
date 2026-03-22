@@ -23,13 +23,17 @@
                                     Background="{TemplateBinding HeaderBackground}" 
                                     Padding="{TemplateBinding EffectiveHeaderPadding}">
                                 <DockPanel LastChildFill="True">
-                                    <EnhancedButton Command="{TemplateBinding BackCommand}"
-                                                    x:Name="BackButton"
-                                                    VerticalAlignment="Center">
-                                        <Button.IsVisible>
-                                            <Binding Path="$self.IsEffectivelyEnabled" />
-                                        </Button.IsVisible>
-                                    </EnhancedButton>
+                                    <!-- Back button hidden on mobile; system back gesture handles navigation -->
+                                    <Panel DockPanel.Dock="Left"
+                                           IsVisible="{OnFormFactor Desktop=True, Mobile=False}">
+                                        <EnhancedButton Command="{TemplateBinding BackCommand}"
+                                                        x:Name="BackButton"
+                                                        VerticalAlignment="Center">
+                                            <Button.IsVisible>
+                                                <Binding Path="$self.IsEffectivelyEnabled" />
+                                            </Button.IsVisible>
+                                        </EnhancedButton>
+                                    </Panel>
                                     <ContentPresenter x:Name="Header" 
                                                       Content="{TemplateBinding Header}" 
                                                       VerticalAlignment="Center" />
