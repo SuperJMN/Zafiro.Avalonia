@@ -95,6 +95,60 @@
                 </Border>
             </Card>
 
+            <Card Header="Justified Chips">
+                <Border Classes="demo-surface"
+                        HorizontalAlignment="Stretch"
+                        MinWidth="0">
+                    <StackPanel Spacing="10">
+                        <TextBlock TextWrapping="Wrap"
+                                   Text="This example uses wrap plus space-between so each wrapped line expands like justified text, distributing the remaining space between the chips on that line." />
+
+                        <FlexPanel Wrap="Wrap"
+                                   Gap="10"
+                                   AlignItems="Center"
+                                   JustifyContent="SpaceBetween"
+                                   AlignContent="Start">
+                            <Border Background="#EEF4FF" CornerRadius="999" Padding="12 8">
+                                <TextBlock Text="Design system" />
+                            </Border>
+                            <Border Background="#E5F8E9" CornerRadius="999" Padding="12 8">
+                                <TextBlock Text="Billing" />
+                            </Border>
+                            <Border Background="#FFF0DB" CornerRadius="999" Padding="12 8">
+                                <TextBlock Text="Customer portal" />
+                            </Border>
+                            <Border Background="#FFE3E3" CornerRadius="999" Padding="12 8">
+                                <TextBlock Text="CSV export" />
+                            </Border>
+                            <Border Background="#E6EDFF" CornerRadius="999" Padding="12 8">
+                                <TextBlock Text="Error tracking" />
+                            </Border>
+                            <Border Background="#F1E8FF" CornerRadius="999" Padding="12 8">
+                                <TextBlock Text="Feature flags" />
+                            </Border>
+                            <Border Background="#E4FBF0" CornerRadius="999" Padding="12 8">
+                                <TextBlock Text="Usage analytics" />
+                            </Border>
+                            <Border Background="#FFF7D6" CornerRadius="999" Padding="12 8">
+                                <TextBlock Text="Roadmap" />
+                            </Border>
+                            <Border Background="#EAF2FF" CornerRadius="999" Padding="12 8">
+                                <TextBlock Text="Changelog" />
+                            </Border>
+                            <Border Background="#E9FBE7" CornerRadius="999" Padding="12 8">
+                                <TextBlock Text="Integrations" />
+                            </Border>
+                            <Border Background="#FDEAE7" CornerRadius="999" Padding="12 8">
+                                <TextBlock Text="Alerts" />
+                            </Border>
+                            <Border Background="#F2EEFF" CornerRadius="999" Padding="12 8">
+                                <TextBlock Text="Release notes" />
+                            </Border>
+                        </FlexPanel>
+                    </StackPanel>
+                </Border>
+            </Card>
+
             <Card Header="Equal Columns With flex: 1 1 0">
                 <Border Classes="demo-surface">
                     <FlexPanel Gap="12" AlignItems="Stretch">
