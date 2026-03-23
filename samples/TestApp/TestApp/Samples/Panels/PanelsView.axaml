@@ -142,16 +142,6 @@
                 </ResponsiveUniformGrid>
             </Card>
 
-            <Card Header="FlexPanel">
-                <FlexBox Wrap="Wrap" JustifyContent="SpaceEvenly" AlignItems="Center">
-                    <EnhancedButton Content="One" />
-                    <EnhancedButton Content="Two" />
-                    <EnhancedButton Content="Three" />
-                    <EnhancedButton Content="Grow" FlexBox.Grow="1" />
-                    <EnhancedButton Content="Grow More" FlexBox.Grow="2" />
-                </FlexBox>
-            </Card>
-
             <Card Header="UniformStripPanel">
                 <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
                     <UniformStripPanel ItemMinWidth="96" ItemMaxWidth="144" ItemSpacing="8" Height="48">

@@ -104,68 +104,68 @@ public struct FlexValue
         => new() { Grow = grow, Shrink = shrink, Basis = basis ?? FlexBasis.Auto };
 }
 
-public class FlexBox : Panel
+public class FlexPanel : Panel
 {
     // Main properties
     public static readonly StyledProperty<FlexDirection> DirectionProperty =
-        AvaloniaProperty.Register<FlexBox, FlexDirection>(nameof(Direction), FlexDirection.Row);
+        AvaloniaProperty.Register<FlexPanel, FlexDirection>(nameof(Direction), FlexDirection.Row);
 
     public static readonly StyledProperty<FlexWrap> WrapProperty =
-        AvaloniaProperty.Register<FlexBox, FlexWrap>(nameof(Wrap), FlexWrap.NoWrap);
+        AvaloniaProperty.Register<FlexPanel, FlexWrap>(nameof(Wrap), FlexWrap.NoWrap);
 
     public static readonly StyledProperty<FlexJustify> JustifyContentProperty =
-        AvaloniaProperty.Register<FlexBox, FlexJustify>(nameof(JustifyContent), FlexJustify.Start);
+        AvaloniaProperty.Register<FlexPanel, FlexJustify>(nameof(JustifyContent), FlexJustify.Start);
 
     public static readonly StyledProperty<FlexAlign> AlignItemsProperty =
-        AvaloniaProperty.Register<FlexBox, FlexAlign>(nameof(AlignItems), FlexAlign.Stretch);
+        AvaloniaProperty.Register<FlexPanel, FlexAlign>(nameof(AlignItems), FlexAlign.Stretch);
 
     public static readonly StyledProperty<FlexAlignContent> AlignContentProperty =
-        AvaloniaProperty.Register<FlexBox, FlexAlignContent>(nameof(AlignContent), FlexAlignContent.Stretch);
+        AvaloniaProperty.Register<FlexPanel, FlexAlignContent>(nameof(AlignContent), FlexAlignContent.Stretch);
 
     public static readonly StyledProperty<double> GapProperty =
-        AvaloniaProperty.Register<FlexBox, double>(nameof(Gap), 0d);
+        AvaloniaProperty.Register<FlexPanel, double>(nameof(Gap), 0d);
 
     public static readonly StyledProperty<double> RowGapProperty =
-        AvaloniaProperty.Register<FlexBox, double>(nameof(RowGap), double.NaN);
+        AvaloniaProperty.Register<FlexPanel, double>(nameof(RowGap), double.NaN);
 
     public static readonly StyledProperty<double> ColumnGapProperty =
-        AvaloniaProperty.Register<FlexBox, double>(nameof(ColumnGap), double.NaN);
+        AvaloniaProperty.Register<FlexPanel, double>(nameof(ColumnGap), double.NaN);
 
     // Attached properties - CSS faithful
     public static readonly AttachedProperty<FlexValue> FlexProperty =
-        AvaloniaProperty.RegisterAttached<FlexBox, Control, FlexValue>("Flex", FlexValue.Initial);
+        AvaloniaProperty.RegisterAttached<FlexPanel, Control, FlexValue>("Flex", FlexValue.Initial);
 
     public static readonly AttachedProperty<double> GrowProperty =
-        AvaloniaProperty.RegisterAttached<FlexBox, Control, double>("Grow", 0d);
+        AvaloniaProperty.RegisterAttached<FlexPanel, Control, double>("Grow", 0d);
 
     public static readonly AttachedProperty<double> ShrinkProperty =
-        AvaloniaProperty.RegisterAttached<FlexBox, Control, double>("Shrink", 1d);
+        AvaloniaProperty.RegisterAttached<FlexPanel, Control, double>("Shrink", 1d);
 
     public static readonly AttachedProperty<FlexBasis> BasisProperty =
-        AvaloniaProperty.RegisterAttached<FlexBox, Control, FlexBasis>("Basis", FlexBasis.Auto);
+        AvaloniaProperty.RegisterAttached<FlexPanel, Control, FlexBasis>("Basis", FlexBasis.Auto);
 
     public static readonly AttachedProperty<FlexAlign?> AlignSelfProperty =
-        AvaloniaProperty.RegisterAttached<FlexBox, Control, FlexAlign?>("AlignSelf", null);
+        AvaloniaProperty.RegisterAttached<FlexPanel, Control, FlexAlign?>("AlignSelf", null);
 
     public static readonly AttachedProperty<int> OrderProperty =
-        AvaloniaProperty.RegisterAttached<FlexBox, Control, int>("Order", 0);
+        AvaloniaProperty.RegisterAttached<FlexPanel, Control, int>("Order", 0);
 
     // Auto margin support
     public static readonly AttachedProperty<bool> MarginLeftAutoProperty =
-        AvaloniaProperty.RegisterAttached<FlexBox, Control, bool>("MarginLeftAuto", false);
+        AvaloniaProperty.RegisterAttached<FlexPanel, Control, bool>("MarginLeftAuto", false);
 
     public static readonly AttachedProperty<bool> MarginRightAutoProperty =
-        AvaloniaProperty.RegisterAttached<FlexBox, Control, bool>("MarginRightAuto", false);
+        AvaloniaProperty.RegisterAttached<FlexPanel, Control, bool>("MarginRightAuto", false);
 
     public static readonly AttachedProperty<bool> MarginTopAutoProperty =
-        AvaloniaProperty.RegisterAttached<FlexBox, Control, bool>("MarginTopAuto", false);
+        AvaloniaProperty.RegisterAttached<FlexPanel, Control, bool>("MarginTopAuto", false);
 
     public static readonly AttachedProperty<bool> MarginBottomAutoProperty =
-        AvaloniaProperty.RegisterAttached<FlexBox, Control, bool>("MarginBottomAuto", false);
+        AvaloniaProperty.RegisterAttached<FlexPanel, Control, bool>("MarginBottomAuto", false);
 
-    static FlexBox()
+    static FlexPanel()
     {
-        AffectsMeasure<FlexBox>(DirectionProperty, WrapProperty, JustifyContentProperty,
+        AffectsMeasure<FlexPanel>(DirectionProperty, WrapProperty, JustifyContentProperty,
             AlignItemsProperty, AlignContentProperty, GapProperty, RowGapProperty, ColumnGapProperty,
             FlexProperty, GrowProperty, ShrinkProperty, BasisProperty, AlignSelfProperty, OrderProperty,
             MarginLeftAutoProperty, MarginRightAutoProperty, MarginTopAutoProperty, MarginBottomAutoProperty);
@@ -313,6 +313,7 @@ public class FlexBox : Panel
 
         var containerMain = IsRow ? availableSize.Width : availableSize.Height;
         var lines = CreateFlexLines(orderedChildren, containerMain);
+        UpdateLineCrossSizes(lines);
 
         // Handle align-content for measurement
         var totalMain = lines.Count > 0 ? lines.Max(l => l.MainSize) : 0;
@@ -332,6 +333,26 @@ public class FlexBox : Panel
         var containerMain = IsRow ? finalSize.Width : finalSize.Height;
         var containerCross = IsRow ? finalSize.Height : finalSize.Width;
         var lines = CreateFlexLines(orderedChildren, containerMain);
+        UpdateLineCrossSizes(lines);
+
+        if (Wrap == FlexWrap.NoWrap && lines.Count == 1)
+        {
+            lines[0].CrossSize = containerCross;
+        }
+        else if (Wrap != FlexWrap.NoWrap && AlignContent == FlexAlignContent.Stretch)
+        {
+            var usedCross = CalculateTotalCrossSize(lines);
+            var remainingCross = containerCross - usedCross;
+
+            if (remainingCross > 0)
+            {
+                var extraCrossPerLine = remainingCross / lines.Count;
+                foreach (var line in lines)
+                {
+                    line.CrossSize += extraCrossPerLine;
+                }
+            }
+        }
 
         // CSS Flexbox Algorithm Steps:
         // 1. Resolve flexible lengths
@@ -398,11 +419,25 @@ public class FlexBox : Panel
         if (currentLine.Items.Any())
             lines.Add(currentLine);
 
-        // Handle wrap-reverse
-        if (IsWrapReverse)
-            lines.Reverse();
-
         return lines;
+    }
+
+    private void UpdateLineCrossSizes(IEnumerable<FlexLine> lines)
+    {
+        foreach (var line in lines)
+        {
+            var crossSize = line.Items.Any() ? line.Items.Max(item => item.CrossSize) : 0;
+            var baselineItems = line.Items.Where(item => (GetAlignSelf(item.Control) ?? AlignItems) == FlexAlign.Baseline).ToList();
+
+            if (baselineItems.Any())
+            {
+                var maxBaseline = baselineItems.Max(GetBaselineOffset);
+                var maxDescent = baselineItems.Max(item => item.CrossSize - GetBaselineOffset(item));
+                crossSize = Math.Max(crossSize, maxBaseline + maxDescent);
+            }
+
+            line.CrossSize = crossSize;
+        }
     }
 
     private FlexItem CreateFlexItem(Control control)
@@ -525,7 +560,11 @@ public class FlexBox : Panel
 
     private List<double> CalculateCrossPositions(List<FlexLine> lines, double containerCross)
     {
-        if (lines.Count <= 1) return new List<double> { 0 };
+        if (!lines.Any())
+            return new List<double>();
+
+        if (Wrap == FlexWrap.NoWrap)
+            return new List<double> { 0 };
 
         var totalLinesCross = lines.Sum(l => l.CrossSize);
         var usedCross = totalLinesCross + CrossGap * (lines.Count - 1);
@@ -551,6 +590,14 @@ public class FlexBox : Panel
             currentPos += lines[i].CrossSize + spacing + (i < lines.Count - 1 ? CrossGap : 0);
         }
 
+        if (IsWrapReverse)
+        {
+            for (var i = 0; i < positions.Count; i++)
+            {
+                positions[i] = containerCross - positions[i] - lines[i].CrossSize;
+            }
+        }
+
         return positions;
     }
 
@@ -558,53 +605,98 @@ public class FlexBox : Panel
     {
         var remainingMain = containerMain - line.MainSize;
         var (mainStart, mainSpacing) = GetJustifyContentOffset(remainingMain, line.Items.Count, lineIndex);
+        var items = line.Items;
 
-        var currentMainPos = mainStart;
-        var items = IsReverse ? line.Items.AsEnumerable().Reverse() : line.Items;
-
-        foreach (var item in items)
+        if (!IsReverse)
         {
-            currentMainPos += item.AutoMarginMainStart;
-
-            var alignSelf = GetAlignSelf(item.Control) ?? AlignItems;
-            var (crossOffset, crossSize) = GetAlignItemsOffset(alignSelf, item, line.CrossSize);
-
-            var finalMainPos = currentMainPos;
-            var finalCrossPos = crossPos + crossOffset + item.AutoMarginCrossStart;
-
-            // Handle baseline alignment
-            if (alignSelf == FlexAlign.Baseline)
+            var currentMainPos = mainStart;
+            for (var index = 0; index < items.Count; index++)
             {
-                finalCrossPos = crossPos + CalculateBaselineOffset(item, line);
+                var item = items[index];
+                currentMainPos += item.AutoMarginMainStart;
+
+                ArrangeItem(item, line, crossPos, currentMainPos);
+
+                currentMainPos += item.MainSize + item.AutoMarginMainEnd + mainSpacing;
+                if (index < items.Count - 1)
+                {
+                    currentMainPos += MainGap;
+                }
             }
 
-            var rect = IsRow
-                ? new Rect(finalMainPos, finalCrossPos, item.MainSize, crossSize)
-                : new Rect(finalCrossPos, finalMainPos, crossSize, item.MainSize);
+            return;
+        }
 
-            item.Control.Arrange(rect);
+        var reverseMainPos = containerMain - mainStart;
+        for (var index = 0; index < items.Count; index++)
+        {
+            var item = items[index];
+            reverseMainPos -= item.AutoMarginMainStart;
+            reverseMainPos -= item.MainSize;
 
-            currentMainPos += item.MainSize + item.AutoMarginMainEnd + mainSpacing;
-            if (items.ToList().IndexOf(item) < line.Items.Count - 1)
+            ArrangeItem(item, line, crossPos, reverseMainPos);
+
+            reverseMainPos -= item.AutoMarginMainEnd + mainSpacing;
+            if (index < items.Count - 1)
             {
-                currentMainPos += MainGap;
+                reverseMainPos -= MainGap;
             }
         }
     }
 
-    private (double offset, double spacing) GetJustifyContentOffset(double remaining, int itemCount, int lineIndex = 0)
+    private void ArrangeItem(FlexItem item, FlexLine line, double crossPos, double mainPos)
     {
-        // CRITICAL FIX: For wrapped lines with SpaceBetween, treat subsequent lines as FlexEnd
-        if (JustifyContent == FlexJustify.SpaceBetween && Wrap != FlexWrap.NoWrap && lineIndex > 0)
+        var alignSelf = GetAlignSelf(item.Control) ?? AlignItems;
+
+        double crossOffset;
+        double crossSize;
+
+        if (item.MarginCrossStart || item.MarginCrossEnd)
         {
-            return (remaining, 0); // Align to end for wrapped lines
+            var remainingCross = line.CrossSize - item.CrossSize;
+            if (remainingCross > 0)
+            {
+                var autoMargins = (item.MarginCrossStart ? 1 : 0) + (item.MarginCrossEnd ? 1 : 0);
+                var autoMarginSize = autoMargins > 0 ? remainingCross / autoMargins : 0;
+
+                item.AutoMarginCrossStart = item.MarginCrossStart ? autoMarginSize : 0;
+                item.AutoMarginCrossEnd = item.MarginCrossEnd ? autoMarginSize : 0;
+            }
+            else
+            {
+                item.AutoMarginCrossStart = 0;
+                item.AutoMarginCrossEnd = 0;
+            }
+
+            crossOffset = 0;
+            crossSize = item.CrossSize;
+        }
+        else
+        {
+            (crossOffset, crossSize) = GetAlignItemsOffset(alignSelf, item, line.CrossSize);
         }
 
+        var finalCrossPos = crossPos + crossOffset + item.AutoMarginCrossStart;
+
+        if (alignSelf == FlexAlign.Baseline)
+        {
+            finalCrossPos = crossPos + CalculateBaselineOffset(item, line);
+        }
+
+        var rect = IsRow
+            ? new Rect(mainPos, finalCrossPos, item.MainSize, crossSize)
+            : new Rect(finalCrossPos, mainPos, crossSize, item.MainSize);
+
+        item.Control.Arrange(rect);
+    }
+
+    private (double offset, double spacing) GetJustifyContentOffset(double remaining, int itemCount, int lineIndex = 0)
+    {
         return JustifyContent switch
         {
             FlexJustify.End => (remaining, 0),
             FlexJustify.Center => (remaining / 2, 0),
-            FlexJustify.SpaceBetween => itemCount > 1 ? (0, remaining / (itemCount - 1)) : (remaining, 0),
+            FlexJustify.SpaceBetween => itemCount > 1 ? (0, remaining / (itemCount - 1)) : (0, 0),
             FlexJustify.SpaceAround => (remaining / itemCount / 2, remaining / itemCount),
             FlexJustify.SpaceEvenly => (remaining / (itemCount + 1), remaining / (itemCount + 1)),
             _ => (0, 0) // Start
@@ -617,22 +709,30 @@ public class FlexBox : Panel
         {
             FlexAlign.End => (lineCross - item.CrossSize, item.CrossSize),
             FlexAlign.Center => ((lineCross - item.CrossSize) / 2, item.CrossSize),
-            FlexAlign.Stretch when !item.MarginCrossStart && !item.MarginCrossEnd => (0, lineCross),
+            FlexAlign.Stretch when !item.MarginCrossStart && !item.MarginCrossEnd && IsAutoCrossSize(item.Control) => (0, lineCross),
             FlexAlign.Baseline => (0, item.CrossSize), // Calculated separately
             _ => (0, item.CrossSize) // Start
         };
     }
 
+    private bool IsAutoCrossSize(Control control) => IsRow ? double.IsNaN(control.Height) : double.IsNaN(control.Width);
+
     private double CalculateBaselineOffset(FlexItem item, FlexLine line)
     {
-        // Simplified baseline calculation - would need proper typography metrics
-        if (item.Control is TextBlock textBlock)
+        var baselineItems = line.Items.Where(current => (GetAlignSelf(current.Control) ?? AlignItems) == FlexAlign.Baseline).ToList();
+        if (!baselineItems.Any())
         {
-            // Estimate baseline as 80% of text height
-            return 0; // Simplified - proper implementation would calculate font metrics
+            return 0;
         }
 
-        return 0;
+        var maxBaseline = baselineItems.Max(GetBaselineOffset);
+        return maxBaseline - GetBaselineOffset(item);
+    }
+
+    private static double GetBaselineOffset(FlexItem item)
+    {
+        var baseline = TextBlock.GetBaselineOffset(item.Control);
+        return baseline > 0 ? baseline : item.CrossSize;
     }
 
     private double CalculateTotalCrossSize(List<FlexLine> lines)
@@ -677,4 +777,47 @@ public class FlexBox : Panel
         public double AutoMarginCrossStart { get; set; }
         public double AutoMarginCrossEnd { get; set; }
     }
+}
+
+public class FlexBox : FlexPanel
+{
+    public new static readonly StyledProperty<FlexDirection> DirectionProperty = FlexPanel.DirectionProperty;
+    public new static readonly StyledProperty<FlexWrap> WrapProperty = FlexPanel.WrapProperty;
+    public new static readonly StyledProperty<FlexJustify> JustifyContentProperty = FlexPanel.JustifyContentProperty;
+    public new static readonly StyledProperty<FlexAlign> AlignItemsProperty = FlexPanel.AlignItemsProperty;
+    public new static readonly StyledProperty<FlexAlignContent> AlignContentProperty = FlexPanel.AlignContentProperty;
+    public new static readonly StyledProperty<double> GapProperty = FlexPanel.GapProperty;
+    public new static readonly StyledProperty<double> RowGapProperty = FlexPanel.RowGapProperty;
+    public new static readonly StyledProperty<double> ColumnGapProperty = FlexPanel.ColumnGapProperty;
+    public new static readonly AttachedProperty<FlexValue> FlexProperty = FlexPanel.FlexProperty;
+    public new static readonly AttachedProperty<double> GrowProperty = FlexPanel.GrowProperty;
+    public new static readonly AttachedProperty<double> ShrinkProperty = FlexPanel.ShrinkProperty;
+    public new static readonly AttachedProperty<FlexBasis> BasisProperty = FlexPanel.BasisProperty;
+    public new static readonly AttachedProperty<FlexAlign?> AlignSelfProperty = FlexPanel.AlignSelfProperty;
+    public new static readonly AttachedProperty<int> OrderProperty = FlexPanel.OrderProperty;
+    public new static readonly AttachedProperty<bool> MarginLeftAutoProperty = FlexPanel.MarginLeftAutoProperty;
+    public new static readonly AttachedProperty<bool> MarginRightAutoProperty = FlexPanel.MarginRightAutoProperty;
+    public new static readonly AttachedProperty<bool> MarginTopAutoProperty = FlexPanel.MarginTopAutoProperty;
+    public new static readonly AttachedProperty<bool> MarginBottomAutoProperty = FlexPanel.MarginBottomAutoProperty;
+
+    public new static void SetFlex(Control target, FlexValue value) => FlexPanel.SetFlex(target, value);
+    public new static FlexValue GetFlex(Control target) => FlexPanel.GetFlex(target);
+    public new static void SetGrow(Control target, double value) => FlexPanel.SetGrow(target, value);
+    public new static double GetGrow(Control target) => FlexPanel.GetGrow(target);
+    public new static void SetShrink(Control target, double value) => FlexPanel.SetShrink(target, value);
+    public new static double GetShrink(Control target) => FlexPanel.GetShrink(target);
+    public new static void SetBasis(Control target, FlexBasis value) => FlexPanel.SetBasis(target, value);
+    public new static FlexBasis GetBasis(Control target) => FlexPanel.GetBasis(target);
+    public new static void SetAlignSelf(Control target, FlexAlign? value) => FlexPanel.SetAlignSelf(target, value);
+    public new static FlexAlign? GetAlignSelf(Control target) => FlexPanel.GetAlignSelf(target);
+    public new static void SetOrder(Control target, int value) => FlexPanel.SetOrder(target, value);
+    public new static int GetOrder(Control target) => FlexPanel.GetOrder(target);
+    public new static void SetMarginLeftAuto(Control target, bool value) => FlexPanel.SetMarginLeftAuto(target, value);
+    public new static bool GetMarginLeftAuto(Control target) => FlexPanel.GetMarginLeftAuto(target);
+    public new static void SetMarginRightAuto(Control target, bool value) => FlexPanel.SetMarginRightAuto(target, value);
+    public new static bool GetMarginRightAuto(Control target) => FlexPanel.GetMarginRightAuto(target);
+    public new static void SetMarginTopAuto(Control target, bool value) => FlexPanel.SetMarginTopAuto(target, value);
+    public new static bool GetMarginTopAuto(Control target) => FlexPanel.GetMarginTopAuto(target);
+    public new static void SetMarginBottomAuto(Control target, bool value) => FlexPanel.SetMarginBottomAuto(target, value);
+    public new static bool GetMarginBottomAuto(Control target) => FlexPanel.GetMarginBottomAuto(target);
 }
