@@ -1,3 +1,6 @@
+using System.ComponentModel;
+using System.Globalization;
+
 namespace Zafiro.Avalonia.Controls.Panels;
 
 public enum FlexDirection
@@ -52,6 +55,7 @@ public enum FlexBasisUnit
     Pixels
 }
 
+[TypeConverter(typeof(FlexBasisConverter))]
 public struct FlexBasis
 {
     public FlexBasisUnit Unit { get; set; }
@@ -62,6 +66,28 @@ public struct FlexBasis
     public static FlexBasis Pixels(double value) => new() { Unit = FlexBasisUnit.Pixels, Value = value };
 
     public static implicit operator FlexBasis(double value) => Pixels(value);
+}
+
+public class FlexBasisConverter : TypeConverter
+{
+    public override bool CanConvertFrom(ITypeDescriptorContext? context, Type sourceType)
+        => sourceType == typeof(string) || base.CanConvertFrom(context, sourceType);
+
+    public override object? ConvertFrom(ITypeDescriptorContext? context, CultureInfo? culture, object value)
+    {
+        if (value is string text)
+        {
+            text = text.Trim();
+            if (text.Equals("Auto", StringComparison.OrdinalIgnoreCase))
+                return FlexBasis.Auto;
+            if (text.Equals("Content", StringComparison.OrdinalIgnoreCase))
+                return FlexBasis.Content;
+            if (double.TryParse(text, NumberStyles.Float, CultureInfo.InvariantCulture, out var pixels))
+                return FlexBasis.Pixels(pixels);
+        }
+
+        return base.ConvertFrom(context, culture, value);
+    }
 }
 
 public struct FlexValue
@@ -251,13 +277,17 @@ public class FlexBox : Panel
     public static void SetMarginLeftAuto(Control target, bool value) => target.SetValue(MarginLeftAutoProperty, value);
     public static bool GetMarginLeftAuto(Control target) => target.GetValue(MarginLeftAutoProperty);
 
-    public static void SetMarginRightAuto(Control target, bool value) => target.SetValue(MarginRightAutoProperty, value);
+    public static void SetMarginRightAuto(Control target, bool value) =>
+        target.SetValue(MarginRightAutoProperty, value);
+
     public static bool GetMarginRightAuto(Control target) => target.GetValue(MarginRightAutoProperty);
 
     public static void SetMarginTopAuto(Control target, bool value) => target.SetValue(MarginTopAutoProperty, value);
     public static bool GetMarginTopAuto(Control target) => target.GetValue(MarginTopAutoProperty);
 
-    public static void SetMarginBottomAuto(Control target, bool value) => target.SetValue(MarginBottomAutoProperty, value);
+    public static void SetMarginBottomAuto(Control target, bool value) =>
+        target.SetValue(MarginBottomAutoProperty, value);
+
     public static bool GetMarginBottomAuto(Control target) => target.GetValue(MarginBottomAutoProperty);
 
     protected override Size MeasureOverride(Size availableSize)
