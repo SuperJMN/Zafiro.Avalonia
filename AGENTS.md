@@ -24,11 +24,12 @@ Zafiro.Avalonia is a UI component library for **Avalonia 11.3.x** — controls, 
 2. **No CommunityToolkit.Mvvm** — Use `ReactiveObject`, `[Reactive]`, `ReactiveCommand` exclusively.
 3. **No service locator** — Constructor injection via MS DI. No `Locator.Current`, no `Splat`.
 4. **No exceptions for control flow** — Return `Result<T>` / `Maybe<T>`. Reserve `throw` for truly exceptional cases.
-5. **No `Async` suffix** — Methods returning `Task` omit the `Async` suffix.
-6. **No leading underscores** — Private fields use `camelCase`: `private readonly INavigator navigator;`
-7. **Empty Subscribe** — Put logic in the Rx pipeline (`.Where()`, `.Select()`, `.Do()`, `.SelectMany()`), not in `.Subscribe()` callbacks.
-8. **Track subscriptions** — `CompositeDisposable` + `.DisposeWith(disposable)` for any subscription outliving a method.
-9. **`x:DataType` on all Views** — Required for type-safe bindings and source-generated view location.
+5. **Idiomatic Result/Maybe** — Use `Map`, `Bind`, `Match`, `Tap`, `Execute`, `GetValueOrDefault`, `Ensure`, etc. **Never** inspect `.IsSuccess`/`.HasValue`/`.Value` imperatively. See anti-pattern #15 below.
+6. **No `Async` suffix** — Methods returning `Task` omit the `Async` suffix.
+7. **No leading underscores** — Private fields use `camelCase`: `private readonly INavigator navigator;`
+8. **Empty Subscribe** — Put logic in the Rx pipeline (`.Where()`, `.Select()`, `.Do()`, `.SelectMany()`), not in `.Subscribe()` callbacks.
+9. **Track subscriptions** — `CompositeDisposable` + `.DisposeWith(disposable)` for any subscription outliving a method.
+10. **`x:DataType` on all Views** — Required for type-safe bindings and source-generated view location.
 
 ## App Bootstrap Pattern
 

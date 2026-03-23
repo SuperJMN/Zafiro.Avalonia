@@ -71,42 +71,74 @@ searchFilter.CombineLatest(categoryFilter, (sf, cf) =>
 
 ## 2. Functional Types: Result<T> and Maybe<T>
 
-`CSharpFunctionalExtensions` types are the standard for fallible and optional returns.
+`CSharpFunctionalExtensions` types are the standard for fallible and optional returns. **Always use the idiomatic combinators** (`Map`, `Bind`, `Match`, `Tap`, `Execute`, etc.) — never inspect `.IsSuccess`/`.HasValue`/`.Value` imperatively.
 
 ### Result<T> — Explicit Success/Failure
 
 ```csharp
-// Command returning a result
-ReactiveCommand.CreateFromTask(async () =>
-{
-    await Task.Delay(1000);
-    return Result.Success(Number!.Value);       // explicit success
-});
+// Constructing results
+Result.Success(42)
+Result.Failure<int>("Something went wrong")
+Result.Try(() => riskyOperation())          // exception-safe wrapping
 
-// Error propagation (no exceptions for control flow)
-return Uri.TryCreate(uriString, UriKind.Absolute, out var uri)
-    ? Result.Success(uri)
-    : Result.Failure<Uri>($"Cannot parse URI '{uriString}'");
+// ✅ Idiomatic pipeline — chain operations without unpacking
+return await GetTopLevel().ToResult("Cannot get host")
+    .Map(topLevel => topLevel.Launcher)
+    .EnsureNotNull("Launcher unavailable")
+    .Bind(launcher => Result.Try(() => launcher.LaunchUriAsync(uri)))
+    .Ensure(ok => ok, "Launch failed");
+
+// ✅ Composing fallible operations
+return await storage.GetDirectory(path)
+    .Map(dir => dir.GetChildren())
+    .Bind(children => ProcessAll(children));
+
+// ✅ Side-effects without unwrapping
+await clipboard.ToResult("No clipboard")
+    .Tap(cb => cb.SetTextAsync(text))
+    .Tap(() => notificationService.Show(null!, "Copied"));
 ```
+
+Key `Result<T>` combinators: `Map`, `Bind`, `Tap`, `OnFailure`, `Ensure`, `EnsureNotNull`, `Match`, `MapError`, `CompensateFailure`, `Result.Try`, `Result.Combine`.
 
 ### Maybe<T> — Explicit Presence/Absence
 
 ```csharp
-// Dialogs return Maybe<T> — absent means dismissed
-Maybe<string> result = await dialog.ShowAndGetResult(viewModel, "Title",
-    vm => vm.IsValid(), vm => vm.Text);
+// Constructing Maybe
+Maybe.From(possiblyNullValue)               // wrap nullable
+Maybe<string>.None                          // explicit absence
+items.TryFirst(x => x.IsActive)            // from collection
 
-// Pattern matching on Maybe
-result.Match(
+// ✅ Idiomatic — use combinators, not if/HasValue
+maybe.Match(
     value => $"Got: {value}",
-    () => "Dismissed");
+    () => "Nothing");
 
-// Rx extensions for Maybe streams
+maybe.Execute(value => Save(value));        // side-effect if present
+maybe.ExecuteNoValue(() => LogMissing());   // side-effect if absent
+maybe.GetValueOrDefault("fallback");        // extract with default
+
+// ✅ Pipeline composition
+Maybe.From(command)
+    .Bind(ToReactiveCommand)
+    .Map(rc => rc.IsExecuting.StartWith(false))
+    .GetValueOrDefault(Observable.Return(false));
+
+// ✅ Rx extensions for splitting Maybe streams
 command.Values()     // IObservable<T> — only present values
 command.Empties()    // IObservable<Unit> — only absent values
+
+// ✅ Dialog results use Maybe
+Maybe<string> result = await dialog.ShowAndGetResult(viewModel, "Title",
+    vm => vm.IsValid(), vm => vm.Text);
+result.Match(
+    value => HandleResult(value),
+    () => HandleDismissal());
 ```
 
-**Evidence**: `DialogSampleViewModel.cs`, `WizardViewModel.cs`, `Commands.cs`, `StorageSampleViewModel.cs`.
+Key `Maybe<T>` combinators: `Map`, `Bind`, `Match`, `Execute`, `ExecuteNoValue`, `GetValueOrDefault`, `Where`, `TryFirst`, `Maybe.From`.
+
+**Evidence**: `LauncherService.cs`, `Commands.cs`, `EnhancedButton.axaml.cs`, `DataTemplateInclude.cs`, `StorageSampleViewModel.cs`, `DialogSampleViewModel.cs`, `WizardViewModel.cs`.
 
 ---
 

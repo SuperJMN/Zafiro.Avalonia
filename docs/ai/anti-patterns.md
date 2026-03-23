@@ -264,3 +264,144 @@ await wizard.Navigate(navigator);
 ```
 
 `[HYPOTHESIS]` Zafiro.Avalonia.Dialogs/Styles.axaml internally includes `avares://Zafiro.Avalonia/Styles.axaml`, so explicit ordering may be redundant. But both samples include core styles first, suggesting it's the intended pattern.
+
+---
+
+## ❌ 15. Do Not Inspect Result/Maybe Imperatively
+
+This is one of the most important conventions. `CSharpFunctionalExtensions` provides a rich set of combinators — use them instead of unpacking `.Value` / `.IsSuccess` / `.HasValue` with if-statements.
+
+### Result<T>
+
+```csharp
+// ❌ WRONG — imperative unwrapping
+var result = await FetchData();
+if (result.IsSuccess)
+{
+    Process(result.Value);
+}
+else
+{
+    Log(result.Error);
+}
+
+// ✅ RIGHT — idiomatic combinators
+await FetchData()
+    .Tap(data => Process(data))
+    .OnFailure(error => Log(error));
+```
+
+```csharp
+// ❌ WRONG — chained imperative checks
+var contentResult = GetContentSize();
+if (contentResult.IsFailure)
+    return Result.Failure<Size>(contentResult.Error);
+var contentSize = contentResult.Value;
+var overflowResult = GetOverflowSize();
+if (overflowResult.IsFailure)
+    return Result.Failure<Size>(overflowResult.Error);
+Process(contentSize, overflowResult.Value);
+
+// ✅ RIGHT — pipeline composition
+return GetContentSize()
+    .Bind(contentSize => GetOverflowSize()
+        .Map(overflowSize => Process(contentSize, overflowSize)));
+```
+
+Key `Result<T>` combinators:
+
+| Method | Purpose | Example |
+|---|---|---|
+| `.Map(T → K)` | Transform success value | `result.Map(x => x.ToString())` |
+| `.Bind(T → Result<K>)` | Chain fallible operations | `result.Bind(x => Validate(x))` |
+| `.Tap(T → void)` | Side-effect on success | `result.Tap(x => Log(x))` |
+| `.OnFailure(error → void)` | Side-effect on failure | `result.OnFailure(e => Log(e))` |
+| `.Ensure(T → bool, error)` | Validate invariant | `result.Ensure(x => x > 0, "Must be positive")` |
+| `.Match(onSuccess, onFailure)` | Exhaustive fold | `result.Match(v => Ok(v), e => Err(e))` |
+| `.MapError(error → error)` | Transform error | `result.MapError(e => $"Wrapped: {e}")` |
+| `Result.Try(() → T)` | Exception-safe wrapping | `Result.Try(() => Parse(input))` |
+| `.CompensateFailure(() → Result<T>)` | Fallback on failure | `primary.CompensateFailure(() => fallback)` |
+
+### Maybe<T>
+
+```csharp
+// ❌ WRONG — imperative check
+if (maybe.HasValue)
+{
+    DoSomething(maybe.Value);
+}
+
+// ✅ RIGHT — idiomatic
+maybe.Execute(value => DoSomething(value));
+
+// ❌ WRONG — ternary on HasValue
+return maybe.HasValue ? maybe.Value : "default";
+
+// ✅ RIGHT
+return maybe.GetValueOrDefault("default");
+
+// ❌ WRONG — conditional transform
+string display;
+if (result.HasValue)
+    display = $"Got: {result.Value}";
+else
+    display = "Nothing";
+
+// ✅ RIGHT — Match
+var display = result.Match(
+    value => $"Got: {value}",
+    () => "Nothing");
+```
+
+Key `Maybe<T>` combinators:
+
+| Method | Purpose | Example |
+|---|---|---|
+| `.Map(T → K)` | Transform if present | `maybe.Map(x => x.Name)` |
+| `.Bind(T → Maybe<K>)` | Chain optional lookups | `maybe.Bind(x => FindChild(x))` |
+| `.Match(onValue, onNone)` | Exhaustive fold | `maybe.Match(v => Show(v), () => ShowEmpty())` |
+| `.Execute(T → void)` | Side-effect if present | `maybe.Execute(x => Save(x))` |
+| `.ExecuteNoValue(() → void)` | Side-effect if absent | `maybe.ExecuteNoValue(() => LogMissing())` |
+| `.GetValueOrDefault(K)` | Extract with fallback | `maybe.GetValueOrDefault("N/A")` |
+| `.Where(T → bool)` | Filter | `maybe.Where(x => x.IsValid)` |
+| `Maybe.From(nullable)` | Wrap nullable | `Maybe.From(possiblyNull)` |
+| `.TryFirst(predicate)` | First match from collection | `items.TryFirst(x => x.IsActive)` |
+
+### Rx Extensions for Maybe Streams
+
+```csharp
+// Split a Maybe stream into value/empty channels
+command.Values()     // IObservable<T> — emits when Maybe has value
+command.Empties()    // IObservable<Unit> — emits when Maybe is empty
+```
+
+### Canonical Examples (from the codebase)
+
+**Best — `LauncherService.cs`**: Full pipeline with no imperative checks:
+```csharp
+return await ApplicationUtils.TopLevel().ToResult("Cannot get the top level host")
+    .Map(topLevel => topLevel.Launcher)
+    .EnsureNotNull("The top level launcher service cannot be null")
+    .Bind(l => Result.Try(() => l.LaunchUriAsync(uri)))
+    .Ensure(b => b, "Launch URI operation failed");
+```
+
+**Best — `EnhancedButton.axaml.cs`**: Maybe pipeline:
+```csharp
+static IObservable<bool> ObserveExecution(ICommand? command) =>
+    Maybe.From(command)
+        .Bind(ToReactiveCommand)
+        .Map(rc => rc.IsExecuting.StartWith(false))
+        .GetValueOrDefault(Observable.Return(false));
+```
+
+**Best — `DataTemplateInclude.cs`**: Nested Maybe composition:
+```csharp
+return DataTemplates
+    .Bind(templates => templates
+        .TryFirst(template => template.Match(param))
+        .Bind(template => Maybe.From(template.Build(param))))
+    .GetValueOrDefault();
+```
+
+**Evidence**: The most idiomatic code is in `LauncherService.cs`, `Commands.cs`, `EnhancedButton.axaml.cs`, `DataTemplateInclude.cs`, `StorageDirectory.cs`, `NamingConventionViewLocator.cs`. Some older code in `AdaptivePanel.cs`, `GraphWizardBuilderGeneric.cs`, and value converters still uses imperative checks — these should be considered legacy patterns, not examples to follow.

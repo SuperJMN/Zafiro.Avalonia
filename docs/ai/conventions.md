@@ -223,6 +223,44 @@ someObservable.Subscribe(x =>
 
 ---
 
+## Result/Maybe Idiomatic Style
+
+**Always prefer functional combinators over imperative checks.** This is a core convention.
+
+### Result<T> — compose with combinators
+
+```csharp
+// ✅ Preferred — pipeline
+return await GetHost().ToResult("No host")
+    .Map(host => host.Launcher)
+    .Bind(l => Result.Try(() => l.LaunchUriAsync(uri)))
+    .Ensure(ok => ok, "Launch failed");
+
+// ❌ Avoid — imperative unpacking
+var result = await GetHost();
+if (result.IsFailure) return Result.Failure(result.Error);
+var host = result.Value;  // never do this
+```
+
+### Maybe<T> — compose with combinators
+
+```csharp
+// ✅ Preferred — Match/Execute/GetValueOrDefault
+maybe.Match(v => $"Got: {v}", () => "Empty");
+maybe.Execute(v => Save(v));
+maybe.GetValueOrDefault("fallback");
+
+// ❌ Avoid — if/HasValue/Value
+if (maybe.HasValue) DoSomething(maybe.Value);
+return maybe.HasValue ? maybe.Value : "default";
+```
+
+Prefer `Map`/`Bind` for transforms, `Tap`/`Execute` for side-effects, `Match` for exhaustive folds, `GetValueOrDefault` for extraction, `Ensure`/`Where` for filtering. See `docs/ai/anti-patterns.md` §15 for the full combinator reference.
+
+**Evidence**: `LauncherService.cs`, `Commands.cs`, `EnhancedButton.axaml.cs`, `DataTemplateInclude.cs`, `NamingConventionViewLocator.cs` all demonstrate clean pipelines. Some older code (`AdaptivePanel.cs`, `GraphWizardBuilderGeneric.cs`) still uses imperative checks — these are legacy patterns, not examples to follow.
+
+---
+
 ## Git and Versioning
 
 - **GitVersion** with semver suffix in squash-merge commit messages
