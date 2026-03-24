@@ -1,0 +1,111 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:bp="clr-namespace:Zafiro.Avalonia.Controls.Panels.Blueprint;assembly=Zafiro.Avalonia"
+             x:Class="TestApp.Samples.Panels.BlueprintPanelView">
+
+    <ScrollViewer>
+        <StackPanel Spacing="24" Margin="16">
+
+            <!-- Demo 1: Simple fixed layout -->
+            <Card Header="Simple Layout" Subheader="Layout=&quot;0 1 1 2 / 0 1 1 2 / 0 1 1 3 / 4 4 4 4&quot;">
+                <bp:BlueprintPanel Layout="0 1 1 2 / 0 1 1 2 / 0 1 1 3 / 4 4 4 4"
+                                   RowSpacing="4" ColumnSpacing="4"
+                                   Height="300">
+                    <Border Background="#4CAF50" CornerRadius="4">
+                        <TextBlock Text="0 · Sidebar" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                   Foreground="White" />
+                    </Border>
+                    <Border Background="#2196F3" CornerRadius="4">
+                        <TextBlock Text="1 · Main" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                   Foreground="White" />
+                    </Border>
+                    <Border Background="#FF9800" CornerRadius="4">
+                        <TextBlock Text="2 · Widget A" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                   Foreground="White" />
+                    </Border>
+                    <Border Background="#9C27B0" CornerRadius="4">
+                        <TextBlock Text="3 · Widget B" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                   Foreground="White" />
+                    </Border>
+                    <Border Background="#607D8B" CornerRadius="4">
+                        <TextBlock Text="4 · Footer" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                   Foreground="White" />
+                    </Border>
+                </bp:BlueprintPanel>
+            </Card>
+
+            <!-- Demo 2: Responsive layout — resize the window to see it adapt -->
+            <Card Header="Responsive Layout" Subheader="Resize the window to see breakpoints in action">
+                <bp:BlueprintPanel RowSpacing="4" ColumnSpacing="4" Height="300">
+                    <bp:BlueprintPanel.Layouts>
+                        <bp:LayoutBreakpoint MinWidth="800">
+                            <bp:LayoutBreakpoint.Blueprint>
+                                0 1 1 1 2 /
+                                0 1 1 1 2 /
+                                0 1 1 1 3 /
+                                4 4 4 4 4
+                            </bp:LayoutBreakpoint.Blueprint>
+                        </bp:LayoutBreakpoint>
+                        <bp:LayoutBreakpoint MinWidth="500">
+                            <bp:LayoutBreakpoint.Blueprint>
+                                0 0 1 /
+                                0 0 1 /
+                                0 0 1 /
+                                2 2 3
+                            </bp:LayoutBreakpoint.Blueprint>
+                        </bp:LayoutBreakpoint>
+                        <bp:LayoutBreakpoint Blueprint="0 / 1 / 2 / 3" />
+                    </bp:BlueprintPanel.Layouts>
+
+                    <Border Background="#E91E63" CornerRadius="4">
+                        <TextBlock Text="0" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                   Foreground="White" FontSize="24" FontWeight="Bold" />
+                    </Border>
+                    <Border Background="#00BCD4" CornerRadius="4">
+                        <TextBlock Text="1" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                   Foreground="White" FontSize="24" FontWeight="Bold" />
+                    </Border>
+                    <Border Background="#CDDC39" CornerRadius="4">
+                        <TextBlock Text="2" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                   FontSize="24" FontWeight="Bold" />
+                    </Border>
+                    <Border Background="#FF5722" CornerRadius="4">
+                        <TextBlock Text="3" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                   Foreground="White" FontSize="24" FontWeight="Bold" />
+                    </Border>
+                    <Border Background="#795548" CornerRadius="4">
+                        <TextBlock Text="4" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                   Foreground="White" FontSize="24" FontWeight="Bold" />
+                    </Border>
+                </bp:BlueprintPanel>
+            </Card>
+
+            <!-- Demo 3: Empty cells -->
+            <Card Header="Empty Cells" Subheader="Use '.' for gaps: 0 . 1 / . 2 . / 3 . 4">
+                <bp:BlueprintPanel Layout="0 . 1 / . 2 . / 3 . 4"
+                                   RowSpacing="4" ColumnSpacing="4"
+                                   Height="200">
+                    <Border Background="#3F51B5" CornerRadius="4">
+                        <TextBlock Text="0" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White"
+                                   FontSize="20" />
+                    </Border>
+                    <Border Background="#009688" CornerRadius="4">
+                        <TextBlock Text="1" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White"
+                                   FontSize="20" />
+                    </Border>
+                    <Border Background="#FFC107" CornerRadius="4">
+                        <TextBlock Text="2" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20" />
+                    </Border>
+                    <Border Background="#F44336" CornerRadius="4">
+                        <TextBlock Text="3" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White"
+                                   FontSize="20" />
+                    </Border>
+                    <Border Background="#8BC34A" CornerRadius="4">
+                        <TextBlock Text="4" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20" />
+                    </Border>
+                </bp:BlueprintPanel>
+            </Card>
+
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>
