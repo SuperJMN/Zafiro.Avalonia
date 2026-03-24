@@ -1,3 +1,5 @@
+using Avalonia.Metadata;
+
 namespace Zafiro.Avalonia.Controls.Panels.Blueprint;
 
 /// <summary>
@@ -33,8 +35,9 @@ public class LayoutBreakpoint : AvaloniaObject
     }
 
     /// <summary>
-    /// The grid template text. Space-separated tokens per row, rows separated by newlines or '/'.
+    /// The grid template text. Space-separated tokens per row, rows separated by '/' or newlines.
     /// </summary>
+    [Content]
     public string? Blueprint
     {
         get => GetValue(BlueprintProperty);

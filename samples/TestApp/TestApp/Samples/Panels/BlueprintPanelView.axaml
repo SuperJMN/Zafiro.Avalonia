@@ -39,20 +39,16 @@
                 <bp:BlueprintPanel RowSpacing="4" ColumnSpacing="4" Height="300">
                     <bp:BlueprintPanel.Layouts>
                         <bp:LayoutBreakpoint MinWidth="800">
-                            <bp:LayoutBreakpoint.Blueprint>
-                                0 1 1 1 2 /
-                                0 1 1 1 2 /
-                                0 1 1 1 3 /
-                                4 4 4 4 4
-                            </bp:LayoutBreakpoint.Blueprint>
+                            0 1 1 1 2 /
+                            0 1 1 1 2 /
+                            0 1 1 1 3 /
+                            4 4 4 4 4
                         </bp:LayoutBreakpoint>
                         <bp:LayoutBreakpoint MinWidth="500">
-                            <bp:LayoutBreakpoint.Blueprint>
-                                0 0 1 /
-                                0 0 1 /
-                                0 0 1 /
-                                2 2 3
-                            </bp:LayoutBreakpoint.Blueprint>
+                            0 0 1 /
+                            0 0 1 /
+                            0 0 1 /
+                            2 2 3
                         </bp:LayoutBreakpoint>
                         <bp:LayoutBreakpoint Blueprint="0 / 1 / 2 / 3" />
                     </bp:BlueprintPanel.Layouts>
