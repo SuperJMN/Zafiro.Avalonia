@@ -1,0 +1,171 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:panels="clr-namespace:Zafiro.Avalonia.Controls.Panels;assembly=Zafiro.Avalonia"
+             mc:Ignorable="d"
+             d:DesignWidth="1000" d:DesignHeight="900"
+             x:Class="TestApp.Samples.Panels.SemanticPanelView">
+
+    <UserControl.Styles>
+        <!-- Colored placeholders so each role is visually distinct -->
+        <Style Selector="Border.role">
+            <Setter Property="CornerRadius" Value="6" />
+            <Setter Property="Padding" Value="16" />
+        </Style>
+        <Style Selector="Border.role > TextBlock">
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+        </Style>
+    </UserControl.Styles>
+
+    <ScrollViewer>
+        <StackPanel Spacing="20" Margin="16">
+
+            <TextBlock Classes="h4" Text="SemanticPanel" />
+            <TextBlock TextWrapping="Wrap"
+                       Text="Children declare a semantic Role and the panel distributes them automatically. Resize the window to see how the layout adapts across Expanded → Medium → Compact." />
+
+            <!-- ═══ Demo 1: TV / YouTube scenario ═══ -->
+            <Card Header="TV Broadcast (all roles)">
+                <panels:SemanticPanel Spacing="8" SidebarWidth="180" PrimaryRatio="0.65" SecondaryMinWidth="200"
+                                      CompactBreakpoint="500" ExpandedBreakpoint="800">
+
+                    <!-- Primary: the live stream -->
+                    <Border Classes="role" Background="#2563EB" MinHeight="220"
+                            panels:SemanticPanel.Role="Primary">
+                        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <TextBlock Text="▶  LIVE STREAM" Foreground="White" FontSize="18" FontWeight="Bold"
+                                       HorizontalAlignment="Center" />
+                            <TextBlock Text="Primary" Foreground="#93C5FD" FontSize="12"
+                                       HorizontalAlignment="Center" />
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Secondary: channel list / recommendations -->
+                    <Border Classes="role" Background="#7C3AED" MinHeight="160"
+                            panels:SemanticPanel.Role="Secondary">
+                        <StackPanel Spacing="6">
+                            <TextBlock Text="Channels" Foreground="White" FontWeight="Bold"
+                                       HorizontalAlignment="Center" />
+                            <TextBlock Text="Channel 1 — News" Foreground="#DDD6FE" />
+                            <TextBlock Text="Channel 2 — Sports" Foreground="#DDD6FE" />
+                            <TextBlock Text="Channel 3 — Movies" Foreground="#DDD6FE" />
+                            <TextBlock Text="Channel 4 — Music" Foreground="#DDD6FE" />
+                            <TextBlock Text="Secondary" Foreground="#C4B5FD" FontSize="11"
+                                       HorizontalAlignment="Center" />
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Info: programme description -->
+                    <Border Classes="role" Background="#0891B2" MinHeight="60"
+                            panels:SemanticPanel.Role="Info">
+                        <StackPanel>
+                            <TextBlock Text="Now playing: Evening News — Breaking stories from around the world"
+                                       Foreground="White" TextWrapping="Wrap" />
+                            <TextBlock Text="Info" Foreground="#A5F3FC" FontSize="11"
+                                       HorizontalAlignment="Center" />
+                        </StackPanel>
+                    </Border>
+
+                    <!-- ActionPrimary: main playback controls -->
+                    <Border Classes="role" Background="#DC2626" MinHeight="44"
+                            panels:SemanticPanel.Role="ActionPrimary">
+                        <StackPanel Orientation="Horizontal" Spacing="12"
+                                    HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <TextBlock Text="⏮" Foreground="White" FontSize="18" />
+                            <TextBlock Text="⏸" Foreground="White" FontSize="18" />
+                            <TextBlock Text="⏭" Foreground="White" FontSize="18" />
+                            <TextBlock Text="🔊" Foreground="White" FontSize="18" />
+                            <TextBlock Text="ActionPrimary" Foreground="#FECACA" FontSize="11"
+                                       VerticalAlignment="Center" Margin="12,0,0,0" />
+                        </StackPanel>
+                    </Border>
+
+                    <!-- ActionSecondary: share, settings -->
+                    <Border Classes="role" Background="#9F1239" MinHeight="44"
+                            panels:SemanticPanel.Role="ActionSecondary">
+                        <StackPanel Orientation="Horizontal" Spacing="12"
+                                    HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <TextBlock Text="⚙" Foreground="White" FontSize="16" />
+                            <TextBlock Text="Share" Foreground="White" />
+                            <TextBlock Text="ActionSecondary" Foreground="#FDA4AF" FontSize="11"
+                                       VerticalAlignment="Center" Margin="12,0,0,0" />
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Sidebar: navigation menu -->
+                    <Border Classes="role" Background="#15803D" MinHeight="100"
+                            panels:SemanticPanel.Role="Sidebar">
+                        <StackPanel Spacing="6">
+                            <TextBlock Text="📺 Menu" Foreground="White" FontWeight="Bold"
+                                       HorizontalAlignment="Center" />
+                            <TextBlock Text="🏠 Home" Foreground="#BBF7D0" />
+                            <TextBlock Text="⭐ Favourites" Foreground="#BBF7D0" />
+                            <TextBlock Text="📋 Guide" Foreground="#BBF7D0" />
+                            <TextBlock Text="Sidebar" Foreground="#86EFAC" FontSize="11"
+                                       HorizontalAlignment="Center" />
+                        </StackPanel>
+                    </Border>
+                </panels:SemanticPanel>
+            </Card>
+
+            <!-- ═══ Demo 2: Minimal — only Primary + Secondary ═══ -->
+            <Card Header="Minimal (Primary + Secondary only)">
+                <panels:SemanticPanel Spacing="8" PrimaryRatio="0.7"
+                                      CompactBreakpoint="500" ExpandedBreakpoint="800">
+                    <Border Classes="role" Background="#2563EB" MinHeight="150"
+                            panels:SemanticPanel.Role="Primary">
+                        <TextBlock Text="Primary" Foreground="White" />
+                    </Border>
+                    <Border Classes="role" Background="#7C3AED" MinHeight="150"
+                            panels:SemanticPanel.Role="Secondary">
+                        <TextBlock Text="Secondary" Foreground="White" />
+                    </Border>
+                </panels:SemanticPanel>
+            </Card>
+
+            <!-- ═══ Demo 3: No sidebar — game-like ═══ -->
+            <Card Header="Pokémon Battle (no Sidebar)">
+                <panels:SemanticPanel Spacing="8" PrimaryRatio="0.6" SecondaryMinWidth="180"
+                                      CompactBreakpoint="500" ExpandedBreakpoint="800">
+                    <Border Classes="role" Background="#1E3A5F" MinHeight="180"
+                            panels:SemanticPanel.Role="Primary">
+                        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <TextBlock Text="⚔️  BATTLE ARENA" Foreground="White" FontSize="16" FontWeight="Bold"
+                                       HorizontalAlignment="Center" />
+                            <TextBlock Text="Pikachu vs Charizard" Foreground="#93C5FD"
+                                       HorizontalAlignment="Center" />
+                        </StackPanel>
+                    </Border>
+                    <Border Classes="role" Background="#4A1D6A" MinHeight="120"
+                            panels:SemanticPanel.Role="Secondary">
+                        <StackPanel Spacing="4">
+                            <TextBlock Text="Battle Log" Foreground="White" FontWeight="Bold" />
+                            <TextBlock Text="Pikachu used Thunderbolt!" Foreground="#DDD6FE" />
+                            <TextBlock Text="It's super effective!" Foreground="#FDE68A" />
+                            <TextBlock Text="Charizard used Flamethrower!" Foreground="#DDD6FE" />
+                        </StackPanel>
+                    </Border>
+                    <Border Classes="role" Background="#065F46" MinHeight="40"
+                            panels:SemanticPanel.Role="Info">
+                        <TextBlock Text="Turn 3 — Pikachu HP: 65/100  |  Charizard HP: 42/120"
+                                   Foreground="#A7F3D0" HorizontalAlignment="Center" />
+                    </Border>
+                    <Border Classes="role" Background="#DC2626" MinHeight="48"
+                            panels:SemanticPanel.Role="ActionPrimary">
+                        <StackPanel Orientation="Horizontal" Spacing="16"
+                                    HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <TextBlock Text="⚡ Fight" Foreground="White" FontWeight="Bold" />
+                            <TextBlock Text="🎒 Bag" Foreground="White" />
+                            <TextBlock Text="🔄 Pokémon" Foreground="White" />
+                            <TextBlock Text="🏃 Run" Foreground="White" />
+                        </StackPanel>
+                    </Border>
+                </panels:SemanticPanel>
+            </Card>
+
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>
