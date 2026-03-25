@@ -83,6 +83,7 @@ this.Connect(() => new ShellView(), _ => shell, () => new Window());
 | FlexPanel patterns | `samples/TestApp/TestApp/Samples/Layout/FlexPanelView.axaml` |
 | AdaptivePanel | `samples/TestApp/TestApp/Samples/Layout/AdaptivePanelView.axaml` |
 | ResponsivePresenter | `samples/TestApp/TestApp/Samples/Layout/ResponsivePresenter/ResponsivePresenterView.axaml` |
+| Responsive design (ContainerQuery + FlexPanel) | `samples/TestApp/TestApp/Samples/Layout/ResponsiveLayoutsView.axaml` |
 
 ## GitVersion Pull Request Workflow
 

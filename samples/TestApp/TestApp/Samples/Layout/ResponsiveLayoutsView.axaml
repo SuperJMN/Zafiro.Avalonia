@@ -1,0 +1,324 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             d:DesignWidth="900" d:DesignHeight="900"
+             x:Class="TestApp.Samples.Layout.ResponsiveLayoutsView">
+
+    <UserControl.Styles>
+        <Style Selector="Border.demo-surface">
+            <Setter Property="Padding" Value="16" />
+            <Setter Property="BorderBrush" Value="#22000000" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="12" />
+            <Setter Property="Background" Value="#08FFFFFF" />
+        </Style>
+
+        <Style Selector="Border.nav-item">
+            <Setter Property="CornerRadius" Value="8" />
+            <Setter Property="Padding" Value="12 8" />
+        </Style>
+        <Style Selector="Border.nav-item:pointerover">
+            <Setter Property="Background" Value="#334155" />
+        </Style>
+
+        <!-- ═══════════════════════════════════════════════════════════
+             IMPORTANT: Mobile-first defaults MUST be set via Styles,
+             not as local values on the controls. Local values always
+             beat ContainerQuery styles (same as CSS !important vs @container).
+             ═══════════════════════════════════════════════════════════ -->
+
+        <!-- Example 1: Shell defaults (mobile-first) -->
+        <Style Selector="FlexPanel#ShellLayout">
+            <Setter Property="Direction" Value="ColumnReverse" />
+        </Style>
+        <Style Selector="FlexPanel#SidebarNav">
+            <Setter Property="Direction" Value="Row" />
+            <Setter Property="JustifyContent" Value="SpaceEvenly" />
+        </Style>
+
+        <!-- Example 2: Toolbar defaults (mobile-first) -->
+        <Style Selector="FlexPanel#ToolbarLayout">
+            <Setter Property="Direction" Value="Column" />
+            <Setter Property="Gap" Value="4" />
+        </Style>
+
+        <!-- Example 4: Page defaults (mobile-first) -->
+        <Style Selector="FlexPanel#PageLayout">
+            <Setter Property="Direction" Value="ColumnReverse" />
+        </Style>
+        <Style Selector="FlexPanel#PageSidebarNav">
+            <Setter Property="Direction" Value="Row" />
+            <Setter Property="JustifyContent" Value="SpaceEvenly" />
+        </Style>
+    </UserControl.Styles>
+
+    <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+        <StackPanel Spacing="12">
+
+            <HeaderedContainer Header="Web-like responsive layouts using FlexPanel + ContainerQuery">
+                <TextBlock Margin="16 0 16 16" TextWrapping="Wrap"
+                           Text="These examples combine FlexPanel (CSS Flexbox) with Avalonia's ContainerQuery (@container queries) to create layouts that adapt to their container's width — exactly like web development with Flexbox + @container." />
+            </HeaderedContainer>
+
+            <!-- ═══════════════════════════════════════════════════════════════
+                 Example 1: Responsive Shell — Sidebar + Content
+                 Web equivalent:
+                   .shell { display: flex; flex-direction: column-reverse; }
+                   .sidebar { flex-shrink: 0; }
+                   .content { flex-grow: 1; }
+                   @container (min-width: 500px) {
+                     .shell { flex-direction: row; }
+                     .sidebar { width: 200px; }
+                     .sidebar-nav { flex-direction: column; }
+                   }
+                 ═══════════════════════════════════════════════════════════════ -->
+            <Card Header="Responsive Shell: Sidebar + Content">
+                <StackPanel Spacing="8" Margin="16 0 16 16">
+                    <TextBlock TextWrapping="Wrap"
+                               Text="Wide → sidebar on the left (Row). Narrow → sidebar at the bottom as a horizontal bar (ColumnReverse). Resize the window to see the transition." />
+
+                    <Border Container.Name="shell" Container.Sizing="Width"
+                            Height="350" ClipToBounds="True">
+                        <Border.Styles>
+                            <!-- Desktop: row layout, fixed sidebar width, vertical nav -->
+                            <ContainerQuery Name="shell" Query="min-width:500">
+                                <Style Selector="FlexPanel#ShellLayout">
+                                    <Setter Property="Direction" Value="Row" />
+                                </Style>
+                                <Style Selector="Border#Sidebar">
+                                    <Setter Property="Width" Value="200" />
+                                </Style>
+                                <Style Selector="FlexPanel#SidebarNav">
+                                    <Setter Property="Direction" Value="Column" />
+                                </Style>
+                            </ContainerQuery>
+                        </Border.Styles>
+
+                        <!-- Mobile-first defaults come from UserControl.Styles above -->
+                        <FlexPanel x:Name="ShellLayout" AlignItems="Stretch">
+
+                            <!-- Sidebar -->
+                            <Border x:Name="Sidebar" Background="#1E293B"
+                                    FlexPanel.Shrink="0" Padding="8">
+                                <FlexPanel x:Name="SidebarNav"
+                                           Gap="4" AlignItems="Center">
+                                    <Border Classes="nav-item">
+                                        <TextBlock Text="🏠 Home" Foreground="White" />
+                                    </Border>
+                                    <Border Classes="nav-item">
+                                        <TextBlock Text="📊 Analytics" Foreground="White" />
+                                    </Border>
+                                    <Border Classes="nav-item">
+                                        <TextBlock Text="👤 Users" Foreground="White" />
+                                    </Border>
+                                    <Border Classes="nav-item">
+                                        <TextBlock Text="⚙️ Settings" Foreground="White" />
+                                    </Border>
+                                </FlexPanel>
+                            </Border>
+
+                            <!-- Content: fills remaining space -->
+                            <Border FlexPanel.Grow="1" Background="#F8FAFC" Padding="20">
+                                <StackPanel Spacing="12">
+                                    <TextBlock FontWeight="Bold" FontSize="18" Text="Dashboard"
+                                               Foreground="#0F172A" />
+                                    <TextBlock TextWrapping="Wrap" Foreground="#475569"
+                                               Text="This content area grows to fill all available space. On desktop, it sits beside the sidebar. On mobile, it takes the full width above the bottom navigation bar." />
+                                    <Border Background="#E2E8F0" CornerRadius="8" Padding="16" Margin="0,8,0,0">
+                                        <TextBlock TextWrapping="Wrap" Foreground="#64748B"
+                                                   Text="Tip: This is the exact same pattern as CSS Flexbox + @container queries. Mobile-first direction (column-reverse), upgraded to row at the breakpoint." />
+                                    </Border>
+                                </StackPanel>
+                            </Border>
+                        </FlexPanel>
+                    </Border>
+                </StackPanel>
+            </Card>
+
+            <!-- ═══════════════════════════════════════════════════════════════
+                 Example 2: Responsive Toolbar
+                 Web equivalent:
+                   .toolbar { display: flex; flex-direction: column; gap: 4px; }
+                   @container (min-width: 400px) {
+                     .toolbar { flex-direction: row; gap: 8px; }
+                   }
+                 ═══════════════════════════════════════════════════════════════ -->
+            <Card Header="Responsive Toolbar">
+                <StackPanel Spacing="8" Margin="16 0 16 16">
+                    <TextBlock TextWrapping="Wrap"
+                               Text="Wide → horizontal toolbar with labels. Narrow → vertical stack. Same FlexPanel + ContainerQuery pattern." />
+
+                    <Border Container.Name="toolbar" Container.Sizing="Width"
+                            ClipToBounds="True">
+                        <Border.Styles>
+                            <ContainerQuery Name="toolbar" Query="min-width:400">
+                                <Style Selector="FlexPanel#ToolbarLayout">
+                                    <Setter Property="Direction" Value="Row" />
+                                    <Setter Property="Gap" Value="8" />
+                                </Style>
+                            </ContainerQuery>
+                        </Border.Styles>
+
+                        <Border Classes="demo-surface">
+                            <FlexPanel x:Name="ToolbarLayout" AlignItems="Stretch">
+                                <EnhancedButton Content="📄 New Document" />
+                                <EnhancedButton Content="💾 Save" />
+                                <EnhancedButton Content="📤 Export" />
+                                <EnhancedButton Content="🗑️ Delete"
+                                                FlexPanel.MarginLeftAuto="True" />
+                            </FlexPanel>
+                        </Border>
+                    </Border>
+                </StackPanel>
+            </Card>
+
+            <!-- ═══════════════════════════════════════════════════════════════
+                 Example 3: BootstrapGridPanel — Built-in responsive columns
+                 Web equivalent:
+                   <div class="row">
+                     <div class="col-12 col-md-6 col-lg-4">...</div>
+                   </div>
+                 No ContainerQuery needed — breakpoints are built into the panel.
+                 ═══════════════════════════════════════════════════════════════ -->
+            <Card Header="BootstrapGridPanel: Responsive Card Grid (native breakpoints)">
+                <StackPanel Spacing="8" Margin="16 0 16 16">
+                    <TextBlock TextWrapping="Wrap"
+                               Text="BootstrapGridPanel has built-in breakpoints (like CSS Bootstrap). Cards go from 3 columns → 2 → 1 as the container narrows. No ContainerQuery needed." />
+
+                    <BootstrapGridPanel Gutter="12"
+                                        MediumBreakpoint="500"
+                                        LargeBreakpoint="700">
+                        <Border BootstrapGridPanel.Col="12"
+                                BootstrapGridPanel.ColMd="6"
+                                BootstrapGridPanel.ColLg="4"
+                                Background="#DBEAFE" CornerRadius="10" Padding="16">
+                            <StackPanel Spacing="4">
+                                <TextBlock FontWeight="Bold" Text="Revenue" />
+                                <TextBlock Text="$12,340" FontSize="24" FontWeight="Bold" Foreground="#1D4ED8" />
+                                <TextBlock Text="+12% vs last month" Foreground="#64748B" />
+                            </StackPanel>
+                        </Border>
+
+                        <Border BootstrapGridPanel.Col="12"
+                                BootstrapGridPanel.ColMd="6"
+                                BootstrapGridPanel.ColLg="4"
+                                Background="#DCFCE7" CornerRadius="10" Padding="16">
+                            <StackPanel Spacing="4">
+                                <TextBlock FontWeight="Bold" Text="Users" />
+                                <TextBlock Text="8,721" FontSize="24" FontWeight="Bold" Foreground="#15803D" />
+                                <TextBlock Text="+5% vs last month" Foreground="#64748B" />
+                            </StackPanel>
+                        </Border>
+
+                        <Border BootstrapGridPanel.Col="12"
+                                BootstrapGridPanel.ColMd="6"
+                                BootstrapGridPanel.ColLg="4"
+                                Background="#FEF3C7" CornerRadius="10" Padding="16">
+                            <StackPanel Spacing="4">
+                                <TextBlock FontWeight="Bold" Text="Conversion" />
+                                <TextBlock Text="3.2%" FontSize="24" FontWeight="Bold" Foreground="#B45309" />
+                                <TextBlock Text="-0.4% vs last month" Foreground="#64748B" />
+                            </StackPanel>
+                        </Border>
+                    </BootstrapGridPanel>
+                </StackPanel>
+            </Card>
+
+            <!-- ═══════════════════════════════════════════════════════════════
+                 Example 4: Combined — Full responsive page
+                 Combines FlexPanel + BootstrapGridPanel + ContainerQuery
+                 to build a complete responsive page layout.
+                 ═══════════════════════════════════════════════════════════════ -->
+            <Card Header="Combined: Full Responsive Page">
+                <StackPanel Spacing="8" Margin="16 0 16 16">
+                    <TextBlock TextWrapping="Wrap"
+                               Text="A complete page combining FlexPanel (outer shell) + BootstrapGridPanel (card grid) + ContainerQuery (breakpoints). This is how you build real responsive apps." />
+
+                    <Border Container.Name="page" Container.Sizing="Width"
+                            Height="400" ClipToBounds="True">
+                        <Border.Styles>
+                            <ContainerQuery Name="page" Query="min-width:600">
+                                <Style Selector="FlexPanel#PageLayout">
+                                    <Setter Property="Direction" Value="Row" />
+                                </Style>
+                                <Style Selector="Border#PageSidebar">
+                                    <Setter Property="Width" Value="180" />
+                                </Style>
+                                <Style Selector="FlexPanel#PageSidebarNav">
+                                    <Setter Property="Direction" Value="Column" />
+                                </Style>
+                            </ContainerQuery>
+                        </Border.Styles>
+
+                        <FlexPanel x:Name="PageLayout" AlignItems="Stretch">
+
+                            <!-- Sidebar -->
+                            <Border x:Name="PageSidebar" Background="#0F172A"
+                                    FlexPanel.Shrink="0" Padding="8">
+                                <FlexPanel x:Name="PageSidebarNav"
+                                           Gap="4" AlignItems="Center">
+                                    <Border Classes="nav-item">
+                                        <TextBlock Text="📋 Overview" Foreground="#94A3B8" />
+                                    </Border>
+                                    <Border Classes="nav-item">
+                                        <TextBlock Text="📈 Reports" Foreground="#94A3B8" />
+                                    </Border>
+                                    <Border Classes="nav-item">
+                                        <TextBlock Text="🔔 Alerts" Foreground="#94A3B8" />
+                                    </Border>
+                                </FlexPanel>
+                            </Border>
+
+                            <!-- Main content with card grid -->
+                            <Border FlexPanel.Grow="1" Background="#F1F5F9" Padding="12">
+                                <FlexPanel Direction="Column" Gap="12" AlignItems="Stretch">
+                                    <TextBlock FontWeight="Bold" FontSize="16" Text="Overview"
+                                               Foreground="#0F172A" />
+
+                                    <BootstrapGridPanel Gutter="8"
+                                                        FlexPanel.Grow="1"
+                                                        SmallBreakpoint="300"
+                                                        MediumBreakpoint="450">
+                                        <Border BootstrapGridPanel.Col="12"
+                                                BootstrapGridPanel.ColSm="6"
+                                                BootstrapGridPanel.ColMd="4"
+                                                Background="White" CornerRadius="8" Padding="12"
+                                                BorderBrush="#E2E8F0" BorderThickness="1">
+                                            <StackPanel Spacing="4">
+                                                <TextBlock Text="Active" Foreground="#64748B" FontSize="12" />
+                                                <TextBlock Text="1,204" FontWeight="Bold" FontSize="20" />
+                                            </StackPanel>
+                                        </Border>
+                                        <Border BootstrapGridPanel.Col="12"
+                                                BootstrapGridPanel.ColSm="6"
+                                                BootstrapGridPanel.ColMd="4"
+                                                Background="White" CornerRadius="8" Padding="12"
+                                                BorderBrush="#E2E8F0" BorderThickness="1">
+                                            <StackPanel Spacing="4">
+                                                <TextBlock Text="Pending" Foreground="#64748B" FontSize="12" />
+                                                <TextBlock Text="342" FontWeight="Bold" FontSize="20" />
+                                            </StackPanel>
+                                        </Border>
+                                        <Border BootstrapGridPanel.Col="12"
+                                                BootstrapGridPanel.ColSm="6"
+                                                BootstrapGridPanel.ColMd="4"
+                                                Background="White" CornerRadius="8" Padding="12"
+                                                BorderBrush="#E2E8F0" BorderThickness="1">
+                                            <StackPanel Spacing="4">
+                                                <TextBlock Text="Errors" Foreground="#64748B" FontSize="12" />
+                                                <TextBlock Text="17" FontWeight="Bold" FontSize="20" Foreground="#DC2626" />
+                                            </StackPanel>
+                                        </Border>
+                                    </BootstrapGridPanel>
+                                </FlexPanel>
+                            </Border>
+                        </FlexPanel>
+                    </Border>
+                </StackPanel>
+            </Card>
+
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>
