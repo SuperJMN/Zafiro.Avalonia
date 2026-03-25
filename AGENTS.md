@@ -30,6 +30,7 @@ Zafiro.Avalonia is a UI component library for **Avalonia 11.3.x** — controls, 
 8. **Empty Subscribe** — Put logic in the Rx pipeline (`.Where()`, `.Select()`, `.Do()`, `.SelectMany()`), not in `.Subscribe()` callbacks.
 9. **Track subscriptions** — `CompositeDisposable` + `.DisposeWith(disposable)` for any subscription outliving a method.
 10. **`x:DataType` on all Views** — Required for type-safe bindings and source-generated view location.
+11. **Responsive by default** — All layouts MUST use responsive panels (`FlexPanel` for bars, `BootstrapGridPanel` for grids). Never use fixed `Grid`/`StackPanel`/`UniformGrid` for content that should adapt to screen size. See anti-pattern #16.
 
 ## App Bootstrap Pattern
 
@@ -61,6 +62,9 @@ this.Connect(() => new ShellView(), _ => shell, () => new Window());
 | `IHaveHeader` / `IHaveFooter` / `IHaveTitle` | `IObservable<object>` reactive content for Frame/wizards |
 | `SlimWizard<T>` | `WizardBuilder.StartWith().Then().Build()` — linear wizard |
 | `GraphWizard<T>` | `GraphWizard.For<T>().Step().Next().Build()` — branching wizard |
+| `BootstrapGridPanel` | 12-col responsive grid: `Col`/`ColSm`/`ColMd`/`ColLg`/`ColXl`/`ColXxl` per child |
+| `FlexPanel` | CSS Flexbox: `Grow`/`Shrink`/`Basis`/`Wrap`/`JustifyContent`/`AlignItems`/`Gap` |
+| `SemanticPanel` | App structure: Primary/Secondary/Sidebar/Actions with 3 responsive size classes |
 
 ## Canonical Files to Reference
 
@@ -75,6 +79,10 @@ this.Connect(() => new ShellView(), _ => shell, () => new Window());
 | GraphWizard | `samples/TestApp/TestApp/Samples/GraphWizard/GraphWizardSampleViewModel.cs` |
 | Dialog patterns | `samples/TestApp/TestApp/Samples/Dialogs/DialogSampleViewModel.cs` |
 | Validation + [Reactive] | `samples/TestApp/TestApp/Samples/SlimWizard/Pages/Page1ViewModel.cs` |
+| Responsive layout panels | `samples/TestApp/TestApp/Samples/Panels/PanelsView.axaml` |
+| FlexPanel patterns | `samples/TestApp/TestApp/Samples/Layout/FlexPanelView.axaml` |
+| AdaptivePanel | `samples/TestApp/TestApp/Samples/Layout/AdaptivePanelView.axaml` |
+| ResponsivePresenter | `samples/TestApp/TestApp/Samples/Layout/ResponsivePresenter/ResponsivePresenterView.axaml` |
 
 ## GitVersion Pull Request Workflow
 
@@ -92,7 +100,7 @@ For in-depth reference, see `docs/ai/`:
 | File | Contents |
 |---|---|
 | `docs/ai/overview.md` | Architecture, package map, bootstrap lifecycle, file organization |
-| `docs/ai/concepts.md` | Core concepts with code examples: ReactiveUI, Result/Maybe, Shell, Navigation, Wizards, Dialogs, DynamicData, View Location |
-| `docs/ai/conventions.md` | Naming, typing, AXAML patterns, DI registration, Rx pipeline style, style classes |
-| `docs/ai/anti-patterns.md` | 14 anti-patterns with wrong/right examples |
-| `docs/ai/examples.md` | 10 complete, copy-pasteable canonical examples from the codebase |
+| `docs/ai/concepts.md` | Core concepts with code examples: ReactiveUI, Result/Maybe, Shell, Navigation, Wizards, Dialogs, DynamicData, View Location, Responsive Layout |
+| `docs/ai/conventions.md` | Naming, typing, AXAML patterns, DI registration, Rx pipeline style, style classes, responsive layout conventions |
+| `docs/ai/anti-patterns.md` | 16 anti-patterns with wrong/right examples |
+| `docs/ai/examples.md` | 11 complete, copy-pasteable canonical examples from the codebase |

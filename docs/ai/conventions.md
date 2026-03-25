@@ -270,3 +270,51 @@ Prefer `Map`/`Bind` for transforms, `Tap`/`Execute` for side-effects, `Match` fo
 - Co-authored-by trailer for Copilot-generated commits
 
 **Evidence**: `AGENTS.md`, `WARP.md`.
+
+---
+
+## Responsive Layout Conventions
+
+### Panel Selection Guide
+
+| Scenario | Panel | Why |
+|---|---|---|
+| Toolbar / nav bar / button row | `FlexPanel` with `Direction="Row"` | Auto + stretch mixing, `MarginLeftAuto` for push-right |
+| Cards / tiles that reflow by screen width | `BootstrapGridPanel` | Per-breakpoint column spans, just like Bootstrap |
+| App-level structure (sidebar + content) | `SemanticPanel` | Role-based zones, 3 size classes with hysteresis |
+| Grid with text-defined template | `BlueprintPanel` | DSL + `LayoutBreakpoint` collection for breakpoints |
+| Uniform cards with aspect ratio | `CardPanel` | Auto-columns from aspect ratio + max width |
+| Uniform items, no breakpoints needed | `ResponsiveUniformGrid` or `BalancedWrapGrid` | Auto-columns from `MinColumnWidth` |
+| Show/hide content based on overflow | `AdaptivePanel` | Swaps Content ↔ OverflowContent automatically |
+| Swap entire UI at a width threshold | `ResponsivePresenter` | Narrow/Wide templates with debounced switching |
+| True-center with side elements | `TrueCenterPanel` | Center child is truly centered regardless of side widths |
+
+### BootstrapGridPanel Conventions
+
+- **Always set `FluidContainer="True"`** unless you specifically need Bootstrap's fixed max-widths per breakpoint.
+- **Start mobile-first**: Set `Col` (base/Xs) first, then override upward: `ColSm`, `ColMd`, etc. Only set breakpoints that change the span.
+- **Use Auto (default) sparingly**: `Col="0"` (Auto) splits remaining columns evenly — good for equal-width items, but explicit spans are clearer.
+- **Prefer `Gutter` over manual Margin**: The panel handles column and row gaps uniformly.
+- **Use `RowBreak` for semantic rows**: Don't rely on overflow wrapping when you want an explicit row boundary.
+
+### FlexPanel Conventions
+
+- **Use `Grow="1"` for the stretchy element**, `Shrink="0"` for fixed elements (buttons, icons).
+- **Use `MarginLeftAuto="True"`** to push an element to the right end (like CSS `margin-left: auto`).
+- **Prefer `Wrap="Wrap"`** over horizontal scroll for action bars and chip lists.
+- **For equal columns**: Set `Grow="1" Shrink="1" Basis="0"` on each child (equivalent to CSS `flex: 1 1 0`).
+
+### Nesting Rules
+
+1. **SemanticPanel at the top** for app structure — never nest SemanticPanels.
+2. **BootstrapGridPanel inside content zones** for responsive grids.
+3. **FlexPanel inside grid cells** for local auto/stretch row behavior.
+4. **Standard panels (StackPanel, Grid, DockPanel)** for leaf-level local layout.
+
+### AXAML Namespace for Panels
+
+```xml
+xmlns:z="clr-namespace:Zafiro.Avalonia.Controls.Panels;assembly=Zafiro.Avalonia"
+```
+
+**Evidence**: `samples/TestApp/TestApp/Samples/Panels/PanelsView.axaml`, `samples/TestApp/TestApp/Samples/Layout/FlexPanelView.axaml`.

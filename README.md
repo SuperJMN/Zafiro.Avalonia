@@ -122,16 +122,16 @@ With `Zafiro.Avalonia.Generators`, `x:DataType` declarations in `.axaml` files a
 
 ### Controls
 
-| Control | Description |
-|---------|-------------|
-| **HeaderedContainer** | Content with header, footer, and configurable spacing |
-| **EdgePanel** | Panel with Start, Content, and End regions |
-| **EnhancedButton** | Button with icon, role-based theming, and box shadow |
-| **Loading** | Loading indicator with content transition |
-| **BalancedWrapGrid** | Wrap panel with balanced column widths and `MaxItemWidth` |
-| **MasterDetailsView** | Side list with detail panel, responsive layout |
-| **AdaptiveControl** | Two templates: portrait and landscape |
-| **StepIndicator** | Visual step progress for wizards |
+| Control                 | Description                                               |
+|-------------------------|-----------------------------------------------------------|
+| **HeaderedContainer**   | Content with header, footer, and configurable spacing     |
+| **EdgePanel**           | Panel with Start, Content, and End regions                |
+| **EnhancedButton**      | Button with icon, role-based theming, and box shadow      |
+| **Loading**             | Loading indicator with content transition                 |
+| **BalancedWrapGrid**    | Wrap panel with balanced column widths and `MaxItemWidth` |
+| **MasterDetailsView**   | Side list with detail panel, responsive layout            |
+| **ResponsivePresenter** | Width-based content swap (Narrow/Wide + Breakpoint)       |
+| **StepIndicator**       | Visual step progress for wizards                          |
 
 https://github.com/SuperJMN-Zafiro/Zafiro.Avalonia/assets/3109851/13279313-92cc-4ba9-902e-e3a26da87916
 

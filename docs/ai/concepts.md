@@ -379,7 +379,7 @@ Icons are referenced by string keys: `"fa-home"` (FontAwesome), `"mdi-settings"`
 | `HeaderedContainer` | `Header`, `Content`, `Footer`, `Spacing`, `HeaderClasses`, `ContentClasses` | Content with header/footer |
 | `MasterDetailsView` | `Items`, `SelectedItem`, `DetailTemplate` | Side list + detail pane |
 | `Frame` | `Content`, `BackCommand`, `Header`, `Footer` | Navigation container |
-| `AdaptiveControl` | `PortraitTemplate`, `LandscapeTemplate` | Responsive two-template control |
+| `ResponsivePresenter` | `Narrow`, `Wide`, `Breakpoint` | Width-based content swap |
 
 ### Interactive Controls
 
@@ -403,15 +403,20 @@ Icons are referenced by string keys: `"fa-home"` (FontAwesome), `"mdi-settings"`
 
 | Panel | Purpose | Key Properties |
 |---|---|---|
-| `FlexBox` | CSS Flexbox-like layout | `Direction`, `Wrap`, `JustifyContent`, `AlignItems`, `Gap` |
-| `BootstrapGridPanel` | 12-column responsive grid | `Columns`, `ColumnSpan` (attached) |
-| `CardPanel` | Card-sized uniform grid | `MinCardWidth`, `MaxCardWidth`, `Spacing` |
-| `SmartGrid` | Auto-configuring Grid | `Columns`, `Rows`, `Spacing` |
-| `BalancedWrapGrid` | Balanced column-width wrap | `MaxItemWidth`, `MinItemWidth`, `Spacing` |
-| `ProportionalCanvas` | Proportional positioning (0.0-1.0) | `X`, `Y` (attached, proportional) |
-| `AdaptivePanel` | Switches templates by size | `PortraitTemplate`, `LandscapeTemplate`, `Breakpoint` |
+| `FlexPanel` | CSS Flexbox layout (800-line faithful impl) | `Direction`, `Wrap`, `JustifyContent`, `AlignItems`, `Gap`; attached: `Grow`, `Shrink`, `Basis`, `AlignSelf`, `Order`, `MarginLeftAuto`/`RightAuto`/`TopAuto`/`BottomAuto` |
+| `BootstrapGridPanel` | Bootstrap 12-column responsive grid | `MaxColumns`, `Gutter`, `FluidContainer`; attached per-breakpoint: `Col`/`ColSm`/`ColMd`/`ColLg`/`ColXl`/`ColXxl`, `Offset*`, `Order*`, `RowBreak` |
+| `SemanticPanel` | Role-based app layout (3 size classes) | `CompactBreakpoint`, `ExpandedBreakpoint`, `PrimaryRatio`, `SidebarWidth`, `Spacing`; attached: `Role` (Primary/Secondary/Info/ActionPrimary/ActionSecondary/Sidebar) |
+| `BlueprintPanel` | Text DSL grid template with breakpoints | `Layout` (string), `Layouts` (LayoutBreakpoint collection), `RowSpacing`, `ColumnSpacing` |
+| `AdaptivePanel` | Switches content on overflow | `Content`, `OverflowContent`, `OverflowDirection`, `SwitchTolerance`, `EnableHysteresis` |
+| `SmartGrid` | Grid that collapses invisible rows/cols | `RowDefinitions`, `ColumnDefinitions`, `RowSpacing`, `ColumnSpacing` |
+| `TrueCenterPanel` | True-center with side content | attached: `Dock` (Left/Center/Right) |
+| `CardPanel` | Aspect-ratio card grid | `ItemAspectRatio`, `MaxItemWidth` |
+| `BalancedWrapGrid` | Balanced column wrap | `MinItemWidth`, `MaxItemWidth`, `HorizontalSpacing`, `VerticalSpacing` |
+| `ResponsiveUniformGrid` | Auto-column uniform grid | `MinColumnWidth`, `MaxColumns`, `ColumnSpacing`, `RowSpacing` |
+| `WrapGrid` | Wrapping with Grid-like width semantics | attached: `PreferredWidth`, `MinPreferredWidth`, `FillWidth`, `WrapMinWidth` |
+| `ProportionalCanvas` | Proportional positioning | `HorizontalMaximum`, `VerticalMaximum`; attached: `Left`, `Top`, `ProportionalWidth`, `ProportionalHeight` |
 
-`[HYPOTHESIS]` The exact property names for `FlexBox` and `BootstrapGridPanel` are inferred from CSS naming conventions. Verify against `src/Zafiro.Avalonia/Panels/FlexBox.cs` and `BootstrapGridPanel.cs`.
+**Evidence**: `src/Zafiro.Avalonia/Controls/Panels/` — all panels verified from source.
 
 ---
 
@@ -437,3 +442,174 @@ public class MyViewModel : ReactiveObject, IDisposable
 Every subscription that outlives a single method should be tracked with `DisposeWith(disposable)`. Behaviors use the same pattern, returning `CompositeDisposable` from `OnAttachedToVisualTreeOverride()`.
 
 **Evidence**: `WizardViewModel.cs`, `ProximityRevealBehavior.cs`, 30+ files use this pattern.
+
+---
+
+## 12. Responsive Layout — The Three Tricks
+
+Zafiro.Avalonia provides the same responsive layout primitives as modern web development. The "magic" of adaptive UIs comes from combining three tools — each solves a different layer of the problem.
+
+### The Web ↔ Zafiro Map
+
+| Web Primitive | Zafiro Equivalent | Use For |
+|---|---|---|
+| CSS Flexbox | **`FlexPanel`** | 1D flow: toolbars, button groups, navbars, centering |
+| Bootstrap Grid (12-col) | **`BootstrapGridPanel`** | Content reflow: cards, form layouts, dashboards |
+| CSS Grid / media queries | **`SemanticPanel`** / **`BlueprintPanel`** | App-level structure: sidebar + primary + secondary |
+| `display:none` / `@media` | **`AdaptivePanel`** / **`ResponsivePresenter`** | Show/hide or swap content at breakpoints |
+
+### Trick 1 — FlexPanel for toolbars and bars
+
+Use `FlexPanel` whenever you need items in a row/column with auto + stretch mixing. This is the most common layout in any UI.
+
+```xml
+<!-- Toolbar: hamburger (auto) + title (stretch) + account button (auto) -->
+<z:FlexPanel Direction="Row" AlignItems="Center" Gap="8">
+    <Button z:FlexPanel.Shrink="0">☰</Button>
+    <TextBlock z:FlexPanel.Grow="1" Text="My App" />
+    <Button z:FlexPanel.Shrink="0">👤</Button>
+</z:FlexPanel>
+
+<!-- Action bar that wraps on narrow screens -->
+<z:FlexPanel Direction="Row" Wrap="Wrap" Gap="8" JustifyContent="SpaceBetween">
+    <Button z:FlexPanel.Shrink="0">Save</Button>
+    <Button z:FlexPanel.Shrink="0">Export</Button>
+    <Button z:FlexPanel.Shrink="0">Share</Button>
+    <Button z:FlexPanel.MarginLeftAuto="True" z:FlexPanel.Shrink="0">Settings</Button>
+</z:FlexPanel>
+
+<!-- Equal columns (like CSS flex: 1 1 0) -->
+<z:FlexPanel Direction="Row" Gap="8">
+    <Border z:FlexPanel.Grow="1" z:FlexPanel.Shrink="1" z:FlexPanel.Basis="0">A</Border>
+    <Border z:FlexPanel.Grow="1" z:FlexPanel.Shrink="1" z:FlexPanel.Basis="0">B</Border>
+    <Border z:FlexPanel.Grow="1" z:FlexPanel.Shrink="1" z:FlexPanel.Basis="0">C</Border>
+</z:FlexPanel>
+```
+
+Key FlexPanel properties:
+
+| Property | Values | CSS Equivalent |
+|---|---|---|
+| `Direction` | `Row`, `RowReverse`, `Column`, `ColumnReverse` | `flex-direction` |
+| `Wrap` | `NoWrap`, `Wrap`, `WrapReverse` | `flex-wrap` |
+| `JustifyContent` | `Start`, `End`, `Center`, `SpaceBetween`, `SpaceAround`, `SpaceEvenly` | `justify-content` |
+| `AlignItems` | `Start`, `End`, `Center`, `Stretch`, `Baseline` | `align-items` |
+| `Gap` / `RowGap` / `ColumnGap` | double | `gap` |
+| `Grow` (attached) | double (default 0) | `flex-grow` |
+| `Shrink` (attached) | double (default 1) | `flex-shrink` |
+| `Basis` (attached) | `Auto`, `Content`, pixels | `flex-basis` |
+| `MarginLeftAuto` (attached) | bool | `margin-left: auto` (push right) |
+
+### Trick 2 — BootstrapGridPanel for responsive content reflow
+
+Use `BootstrapGridPanel` when content should change column count at different screen widths. This is the Bootstrap grid, faithfully ported.
+
+```xml
+<!-- Cards: 1-col mobile, 2-col tablet, 3-col desktop -->
+<z:BootstrapGridPanel MaxColumns="12" Gutter="16" FluidContainer="True">
+    <Border z:BootstrapGridPanel.Col="12"
+            z:BootstrapGridPanel.ColMd="6"
+            z:BootstrapGridPanel.ColLg="4">Card 1</Border>
+    <Border z:BootstrapGridPanel.Col="12"
+            z:BootstrapGridPanel.ColMd="6"
+            z:BootstrapGridPanel.ColLg="4">Card 2</Border>
+    <Border z:BootstrapGridPanel.Col="12"
+            z:BootstrapGridPanel.ColMd="6"
+            z:BootstrapGridPanel.ColLg="4">Card 3</Border>
+</z:BootstrapGridPanel>
+
+<!-- App layout: nav + sidebar + content that stacks on mobile -->
+<z:BootstrapGridPanel MaxColumns="12" Gutter="16" FluidContainer="True">
+    <Border z:BootstrapGridPanel.Col="12">Nav bar</Border>
+    <Border z:BootstrapGridPanel.Col="12"
+            z:BootstrapGridPanel.ColMd="3">Sidebar</Border>
+    <Border z:BootstrapGridPanel.Col="12"
+            z:BootstrapGridPanel.ColMd="9">Main content</Border>
+    <Border z:BootstrapGridPanel.Col="12">Footer</Border>
+</z:BootstrapGridPanel>
+```
+
+6 breakpoint tiers (identical to Bootstrap 5):
+
+| Tier | Attached property | Activates at width ≥ | Default threshold |
+|---|---|---|---|
+| Xs | `Col` (base) | 0 | — |
+| Sm | `ColSm` | `SmallBreakpoint` | 576 |
+| Md | `ColMd` | `MediumBreakpoint` | 768 |
+| Lg | `ColLg` | `LargeBreakpoint` | 992 |
+| Xl | `ColXl` | `ExtraLargeBreakpoint` | 1200 |
+| Xxl | `ColXxl` | `XXLBreakpoint` | 1400 |
+
+**Cascading**: If `ColLg` is not set, it falls back to `ColMd` → `ColSm` → `Col`. Same cascade for `Offset*` and `Order*`.
+
+Special column values:
+- **Integer 1–12**: Fixed span (number of columns)
+- **Auto (0, default)**: Equal share of remaining columns in the row
+- **AutoContent (-1)**: Span computed from child's natural width. Set via `SetColAuto(child)`.
+
+Additional per-breakpoint attached properties: `Offset`/`OffsetSm`/.../`OffsetXxl` (shift position), `Order`/`OrderSm`/.../`OrderXxl` (visual reordering), `RowBreak` (force new row).
+
+### Trick 3 — Nesting them
+
+The real power comes from combining panels. Each panel handles one level of the layout hierarchy:
+
+```
+App Window
+ └─ SemanticPanel               → app structure (sidebar + content zones)
+     ├─ Sidebar zone
+     │   └─ FlexPanel Column    → vertical nav links
+     ├─ Primary zone
+     │   └─ BootstrapGridPanel  → responsive content grid
+     │       ├─ Card (Col=12, ColMd=6, ColLg=4)
+     │       └─ Card (...)
+     └─ ActionPrimary zone
+         └─ FlexPanel Row       → toolbar with auto + stretch
+```
+
+### Supporting Controls
+
+**`AdaptivePanel`** — Shows `Content` normally; swaps to `OverflowContent` when the content doesn't fit.
+
+```xml
+<z:AdaptivePanel OverflowDirection="Horizontal" SwitchTolerance="10">
+    <z:AdaptivePanel.Content>
+        <StackPanel Orientation="Horizontal">
+            <Button>Save</Button><Button>Export</Button><Button>Share</Button>
+        </StackPanel>
+    </z:AdaptivePanel.Content>
+    <z:AdaptivePanel.OverflowContent>
+        <Button>⋯</Button>
+    </z:AdaptivePanel.OverflowContent>
+</z:AdaptivePanel>
+```
+
+**`ResponsivePresenter`** — Swaps between `Narrow` and `Wide` content templates at a width breakpoint.
+
+```xml
+<z:ResponsivePresenter Breakpoint="600">
+    <z:ResponsivePresenter.Wide>
+        <DataTemplate><!-- Full table view --></DataTemplate>
+    </z:ResponsivePresenter.Wide>
+    <z:ResponsivePresenter.Narrow>
+        <DataTemplate><!-- Card list view --></DataTemplate>
+    </z:ResponsivePresenter.Narrow>
+</z:ResponsivePresenter>
+```
+
+**`BlueprintPanel`** — Grid defined by a text DSL, with breakpoint-specific layouts.
+
+```xml
+<z:BlueprintPanel RowSpacing="8" ColumnSpacing="8">
+    <z:BlueprintPanel.Layouts>
+        <z:LayoutBreakpoint MinWidth="800" Blueprint="0 1 1 2 / 0 1 1 2 / 3 3 3 3" />
+        <z:LayoutBreakpoint MinWidth="500" Blueprint="0 1 / 2 1 / 3 3" />
+        <z:LayoutBreakpoint Blueprint="0 / 1 / 2 / 3" />
+    </z:BlueprintPanel.Layouts>
+    <Border>Sidebar</Border>
+    <Border>Main</Border>
+    <Border>Widget</Border>
+    <Border>Footer</Border>
+</z:BlueprintPanel>
+```
+
+**Evidence**: `samples/TestApp/TestApp/Samples/Panels/PanelsView.axaml`, `samples/TestApp/TestApp/Samples/Layout/FlexPanelView.axaml`, `samples/TestApp/TestApp/Samples/Layout/AdaptivePanelView.axaml`, `samples/TestApp/TestApp/Samples/Layout/ResponsivePresenter/ResponsivePresenterView.axaml`, `test/Zafiro.Avalonia.Tests/Panels/BootstrapGridPanelTests.cs`.

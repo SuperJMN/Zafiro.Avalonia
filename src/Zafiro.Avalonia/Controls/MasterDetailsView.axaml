@@ -3,99 +3,98 @@
         xmlns:generic="clr-namespace:System.Collections.Generic;assembly=System.Collections"
         xmlns:system="clr-namespace:System;assembly=System.Runtime"
         xmlns:controls="clr-namespace:Zafiro.Avalonia.Controls">
-	<Design.PreviewWith>
-		<controls:MasterDetailsView Width="600" Height="500" Header="Header">
-			<controls:MasterDetailsView.Footer>
-				<TextBlock>Footer</TextBlock>
-			</controls:MasterDetailsView.Footer>
-			<controls:MasterDetailsView.ItemsSource>
-				<generic:List x:TypeArguments="x:Object">
-					<system:String>Hola</system:String>
-					<system:String>Hola2</system:String>
-					<system:String>Hola3</system:String>
-				</generic:List>
-			</controls:MasterDetailsView.ItemsSource>
-		</controls:MasterDetailsView>
-	</Design.PreviewWith>
+    <Design.PreviewWith>
+        <controls:MasterDetailsView Width="600" Height="500" Header="Header">
+            <controls:MasterDetailsView.Footer>
+                <TextBlock>Footer</TextBlock>
+            </controls:MasterDetailsView.Footer>
+            <controls:MasterDetailsView.ItemsSource>
+                <generic:List x:TypeArguments="x:Object">
+                    <system:String>Hola</system:String>
+                    <system:String>Hola2</system:String>
+                    <system:String>Hola3</system:String>
+                </generic:List>
+            </controls:MasterDetailsView.ItemsSource>
+        </controls:MasterDetailsView>
+    </Design.PreviewWith>
 
-	<Style Selector="controls|MasterDetailsView">
-		<Setter Property="Template">
-			<ControlTemplate>
-				<controls:AdaptiveControl
-                    IsHorizontal="{Binding !$parent[controls:MasterDetailsView].IsCollapsed, Mode=TwoWay}">
-					<controls:AdaptiveControl.HorizontalTemplate>
-						<ControlTemplate>
-							<Grid ColumnDefinitions="Auto *" RowDefinitions="Auto * Auto">
+    <Style Selector="controls|MasterDetailsView">
+        <Setter Property="Template">
+            <ControlTemplate>
+                <controls:ResponsivePresenter
+                    Breakpoint="{Binding CompactWidth, RelativeSource={RelativeSource FindAncestor, AncestorType=controls:MasterDetailsView}}">
+                    <controls:ResponsivePresenter.Wide>
+                        <Grid ColumnDefinitions="Auto *" RowDefinitions="Auto * Auto">
 
-								<Border Background="{DynamicResource SoftBackgroundLists}" Grid.RowSpan="3" />
+                            <Border Background="{DynamicResource SoftBackgroundLists}" Grid.RowSpan="3" />
 
-								<ContentControl Grid.Row="0" Grid.Column="0"
+                            <ContentControl Grid.Row="0" Grid.Column="0"
+                                            Content="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=controls:MasterDetailsView}, Path=Header}"
+                                            ContentTemplate="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=controls:MasterDetailsView}, Path=HeaderTemplate}" />
+                            <ListBox Grid.Row="1" Grid.Column="0" x:DataType="controls:MasterDetailsView"
+                                     ItemTemplate="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=controls:MasterDetailsView}, Path=ItemTemplate}"
+                                     SelectedItem="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=controls:MasterDetailsView}, Path=SelectedItem}"
+                                     ItemsSource="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=controls:MasterDetailsView}, Path=ItemsSource}"
+                                     Background="Transparent"
+                                     Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=controls:MasterDetailsView}, Path=MasterPaneWidth}"
+                                     DockPanel.Dock="Left" />
+
+                            <ContentControl Grid.Row="0" Grid.RowSpan="3" Grid.Column="1"
+                                            ContentTemplate="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=controls:MasterDetailsView}, Path=DetailsTemplate}"
+                                            Content="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=controls:MasterDetailsView}, Path=SelectedItem}" />
+
+                            <ContentControl Grid.Row="2" Grid.Column="0"
+                                            Content="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=controls:MasterDetailsView}, Path=Footer}"
+                                            ContentTemplate="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=controls:MasterDetailsView}, Path=FooterTemplate}" />
+                        </Grid>
+                    </controls:ResponsivePresenter.Wide>
+                    <controls:ResponsivePresenter.Narrow>
+                        <Panel>
+                            <Border Background="{DynamicResource SoftBackgroundLists}" />
+
+                            <DockPanel
+                                IsVisible="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=controls:MasterDetailsView}, Path=!AreDetailsShown}">
+
+                                <ContentControl DockPanel.Dock="Top"
                                                 Content="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=controls:MasterDetailsView}, Path=Header}"
                                                 ContentTemplate="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=controls:MasterDetailsView}, Path=HeaderTemplate}" />
-								<ListBox Grid.Row="1" Grid.Column="0" x:DataType="controls:MasterDetailsView"
-                                         ItemTemplate="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=controls:MasterDetailsView}, Path=ItemTemplate}"
-                                         SelectedItem="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=controls:MasterDetailsView}, Path=SelectedItem}"
-                                         ItemsSource="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=controls:MasterDetailsView}, Path=ItemsSource}"
-                                         Background="Transparent"
-                                         Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=controls:MasterDetailsView}, Path=MasterPaneWidth}"
-                                         DockPanel.Dock="Left" />
 
-								<ContentControl Grid.Row="0" Grid.RowSpan="3" Grid.Column="1"
-                                                ContentTemplate="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=controls:MasterDetailsView}, Path=DetailsTemplate}"
-                                                Content="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=controls:MasterDetailsView}, Path=SelectedItem}" />
-
-								<ContentControl Grid.Row="2" Grid.Column="0" Content="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=controls:MasterDetailsView}, Path=Footer}"
+                                <ContentControl DockPanel.Dock="Bottom"
+                                                Content="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=controls:MasterDetailsView}, Path=Footer}"
                                                 ContentTemplate="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=controls:MasterDetailsView}, Path=FooterTemplate}" />
-							</Grid>
-						</ControlTemplate>
-					</controls:AdaptiveControl.HorizontalTemplate>
-					<controls:AdaptiveControl.VerticalTemplate>
-						<ControlTemplate>
-							<Panel>
-								<Border Background="{DynamicResource SoftBackgroundLists}" />
 
-								<DockPanel IsVisible="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=controls:MasterDetailsView}, Path=!AreDetailsShown}">
+                                <ListBox x:DataType="controls:MasterDetailsView"
+                                         ItemTemplate="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=controls:MasterDetailsView}, Path=ItemTemplate}"
+                                         SelectedItem="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=controls:MasterDetailsView}, Path=SelectedItem,Mode=TwoWay}"
+                                         ItemsSource="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=controls:MasterDetailsView}, Path=ItemsSource}"
+                                         Background="Transparent">
+                                    <ListBox.Styles>
+                                        <Style Selector="ListBoxItem">
+                                            <Setter Property="Interaction.Behaviors">
+                                                <BehaviorCollectionTemplate>
+                                                    <BehaviorCollection>
+                                                        <RoutedEventTriggerBehavior
+                                                            RoutedEvent="{x:Static InputElement.PointerPressedEvent}"
+                                                            RoutingStrategies="Tunnel">
+                                                            <InvokeCommandAction
+                                                                Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=controls:MasterDetailsView}, Path=GoToDetails}" />
+                                                        </RoutedEventTriggerBehavior>
+                                                    </BehaviorCollection>
+                                                </BehaviorCollectionTemplate>
+                                            </Setter>
+                                        </Style>
+                                    </ListBox.Styles>
+                                </ListBox>
+                            </DockPanel>
 
-                                    <ContentControl DockPanel.Dock="Top"
-                                                    Content="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=controls:MasterDetailsView}, Path=Header}"
-                                                    ContentTemplate="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=controls:MasterDetailsView}, Path=HeaderTemplate}" />
-
-                                    <ContentControl DockPanel.Dock="Bottom" Content="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=controls:MasterDetailsView}, Path=Footer}"
-                                                    ContentTemplate="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=controls:MasterDetailsView}, Path=FooterTemplate}" />
-
-                                    <ListBox x:DataType="controls:MasterDetailsView"
-                                             ItemTemplate="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=controls:MasterDetailsView}, Path=ItemTemplate}"
-                                             SelectedItem="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=controls:MasterDetailsView}, Path=SelectedItem,Mode=TwoWay}"
-                                             ItemsSource="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=controls:MasterDetailsView}, Path=ItemsSource}"
-                                             Background="Transparent">
-										<ListBox.Styles>
-											<Style Selector="ListBoxItem">
-												<Setter Property="Interaction.Behaviors">
-													<BehaviorCollectionTemplate>
-														<BehaviorCollection>
-															<RoutedEventTriggerBehavior
-                                                                RoutedEvent="{x:Static InputElement.PointerPressedEvent}"
-                                                                RoutingStrategies="Tunnel">
-																<InvokeCommandAction
-                                                                    Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=controls:MasterDetailsView}, Path=GoToDetails}" />
-															</RoutedEventTriggerBehavior>
-														</BehaviorCollection>
-													</BehaviorCollectionTemplate>
-												</Setter>
-											</Style>
-										</ListBox.Styles>
-									</ListBox>
-								</DockPanel>
-
-								<ContentControl
-                                    IsVisible="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=controls:MasterDetailsView}, Path=AreDetailsShown}"
-                                    ContentTemplate="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=controls:MasterDetailsView}, Path=DetailsTemplate}"
-                                    Content="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=controls:MasterDetailsView}, Path=SelectedItem}" />
-							</Panel>
-						</ControlTemplate>
-					</controls:AdaptiveControl.VerticalTemplate>
-				</controls:AdaptiveControl>
-			</ControlTemplate>
-		</Setter>
-	</Style>
+                            <ContentControl
+                                IsVisible="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=controls:MasterDetailsView}, Path=AreDetailsShown}"
+                                ContentTemplate="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=controls:MasterDetailsView}, Path=DetailsTemplate}"
+                                Content="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=controls:MasterDetailsView}, Path=SelectedItem}" />
+                        </Panel>
+                    </controls:ResponsivePresenter.Narrow>
+                </controls:ResponsivePresenter>
+            </ControlTemplate>
+        </Setter>
+    </Style>
 </Styles>

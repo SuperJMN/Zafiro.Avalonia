@@ -16,7 +16,8 @@
                 <ResourceInclude Source="Controls/TypewriterTextControl.axaml" />
                 <ResourceInclude Source="Controls/CircularProgressBar.axaml" />
                 <ResourceInclude Source="Icons.axaml" />
-                <ResourceInclude Source="avares://FluentAvalonia/Styling/ControlThemes/FAControls/ProgressRingStyles.axaml" />
+                <ResourceInclude
+                    Source="avares://FluentAvalonia/Styling/ControlThemes/FAControls/ProgressRingStyles.axaml" />
                 <ResourceInclude Source="GraphWizard/View/GraphWizardHeaderView.axaml" />
                 <ResourceInclude Source="GraphWizard/View/GraphWizardFooterView.axaml" />
             </ResourceDictionary.MergedDictionaries>
@@ -38,7 +39,7 @@
     <StyleInclude Source="Styles/Control.axaml" />
 
     <StyleInclude Source="Controls/MasterDetailsView.axaml" />
-    <StyleInclude Source="Controls/AdaptiveControl.axaml" />
+
     <StyleInclude Source="Controls/StoppableControl.axaml" />
     <StyleInclude Source="Controls/SlimDataGrid/SlimDataGrid.axaml" />
     <StyleInclude Source="Controls/Wizards/Slim/SlimWizardControl.axaml" />

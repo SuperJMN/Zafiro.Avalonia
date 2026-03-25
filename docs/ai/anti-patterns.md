@@ -405,3 +405,70 @@ return DataTemplates
 ```
 
 **Evidence**: The most idiomatic code is in `LauncherService.cs`, `Commands.cs`, `EnhancedButton.axaml.cs`, `DataTemplateInclude.cs`, `StorageDirectory.cs`, `NamingConventionViewLocator.cs`. Some older code in `AdaptivePanel.cs`, `GraphWizardBuilderGeneric.cs`, and value converters still uses imperative checks — these should be considered legacy patterns, not examples to follow.
+
+---
+
+## ❌ 16. Do Not Hard-Code Layouts for a Single Screen Size
+
+```xml
+<!-- ❌ WRONG — fixed 3-column grid, breaks on mobile -->
+<Grid ColumnDefinitions="250,*,300">
+    <Border Grid.Column="0">Sidebar</Border>
+    <Border Grid.Column="1">Content</Border>
+    <Border Grid.Column="2">Aside</Border>
+</Grid>
+
+<!-- ✅ RIGHT — responsive: stacks on mobile, side-by-side on tablet+ -->
+<panels:BootstrapGridPanel MaxColumns="12" Gutter="16" FluidContainer="True">
+    <Border panels:BootstrapGridPanel.Col="12"
+            panels:BootstrapGridPanel.ColMd="3">Sidebar</Border>
+    <Border panels:BootstrapGridPanel.Col="12"
+            panels:BootstrapGridPanel.ColMd="6">Content</Border>
+    <Border panels:BootstrapGridPanel.Col="12"
+            panels:BootstrapGridPanel.ColMd="3">Aside</Border>
+</panels:BootstrapGridPanel>
+```
+
+```xml
+<!-- ❌ WRONG — fixed horizontal toolbar, clips on narrow screens -->
+<StackPanel Orientation="Horizontal" Spacing="8">
+    <Button>Save</Button>
+    <Button>Export</Button>
+    <Button>Share</Button>
+    <Button>Settings</Button>
+</StackPanel>
+
+<!-- ✅ RIGHT — wrapping toolbar with push-right -->
+<panels:FlexPanel Direction="Row" Wrap="Wrap" Gap="8">
+    <Button panels:FlexPanel.Shrink="0">Save</Button>
+    <Button panels:FlexPanel.Shrink="0">Export</Button>
+    <Button panels:FlexPanel.Shrink="0">Share</Button>
+    <Button panels:FlexPanel.MarginLeftAuto="True" panels:FlexPanel.Shrink="0">Settings</Button>
+</panels:FlexPanel>
+```
+
+```xml
+<!-- ❌ WRONG — one-size-fits-all card layout -->
+<UniformGrid Columns="3">
+    <Border>Card 1</Border>
+    <Border>Card 2</Border>
+    <Border>Card 3</Border>
+</UniformGrid>
+
+<!-- ✅ RIGHT — cards reflow: 1 col mobile, 2 col tablet, 3 col desktop -->
+<panels:BootstrapGridPanel MaxColumns="12" Gutter="16" FluidContainer="True">
+    <Border panels:BootstrapGridPanel.Col="12"
+            panels:BootstrapGridPanel.ColMd="6"
+            panels:BootstrapGridPanel.ColLg="4">Card 1</Border>
+    <Border panels:BootstrapGridPanel.Col="12"
+            panels:BootstrapGridPanel.ColMd="6"
+            panels:BootstrapGridPanel.ColLg="4">Card 2</Border>
+    <Border panels:BootstrapGridPanel.Col="12"
+            panels:BootstrapGridPanel.ColMd="6"
+            panels:BootstrapGridPanel.ColLg="4">Card 3</Border>
+</panels:BootstrapGridPanel>
+```
+
+**Why**: Zafiro.Avalonia targets Desktop, Mobile, and Browser. Static Grid/StackPanel layouts break on narrow screens. Use `BootstrapGridPanel` for responsive grids and `FlexPanel` for toolbars/bars. Think mobile-first: define `Col` (base), then override with `ColMd`, `ColLg`, etc.
+
+**Evidence**: `samples/TestApp/TestApp/Samples/Panels/PanelsView.axaml` demonstrates responsive cards with `BootstrapGridPanel`. `samples/TestApp/TestApp/Samples/Layout/FlexPanelView.axaml` demonstrates adaptive toolbars with `FlexPanel`.

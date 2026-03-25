@@ -464,3 +464,111 @@ public class AppDelegate : AvaloniaAppDelegate<App>
 ```
 
 **Source**: `samples/TestApp/TestApp.Desktop/Program.cs`, `TestApp.Browser/Program.cs`, `TestApp.Android/MainActivity.cs`, `TestApp.iOS/AppDelegate.cs`.
+
+---
+
+## 11. Responsive Layout Patterns
+
+Three patterns that cover 90% of adaptive UI needs. Combine them for full-page responsive layouts.
+
+**Source**: `samples/TestApp/TestApp/Samples/Panels/PanelsView.axaml`, `samples/TestApp/TestApp/Samples/Layout/FlexPanelView.axaml`
+
+### Responsive Card Grid (BootstrapGridPanel)
+
+```xml
+<!-- xmlns:panels="clr-namespace:Zafiro.Avalonia.Controls.Panels;assembly=Zafiro.Avalonia" -->
+
+<!-- Mobile: 1 col. Tablet: 2 cols. Desktop: 3 cols. -->
+<panels:BootstrapGridPanel MaxColumns="12" Gutter="16" FluidContainer="True">
+    <Border panels:BootstrapGridPanel.Col="12"
+            panels:BootstrapGridPanel.ColMd="6"
+            panels:BootstrapGridPanel.ColLg="4"
+            Background="#2196F3" CornerRadius="8" Padding="16">
+        <TextBlock Text="Card 1" Foreground="White" />
+    </Border>
+    <Border panels:BootstrapGridPanel.Col="12"
+            panels:BootstrapGridPanel.ColMd="6"
+            panels:BootstrapGridPanel.ColLg="4"
+            Background="#4CAF50" CornerRadius="8" Padding="16">
+        <TextBlock Text="Card 2" Foreground="White" />
+    </Border>
+    <Border panels:BootstrapGridPanel.Col="12"
+            panels:BootstrapGridPanel.ColMd="6"
+            panels:BootstrapGridPanel.ColLg="4"
+            Background="#FF9800" CornerRadius="8" Padding="16">
+        <TextBlock Text="Card 3" Foreground="White" />
+    </Border>
+</panels:BootstrapGridPanel>
+```
+
+### Adaptive Toolbar (FlexPanel)
+
+```xml
+<!-- Toolbar: menu left, title stretches, actions right. Wraps on narrow. -->
+<panels:FlexPanel Direction="Row" Wrap="Wrap" AlignItems="Center" Gap="8">
+    <Button panels:FlexPanel.Shrink="0">☰</Button>
+    <TextBlock panels:FlexPanel.Grow="1" Text="Dashboard"
+               FontSize="18" FontWeight="Bold" />
+    <Button panels:FlexPanel.Shrink="0"
+            panels:FlexPanel.MarginLeftAuto="True">🔔</Button>
+    <Button panels:FlexPanel.Shrink="0">👤</Button>
+</panels:FlexPanel>
+```
+
+### Full-Page Responsive Layout (Combined)
+
+```xml
+<!-- Complete responsive page: header + sidebar/content + footer -->
+<panels:BootstrapGridPanel MaxColumns="12" Gutter="16" FluidContainer="True">
+
+    <!-- Header: always full width -->
+    <panels:FlexPanel panels:BootstrapGridPanel.Col="12"
+                      Direction="Row" AlignItems="Center" Gap="8">
+        <Button panels:FlexPanel.Shrink="0">☰</Button>
+        <TextBlock panels:FlexPanel.Grow="1" Text="My App" FontSize="18" />
+        <Button panels:FlexPanel.Shrink="0">⚙</Button>
+    </panels:FlexPanel>
+
+    <!-- Sidebar: full width mobile, 3 cols desktop -->
+    <Border panels:BootstrapGridPanel.Col="12"
+            panels:BootstrapGridPanel.ColMd="3"
+            panels:BootstrapGridPanel.OrderMd="1"
+            Background="{DynamicResource SystemAltHighColor}" Padding="12">
+        <StackPanel Spacing="8">
+            <TextBlock Text="Navigation" FontWeight="Bold" />
+            <Button HorizontalAlignment="Stretch">Home</Button>
+            <Button HorizontalAlignment="Stretch">Settings</Button>
+            <Button HorizontalAlignment="Stretch">About</Button>
+        </StackPanel>
+    </Border>
+
+    <!-- Main content: full width mobile, 9 cols desktop -->
+    <Border panels:BootstrapGridPanel.Col="12"
+            panels:BootstrapGridPanel.ColMd="9"
+            panels:BootstrapGridPanel.OrderMd="2"
+            Padding="12">
+        <!-- Nested responsive grid for content cards -->
+        <panels:BootstrapGridPanel MaxColumns="12" Gutter="12" FluidContainer="True">
+            <Border panels:BootstrapGridPanel.Col="12"
+                    panels:BootstrapGridPanel.ColLg="6"
+                    Background="#E3F2FD" CornerRadius="8" Padding="16">
+                <TextBlock Text="Widget A" />
+            </Border>
+            <Border panels:BootstrapGridPanel.Col="12"
+                    panels:BootstrapGridPanel.ColLg="6"
+                    Background="#E8F5E9" CornerRadius="8" Padding="16">
+                <TextBlock Text="Widget B" />
+            </Border>
+        </panels:BootstrapGridPanel>
+    </Border>
+
+    <!-- Footer: always full width -->
+    <Border panels:BootstrapGridPanel.Col="12"
+            panels:BootstrapGridPanel.OrderMd="3"
+            Padding="12">
+        <TextBlock Text="© 2026 My App" HorizontalAlignment="Center"
+                   Foreground="{DynamicResource SystemBaseMediumColor}" />
+    </Border>
+
+</panels:BootstrapGridPanel>
+```
