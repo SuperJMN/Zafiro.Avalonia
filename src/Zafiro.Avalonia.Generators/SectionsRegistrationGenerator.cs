@@ -18,46 +18,55 @@ public sealed class SectionsRegistrationGenerator : IIncrementalGenerator
             var sections = FindAnnotatedSections(compilation, spc).OrderBy(s => s.sortIndex).ToList();
             var asm = compilation.AssemblyName ?? "Assembly";
             var safeAsm = MakeSafeForNamespace(asm);
-            var assembliesWithRegistrations = GetAssembliesWithRegistrations(compilation, safeAsm).Distinct().OrderBy(x => x).ToList();
+            var assembliesWithRegistrations = GetAssembliesWithRegistrations(compilation, safeAsm).Distinct()
+                .OrderBy(x => x).ToList();
 
             var sb = new StringBuilder();
             sb.AppendLine($"namespace Zafiro.UI.Shell.Utils.SectionsGen.{safeAsm};");
             sb.AppendLine();
             sb.AppendLine("public static class GeneratedSectionRegistrations");
             sb.AppendLine("{");
-            sb.AppendLine("    public static global::Microsoft.Extensions.DependencyInjection.IServiceCollection AddSectionsFromAttributes(this global::Microsoft.Extensions.DependencyInjection.IServiceCollection services, global::Serilog.ILogger? logger = null, global::System.Reactive.Concurrency.IScheduler? scheduler = null)");
+            sb.AppendLine(
+                "    public static global::Microsoft.Extensions.DependencyInjection.IServiceCollection AddSectionsFromAttributes(this global::Microsoft.Extensions.DependencyInjection.IServiceCollection services, global::Serilog.ILogger? logger = null, global::System.Reactive.Concurrency.IScheduler? scheduler = null)");
             sb.AppendLine("    {");
             sb.AppendLine("        RegisterAnnotatedSections(services);");
             sb.AppendLine("        AddAnnotatedSections(services, logger, scheduler);");
             sb.AppendLine("        return services;");
             sb.AppendLine("    }");
             sb.AppendLine();
-            sb.AppendLine("    public static global::Microsoft.Extensions.DependencyInjection.IServiceCollection AddAllSectionsFromAttributes(this global::Microsoft.Extensions.DependencyInjection.IServiceCollection services, global::Serilog.ILogger? logger = null, global::System.Reactive.Concurrency.IScheduler? scheduler = null)");
+            sb.AppendLine(
+                "    public static global::Microsoft.Extensions.DependencyInjection.IServiceCollection AddAllSectionsFromAttributes(this global::Microsoft.Extensions.DependencyInjection.IServiceCollection services, global::Serilog.ILogger? logger = null, global::System.Reactive.Concurrency.IScheduler? scheduler = null)");
             sb.AppendLine("    {");
             sb.AppendLine("        EnsureSectionRegistrationsAreRegistered();");
-            sb.AppendLine("        return global::Zafiro.UI.Shell.Utils.SectionRegistrationRegistry.AddAllSectionsFromRegistry(services, logger, scheduler);");
+            sb.AppendLine(
+                "        return global::Zafiro.UI.Shell.Utils.SectionRegistrationRegistry.AddAllSectionsFromRegistry(services, logger, scheduler);");
             sb.AppendLine("    }");
             sb.AppendLine();
-            sb.AppendLine("    public static global::Microsoft.Extensions.DependencyInjection.IServiceCollection RegisterAnnotatedSections(this global::Microsoft.Extensions.DependencyInjection.IServiceCollection services)");
+            sb.AppendLine(
+                "    public static global::Microsoft.Extensions.DependencyInjection.IServiceCollection RegisterAnnotatedSections(this global::Microsoft.Extensions.DependencyInjection.IServiceCollection services)");
             sb.AppendLine("    {");
             foreach (var s in sections)
             {
                 if (s.contractFqn == s.implFqn)
                 {
-                    sb.AppendLine($"        global::Microsoft.Extensions.DependencyInjection.ServiceCollectionServiceExtensions.AddTransient(services, typeof({s.implFqn}));");
+                    sb.AppendLine(
+                        $"        global::Microsoft.Extensions.DependencyInjection.ServiceCollectionServiceExtensions.AddTransient(services, typeof({s.implFqn}));");
                 }
                 else
                 {
-                    sb.AppendLine($"        global::Microsoft.Extensions.DependencyInjection.ServiceCollectionServiceExtensions.AddTransient(services, typeof({s.contractFqn}), typeof({s.implFqn}));");
+                    sb.AppendLine(
+                        $"        global::Microsoft.Extensions.DependencyInjection.ServiceCollectionServiceExtensions.AddTransient(services, typeof({s.contractFqn}), typeof({s.implFqn}));");
                 }
             }
 
             sb.AppendLine("        return services;");
             sb.AppendLine("    }");
             sb.AppendLine();
-            sb.AppendLine("    public static global::Microsoft.Extensions.DependencyInjection.IServiceCollection AddAnnotatedSections(this global::Microsoft.Extensions.DependencyInjection.IServiceCollection services, global::Serilog.ILogger? logger = null, global::System.Reactive.Concurrency.IScheduler? scheduler = null)");
+            sb.AppendLine(
+                "    public static global::Microsoft.Extensions.DependencyInjection.IServiceCollection AddAnnotatedSections(this global::Microsoft.Extensions.DependencyInjection.IServiceCollection services, global::Serilog.ILogger? logger = null, global::System.Reactive.Concurrency.IScheduler? scheduler = null)");
             sb.AppendLine("    {");
-            sb.AppendLine("        global::Zafiro.UI.Navigation.NavigationServiceCollectionExtensions.AddSections(services, builder =>");
+            sb.AppendLine(
+                "        global::Zafiro.UI.Navigation.NavigationServiceCollectionExtensions.AddSections(services, builder =>");
             sb.AppendLine("        {");
             foreach (var s in sections)
             {
@@ -79,11 +88,19 @@ public sealed class SectionsRegistrationGenerator : IIncrementalGenerator
                 sb.Append(group);
                 sb.Append(", ");
                 sb.Append(s.sortIndex);
+                if (s.shortName is not null)
+                {
+                    sb.Append(", shortName: \"");
+                    sb.Append(Escape(s.shortName));
+                    sb.Append("\"");
+                }
+
                 sb.Append(");");
                 sb.AppendLine();
             }
 
-            sb.AppendLine("        }, logger: logger, scheduler: scheduler ?? global::ReactiveUI.RxApp.MainThreadScheduler);");
+            sb.AppendLine(
+                "        }, logger: logger, scheduler: scheduler ?? global::ReactiveUI.RxApp.MainThreadScheduler);");
             sb.AppendLine("        return services;");
             sb.AppendLine("    }");
             sb.AppendLine();
@@ -91,7 +108,8 @@ public sealed class SectionsRegistrationGenerator : IIncrementalGenerator
             sb.AppendLine("    {");
             foreach (var assemblyName in assembliesWithRegistrations)
             {
-                sb.AppendLine($"        _ = typeof(global::Zafiro.UI.Shell.Utils.SectionsGen.{assemblyName}.GeneratedSectionRegistrations);");
+                sb.AppendLine(
+                    $"        _ = typeof(global::Zafiro.UI.Shell.Utils.SectionsGen.{assemblyName}.GeneratedSectionRegistrations);");
             }
 
             sb.AppendLine("    }");
@@ -99,18 +117,23 @@ public sealed class SectionsRegistrationGenerator : IIncrementalGenerator
             sb.AppendLine("    [global::System.Runtime.CompilerServices.ModuleInitializer]");
             sb.AppendLine("    internal static void RegisterSectionsWithRegistry()");
             sb.AppendLine("    {");
-            sb.AppendLine($"        global::Zafiro.UI.Shell.Utils.SectionRegistrationRegistry.Register(\"{Escape(asm)}\", static services => RegisterAnnotatedSections(services), static (services, logger, scheduler) => AddAnnotatedSections(services, logger, scheduler));");
+            sb.AppendLine(
+                $"        global::Zafiro.UI.Shell.Utils.SectionRegistrationRegistry.Register(\"{Escape(asm)}\", static services => RegisterAnnotatedSections(services), static (services, logger, scheduler) => AddAnnotatedSections(services, logger, scheduler));");
             sb.AppendLine("    }");
             sb.AppendLine("}");
 
             spc.AddSource("GeneratedSectionRegistrations.g.cs", SourceText.From(sb.ToString(), Encoding.UTF8));
 
             var globalUsing = $"global using Zafiro.UI.Shell.Utils.SectionsGen.{safeAsm};";
-            spc.AddSource("GeneratedSectionRegistrations.GlobalUsing.g.cs", SourceText.From(globalUsing, Encoding.UTF8));
+            spc.AddSource("GeneratedSectionRegistrations.GlobalUsing.g.cs",
+                SourceText.From(globalUsing, Encoding.UTF8));
         });
     }
 
-    private static IEnumerable<(string implFqn, string contractFqn, int sortIndex, string name, string friendlyName, string? icon, string? groupKey, string? groupFriendlyName)> FindAnnotatedSections(Compilation compilation, SourceProductionContext context)
+    private static
+        IEnumerable<(string implFqn, string contractFqn, int sortIndex, string name, string friendlyName, string?
+            shortName, string? icon, string? groupKey, string? groupFriendlyName)> FindAnnotatedSections(
+            Compilation compilation, SourceProductionContext context)
     {
         var attr = compilation.GetTypeByMetadataName("Zafiro.UI.Shell.Utils.SectionAttribute");
         var groupAttr = compilation.GetTypeByMetadataName("Zafiro.UI.Shell.Utils.SectionGroupAttribute");
@@ -122,7 +145,8 @@ public sealed class SectionsRegistrationGenerator : IIncrementalGenerator
             if (type.TypeKind != TypeKind.Class)
                 continue;
 
-            var sectionAttr = type.GetAttributes().FirstOrDefault(a => SymbolEqualityComparer.Default.Equals(a.AttributeClass, attr));
+            var sectionAttr = type.GetAttributes()
+                .FirstOrDefault(a => SymbolEqualityComparer.Default.Equals(a.AttributeClass, attr));
             if (sectionAttr is null)
                 continue;
 
@@ -131,7 +155,8 @@ public sealed class SectionsRegistrationGenerator : IIncrementalGenerator
 
             var sectionGroupAttr = groupAttr is null
                 ? null
-                : type.GetAttributes().FirstOrDefault(a => SymbolEqualityComparer.Default.Equals(a.AttributeClass, groupAttr));
+                : type.GetAttributes()
+                    .FirstOrDefault(a => SymbolEqualityComparer.Default.Equals(a.AttributeClass, groupAttr));
 
             if (sectionGroupAttr is not null)
             {
@@ -150,6 +175,7 @@ public sealed class SectionsRegistrationGenerator : IIncrementalGenerator
             string? icon = null;
             string? explicitName = null;
             string? explicitFriendlyName = null;
+            string? shortName = null;
             var sortIndex = 0;
             ITypeSymbol? contract = null;
 
@@ -160,6 +186,7 @@ public sealed class SectionsRegistrationGenerator : IIncrementalGenerator
             }
 
             explicitFriendlyName = GetNamedString(sectionAttr, "FriendlyName");
+            shortName = GetNamedString(sectionAttr, "ShortName");
 
             if (sectionCtorArgs.Length >= 2 && sectionCtorArgs[1].Value is string iconStr)
             {
@@ -187,11 +214,13 @@ public sealed class SectionsRegistrationGenerator : IIncrementalGenerator
             var name = explicitName ?? defaultName;
             var friendlyName = explicitFriendlyName ?? explicitName ?? defaultName;
 
-            yield return (implFqn, contractFqn, sortIndex, name, friendlyName, icon, groupKey, groupFriendlyName);
+            yield return (implFqn, contractFqn, sortIndex, name, friendlyName, shortName, icon, groupKey,
+                groupFriendlyName);
         }
     }
 
-    private static IEnumerable<INamedTypeSymbol> EnumerateAllTypes(INamespaceSymbol ns, CancellationToken cancellationToken)
+    private static IEnumerable<INamedTypeSymbol> EnumerateAllTypes(INamespaceSymbol ns,
+        CancellationToken cancellationToken)
     {
         foreach (var type in ns.GetTypeMembers())
         {
@@ -208,7 +237,8 @@ public sealed class SectionsRegistrationGenerator : IIncrementalGenerator
         }
     }
 
-    private static IEnumerable<INamedTypeSymbol> EnumerateNestedTypes(INamedTypeSymbol type, CancellationToken cancellationToken)
+    private static IEnumerable<INamedTypeSymbol> EnumerateNestedTypes(INamedTypeSymbol type,
+        CancellationToken cancellationToken)
     {
         foreach (var nested in type.GetTypeMembers())
         {
@@ -252,7 +282,8 @@ public sealed class SectionsRegistrationGenerator : IIncrementalGenerator
         return null;
     }
 
-    private static IEnumerable<string> GetAssembliesWithRegistrations(Compilation compilation, string currentAssemblySafeName)
+    private static IEnumerable<string> GetAssembliesWithRegistrations(Compilation compilation,
+        string currentAssemblySafeName)
     {
         var seen = new HashSet<string>(StringComparer.Ordinal);
         if (seen.Add(currentAssemblySafeName))
@@ -281,5 +312,6 @@ public sealed class SectionsRegistrationGenerator : IIncrementalGenerator
         }
     }
 
-    private static string MakeSafeForNamespace(string assemblyName) => new(assemblyName.Select(ch => char.IsLetterOrDigit(ch) ? ch : '_').ToArray());
+    private static string MakeSafeForNamespace(string assemblyName) =>
+        new(assemblyName.Select(ch => char.IsLetterOrDigit(ch) ? ch : '_').ToArray());
 }
