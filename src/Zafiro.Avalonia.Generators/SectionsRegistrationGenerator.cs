@@ -22,6 +22,8 @@ public sealed class SectionsRegistrationGenerator : IIncrementalGenerator
                 .OrderBy(x => x).ToList();
 
             var sb = new StringBuilder();
+            sb.AppendLine("#nullable enable");
+            sb.AppendLine();
             sb.AppendLine($"namespace Zafiro.UI.Shell.Utils.SectionsGen.{safeAsm};");
             sb.AppendLine();
             sb.AppendLine("public static class GeneratedSectionRegistrations");
