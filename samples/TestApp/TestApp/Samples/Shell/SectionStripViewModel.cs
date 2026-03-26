@@ -17,28 +17,28 @@ public class SectionStripViewModel
     {
         new SimpleSection()
         {
-            Name = "Dashboard",
+            Id = "Dashboard",
             FriendlyName = "Dashboard",
             Icon = new Icon("fa-tachometer-alt"),
             Group = MainGroup
         },
         new SimpleSection()
         {
-            Name = "Analytics",
+            Id = "Analytics",
             FriendlyName = "Analytics",
             Icon = new Icon("fa-chart-line"),
             Group = MainGroup
         },
         new SimpleSection()
         {
-            Name = "Users",
+            Id = "Users",
             FriendlyName = "Users",
             Icon = new Icon("fa-users"),
             Group = AdminGroup
         },
         new SimpleSection()
         {
-            Name = "Settings",
+            Id = "Settings",
             FriendlyName = "Settings",
             Icon = new Icon("fa-cog"),
             Group = AdminGroup

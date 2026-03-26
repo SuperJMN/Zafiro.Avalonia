@@ -9,9 +9,9 @@ public class ShellDesign : IShell
     {
         var sections = new ISection[]
         {
-            new SimpleSection { Name = "Home", FriendlyName = "Home", Icon = new Icon { Source = "fa-home" } },
-            new SimpleSection { Name = "Settings", FriendlyName = "Settings", Icon = new Icon { Source = "fa-gear" } },
-            new SimpleSection { Name = "Profile", FriendlyName = "Profile", Icon = new Icon { Source = "fa-user" } },
+            new SimpleSection { Id = "Home", FriendlyName = "Home", Icon = new Icon { Source = "fa-home" } },
+            new SimpleSection { Id = "Settings", FriendlyName = "Settings", Icon = new Icon { Source = "fa-gear" } },
+            new SimpleSection { Id = "Profile", FriendlyName = "Profile", Icon = new Icon { Source = "fa-user" } },
         };
 
         Sections = sections;

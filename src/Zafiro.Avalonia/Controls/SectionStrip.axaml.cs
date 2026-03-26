@@ -12,19 +12,25 @@ namespace Zafiro.Avalonia.Controls;
 
 public class SectionStrip : TemplatedControl
 {
-    public static readonly StyledProperty<IEnumerable<ISection>?> SectionsProperty = AvaloniaProperty.Register<SectionStrip, IEnumerable<ISection>?>(
-        nameof(Sections));
+    public static readonly StyledProperty<IEnumerable<ISection>?> SectionsProperty =
+        AvaloniaProperty.Register<SectionStrip, IEnumerable<ISection>?>(
+            nameof(Sections));
 
-    public static readonly StyledProperty<ISection> SelectedSectionProperty = AvaloniaProperty.Register<SectionStrip, ISection>(nameof(SelectedSection), defaultBindingMode: BindingMode.TwoWay);
+    public static readonly StyledProperty<ISection> SelectedSectionProperty =
+        AvaloniaProperty.Register<SectionStrip, ISection>(nameof(SelectedSection),
+            defaultBindingMode: BindingMode.TwoWay);
 
-    public static readonly StyledProperty<Orientation> OrientationProperty = AvaloniaProperty.Register<SectionStrip, Orientation>(
-        nameof(Orientation), Orientation.Vertical);
+    public static readonly StyledProperty<Orientation> OrientationProperty =
+        AvaloniaProperty.Register<SectionStrip, Orientation>(
+            nameof(Orientation), Orientation.Vertical);
 
-    public static readonly StyledProperty<double> MaxItemWidthProperty = AvaloniaProperty.Register<SectionStrip, double>(
-        nameof(MaxItemWidth));
+    public static readonly StyledProperty<double> MaxItemWidthProperty =
+        AvaloniaProperty.Register<SectionStrip, double>(
+            nameof(MaxItemWidth));
 
-    public static readonly StyledProperty<double> MinItemWidthProperty = AvaloniaProperty.Register<SectionStrip, double>(
-        nameof(MinItemWidth));
+    public static readonly StyledProperty<double> MinItemWidthProperty =
+        AvaloniaProperty.Register<SectionStrip, double>(
+            nameof(MinItemWidth));
 
     public static readonly StyledProperty<double> ItemSpacingProperty = AvaloniaProperty.Register<SectionStrip, double>(
         nameof(ItemSpacing));
@@ -32,35 +38,45 @@ public class SectionStrip : TemplatedControl
     public static readonly StyledProperty<double> IconSizeProperty = AvaloniaProperty.Register<SectionStrip, double>(
         nameof(IconSize), defaultValue: 38d);
 
-    public static readonly StyledProperty<double> HorizontalIconLabelSpacingProperty = AvaloniaProperty.Register<SectionStrip, double>(
-        nameof(HorizontalIconLabelSpacing));
+    public static readonly StyledProperty<double> HorizontalIconLabelSpacingProperty =
+        AvaloniaProperty.Register<SectionStrip, double>(
+            nameof(HorizontalIconLabelSpacing));
 
-    public static readonly StyledProperty<Thickness> ItemPaddingProperty = AvaloniaProperty.Register<SectionStrip, Thickness>(
-        nameof(ItemPadding));
+    public static readonly StyledProperty<Thickness> ItemPaddingProperty =
+        AvaloniaProperty.Register<SectionStrip, Thickness>(
+            nameof(ItemPadding));
 
-    public static readonly DirectProperty<SectionStrip, IEnumerable<ISection>> FilteredSectionsProperty = AvaloniaProperty.RegisterDirect<SectionStrip, IEnumerable<ISection>>(
-        nameof(FilteredSections), o => o.FilteredSections, (o, v) => o.FilteredSections = v);
+    public static readonly DirectProperty<SectionStrip, IEnumerable<ISection>> FilteredSectionsProperty =
+        AvaloniaProperty.RegisterDirect<SectionStrip, IEnumerable<ISection>>(
+            nameof(FilteredSections), o => o.FilteredSections, (o, v) => o.FilteredSections = v);
 
-    public static readonly StyledProperty<Thickness> IconMarginProperty = AvaloniaProperty.Register<SectionStrip, Thickness>(
-        nameof(IconMargin));
+    public static readonly StyledProperty<Thickness> IconMarginProperty =
+        AvaloniaProperty.Register<SectionStrip, Thickness>(
+            nameof(IconMargin));
 
-    public static readonly StyledProperty<double> VerticalIconLabelSpacingProperty = AvaloniaProperty.Register<SectionStrip, double>(
-        nameof(VerticalIconLabelSpacing));
+    public static readonly StyledProperty<double> VerticalIconLabelSpacingProperty =
+        AvaloniaProperty.Register<SectionStrip, double>(
+            nameof(VerticalIconLabelSpacing));
 
-    public static readonly DirectProperty<SectionStrip, IEnumerable<SectionGroupView>> SectionGroupsProperty = AvaloniaProperty.RegisterDirect<SectionStrip, IEnumerable<SectionGroupView>>(
-        nameof(SectionGroups), strip => strip.SectionGroups, (strip, value) => strip.SectionGroups = value);
+    public static readonly DirectProperty<SectionStrip, IEnumerable<SectionGroupView>> SectionGroupsProperty =
+        AvaloniaProperty.RegisterDirect<SectionStrip, IEnumerable<SectionGroupView>>(
+            nameof(SectionGroups), strip => strip.SectionGroups, (strip, value) => strip.SectionGroups = value);
 
-    public static readonly StyledProperty<IDataTemplate?> ItemTemplateProperty = AvaloniaProperty.Register<SectionStrip, IDataTemplate?>(
-        nameof(ItemTemplate));
+    public static readonly StyledProperty<IDataTemplate?> ItemTemplateProperty =
+        AvaloniaProperty.Register<SectionStrip, IDataTemplate?>(
+            nameof(ItemTemplate));
 
-    public static readonly StyledProperty<ControlTheme?> ItemContainerThemeProperty = AvaloniaProperty.Register<SectionStrip, ControlTheme?>(
-        nameof(ItemContainerTheme));
+    public static readonly StyledProperty<ControlTheme?> ItemContainerThemeProperty =
+        AvaloniaProperty.Register<SectionStrip, ControlTheme?>(
+            nameof(ItemContainerTheme));
 
-    public static readonly StyledProperty<ControlTheme?> GroupHeaderThemeProperty = AvaloniaProperty.Register<SectionStrip, ControlTheme?>(
-        nameof(GroupHeaderTheme));
+    public static readonly StyledProperty<ControlTheme?> GroupHeaderThemeProperty =
+        AvaloniaProperty.Register<SectionStrip, ControlTheme?>(
+            nameof(GroupHeaderTheme));
 
-    public static readonly StyledProperty<double> GroupSpacingProperty = AvaloniaProperty.Register<SectionStrip, double>(
-        nameof(GroupSpacing));
+    public static readonly StyledProperty<double> GroupSpacingProperty =
+        AvaloniaProperty.Register<SectionStrip, double>(
+            nameof(GroupSpacing));
 
     private readonly CompositeDisposable disposable = new();
 
@@ -72,7 +88,7 @@ public class SectionStrip : TemplatedControl
     {
         var sectionChanges = this.WhenAnyValue(strip => strip.Sections)
             .WhereNotNull()
-            .Select(sections => sections.ToObservableChangeSetIfPossible(section => section.Name))
+            .Select(sections => sections.ToObservableChangeSetIfPossible(section => section.Id))
             .Switch();
 
         var sectionSorter = new SectionSorter(sectionChanges)
