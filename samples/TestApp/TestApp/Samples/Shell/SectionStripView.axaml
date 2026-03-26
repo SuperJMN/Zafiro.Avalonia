@@ -15,14 +15,15 @@
                 <!-- Basic horizontal example -->
                 <StackPanel Spacing="8">
                     <TextBlock Text="Basic horizontal (with overflow)" FontWeight="Bold" />
-                    <SectionStrip IconOptions.Size="22" HorizontalIconLabelSpacing="10" VerticalIconLabelSpacing="10" Orientation="Horizontal" MaxItemWidth="100">
+                    <SectionStrip IconOptions.Size="22" HorizontalIconLabelSpacing="10" VerticalIconLabelSpacing="10"
+                                  Orientation="Horizontal" MaxItemWidth="100">
                         <SectionStrip.Sections>
                             <generic:List x:TypeArguments="sections:ISection">
-                                <SimpleSection Name="Section1" FriendlyName="Section 1" Icon="{Icon fa-wallet}" />
-                                <SimpleSection Name="Section2" FriendlyName="Section 2" Icon="{Icon fa-wallet}" />
-                                <SimpleSection Name="Section3" FriendlyName="Section 3" Icon="{Icon fa-wallet}" />
-                                <SimpleSection Name="Section4" FriendlyName="Section 4" Icon="{Icon fa-wallet}" />
-                                <SimpleSection Name="Section5" FriendlyName="Section 5" Icon="{Icon fa-wallet}" />
+                                <SimpleSection Id="Section1" FriendlyName="Section 1" Icon="{Icon fa-wallet}" />
+                                <SimpleSection Id="Section2" FriendlyName="Section 2" Icon="{Icon fa-wallet}" />
+                                <SimpleSection Id="Section3" FriendlyName="Section 3" Icon="{Icon fa-wallet}" />
+                                <SimpleSection Id="Section4" FriendlyName="Section 4" Icon="{Icon fa-wallet}" />
+                                <SimpleSection Id="Section5" FriendlyName="Section 5" Icon="{Icon fa-wallet}" />
                             </generic:List>
                         </SectionStrip.Sections>
                     </SectionStrip>
@@ -48,9 +49,9 @@
                         </SectionStrip.Styles>
                         <SectionStrip.Sections>
                             <generic:List x:TypeArguments="sections:ISection">
-                                <SimpleSection Name="Home" FriendlyName="Home" Icon="{Icon fa-home}" />
-                                <SimpleSection Name="Search" FriendlyName="Search" Icon="{Icon fa-search}" />
-                                <SimpleSection Name="Settings" FriendlyName="Settings" Icon="{Icon fa-cog}" />
+                                <SimpleSection Id="Home" FriendlyName="Home" Icon="{Icon fa-home}" />
+                                <SimpleSection Id="Search" FriendlyName="Search" Icon="{Icon fa-search}" />
+                                <SimpleSection Id="Settings" FriendlyName="Settings" Icon="{Icon fa-cog}" />
                             </generic:List>
                         </SectionStrip.Sections>
                     </SectionStrip>
@@ -59,7 +60,8 @@
                 <!-- Vertical with groups -->
                 <StackPanel Spacing="8">
                     <TextBlock Text="Vertical with groups (default style)" FontWeight="Bold" />
-                    <TextBlock Text="Groups are configured via ViewModel - see SectionStripViewModel" FontStyle="Italic" Opacity="0.7" />
+                    <TextBlock Text="Groups are configured via ViewModel - see SectionStripViewModel"
+                               FontStyle="Italic" Opacity="0.7" />
                     <Border BorderBrush="Gray" BorderThickness="1" Padding="8" Height="200">
                         <SectionStrip IconOptions.Size="18" Orientation="Vertical" Sections="{Binding GroupedSections}" />
                     </Border>

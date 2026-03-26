@@ -163,9 +163,10 @@ public class UniformStripPanel : Panel
             return;
         }
 
-        // Start with the minimum number of columns required to keep item width <= max (if max is finite)
+        // Start with the number of columns required to keep item width <= max.
+        // When max is unconstrained, try to fit all items.
         int cByMax = double.IsInfinity(max)
-            ? 1
+            ? visibleCount
             : Math.Max(1, (int)Math.Ceiling((containerWidth + spacing) / (max + spacing)));
 
         int c = Math.Max(1, cByMax);

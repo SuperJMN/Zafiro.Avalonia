@@ -24,7 +24,8 @@ public partial class SimpleSection : ReactiveObject, ISection
             .DisposeWith(disposable);
     }
 
-    public string Name { get; set; } = string.Empty;
+    public string Id { get; set; } = string.Empty;
+    public string? ShortName { get; set; }
     public string FriendlyName { get; set; } = string.Empty;
     public SectionGroup Group { get; set; } = new();
 
