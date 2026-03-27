@@ -313,6 +313,19 @@ public class FlexPanel : Panel
 
         var containerMain = IsRow ? availableSize.Width : availableSize.Height;
         var lines = CreateFlexLines(orderedChildren, containerMain);
+
+        // Resolve flexible lengths so we know the actual main-axis size each child will receive
+        foreach (var line in lines)
+        {
+            ResolveFlexibleLengths(line, containerMain);
+        }
+
+        // Re-measure children whose resolved size differs from their basis size.
+        // Without this, children measured with flex-basis:0 would compute their
+        // cross-axis size (e.g. height for rows) based on zero available main-axis
+        // space, producing incorrect layout for content-dependent controls.
+        RemeasureResolvedItems(lines, availableSize);
+
         UpdateLineCrossSizes(lines);
 
         // Handle align-content for measurement
@@ -333,6 +346,19 @@ public class FlexPanel : Panel
         var containerMain = IsRow ? finalSize.Width : finalSize.Height;
         var containerCross = IsRow ? finalSize.Height : finalSize.Width;
         var lines = CreateFlexLines(orderedChildren, containerMain);
+
+        // CSS Flexbox Algorithm Steps:
+        // 1. Resolve flexible lengths
+        foreach (var line in lines)
+        {
+            ResolveFlexibleLengths(line, containerMain);
+        }
+
+        // Re-measure children with their resolved main-axis size so cross-axis
+        // sizes are correct for the actual arranged width (finalSize may differ
+        // from the availableSize used during Measure).
+        RemeasureResolvedItems(lines, finalSize);
+
         UpdateLineCrossSizes(lines);
 
         if (Wrap == FlexWrap.NoWrap && lines.Count == 1)
@@ -352,13 +378,6 @@ public class FlexPanel : Panel
                     line.CrossSize += extraCrossPerLine;
                 }
             }
-        }
-
-        // CSS Flexbox Algorithm Steps:
-        // 1. Resolve flexible lengths
-        foreach (var line in lines)
-        {
-            ResolveFlexibleLengths(line, containerMain);
         }
 
         // 2. Handle auto margins
@@ -389,6 +408,27 @@ public class FlexPanel : Panel
 
         var basis = GetBasis(child);
         return basis.Unit != FlexBasisUnit.Auto ? basis : FlexBasis.Auto;
+    }
+
+    private void RemeasureResolvedItems(List<FlexLine> lines, Size availableSize)
+    {
+        foreach (var line in lines)
+        {
+            foreach (var item in line.Items)
+            {
+                if (Math.Abs(item.MainSize - item.OriginalMainSize) < 0.5)
+                    continue;
+
+                var constraintSize = IsRow
+                    ? new Size(item.MainSize, availableSize.Height)
+                    : new Size(availableSize.Width, item.MainSize);
+
+                item.Control.Measure(constraintSize);
+
+                var desired = item.Control.DesiredSize;
+                item.CrossSize = IsRow ? desired.Height : desired.Width;
+            }
+        }
     }
 
     private List<FlexLine> CreateFlexLines(List<Control> children, double containerMain)

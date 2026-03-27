@@ -593,8 +593,78 @@ public class FlexPanelTests
         Assert.Equal(height, control.Bounds.Height, 5);
     }
 
+    [AvaloniaFact]
+    public void Should_remeasure_children_with_resolved_size_when_basis_is_zero()
+    {
+        // A control that adapts its height based on available width (like a wrapping TextBlock).
+        // With 100+ width it's 20px tall; with less than 10px it wraps to 80px tall.
+        var first = new WidthDependentControl(minMainForCompact: 100, compactCross: 20, expandedCross: 80);
+        var second = new WidthDependentControl(minMainForCompact: 100, compactCross: 20, expandedCross: 80);
+
+        FlexPanel.SetGrow(first, 1);
+        FlexPanel.SetBasis(first, FlexBasis.Pixels(0));
+        FlexPanel.SetGrow(second, 1);
+        FlexPanel.SetBasis(second, FlexBasis.Pixels(0));
+
+        var panel = Panel(FlexDirection.Row, FlexWrap.NoWrap, FlexJustify.Start, FlexAlign.Start, 0, first, second);
+
+        ShowAndLayout(panel, 300, 200);
+
+        // Each child gets 150px width (300 / 2), well above the 100px threshold.
+        // After re-measure with resolved width, they should report 20px height (compact).
+        AssertBounds(first, x: 0, y: 0, width: 150, height: 20);
+        AssertBounds(second, x: 150, y: 0, width: 150, height: 20);
+    }
+
+    [AvaloniaFact]
+    public void Should_remeasure_nested_stackpanel_children_with_resolved_size_when_basis_is_zero()
+    {
+        // Simulates the real-world scenario: StackPanel with children inside a Border,
+        // using flex-basis: 0 with grow to get equal-width columns.
+        var stackPanel1 = new StackPanel();
+        stackPanel1.Children.Add(new FixedSizeControl(80, 30));
+        stackPanel1.Children.Add(new FixedSizeControl(60, 20));
+        var border1 = new Border { Child = stackPanel1 };
+
+        var stackPanel2 = new StackPanel();
+        stackPanel2.Children.Add(new FixedSizeControl(40, 25));
+        stackPanel2.Children.Add(new FixedSizeControl(70, 15));
+        var border2 = new Border { Child = stackPanel2 };
+
+        FlexPanel.SetGrow(border1, 1);
+        FlexPanel.SetBasis(border1, FlexBasis.Pixels(0));
+        FlexPanel.SetGrow(border2, 1);
+        FlexPanel.SetBasis(border2, FlexBasis.Pixels(0));
+
+        var panel = Panel(FlexDirection.Row, FlexWrap.NoWrap, FlexJustify.Start, FlexAlign.Stretch, 0, border1, border2);
+
+        ShowAndLayout(panel, 300, 200);
+
+        // Both borders should get equal width (150 each) and the StackPanel content should be visible
+        Assert.Equal(150, border1.Bounds.Width, 1);
+        Assert.Equal(150, border2.Bounds.Width, 1);
+        // The StackPanel should measure correctly with the resolved width:
+        // StackPanel1 height = 30 + 20 = 50, StackPanel2 height = 25 + 15 = 40
+        Assert.Equal(50, stackPanel1.DesiredSize.Height, 1);
+        Assert.Equal(40, stackPanel2.DesiredSize.Height, 1);
+    }
+
     private sealed class FixedSizeControl(double width, double height) : Control
     {
         protected override Size MeasureOverride(Size availableSize) => new(width, height);
+    }
+
+    /// <summary>
+    /// A control whose cross-axis size depends on the available main-axis size,
+    /// simulating wrapping behavior (like TextBlock with text wrapping).
+    /// </summary>
+    private sealed class WidthDependentControl(double minMainForCompact, double compactCross, double expandedCross) : Control
+    {
+        protected override Size MeasureOverride(Size availableSize)
+        {
+            var availableMain = availableSize.Width;
+            var crossSize = availableMain >= minMainForCompact ? compactCross : expandedCross;
+            return new Size(Math.Min(minMainForCompact, availableMain), crossSize);
+        }
     }
 }
