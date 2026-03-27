@@ -649,6 +649,105 @@ public class FlexPanelTests
         Assert.Equal(40, stackPanel2.DesiredSize.Height, 1);
     }
 
+    [AvaloniaFact]
+    public void Should_layout_home_cards_with_centered_stackpanels_when_width_is_bounded()
+    {
+        var first = HomeCard();
+        var second = HomeCard();
+        var firstStack = (StackPanel)first.Child!;
+        var secondStack = (StackPanel)second.Child!;
+
+        FlexPanel.SetGrow(first, 1);
+        FlexPanel.SetBasis(first, FlexBasis.Pixels(0));
+        FlexPanel.SetGrow(second, 1);
+        FlexPanel.SetBasis(second, FlexBasis.Pixels(0));
+
+        var panel = Panel(FlexDirection.Row, FlexWrap.NoWrap, FlexJustify.Start, FlexAlign.Stretch, 20, first, second);
+
+        ShowAndLayout(panel, 900, 320);
+
+        Assert.Equal(440, first.Bounds.Width, 1);
+        Assert.Equal(440, second.Bounds.Width, 1);
+        Assert.Equal(320, first.Bounds.Height, 1);
+        Assert.Equal(320, second.Bounds.Height, 1);
+        Assert.True(firstStack.Bounds.Y > 0);
+        Assert.True(secondStack.Bounds.Y > 0);
+        Assert.True(firstStack.DesiredSize.Height > 0);
+        Assert.True(secondStack.DesiredSize.Height > 0);
+    }
+
+    [AvaloniaFact]
+    public void Should_not_return_infinite_desired_width_when_grow_items_are_measured_with_unbounded_main_axis()
+    {
+        var first = HomeCard();
+        var second = HomeCard();
+
+        FlexPanel.SetGrow(first, 1);
+        FlexPanel.SetBasis(first, FlexBasis.Pixels(0));
+        FlexPanel.SetGrow(second, 1);
+        FlexPanel.SetBasis(second, FlexBasis.Pixels(0));
+
+        var panel = Panel(FlexDirection.Row, FlexWrap.NoWrap, FlexJustify.Start, FlexAlign.Stretch, 20, first, second);
+
+        panel.Measure(new Size(double.PositiveInfinity, 320));
+
+        Assert.False(double.IsInfinity(panel.DesiredSize.Width));
+        Assert.Equal(636, panel.DesiredSize.Width, 1);
+    }
+
+    [AvaloniaFact]
+    public void Should_use_definite_basis_for_fully_inflexible_items_when_main_axis_is_unbounded()
+    {
+        var first = Item(width: 80, height: 10);
+        var second = Item(width: 90, height: 10);
+
+        first.SetValue(FlexPanel.FlexProperty, FlexValue.Create(grow: 0, shrink: 0, basis: FlexBasis.Pixels(200)));
+        second.SetValue(FlexPanel.FlexProperty, FlexValue.Create(grow: 0, shrink: 0, basis: FlexBasis.Pixels(120)));
+
+        var panel = Panel(FlexDirection.Row, FlexWrap.NoWrap, FlexJustify.Start, FlexAlign.Start, 10, first, second);
+
+        panel.Measure(new Size(double.PositiveInfinity, 100));
+
+        Assert.Equal(330, panel.DesiredSize.Width, 1);
+    }
+
+    [AvaloniaFact]
+    public void Should_honor_shrink_attached_property_when_set_directly()
+    {
+        var first = Item(width: 100, height: 10);
+        var second = Item(width: 100, height: 10);
+
+        first.SetValue(FlexPanel.ShrinkProperty, 0d);
+        second.SetValue(FlexPanel.ShrinkProperty, 1d);
+
+        var panel = Panel(FlexDirection.Row, FlexWrap.NoWrap, FlexJustify.Start, FlexAlign.Start, 0, first, second);
+
+        ShowAndLayout(panel, 150, 100);
+
+        AssertBounds(first, x: 0, y: 0, width: 100, height: 10);
+        AssertBounds(second, x: 100, y: 0, width: 50, height: 10);
+    }
+
+    private static Border HomeCard()
+    {
+        var stack = new StackPanel
+        {
+            Spacing = 16,
+            VerticalAlignment = global::Avalonia.Layout.VerticalAlignment.Center
+        };
+
+        stack.Children.Add(new FixedSizeControl(72, 72));
+        stack.Children.Add(new FixedSizeControl(220, 28));
+        stack.Children.Add(new FixedSizeControl(260, 40));
+        stack.Children.Add(new FixedSizeControl(180, 36));
+
+        return new Border
+        {
+            Padding = new Thickness(24),
+            Child = stack
+        };
+    }
+
     private sealed class FixedSizeControl(double width, double height) : Control
     {
         protected override Size MeasureOverride(Size availableSize) => new(width, height);

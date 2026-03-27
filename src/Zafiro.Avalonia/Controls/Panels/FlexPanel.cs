@@ -234,7 +234,13 @@ public class FlexPanel : Panel
         : (double.IsNaN(ColumnGap) ? Gap : ColumnGap);
 
     // Attached property helpers
-    public static void SetFlex(Control target, FlexValue value) => target.SetValue(FlexProperty, value);
+    public static void SetFlex(Control target, FlexValue value)
+    {
+        target.SetValue(FlexProperty, value);
+        target.SetValue(GrowProperty, value.Grow);
+        target.SetValue(ShrinkProperty, value.Shrink);
+        target.SetValue(BasisProperty, value.Basis);
+    }
     public static FlexValue GetFlex(Control target) => target.GetValue(FlexProperty);
 
     public static void SetGrow(Control target, double value)
@@ -312,19 +318,23 @@ public class FlexPanel : Panel
         }
 
         var containerMain = IsRow ? availableSize.Width : availableSize.Height;
-        var lines = CreateFlexLines(orderedChildren, containerMain);
+        var isMainAxisConstrained = IsFinite(containerMain);
+        var lines = CreateFlexLines(orderedChildren, containerMain, availableSize, useIntrinsicMainContribution: !isMainAxisConstrained);
 
-        // Resolve flexible lengths so we know the actual main-axis size each child will receive
-        foreach (var line in lines)
+        if (isMainAxisConstrained)
         {
-            ResolveFlexibleLengths(line, containerMain);
-        }
+            // Resolve flexible lengths so we know the actual main-axis size each child will receive
+            foreach (var line in lines)
+            {
+                ResolveFlexibleLengths(line, containerMain);
+            }
 
-        // Re-measure children whose resolved size differs from their basis size.
-        // Without this, children measured with flex-basis:0 would compute their
-        // cross-axis size (e.g. height for rows) based on zero available main-axis
-        // space, producing incorrect layout for content-dependent controls.
-        RemeasureResolvedItems(lines, availableSize);
+            // Re-measure children whose resolved size differs from their basis size.
+            // Without this, children measured with flex-basis:0 would compute their
+            // cross-axis size (e.g. height for rows) based on zero available main-axis
+            // space, producing incorrect layout for content-dependent controls.
+            RemeasureResolvedItems(lines, availableSize);
+        }
 
         UpdateLineCrossSizes(lines);
 
@@ -345,7 +355,7 @@ public class FlexPanel : Panel
 
         var containerMain = IsRow ? finalSize.Width : finalSize.Height;
         var containerCross = IsRow ? finalSize.Height : finalSize.Width;
-        var lines = CreateFlexLines(orderedChildren, containerMain);
+        var lines = CreateFlexLines(orderedChildren, containerMain, finalSize);
 
         // CSS Flexbox Algorithm Steps:
         // 1. Resolve flexible lengths
@@ -400,14 +410,39 @@ public class FlexPanel : Panel
         return finalSize;
     }
 
+    private static bool IsFinite(double value) => !double.IsInfinity(value) && !double.IsNaN(value);
+
+    private double GetEffectiveGrow(Control control)
+    {
+        if (control.IsSet(GrowProperty))
+            return control.GetValue(GrowProperty);
+
+        if (control.IsSet(FlexProperty))
+            return control.GetValue(FlexProperty).Grow;
+
+        return FlexValue.Initial.Grow;
+    }
+
+    private double GetEffectiveShrink(Control control)
+    {
+        if (control.IsSet(ShrinkProperty))
+            return control.GetValue(ShrinkProperty);
+
+        if (control.IsSet(FlexProperty))
+            return control.GetValue(FlexProperty).Shrink;
+
+        return FlexValue.Initial.Shrink;
+    }
+
     private FlexBasis GetEffectiveBasis(Control child)
     {
-        var flex = GetFlex(child);
-        if (flex.Basis.Unit != FlexBasisUnit.Auto)
-            return flex.Basis;
+        if (child.IsSet(BasisProperty))
+            return child.GetValue(BasisProperty);
 
-        var basis = GetBasis(child);
-        return basis.Unit != FlexBasisUnit.Auto ? basis : FlexBasis.Auto;
+        if (child.IsSet(FlexProperty))
+            return child.GetValue(FlexProperty).Basis;
+
+        return FlexBasis.Auto;
     }
 
     private void RemeasureResolvedItems(List<FlexLine> lines, Size availableSize)
@@ -431,14 +466,18 @@ public class FlexPanel : Panel
         }
     }
 
-    private List<FlexLine> CreateFlexLines(List<Control> children, double containerMain)
+    private List<FlexLine> CreateFlexLines(
+        List<Control> children,
+        double containerMain,
+        Size availableSize,
+        bool useIntrinsicMainContribution = false)
     {
         var lines = new List<FlexLine>();
         var currentLine = new FlexLine();
 
         foreach (var child in children)
         {
-            var item = CreateFlexItem(child);
+            var item = CreateFlexItem(child, availableSize, useIntrinsicMainContribution);
             var gap = currentLine.Items.Any() ? MainGap : 0;
 
             // Check wrapping - CSS faithful
@@ -480,22 +519,36 @@ public class FlexPanel : Panel
         }
     }
 
-    private FlexItem CreateFlexItem(Control control)
+    private FlexItem CreateFlexItem(Control control, Size availableSize, bool useIntrinsicMainContribution = false)
     {
-        var flex = GetFlex(control);
         var size = control.DesiredSize;
         var basis = GetEffectiveBasis(control);
+        var grow = GetEffectiveGrow(control);
+        var shrink = GetEffectiveShrink(control);
+        var desiredMainSize = IsRow ? size.Width : size.Height;
+        var desiredCrossSize = IsRow ? size.Height : size.Width;
 
-        // Calculate main and cross sizes based on flex-basis
-        double mainSize = basis.Unit switch
+        double baseMainSize = basis.Unit switch
         {
-            FlexBasisUnit.Auto => IsRow ? size.Width : size.Height,
-            FlexBasisUnit.Content => IsRow ? size.Width : size.Height, // Simplified
+            FlexBasisUnit.Auto => desiredMainSize,
+            FlexBasisUnit.Content => desiredMainSize,
             FlexBasisUnit.Pixels => basis.Value,
-            _ => IsRow ? size.Width : size.Height
+            _ => desiredMainSize
         };
 
-        double crossSize = IsRow ? size.Height : size.Width;
+        double mainSize = useIntrinsicMainContribution
+            ? GetIntrinsicMainContribution(control, availableSize, baseMainSize, grow, shrink)
+            : basis.Unit switch
+            {
+                FlexBasisUnit.Auto => desiredMainSize,
+                FlexBasisUnit.Content => desiredMainSize, // Simplified
+                FlexBasisUnit.Pixels => basis.Value,
+                _ => desiredMainSize
+            };
+
+        double crossSize = useIntrinsicMainContribution
+            ? MeasureWithMainSize(control, availableSize, mainSize)
+            : desiredCrossSize;
 
         return new FlexItem
         {
@@ -503,14 +556,71 @@ public class FlexPanel : Panel
             MainSize = mainSize,
             CrossSize = crossSize,
             OriginalMainSize = mainSize,
-            Grow = flex.Grow > 0 ? flex.Grow : GetGrow(control),
-            Shrink = flex.Shrink >= 0 ? flex.Shrink : GetShrink(control),
+            Grow = grow,
+            Shrink = shrink,
             Basis = basis,
             MarginMainStart = GetAutoMargin(control, true, true),
             MarginMainEnd = GetAutoMargin(control, true, false),
             MarginCrossStart = GetAutoMargin(control, false, true),
             MarginCrossEnd = GetAutoMargin(control, false, false)
         };
+    }
+
+    private double GetIntrinsicMainContribution(Control control, Size availableSize, double baseMainSize, double grow, double shrink)
+    {
+        var maxContentMainSize = MeasureMaxContentMainSize(control, availableSize);
+        var preferredMainSize = GetPreferredMainSize(control);
+        var contribution = double.IsNaN(preferredMainSize)
+            ? maxContentMainSize
+            : Math.Max(maxContentMainSize, preferredMainSize);
+
+        if (grow <= 0)
+        {
+            contribution = Math.Min(contribution, baseMainSize);
+        }
+
+        if (shrink <= 0)
+        {
+            contribution = Math.Max(contribution, baseMainSize);
+        }
+
+        return ClampMainSize(control, contribution);
+    }
+
+    private double MeasureMaxContentMainSize(Control control, Size availableSize)
+    {
+        var measureSize = IsRow
+            ? new Size(double.PositiveInfinity, availableSize.Height)
+            : new Size(availableSize.Width, double.PositiveInfinity);
+
+        control.Measure(measureSize);
+        return IsRow ? control.DesiredSize.Width : control.DesiredSize.Height;
+    }
+
+    private double MeasureWithMainSize(Control control, Size availableSize, double mainSize)
+    {
+        var measureSize = IsRow
+            ? new Size(mainSize, availableSize.Height)
+            : new Size(availableSize.Width, mainSize);
+
+        control.Measure(measureSize);
+        return IsRow ? control.DesiredSize.Height : control.DesiredSize.Width;
+    }
+
+    private double GetPreferredMainSize(Control control) => IsRow ? control.Width : control.Height;
+
+    private double ClampMainSize(Control control, double size)
+    {
+        var min = IsRow ? control.MinWidth : control.MinHeight;
+        var max = IsRow ? control.MaxWidth : control.MaxHeight;
+        var clamped = Math.Max(min, size);
+
+        if (!double.IsInfinity(max))
+        {
+            clamped = Math.Min(clamped, max);
+        }
+
+        return clamped;
     }
 
     private bool GetAutoMargin(Control control, bool isMainAxis, bool isStart)
