@@ -8,6 +8,7 @@
     <Styles.Resources>
         <ControlTheme TargetType="navigation:Frame" x:Key="{x:Type navigation:Frame}">
             <Setter Property="Padding" Value="10" />
+            <Setter Property="HeaderDisplayMode" Value="Separate" />
             <Setter Property="Template">
                 <ControlTemplate>
                     <OverlayBorder CornerRadius="{TemplateBinding CornerRadius}"
@@ -16,11 +17,19 @@
                                    BorderThickness="{TemplateBinding BorderThickness}"
                                    BoxShadow="{TemplateBinding BoxShadow}"
                                    ClipToBounds="{TemplateBinding ClipToBounds}">
-                        <DockPanel>
-                            
-                            <!-- Header Area: Back Button + Header Content -->
-                            <Border DockPanel.Dock="Top" 
-                                    Background="{TemplateBinding HeaderBackground}" 
+                        <Grid RowDefinitions="Auto,*,Auto">
+                            <ContentPresenter x:Name="Content"
+                                              Grid.Row="1"
+                                              Background="{TemplateBinding ContentBackground}"
+                                              Padding="{TemplateBinding EffectiveContentPadding}"
+                                              Content="{TemplateBinding Content}" />
+
+                            <Border x:Name="HeaderHost"
+                                    Grid.Row="0"
+                                    ZIndex="1"
+                                    VerticalAlignment="Top"
+                                    HorizontalAlignment="Stretch"
+                                    Background="{TemplateBinding HeaderBackground}"
                                     Padding="{TemplateBinding EffectiveHeaderPadding}">
                                 <DockPanel LastChildFill="True">
                                     <!-- Back button hidden on mobile; system back gesture handles navigation -->
@@ -40,19 +49,12 @@
                                 </DockPanel>
                             </Border>
 
-                            <!-- Footer Area -->
-                            <ContentPresenter x:Name="Footer" 
-                                              DockPanel.Dock="Bottom" 
+                            <ContentPresenter x:Name="Footer"
+                                              Grid.Row="2"
                                               Background="{TemplateBinding FooterBackground}"
                                               Padding="{TemplateBinding EffectiveFooterPadding}"
                                               Content="{TemplateBinding Footer}" />
-
-                            <!-- Main Content Area -->
-                            <ContentPresenter x:Name="Content" 
-                                              Background="{TemplateBinding ContentBackground}"
-                                              Padding="{TemplateBinding EffectiveContentPadding}"
-                                              Content="{TemplateBinding Content}" />
-                        </DockPanel>
+                        </Grid>
                     </OverlayBorder>
                 </ControlTemplate>
             </Setter>
@@ -66,6 +68,9 @@
                         </Template>
                     </Setter.Value>
                 </Setter>
+            </Style>
+            <Style Selector="^[HeaderDisplayMode=Overlay] /template/ Border#HeaderHost">
+                <Setter Property="Grid.Row" Value="1" />
             </Style>
         </ControlTheme>
     </Styles.Resources>

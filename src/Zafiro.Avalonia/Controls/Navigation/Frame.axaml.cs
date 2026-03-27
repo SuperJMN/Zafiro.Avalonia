@@ -32,6 +32,9 @@ public class Frame : TemplatedControl
     public static readonly StyledProperty<object?> FooterProperty = AvaloniaProperty.Register<Frame, object?>(
         nameof(Footer));
 
+    public static readonly StyledProperty<FrameHeaderDisplayMode> HeaderDisplayModeProperty = AvaloniaProperty.Register<Frame, FrameHeaderDisplayMode>(
+        nameof(HeaderDisplayMode));
+
     public static readonly StyledProperty<IBrush?> HeaderBackgroundProperty = AvaloniaProperty.Register<Frame, IBrush?>(
         nameof(HeaderBackground));
 
@@ -81,6 +84,12 @@ public class Frame : TemplatedControl
     {
         get => GetValue(FooterProperty);
         set => SetValue(FooterProperty, value);
+    }
+
+    public FrameHeaderDisplayMode HeaderDisplayMode
+    {
+        get => GetValue(HeaderDisplayModeProperty);
+        set => SetValue(HeaderDisplayModeProperty, value);
     }
 
     public new IBrush? Background
