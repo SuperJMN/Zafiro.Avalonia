@@ -20,6 +20,25 @@
             <Setter Property="CornerRadius" Value="12" />
             <Setter Property="Background" Value="#08FFFFFF" />
         </Style>
+
+        <Style Selector="GridSplitter.demo-resizer">
+            <Setter Property="ResizeDirection" Value="Columns" />
+            <Setter Property="MinWidth" Value="16" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <Panel Background="Transparent">
+                        <Border Width="4" Height="28" CornerRadius="2"
+                                Background="#30808080"
+                                VerticalAlignment="Center" HorizontalAlignment="Center"
+                                Name="Grip" />
+                    </Panel>
+                </ControlTemplate>
+            </Setter>
+        </Style>
+        <Style Selector="GridSplitter.demo-resizer:pointerover /template/ Border#Grip">
+            <Setter Property="Background" Value="#60808080" />
+        </Style>
     </UserControl.Styles>
 
     <ScrollViewer HorizontalScrollBarVisibility="Disabled">
@@ -28,85 +47,52 @@
             <HeaderedContainer Header="CSS-like flex layout for Avalonia panels">
                 <TextBlock Margin="16 0 16 16"
                            TextWrapping="Wrap"
-                           Text="FlexPanel is the preferred public name for the control. These examples focus on the most common web layouts: split toolbars, wrapping action rows, equal columns, and sticky footer composition. Resize the window to see how the wrapping examples reflow." />
+                           Text="FlexPanel is the preferred public name for the control. These examples focus on the most common web layouts: split toolbars, wrapping action rows, equal columns, and sticky footer composition. Drag the grip handle on the right side of each example to resize it independently." />
             </HeaderedContainer>
 
             <Card Header="Toolbar Split With Auto Margin">
-                <Border Classes="demo-surface">
-                    <FlexPanel Gap="8" AlignItems="Center">
-                        <EnhancedButton Classes="flex-demo" Content="Back" />
-                        <EnhancedButton Classes="flex-demo" Content="Share" />
-                        <EnhancedButton Classes="flex-demo" Content="Archive" />
-                        <EnhancedButton Classes="flex-demo" Content="Delete"
-                                        FlexPanel.MarginLeftAuto="True" />
-                    </FlexPanel>
-                </Border>
+                <Grid ColumnDefinitions="3*, Auto, *">
+                    <Border Grid.Column="0" Classes="demo-surface" ClipToBounds="True" MinWidth="100">
+                        <FlexPanel Gap="8" AlignItems="Center">
+                            <EnhancedButton Classes="flex-demo" Content="Back" />
+                            <EnhancedButton Classes="flex-demo" Content="Share" />
+                            <EnhancedButton Classes="flex-demo" Content="Archive" />
+                            <EnhancedButton Classes="flex-demo" Content="Delete"
+                                            FlexPanel.MarginLeftAuto="True" />
+                        </FlexPanel>
+                    </Border>
+                    <GridSplitter Grid.Column="1" Classes="demo-resizer" />
+                    <Panel Grid.Column="2" />
+                </Grid>
             </Card>
 
             <Card Header="Responsive Wrapping Actions">
-                <Border Classes="demo-surface"
-                        HorizontalAlignment="Stretch"
-                        MinWidth="0">
-                    <FlexPanel Wrap="Wrap"
-                               Gap="12"
-                               AlignItems="Center"
-                               JustifyContent="SpaceBetween"
-                               AlignContent="Start">
-                        <EnhancedButton Classes="flex-demo" Content="Overview" />
-                        <EnhancedButton Classes="flex-demo" Content="Revenue" />
-                        <EnhancedButton Classes="flex-demo" Content="Forecasts" />
-                        <EnhancedButton Classes="flex-demo" Content="Exports" />
-                        <EnhancedButton Classes="flex-demo" Content="Settings" />
-                    </FlexPanel>
-                </Border>
+                <Grid ColumnDefinitions="3*, Auto, *">
+                    <Border Grid.Column="0" Classes="demo-surface" ClipToBounds="True" MinWidth="100">
+                        <FlexPanel Wrap="Wrap"
+                                   Gap="12"
+                                   AlignItems="Center"
+                                   JustifyContent="SpaceBetween"
+                                   AlignContent="Start">
+                            <EnhancedButton Classes="flex-demo" Content="Overview" />
+                            <EnhancedButton Classes="flex-demo" Content="Revenue" />
+                            <EnhancedButton Classes="flex-demo" Content="Forecasts" />
+                            <EnhancedButton Classes="flex-demo" Content="Exports" />
+                            <EnhancedButton Classes="flex-demo" Content="Settings" />
+                        </FlexPanel>
+                    </Border>
+                    <GridSplitter Grid.Column="1" Classes="demo-resizer" />
+                    <Panel Grid.Column="2" />
+                </Grid>
             </Card>
 
             <Card Header="Wrapping Chips">
-                <Border Classes="demo-surface"
-                        HorizontalAlignment="Stretch"
-                        MinWidth="0">
-                    <FlexPanel Wrap="Wrap"
-                               Gap="10"
-                               AlignItems="Center"
-                               JustifyContent="Start"
-                               AlignContent="Start">
-                        <Border Background="#EEF4FF" CornerRadius="999" Padding="12 8">
-                            <TextBlock Text="Design system" />
-                        </Border>
-                        <Border Background="#E5F8E9" CornerRadius="999" Padding="12 8">
-                            <TextBlock Text="Billing" />
-                        </Border>
-                        <Border Background="#FFF0DB" CornerRadius="999" Padding="12 8">
-                            <TextBlock Text="Notifications" />
-                        </Border>
-                        <Border Background="#FFE3E3" CornerRadius="999" Padding="12 8">
-                            <TextBlock Text="CSV export" />
-                        </Border>
-                        <Border Background="#E6EDFF" CornerRadius="999" Padding="12 8">
-                            <TextBlock Text="Error tracking" />
-                        </Border>
-                        <Border Background="#F1E8FF" CornerRadius="999" Padding="12 8">
-                            <TextBlock Text="Feature flags" />
-                        </Border>
-                        <Border Background="#E4FBF0" CornerRadius="999" Padding="12 8">
-                            <TextBlock Text="Usage analytics" />
-                        </Border>
-                    </FlexPanel>
-                </Border>
-            </Card>
-
-            <Card Header="Justified Chips">
-                <Border Classes="demo-surface"
-                        HorizontalAlignment="Stretch"
-                        MinWidth="0">
-                    <StackPanel Spacing="10">
-                        <TextBlock TextWrapping="Wrap"
-                                   Text="This example uses wrap plus space-between so each wrapped line expands like justified text, distributing the remaining space between the chips on that line." />
-
+                <Grid ColumnDefinitions="3*, Auto, *">
+                    <Border Grid.Column="0" Classes="demo-surface" ClipToBounds="True" MinWidth="100">
                         <FlexPanel Wrap="Wrap"
                                    Gap="10"
                                    AlignItems="Center"
-                                   JustifyContent="SpaceBetween"
+                                   JustifyContent="Start"
                                    AlignContent="Start">
                             <Border Background="#EEF4FF" CornerRadius="999" Padding="12 8">
                                 <TextBlock Text="Design system" />
@@ -115,7 +101,7 @@
                                 <TextBlock Text="Billing" />
                             </Border>
                             <Border Background="#FFF0DB" CornerRadius="999" Padding="12 8">
-                                <TextBlock Text="Customer portal" />
+                                <TextBlock Text="Notifications" />
                             </Border>
                             <Border Background="#FFE3E3" CornerRadius="999" Padding="12 8">
                                 <TextBlock Text="CSV export" />
@@ -129,75 +115,127 @@
                             <Border Background="#E4FBF0" CornerRadius="999" Padding="12 8">
                                 <TextBlock Text="Usage analytics" />
                             </Border>
-                            <Border Background="#FFF7D6" CornerRadius="999" Padding="12 8">
-                                <TextBlock Text="Roadmap" />
-                            </Border>
-                            <Border Background="#EAF2FF" CornerRadius="999" Padding="12 8">
-                                <TextBlock Text="Changelog" />
-                            </Border>
-                            <Border Background="#E9FBE7" CornerRadius="999" Padding="12 8">
-                                <TextBlock Text="Integrations" />
-                            </Border>
-                            <Border Background="#FDEAE7" CornerRadius="999" Padding="12 8">
-                                <TextBlock Text="Alerts" />
-                            </Border>
-                            <Border Background="#F2EEFF" CornerRadius="999" Padding="12 8">
-                                <TextBlock Text="Release notes" />
-                            </Border>
                         </FlexPanel>
-                    </StackPanel>
-                </Border>
+                    </Border>
+                    <GridSplitter Grid.Column="1" Classes="demo-resizer" />
+                    <Panel Grid.Column="2" />
+                </Grid>
+            </Card>
+
+            <Card Header="Justified Chips">
+                <Grid ColumnDefinitions="3*, Auto, *">
+                    <Border Grid.Column="0" Classes="demo-surface" ClipToBounds="True" MinWidth="100">
+                        <StackPanel Spacing="10">
+                            <TextBlock TextWrapping="Wrap"
+                                       Text="This example uses wrap plus space-between so each wrapped line expands like justified text, distributing the remaining space between the chips on that line." />
+
+                            <FlexPanel Wrap="Wrap"
+                                       Gap="10"
+                                       AlignItems="Center"
+                                       JustifyContent="SpaceBetween"
+                                       AlignContent="Start">
+                                <Border Background="#EEF4FF" CornerRadius="999" Padding="12 8">
+                                    <TextBlock Text="Design system" />
+                                </Border>
+                                <Border Background="#E5F8E9" CornerRadius="999" Padding="12 8">
+                                    <TextBlock Text="Billing" />
+                                </Border>
+                                <Border Background="#FFF0DB" CornerRadius="999" Padding="12 8">
+                                    <TextBlock Text="Customer portal" />
+                                </Border>
+                                <Border Background="#FFE3E3" CornerRadius="999" Padding="12 8">
+                                    <TextBlock Text="CSV export" />
+                                </Border>
+                                <Border Background="#E6EDFF" CornerRadius="999" Padding="12 8">
+                                    <TextBlock Text="Error tracking" />
+                                </Border>
+                                <Border Background="#F1E8FF" CornerRadius="999" Padding="12 8">
+                                    <TextBlock Text="Feature flags" />
+                                </Border>
+                                <Border Background="#E4FBF0" CornerRadius="999" Padding="12 8">
+                                    <TextBlock Text="Usage analytics" />
+                                </Border>
+                                <Border Background="#FFF7D6" CornerRadius="999" Padding="12 8">
+                                    <TextBlock Text="Roadmap" />
+                                </Border>
+                                <Border Background="#EAF2FF" CornerRadius="999" Padding="12 8">
+                                    <TextBlock Text="Changelog" />
+                                </Border>
+                                <Border Background="#E9FBE7" CornerRadius="999" Padding="12 8">
+                                    <TextBlock Text="Integrations" />
+                                </Border>
+                                <Border Background="#FDEAE7" CornerRadius="999" Padding="12 8">
+                                    <TextBlock Text="Alerts" />
+                                </Border>
+                                <Border Background="#F2EEFF" CornerRadius="999" Padding="12 8">
+                                    <TextBlock Text="Release notes" />
+                                </Border>
+                            </FlexPanel>
+                        </StackPanel>
+                    </Border>
+                    <GridSplitter Grid.Column="1" Classes="demo-resizer" />
+                    <Panel Grid.Column="2" />
+                </Grid>
             </Card>
 
             <Card Header="Equal Columns With flex: 1 1 0">
-                <Border Classes="demo-surface">
-                    <FlexPanel Gap="12" AlignItems="Stretch">
-                        <Border Background="#DDEBFF" CornerRadius="10" Padding="16"
-                                FlexPanel.Grow="1"
-                                FlexPanel.Shrink="1"
-                                FlexPanel.Basis="0">
-                            <StackPanel Spacing="6">
-                                <TextBlock FontWeight="Bold" Text="Analytics" />
-                                <TextBlock TextWrapping="Wrap" Text="Same width regardless of content length." />
-                            </StackPanel>
-                        </Border>
-                        <Border Background="#E5F8E9" CornerRadius="10" Padding="16"
-                                FlexPanel.Grow="1"
-                                FlexPanel.Shrink="1"
-                                FlexPanel.Basis="0">
-                            <StackPanel Spacing="6">
-                                <TextBlock FontWeight="Bold" Text="Conversion" />
-                                <TextBlock TextWrapping="Wrap" Text="Useful for dashboards and pricing cards." />
-                            </StackPanel>
-                        </Border>
-                        <Border Background="#FFF0DB" CornerRadius="10" Padding="16"
-                                FlexPanel.Grow="1"
-                                FlexPanel.Shrink="1"
-                                FlexPanel.Basis="0">
-                            <StackPanel Spacing="6">
-                                <TextBlock FontWeight="Bold" Text="Retention" />
-                                <TextBlock TextWrapping="Wrap" Text="The content can differ and the columns stay balanced." />
-                            </StackPanel>
-                        </Border>
-                    </FlexPanel>
-                </Border>
+                <Grid ColumnDefinitions="3*, Auto, *">
+                    <Border Grid.Column="0" Classes="demo-surface" ClipToBounds="True" MinWidth="100">
+                        <FlexPanel Gap="12" AlignItems="Stretch">
+                            <Border Background="#DDEBFF" CornerRadius="10" Padding="16"
+                                    FlexPanel.Grow="1"
+                                    FlexPanel.Shrink="1"
+                                    FlexPanel.Basis="0">
+                                <StackPanel Spacing="6">
+                                    <TextBlock FontWeight="Bold" Text="Analytics" />
+                                    <TextBlock TextWrapping="Wrap" Text="Same width regardless of content length." />
+                                </StackPanel>
+                            </Border>
+                            <Border Background="#E5F8E9" CornerRadius="10" Padding="16"
+                                    FlexPanel.Grow="1"
+                                    FlexPanel.Shrink="1"
+                                    FlexPanel.Basis="0">
+                                <StackPanel Spacing="6">
+                                    <TextBlock FontWeight="Bold" Text="Conversion" />
+                                    <TextBlock TextWrapping="Wrap" Text="Useful for dashboards and pricing cards." />
+                                </StackPanel>
+                            </Border>
+                            <Border Background="#FFF0DB" CornerRadius="10" Padding="16"
+                                    FlexPanel.Grow="1"
+                                    FlexPanel.Shrink="1"
+                                    FlexPanel.Basis="0">
+                                <StackPanel Spacing="6">
+                                    <TextBlock FontWeight="Bold" Text="Retention" />
+                                    <TextBlock TextWrapping="Wrap"
+                                               Text="The content can differ and the columns stay balanced." />
+                                </StackPanel>
+                            </Border>
+                        </FlexPanel>
+                    </Border>
+                    <GridSplitter Grid.Column="1" Classes="demo-resizer" />
+                    <Panel Grid.Column="2" />
+                </Grid>
             </Card>
 
             <Card Header="Cross-Axis Alignment">
-                <Border Classes="demo-surface">
-                    <FlexPanel Gap="12" AlignItems="Center">
-                        <Border Background="#FFE3E3" CornerRadius="10" Padding="12" Height="40">
-                            <TextBlock VerticalAlignment="Center" Text="Short" />
-                        </Border>
-                        <Border Background="#E6EDFF" CornerRadius="10" Padding="12" Height="72">
-                            <TextBlock VerticalAlignment="Center" Text="Centered against taller siblings" />
-                        </Border>
-                        <Border Background="#E4FBF0" CornerRadius="10" Padding="12" Height="56"
-                                FlexPanel.AlignSelf="End">
-                            <TextBlock VerticalAlignment="Center" Text="align-self: end" />
-                        </Border>
-                    </FlexPanel>
-                </Border>
+                <Grid ColumnDefinitions="3*, Auto, *">
+                    <Border Grid.Column="0" Classes="demo-surface" ClipToBounds="True" MinWidth="100">
+                        <FlexPanel Gap="12" AlignItems="Center">
+                            <Border Background="#FFE3E3" CornerRadius="10" Padding="12" Height="40">
+                                <TextBlock VerticalAlignment="Center" Text="Short" />
+                            </Border>
+                            <Border Background="#E6EDFF" CornerRadius="10" Padding="12" Height="72">
+                                <TextBlock VerticalAlignment="Center" Text="Centered against taller siblings" />
+                            </Border>
+                            <Border Background="#E4FBF0" CornerRadius="10" Padding="12" Height="56"
+                                    FlexPanel.AlignSelf="End">
+                                <TextBlock VerticalAlignment="Center" Text="align-self: end" />
+                            </Border>
+                        </FlexPanel>
+                    </Border>
+                    <GridSplitter Grid.Column="1" Classes="demo-resizer" />
+                    <Panel Grid.Column="2" />
+                </Grid>
             </Card>
 
             <Card Header="Sticky Footer Pattern">
@@ -206,13 +244,15 @@
                         <Border Background="#EEF4FF" CornerRadius="10" Padding="16">
                             <StackPanel Spacing="8">
                                 <TextBlock FontWeight="Bold" Text="Account Settings" />
-                                <TextBlock TextWrapping="Wrap" Text="Column flex layouts are useful for dialogs, settings screens, and card internals." />
+                                <TextBlock TextWrapping="Wrap"
+                                           Text="Column flex layouts are useful for dialogs, settings screens, and card internals." />
                             </StackPanel>
                         </Border>
 
                         <Border Background="#F8FAFC" CornerRadius="10" Padding="16"
                                 FlexPanel.Grow="1">
-                            <TextBlock TextWrapping="Wrap" Text="This region grows and absorbs the remaining vertical space." />
+                            <TextBlock TextWrapping="Wrap"
+                                       Text="This region grows and absorbs the remaining vertical space." />
                         </Border>
 
                         <FlexPanel Gap="8"
