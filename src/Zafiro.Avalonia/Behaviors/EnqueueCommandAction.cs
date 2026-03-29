@@ -3,6 +3,7 @@ using System.Reactive.Concurrency;
 using System.Reactive.Disposables;
 using System.Windows.Input;
 using Avalonia.Data;
+using Avalonia.LogicalTree;
 using Avalonia.Xaml.Interactivity;
 using Zafiro.UI.Commands;
 
@@ -34,13 +35,15 @@ public class EnqueueCommandAction : StyledElementAction
     /// Identifies the <see cref="Command"/> avalonia property.
     /// </summary>
     public static readonly StyledProperty<ICommand?> CommandProperty =
-        AvaloniaProperty.Register<EnqueueCommandAction, ICommand?>(nameof(Command), defaultBindingMode: BindingMode.OneWay);
+        AvaloniaProperty.Register<EnqueueCommandAction, ICommand?>(nameof(Command),
+            defaultBindingMode: BindingMode.OneWay);
 
     /// <summary>
     /// Identifies the <see cref="CommandParameter"/> avalonia property.
     /// </summary>
     public static readonly StyledProperty<object?> CommandParameterProperty =
-        AvaloniaProperty.Register<EnqueueCommandAction, object?>(nameof(CommandParameter), defaultBindingMode: BindingMode.OneWay);
+        AvaloniaProperty.Register<EnqueueCommandAction, object?>(nameof(CommandParameter),
+            defaultBindingMode: BindingMode.OneWay);
 
     /// <summary>
     /// Identifies the <see cref="PoolName"/> avalonia property.
@@ -70,7 +73,8 @@ public class EnqueueCommandAction : StyledElementAction
     /// Identifies the <see cref="PoolExecutingCount"/> avalonia property.
     /// </summary>
     public static readonly DirectProperty<EnqueueCommandAction, int> PoolExecutingCountProperty =
-        AvaloniaProperty.RegisterDirect<EnqueueCommandAction, int>(nameof(PoolExecutingCount), o => o.PoolExecutingCount);
+        AvaloniaProperty.RegisterDirect<EnqueueCommandAction, int>(nameof(PoolExecutingCount),
+            o => o.PoolExecutingCount);
 
     /// <summary>
     /// Identifies the <see cref="PoolPendingCount"/> avalonia property.
@@ -88,7 +92,8 @@ public class EnqueueCommandAction : StyledElementAction
     /// Identifies the <see cref="PoolCompletedCount"/> avalonia property.
     /// </summary>
     public static readonly DirectProperty<EnqueueCommandAction, int> PoolCompletedCountProperty =
-        AvaloniaProperty.RegisterDirect<EnqueueCommandAction, int>(nameof(PoolCompletedCount), o => o.PoolCompletedCount);
+        AvaloniaProperty.RegisterDirect<EnqueueCommandAction, int>(nameof(PoolCompletedCount),
+            o => o.PoolCompletedCount);
 
     private readonly CompositeDisposable pendingJobs = new();
 
@@ -207,6 +212,15 @@ public class EnqueueCommandAction : StyledElementAction
         }
     }
 
+    /// <inheritdoc />
+    protected override void OnDetachedFromLogicalTree(LogicalTreeAttachmentEventArgs e)
+    {
+        base.OnDetachedFromLogicalTree(e);
+        poolSubscription?.Dispose();
+        poolSubscription = null;
+        pendingJobs.Clear();
+    }
+
     private void UpdateSubscription(string? poolName)
     {
         poolSubscription?.Dispose();
@@ -240,7 +254,8 @@ public class EnqueueCommandAction : StyledElementAction
                     pool.PendingCountObservable,
                     pool.TotalCountObservable,
                     pool.CompletedCountObservable,
-                    (executing, pending, total, completed) => (Executing: executing, Pending: pending, Total: total, Completed: completed));
+                    (executing, pending, total, completed) => (Executing: executing, Pending: pending, Total: total,
+                        Completed: completed));
             })
             .ObserveOn(AvaloniaScheduler.Instance)
             .Subscribe(tuple =>
