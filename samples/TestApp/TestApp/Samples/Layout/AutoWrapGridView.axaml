@@ -1,0 +1,137 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             d:DesignWidth="900"
+             d:DesignHeight="900"
+             x:Class="TestApp.Samples.Layout.AutoWrapGridView">
+
+    <UserControl.Styles>
+        <Style Selector="Border.demo-surface">
+            <Setter Property="Padding" Value="16" />
+            <Setter Property="BorderBrush" Value="#22000000" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="12" />
+            <Setter Property="Background" Value="#08FFFFFF" />
+        </Style>
+
+        <Style Selector="GridSplitter.demo-resizer">
+            <Setter Property="ResizeDirection" Value="Columns" />
+            <Setter Property="MinWidth" Value="16" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <Panel Background="Transparent">
+                        <Border Width="4" Height="28" CornerRadius="2"
+                                Background="#30808080"
+                                VerticalAlignment="Center" HorizontalAlignment="Center"
+                                Name="Grip" />
+                    </Panel>
+                </ControlTemplate>
+            </Setter>
+        </Style>
+        <Style Selector="GridSplitter.demo-resizer:pointerover /template/ Border#Grip">
+            <Setter Property="Background" Value="#60808080" />
+        </Style>
+
+        <Style Selector="AutoWrapGrid > Button">
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="VerticalAlignment" Value="Stretch" />
+        </Style>
+    </UserControl.Styles>
+
+    <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+        <StackPanel Spacing="12" HorizontalAlignment="Stretch">
+            <HeaderedContainer Header="Auto when single-row, uniform when wrapping">
+                <TextBlock Margin="16 0 16 16"
+                           TextWrapping="Wrap"
+                           Text="AutoWrapGrid lays items at their natural width when all fit in one row. When wrapping occurs, all items become uniform width to prevent jagged rows. Drag the grip handle to resize each example." />
+            </HeaderedContainer>
+
+            <!-- Demo 1: The user's scenario — 3 buttons with different content -->
+            <Card Header="3 Buttons — Auto vs Uniform">
+                <Grid ColumnDefinitions="3*, Auto, *">
+                    <Border Grid.Column="0" Classes="demo-surface" ClipToBounds="True" MinWidth="100">
+                        <AutoWrapGrid ColumnSpacing="8" RowSpacing="8">
+                            <Button Content="OK" />
+                            <Button Content="Save changes" />
+                            <Button Content="Discard and go back" />
+                        </AutoWrapGrid>
+                    </Border>
+                    <GridSplitter Grid.Column="1" Classes="demo-resizer" />
+                    <Panel Grid.Column="2" />
+                </Grid>
+            </Card>
+
+            <!-- Demo 2: More items to show progressive wrapping -->
+            <Card Header="5 Actions — Progressive Wrapping">
+                <Grid ColumnDefinitions="3*, Auto, *">
+                    <Border Grid.Column="0" Classes="demo-surface" ClipToBounds="True" MinWidth="100">
+                        <AutoWrapGrid ColumnSpacing="8" RowSpacing="8">
+                            <Button Content="New" />
+                            <Button Content="Open file" />
+                            <Button Content="Save" />
+                            <Button Content="Export as PDF" />
+                            <Button Content="Print" />
+                        </AutoWrapGrid>
+                    </Border>
+                    <GridSplitter Grid.Column="1" Classes="demo-resizer" />
+                    <Panel Grid.Column="2" />
+                </Grid>
+            </Card>
+
+            <!-- Demo 3: Very different content sizes -->
+            <Card Header="Mixed Content Sizes">
+                <Grid ColumnDefinitions="3*, Auto, *">
+                    <Border Grid.Column="0" Classes="demo-surface" ClipToBounds="True" MinWidth="100">
+                        <AutoWrapGrid ColumnSpacing="10" RowSpacing="10">
+                            <Button Content="X" />
+                            <Button Content="Medium label" />
+                            <Button Content="A much longer button label here" />
+                            <Button Content="Go" />
+                        </AutoWrapGrid>
+                    </Border>
+                    <GridSplitter Grid.Column="1" Classes="demo-resizer" />
+                    <Panel Grid.Column="2" />
+                </Grid>
+            </Card>
+
+            <!-- Demo 4: Many items showing grid-like behavior -->
+            <Card Header="7 Items — Grid Behavior on Wrap">
+                <Grid ColumnDefinitions="3*, Auto, *">
+                    <Border Grid.Column="0" Classes="demo-surface" ClipToBounds="True" MinWidth="100">
+                        <AutoWrapGrid ColumnSpacing="8" RowSpacing="8">
+                            <Button Content="Dashboard" />
+                            <Button Content="Users" />
+                            <Button Content="Analytics" />
+                            <Button Content="Settings" />
+                            <Button Content="Billing" />
+                            <Button Content="Support" />
+                            <Button Content="Logout" />
+                        </AutoWrapGrid>
+                    </Border>
+                    <GridSplitter Grid.Column="1" Classes="demo-resizer" />
+                    <Panel Grid.Column="2" />
+                </Grid>
+            </Card>
+
+            <!-- Demo 5: Wider spacing -->
+            <Card Header="Wide Spacing (16 / 12)">
+                <Grid ColumnDefinitions="3*, Auto, *">
+                    <Border Grid.Column="0" Classes="demo-surface" ClipToBounds="True" MinWidth="100">
+                        <AutoWrapGrid ColumnSpacing="16" RowSpacing="12">
+                            <Button Content="Alpha" />
+                            <Button Content="Bravo" />
+                            <Button Content="Charlie" />
+                            <Button Content="Delta" />
+                            <Button Content="Echo" />
+                        </AutoWrapGrid>
+                    </Border>
+                    <GridSplitter Grid.Column="1" Classes="demo-resizer" />
+                    <Panel Grid.Column="2" />
+                </Grid>
+            </Card>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>
