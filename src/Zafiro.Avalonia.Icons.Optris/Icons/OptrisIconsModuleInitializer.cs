@@ -1,16 +1,16 @@
 using System.Runtime.CompilerServices;
-using Projektanker.Icons.Avalonia;
-using Projektanker.Icons.Avalonia.FontAwesome;
-using Projektanker.Icons.Avalonia.MaterialDesign;
+using Optris.Icons.Avalonia;
+using Optris.Icons.Avalonia.FontAwesome;
+using Optris.Icons.Avalonia.MaterialDesign;
 
 namespace Zafiro.Avalonia.Icons;
 
 /// <summary>
-/// Module initializer that wires up the default Projektanker icon packs and
-/// the path-based icon provider when the Zafiro.Avalonia.Icons.Projektanker
+/// Module initializer that wires up the default Optris icon packs and
+/// the path-based icon provider when the Zafiro.Avalonia.Icons.Optris
 /// assembly is loaded.
 /// </summary>
-internal static class ProjektankerIconsModuleInitializer
+internal static class OptrisIconsModuleInitializer
 {
     [ModuleInitializer]
     internal static void Initialize()

@@ -21,8 +21,8 @@ public class App : Application
         // Register Svg-based icon provider for "svg:" sources
         IconControlProviderRegistry.Register(new SvgIconControlProvider());
 
-        // Register Projektanker-based icon provider as the default for Zafiro.UI icons
-        IconControlProviderRegistry.Register(new ProjektankerIconControlProvider(), asDefault: true);
+        // Register Optris-based icon provider as the default for Zafiro.UI icons
+        IconControlProviderRegistry.Register(new OptrisIconControlProvider(), asDefault: true);
 
         this.Connect(() => new MainView(), view => CompositionRoot.Create(view), () => new MainWindow());
 

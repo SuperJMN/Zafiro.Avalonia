@@ -1,4 +1,4 @@
-using Projektanker.Icons.Avalonia;
+using Optris.Icons.Avalonia;
 
 namespace Zafiro.Avalonia.Icons;
 

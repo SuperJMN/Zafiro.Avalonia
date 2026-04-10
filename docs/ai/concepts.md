@@ -352,11 +352,11 @@ Both `DataTypeViewLocator` and `NamingConventionGeneratedViewLocator` are genera
 ```csharp
 // Register providers at startup (App.axaml.cs)
 IconControlProviderRegistry.Register(new SvgIconControlProvider());
-IconControlProviderRegistry.Register(new ProjektankerIconControlProvider(), asDefault: true);
+IconControlProviderRegistry.Register(new OptrisIconControlProvider(), asDefault: true);
 ```
 
 ```xml
-<!-- AXAML: use Projektanker icons directly -->
+<!-- AXAML: use Optris icons directly -->
 <i:Icon Value="fa-solid fa-home" />
 
 <!-- Or via Zafiro's {Icon} markup extension -->
