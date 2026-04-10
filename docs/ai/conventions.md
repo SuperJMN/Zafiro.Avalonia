@@ -180,7 +180,7 @@ services.AddTransient<MainViewModel>();
 
 // 6. Platform services
 services.AddSingleton<IFileSystemPicker>(_ =>
-    new AvaloniaFileSystemPicker(TopLevel.GetTopLevel(view).StorageProvider));
+    new AvaloniaFileSystemPicker(() => TopLevel.GetTopLevel(view)!.StorageProvider));
 
 var provider = services.BuildServiceProvider();
 ```
