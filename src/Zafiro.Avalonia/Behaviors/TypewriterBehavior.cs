@@ -17,7 +17,7 @@ public class TypewriterBehavior : DisposingBehavior<TextBlock>
     {
         return this.WhenAnyValue(x => x.TextToType)
             .WhereNotNull()
-            .Throttle(TimeSpan.FromSeconds(1), RxApp.MainThreadScheduler)
+            .Throttle(TimeSpan.FromSeconds(1), RxSchedulers.MainThreadScheduler)
             .Select(s => Remove(AssociatedObject.Text).Concat(Add(TextToType)))
             .Switch()
             .Do(text => AssociatedObject.Text = text)

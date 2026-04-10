@@ -17,5 +17,5 @@ class Program
 #if DEBUG
             .WithDeveloperTools()
 #endif
-            .UseReactiveUI();
+            .UseReactiveUI(_ => { });
 }

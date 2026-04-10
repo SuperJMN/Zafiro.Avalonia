@@ -93,7 +93,7 @@ public class EnhancedButton : Button
         .Select(ObserveExecution)
         .Switch()
         .DistinctUntilChanged()
-        .ObserveOn(RxApp.MainThreadScheduler);
+        .ObserveOn(RxSchedulers.MainThreadScheduler);
 
     static IObservable<bool> ObserveExecution(ICommand? command) =>
         Maybe.From(command)

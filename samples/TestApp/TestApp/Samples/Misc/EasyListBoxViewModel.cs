@@ -1,3 +1,4 @@
+using ReactiveUI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,7 +36,7 @@ public class EasyListBoxViewModel
         MutableGraph = graph2D;
 
         Play = ReactiveCommand
-            .CreateFromObservable(() => Observable.Interval(TimeSpan.FromMilliseconds(12), RxApp.MainThreadScheduler).Do(_ => engine1.Step()));
+            .CreateFromObservable(() => Observable.Interval(TimeSpan.FromMilliseconds(12), RxSchedulers.MainThreadScheduler).Do(_ => engine1.Step()));
 
         Play.Execute().Subscribe();
 
