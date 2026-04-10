@@ -217,6 +217,26 @@ public class FlexPanelTests
     }
 
     [AvaloniaFact]
+    public void Should_justify_end_on_each_wrapped_line()
+    {
+        // 3 items of 40px each, gap 10, container 100px wide
+        // Row 1: items 1+2 = 40+10+40 = 90, remaining = 10 → both start at x=10
+        // Row 2: item 3 = 40, remaining = 60 → starts at x=60
+        var first = Item(width: 40, height: 20);
+        var second = Item(width: 40, height: 20);
+        var third = Item(width: 40, height: 20);
+
+        var panel = Panel(FlexDirection.Row, FlexWrap.Wrap, FlexJustify.End, FlexAlign.Start, 10, first, second, third);
+        panel.AlignContent = FlexAlignContent.Start;
+
+        ShowAndLayout(panel, 100, 100);
+
+        AssertBounds(first, x: 10, y: 0, width: 40, height: 20);
+        AssertBounds(second, x: 60, y: 0, width: 40, height: 20);
+        AssertBounds(third, x: 60, y: 30, width: 40, height: 20);
+    }
+
+    [AvaloniaFact]
     public void Should_stretch_lines_on_cross_axis_by_default_when_wrapping()
     {
         var first = Item(width: 40, height: 20);

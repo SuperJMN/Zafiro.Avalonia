@@ -76,7 +76,7 @@ public class UntouchedClassBehavior : Behavior<Control>
         disposables.Dispose();
         if (AssociatedObject != null)
         {
-            if (AssociatedObject.GetVisualRoot() is { })
+            if (AssociatedObject.IsAttachedToVisualTree())
             {
                 AssociatedObject.Classes.Remove(ClassName);
             }
@@ -85,7 +85,7 @@ public class UntouchedClassBehavior : Behavior<Control>
 
     private void OnTextChanged()
     {
-        if (!hasBeenModified && AssociatedObject?.GetVisualRoot() is { })
+        if (!hasBeenModified && AssociatedObject is { } obj && obj.IsAttachedToVisualTree())
         {
             hasBeenModified = true;
             AssociatedObject.Classes.Remove(ClassName);

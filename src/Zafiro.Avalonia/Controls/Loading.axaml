@@ -1,7 +1,7 @@
 <Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:controls="clr-namespace:Zafiro.Avalonia.Controls"
-        xmlns:c="clr-namespace:FluentAvalonia.UI.Controls;assembly=FluentAvalonia">
+        xmlns:c="clr-namespace:Zafiro.Avalonia.Controls">
     <Styles.Resources>
         <ControlTheme x:Key="{x:Type controls:Loading}" TargetType="{x:Type controls:Loading}">
             <Setter Property="LoadingTemplate">

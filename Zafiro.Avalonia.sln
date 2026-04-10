@@ -7,16 +7,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Zafiro.Avalonia.Dialogs", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Zafiro.Avalonia", "src\Zafiro.Avalonia\Zafiro.Avalonia.csproj", "{7E270C24-4440-4BDB-889D-6CA65C082AD1}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{022A4D50-4916-4866-833D-89E8A1C3E90B}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestApp", "samples\TestApp\TestApp\TestApp.csproj", "{0B28296D-9B99-45C7-B9AC-6EBB7DCF22A1}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestApp.Desktop", "samples\TestApp\TestApp.Desktop\TestApp.Desktop.csproj", "{562DA12A-1D8E-4DB8-9279-059677AED984}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ControlLibrary", "ControlLibrary", "{41A6E3E0-9492-4B68-B308-40F2A7ED0623}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Zafiro.Avalonia.DataViz", "src\Zafiro.Avalonia.DataViz\Zafiro.Avalonia.DataViz.csproj", "{ACAFB523-C9C0-47BA-9870-7148DE5C0835}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Zafiro.Avalonia.Generators", "src\Zafiro.Avalonia.Generators\Zafiro.Avalonia.Generators.csproj", "{D2993F32-C840-4A28-BBC4-986DF7299073}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Other files", "Other files", "{5C17C740-EF9B-4539-92BB-43CE92250490}"
@@ -25,8 +15,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Other files", "Other files"
 		src\Common.props = src\Common.props
 		Directory.Packages.props = Directory.Packages.props
 	EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zafiro.Avalonia.Icons.Projektanker", "src\Zafiro.Avalonia.Icons.Projektanker\Zafiro.Avalonia.Icons.Projektanker.csproj", "{7AB81EA9-F3F5-4732-BD23-9805747CEB34}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zafiro.Avalonia.Icons.Svg", "src\Zafiro.Avalonia.Icons.Svg\Zafiro.Avalonia.Icons.Svg.csproj", "{0654A361-009C-4E76-BD70-37D76A9A47A7}"
 EndProject
@@ -46,26 +34,10 @@ Global
 		{7E270C24-4440-4BDB-889D-6CA65C082AD1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7E270C24-4440-4BDB-889D-6CA65C082AD1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7E270C24-4440-4BDB-889D-6CA65C082AD1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0B28296D-9B99-45C7-B9AC-6EBB7DCF22A1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0B28296D-9B99-45C7-B9AC-6EBB7DCF22A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0B28296D-9B99-45C7-B9AC-6EBB7DCF22A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0B28296D-9B99-45C7-B9AC-6EBB7DCF22A1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{562DA12A-1D8E-4DB8-9279-059677AED984}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{562DA12A-1D8E-4DB8-9279-059677AED984}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{562DA12A-1D8E-4DB8-9279-059677AED984}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{562DA12A-1D8E-4DB8-9279-059677AED984}.Release|Any CPU.Build.0 = Release|Any CPU
-		{ACAFB523-C9C0-47BA-9870-7148DE5C0835}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{ACAFB523-C9C0-47BA-9870-7148DE5C0835}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{ACAFB523-C9C0-47BA-9870-7148DE5C0835}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{ACAFB523-C9C0-47BA-9870-7148DE5C0835}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D2993F32-C840-4A28-BBC4-986DF7299073}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D2993F32-C840-4A28-BBC4-986DF7299073}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D2993F32-C840-4A28-BBC4-986DF7299073}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D2993F32-C840-4A28-BBC4-986DF7299073}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7AB81EA9-F3F5-4732-BD23-9805747CEB34}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7AB81EA9-F3F5-4732-BD23-9805747CEB34}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7AB81EA9-F3F5-4732-BD23-9805747CEB34}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7AB81EA9-F3F5-4732-BD23-9805747CEB34}.Release|Any CPU.Build.0 = Release|Any CPU
 		{0654A361-009C-4E76-BD70-37D76A9A47A7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{0654A361-009C-4E76-BD70-37D76A9A47A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0654A361-009C-4E76-BD70-37D76A9A47A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -77,11 +49,6 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{0B28296D-9B99-45C7-B9AC-6EBB7DCF22A1} = {41A6E3E0-9492-4B68-B308-40F2A7ED0623}
-		{562DA12A-1D8E-4DB8-9279-059677AED984} = {41A6E3E0-9492-4B68-B308-40F2A7ED0623}
-		{41A6E3E0-9492-4B68-B308-40F2A7ED0623} = {022A4D50-4916-4866-833D-89E8A1C3E90B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E64CD420-15B1-487C-9806-41EBE6DC15A4}

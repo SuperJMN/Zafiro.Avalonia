@@ -21,6 +21,11 @@
             <Setter Property="Background" Value="#08FFFFFF" />
         </Style>
 
+        <Style Selector="FlexPanel > Button">
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="VerticalAlignment" Value="Stretch" />
+        </Style>
+
         <Style Selector="GridSplitter.demo-resizer">
             <Setter Property="ResizeDirection" Value="Columns" />
             <Setter Property="MinWidth" Value="16" />
@@ -211,6 +216,60 @@
                                 </StackPanel>
                             </Border>
                         </FlexPanel>
+                    </Border>
+                    <GridSplitter Grid.Column="1" Classes="demo-resizer" />
+                    <Panel Grid.Column="2" />
+                </Grid>
+            </Card>
+
+            <Card Header="Wrap-to-Fill Buttons (flex-grow: 1 + flex-basis per size)">
+                <Grid ColumnDefinitions="3*, Auto, *">
+                    <Border Grid.Column="0" Classes="demo-surface" ClipToBounds="True" MinWidth="180">
+                        <StackPanel Spacing="10">
+                            <TextBlock TextWrapping="Wrap"
+                                       Text="Every button has Grow=1 so items on the same line share extra space equally. Each one has a different Basis that sets its ideal width before growing. When the container shrinks, buttons wrap and still fill their row. Drag the grip to resize." />
+
+                            <FlexPanel Wrap="Wrap" Gap="8" AlignContent="Start">
+                                <Button Content="Cancelar"
+                                        FontSize="12" Padding="10,4"
+                                        FlexPanel.Grow="1" FlexPanel.Basis="60" />
+                                <Button Content="Ver detalles"
+                                        FontSize="13" Padding="13,5"
+                                        Background="#DBEAFE" Foreground="#1E40AF"
+                                        FlexPanel.Grow="1" FlexPanel.Basis="90" />
+                                <Button Content="Guardar borrador"
+                                        FontSize="14" Padding="16,6"
+                                        FlexPanel.Grow="1" FlexPanel.Basis="120" />
+                                <Button Content="⏳ Pendiente"
+                                        FontSize="13" Padding="13,5"
+                                        Background="#FEF3C7" Foreground="#92400E"
+                                        FlexPanel.Grow="1" FlexPanel.Basis="90" />
+                                <Button Content="Publicar ahora"
+                                        FontSize="15" Padding="20,8"
+                                        Background="#1E293B" Foreground="White"
+                                        FlexPanel.Grow="1" FlexPanel.Basis="150" />
+                                <Button Content="Eliminar"
+                                        FontSize="12" Padding="10,4"
+                                        Background="#FEE2E2" Foreground="#991B1B"
+                                        FlexPanel.Grow="1" FlexPanel.Basis="60" />
+                                <Button Content="Confirmar pedido"
+                                        FontSize="16" Padding="26,10"
+                                        Background="#D1FAE5" Foreground="#065F46"
+                                        FlexPanel.Grow="1" FlexPanel.Basis="190" />
+                                <Button Content="Duplicar"
+                                        FontSize="13" Padding="13,5"
+                                        FlexPanel.Grow="1" FlexPanel.Basis="90" />
+                                <Button Content="Exportar PDF"
+                                        FontSize="14" Padding="16,6"
+                                        FlexPanel.Grow="1" FlexPanel.Basis="120" />
+                                <Button Content="Filtros"
+                                        FontSize="12" Padding="10,4"
+                                        FlexPanel.Grow="1" FlexPanel.Basis="60" />
+                                <Button Content="Compartir enlace"
+                                        FontSize="15" Padding="20,8"
+                                        FlexPanel.Grow="1" FlexPanel.Basis="150" />
+                            </FlexPanel>
+                        </StackPanel>
                     </Border>
                     <GridSplitter Grid.Column="1" Classes="demo-resizer" />
                     <Panel Grid.Column="2" />

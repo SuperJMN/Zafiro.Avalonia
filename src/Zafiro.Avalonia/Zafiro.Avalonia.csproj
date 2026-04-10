@@ -11,8 +11,9 @@
     <ItemGroup>
         <PackageReference Include="Avalonia"/>
         <PackageReference Include="Avalonia.Controls.DataGrid"/>
+        <PackageReference Include="Avalonia.Skia"/>
         <PackageReference Include="CSharpFunctionalExtensions"/>
-        <PackageReference Include="FluentAvaloniaUI"/>
+
         <PackageReference Include="JetBrains.Annotations"/>
         <PackageReference Include="ReactiveProperty"/>
         <PackageReference Include="ReactiveUI.Avalonia"/>

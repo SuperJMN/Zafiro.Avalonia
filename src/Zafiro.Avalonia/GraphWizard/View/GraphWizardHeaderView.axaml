@@ -11,7 +11,7 @@
     </Design.PreviewWith>
 
     <ControlTheme x:Key="{x:Type view:GraphWizardHeaderView}" TargetType="view:GraphWizardHeaderView">
-        <Setter Property="Wizard" Value="{Binding Wizard}" />
+        <Setter Property="Wizard" Value="{ReflectionBinding Wizard}" />
         <Setter Property="Background" Value="{DynamicResource SystemChromeLowColor}" />
         <Setter Property="Padding" Value="10" />
         <Setter Property="Template">

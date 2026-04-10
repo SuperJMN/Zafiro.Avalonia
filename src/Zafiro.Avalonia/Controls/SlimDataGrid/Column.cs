@@ -31,7 +31,7 @@ public class Column : AvaloniaObject
 
     [AssignBinding]
     [InheritDataTypeFromItems(nameof(SlimDataGrid.ItemsSource), AncestorType = typeof(SlimDataGrid))]
-    public IBinding? Binding { get; set; }
+    public BindingBase? Binding { get; set; }
 
     public object? Header { get; set; }
 
