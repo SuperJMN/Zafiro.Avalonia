@@ -36,7 +36,7 @@ public class App : Application
 
     public override void OnFrameworkInitializationCompleted()
     {
-        IconControlProviderRegistry.Register(new ProjektankerIconControlProvider(), asDefault: true);
+        IconControlProviderRegistry.Register(new OptrisIconControlProvider(), asDefault: true);
         var services = new ServiceCollection();
         services.AddZafiroShell(logger: logger);
         services.AddAllSectionsFromAttributes(logger);

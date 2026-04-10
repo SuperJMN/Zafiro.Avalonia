@@ -14,7 +14,7 @@ A UI components library for **Avalonia 11.3.x** that provides controls, dialogs,
 | **Zafiro.Avalonia.Dialogs** | [![NuGet](https://img.shields.io/nuget/v/Zafiro.Avalonia.Dialogs?logo=nuget)](https://www.nuget.org/packages/Zafiro.Avalonia.Dialogs) | Dialog system for desktop and mobile |
 | **Zafiro.Avalonia.DataViz** | [![NuGet](https://img.shields.io/nuget/v/Zafiro.Avalonia.DataViz?logo=nuget)](https://www.nuget.org/packages/Zafiro.Avalonia.DataViz) | Data visualization (heatmaps, dendrograms, graphs) |
 | **Zafiro.Avalonia.Generators** | [![NuGet](https://img.shields.io/nuget/v/Zafiro.Avalonia.Generators?logo=nuget)](https://www.nuget.org/packages/Zafiro.Avalonia.Generators) | Source generator for view locators and section registration |
-| **Zafiro.Avalonia.Icons.Projektanker** | [![NuGet](https://img.shields.io/nuget/v/Zafiro.Avalonia.Icons.Projektanker?logo=nuget)](https://www.nuget.org/packages/Zafiro.Avalonia.Icons.Projektanker) | Icon provider using Projektanker (FontAwesome, Material Design) |
+| **Zafiro.Avalonia.Icons.Optris** | [![NuGet](https://img.shields.io/nuget/v/Zafiro.Avalonia.Icons.Optris?logo=nuget)](https://www.nuget.org/packages/Zafiro.Avalonia.Icons.Optris) | Icon provider using Optris (FontAwesome, Material Design) |
 | **Zafiro.Avalonia.Icons.Svg** | [![NuGet](https://img.shields.io/nuget/v/Zafiro.Avalonia.Icons.Svg?logo=nuget)](https://www.nuget.org/packages/Zafiro.Avalonia.Icons.Svg) | SVG-based icon provider |
 
 ## Getting Started
@@ -151,7 +151,7 @@ https://github.com/SuperJMN-Zafiro/Zafiro.Avalonia/assets/3109851/13279313-92cc-
 
 - **`Connect`** — One-line app bootstrap for all platforms (Desktop, Mobile, Browser).
 - **NamingConventionViewLocator + DataTypeViewLocator** — Convention and `x:DataType` based ViewModel → View resolution.
-- **IconExtension** — Unified icon markup extension supporting Projektanker and SVG providers.
+- **IconExtension** — Unified icon markup extension supporting Optris and SVG providers.
 - **ReturnExtension** — Markup extension for returning observables in design-time data.
 
 ## Samples

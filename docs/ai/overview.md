@@ -25,7 +25,7 @@ It targets Desktop, Mobile (Android / iOS), and Browser (WASM) from a single cod
 | `Zafiro.Avalonia.Dialogs` | `IDialog` system: messages, forms, wizard hosting |
 | `Zafiro.Avalonia.DataViz` | Heatmaps, dendrograms, graphs, monitoring, tables |
 | `Zafiro.Avalonia.Generators` | Source generators: `NamingConventionGeneratedViewLocator`, `DataTypeViewLocator`, `AddAllSectionsFromAttributes` |
-| `Zafiro.Avalonia.Icons.Projektanker` | FontAwesome + Material Design icons via Projektanker |
+| `Zafiro.Avalonia.Icons.Optris` | FontAwesome + Material Design icons via Optris |
 | `Zafiro.Avalonia.Icons.Svg` | SVG-based icon provider |
 
 External dependency `Zafiro.UI` (NuGet) provides core abstractions: `INavigator`, `IShell`, `IEnhancedCommand`, `SlimWizard`, `Result`/`Maybe` Rx extensions, `[Section]`/`[SectionGroup]` attributes.
@@ -49,7 +49,7 @@ App.axaml                          App.axaml.cs
 // App.axaml.cs
 public override void OnFrameworkInitializationCompleted()
 {
-    IconControlProviderRegistry.Register(new ProjektankerIconControlProvider(), asDefault: true);
+    IconControlProviderRegistry.Register(new OptrisIconControlProvider(), asDefault: true);
 
     var services = new ServiceCollection();
     services.AddZafiroShell(logger: logger);

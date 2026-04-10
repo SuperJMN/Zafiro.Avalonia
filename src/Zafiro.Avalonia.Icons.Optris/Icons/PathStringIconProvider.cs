@@ -1,14 +1,14 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
-using Projektanker.Icons.Avalonia;
-using Projektanker.Icons.Avalonia.Models;
+using Optris.Icons.Avalonia;
+using Optris.Icons.Avalonia.Models;
 
 namespace Zafiro.Avalonia.Icons
 {
     /// <summary>
     /// Icon provider that retrieves path strings from application resources
-    /// and converts them into icon models for Projektanker.Icons.Avalonia.
+    /// and converts them into icon models for Optris.Icons.Avalonia.
     /// </summary>
     public class PathStringIconProvider : IIconProvider
     {

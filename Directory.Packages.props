@@ -28,9 +28,9 @@
 
       <!-- Temporarily excluded from solution (awaiting Av12 support) -->
       <PackageVersion Include="PanAndZoom" Version="11.3.6"/>
-      <PackageVersion Include="Projektanker.Icons.Avalonia" Version="9.6.2"/>
-      <PackageVersion Include="Projektanker.Icons.Avalonia.FontAwesome" Version="9.6.2"/>
-      <PackageVersion Include="Projektanker.Icons.Avalonia.MaterialDesign" Version="9.6.2"/>
+      <PackageVersion Include="Optris.Icons.Avalonia" Version="12.0.4"/>
+      <PackageVersion Include="Optris.Icons.Avalonia.FontAwesome" Version="12.0.4"/>
+      <PackageVersion Include="Optris.Icons.Avalonia.MaterialDesign" Version="12.0.4"/>
 
       <!-- ReactiveUI -->
       <PackageVersion Include="ReactiveProperty" Version="9.8.0"/>

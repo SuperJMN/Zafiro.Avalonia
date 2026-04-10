@@ -1,0 +1,26 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Zafiro.Avalonia/Zafiro.Avalonia.csproj" />
+    <Project Path="src/Zafiro.Avalonia.Dialogs/Zafiro.Avalonia.Dialogs.csproj" />
+    <Project Path="src/Zafiro.Avalonia.Generators/Zafiro.Avalonia.Generators.csproj" />
+    <Project Path="src/Zafiro.Avalonia.Icons.Svg/Zafiro.Avalonia.Icons.Svg.csproj" />
+    <Project Path="src/Zafiro.Avalonia.Icons.Optris/Zafiro.Avalonia.Icons.Optris.csproj" />
+  </Folder>
+  <Folder Name="/test/">
+    <Project Path="test/Zafiro.Avalonia.Tests/Zafiro.Avalonia.Tests.csproj" />
+  </Folder>
+  <Folder Name="/samples/">
+    <Project Path="samples/MinimalShell/MinimalShell.csproj" />
+    <Project Path="samples/FileExplorer/SampleFileExplorer/SampleFileExplorer.csproj" />
+    <Project Path="samples/TestApp/TestApp/TestApp.csproj" />
+    <Project Path="samples/TestApp/TestApp.Desktop/TestApp.Desktop.csproj" />
+    <Project Path="samples/TestApp/TestApp.Browser/TestApp.Browser.csproj" />
+    <Project Path="samples/TestApp/TestApp.Android/TestApp.Android.csproj" />
+    <Project Path="samples/TestApp/TestApp.iOS/TestApp.iOS.csproj" />
+  </Folder>
+  <Folder Name="/Other files/">
+    <File Path="azure-pipelines.yml" />
+    <File Path="src/Common.props" />
+    <File Path="Directory.Packages.props" />
+  </Folder>
+</Solution>
