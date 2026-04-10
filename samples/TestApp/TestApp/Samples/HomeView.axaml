@@ -32,30 +32,21 @@
                      HorizontalContentAlignment="Center" />
         </StackPanel>
 
-        <!-- Category Chips -->
-        <ScrollViewer DockPanel.Dock="Top" HorizontalScrollBarVisibility="Auto"
-                      VerticalScrollBarVisibility="Disabled" Margin="32,12,32,0">
-            <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center">
-                <EnhancedButton Content="All"
-                                Command="{Binding ClearCategory}"
-                                Classes="Ghost" />
-                <ItemsControl ItemsSource="{Binding Categories}">
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <StackPanel Orientation="Horizontal" Spacing="8" />
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate x:DataType="x:String">
-                            <EnhancedButton Content="{Binding}"
-                                            Command="{Binding $parent[UserControl].((samples:HomeViewModel)DataContext).SelectCategory}"
-                                            CommandParameter="{Binding}"
-                                            Classes="Ghost" />
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
-            </StackPanel>
-        </ScrollViewer>
+        <!-- Category Pills -->
+        <ListBox DockPanel.Dock="Top"
+                 ItemsSource="{Binding Categories}"
+                 SelectedItem="{Binding State.SelectedCategory}"
+                 Classes="PillSelector"
+                 HorizontalAlignment="Center"
+                 Margin="32,12,32,0"
+                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                 ScrollViewer.VerticalScrollBarVisibility="Disabled">
+            <ListBox.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel Orientation="Horizontal" />
+                </ItemsPanelTemplate>
+            </ListBox.ItemsPanel>
+        </ListBox>
 
         <!-- Card Grid -->
         <ScrollViewer Margin="24,16,24,24">

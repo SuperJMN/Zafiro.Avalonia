@@ -21,10 +21,8 @@ public partial class HomeViewModel : ReactiveObject
         State = state;
         allSamples.AddOrUpdate(samples);
 
-        Categories = samples
-            .Select(s => s.Category)
-            .Distinct()
-            .OrderBy(c => c)
+        Categories = new[] { "All" }
+            .Concat(samples.Select(s => s.Category).Distinct().OrderBy(c => c))
             .ToList();
 
         var searchFilter = this.WhenAnyValue(x => x.State.SearchText)
@@ -45,9 +43,6 @@ public partial class HomeViewModel : ReactiveObject
             .Subscribe();
 
         NavigateToSample = ReactiveCommand.CreateFromTask<SampleCard>(async card => { await navigator.Go(card.ViewModelType); });
-
-        SelectCategory = ReactiveCommand.Create<string>(category => { State.SelectedCategory = category; });
-        ClearCategory = ReactiveCommand.Create(() => { State.SelectedCategory = null; });
     }
 
     public HomeViewState State { get; }
@@ -55,8 +50,6 @@ public partial class HomeViewModel : ReactiveObject
     public ReadOnlyObservableCollection<SampleCard> FilteredSamples => filteredSamples;
     public IReadOnlyList<string> Categories { get; }
     public ReactiveCommand<SampleCard, Unit> NavigateToSample { get; }
-    public ReactiveCommand<string, Unit> SelectCategory { get; }
-    public ReactiveCommand<Unit, Unit> ClearCategory { get; }
 
     private static Func<SampleCard, bool> BuildSearchFilter(string? text)
     {
@@ -71,7 +64,7 @@ public partial class HomeViewModel : ReactiveObject
 
     private static Func<SampleCard, bool> BuildCategoryFilter(string? category)
     {
-        if (string.IsNullOrWhiteSpace(category))
+        if (string.IsNullOrWhiteSpace(category) || string.Equals(category, "All", StringComparison.OrdinalIgnoreCase))
         {
             return _ => true;
         }
