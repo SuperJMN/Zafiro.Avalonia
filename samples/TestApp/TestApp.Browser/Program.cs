@@ -12,7 +12,7 @@ internal partial class Program
 {
     private static async Task Main(string[] args) => await BuildAvaloniaApp()
         .WithInterFont()
-        .UseReactiveUI()
+        .UseReactiveUI(_ => { })
         .StartBrowserAppAsync("out");
 
     public static AppBuilder BuildAvaloniaApp()

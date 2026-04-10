@@ -30,7 +30,7 @@ public class ProgressBarExecutionBehavior : DisposingBehavior<ProgressBar>
             .DisposeWith(disposable);
 
         this.WhenAnyObservable(x => x.Execution.Progress)
-            .ObserveOn(RxApp.MainThreadScheduler)
+            .ObserveOn(RxSchedulers.MainThreadScheduler)
             .Do(progress =>
             {
                 if (progress is NotStarted)

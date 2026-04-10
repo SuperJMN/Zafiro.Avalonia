@@ -1,3 +1,4 @@
+using ReactiveUI.Avalonia;
 using System;
 using System.Reactive;
 using System.Reactive.Linq;
@@ -27,7 +28,7 @@ public class TestViewModel
                 .Map(data => new CopyFileAction(data, b))
                 .Bind(async fileAction =>
                 {
-                    using (fileAction.Progress.Select(x => x.Value).Sample(TimeSpan.FromSeconds(1), RxApp.MainThreadScheduler).Subscribe(progressSubject))
+                    using (fileAction.Progress.Select(x => x.Value).Sample(TimeSpan.FromSeconds(1), AvaloniaScheduler.Instance).Subscribe(progressSubject))
                     {
                         return await fileAction.Execute().ConfigureAwait(false);
                     }

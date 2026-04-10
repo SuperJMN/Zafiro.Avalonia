@@ -28,7 +28,7 @@ public static class SectionRegistrationRegistry
 
     public static IServiceCollection AddAllSectionsFromRegistry(this IServiceCollection services, ILogger? logger = null, IScheduler? scheduler = null)
     {
-        scheduler ??= RxApp.MainThreadScheduler;
+        scheduler ??= RxSchedulers.MainThreadScheduler;
 
         Registration[] snapshot;
         lock (Sync)

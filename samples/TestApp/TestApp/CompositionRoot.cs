@@ -1,3 +1,4 @@
+using ReactiveUI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -49,7 +50,7 @@ public static class CompositionRoot
 
         // Register INavigator as singleton (the hub uses a single navigator for the whole app).
         services.AddSingleton<INavigator>(sp =>
-            new Navigator(sp, ((ILogger)logger).AsMaybe(), RxApp.MainThreadScheduler));
+            new Navigator(sp, ((ILogger)logger).AsMaybe(), RxSchedulers.MainThreadScheduler));
 
         var serviceProvider = services.BuildServiceProvider();
 

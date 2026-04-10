@@ -16,10 +16,10 @@
       <PackageVersion Include="Avalonia.iOS" Version="$(AvaloniaVersion)"/>
       <PackageVersion Include="Avalonia.Skia" Version="$(AvaloniaVersion)"/>
       <PackageVersion Include="Avalonia.Themes.Fluent" Version="$(AvaloniaVersion)"/>
-      <PackageVersion Include="AvaloniaUI.DiagnosticsSupport" Version="2.2.0-beta3"/>
+      <PackageVersion Include="AvaloniaUI.DiagnosticsSupport" Version="2.2.0"/>
 
       <!-- Avalonia 12 ecosystem -->
-      <PackageVersion Include="ReactiveUI.Avalonia" Version="11.3.8"/>
+      <PackageVersion Include="ReactiveUI.Avalonia" Version="11.4.12"/>
       <PackageVersion Include="Svg.Controls.Skia.Avalonia" Version="12.0.0"/>
       <PackageVersion Include="Xaml.Behaviors.Avalonia" Version="12.0.0"/>
       <PackageVersion Include="Xaml.Behaviors.Interactions.DragAndDrop" Version="12.0.0"/>
@@ -34,9 +34,9 @@
 
       <!-- ReactiveUI -->
       <PackageVersion Include="ReactiveProperty" Version="9.8.0"/>
-      <PackageVersion Include="ReactiveUI" Version="22.2.1"/>
-      <PackageVersion Include="ReactiveUI.SourceGenerators" Version="2.5.1"/>
-      <PackageVersion Include="ReactiveUI.Validation" Version="6.0.5"/>
+      <PackageVersion Include="ReactiveUI" Version="23.1.8"/>
+      <PackageVersion Include="ReactiveUI.SourceGenerators" Version="2.6.1"/>
+      <PackageVersion Include="ReactiveUI.Validation" Version="7.0.5"/>
 
       <!-- Infrastructure -->
       <PackageVersion Include="coverlet.collector" Version="6.0.4"/>

@@ -1,3 +1,4 @@
+using ReactiveUI;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -27,7 +28,7 @@ public partial class HomeViewModel : ReactiveObject
             .ToList();
 
         var searchFilter = this.WhenAnyValue(x => x.State.SearchText)
-            .Throttle(TimeSpan.FromMilliseconds(300), RxApp.MainThreadScheduler)
+            .Throttle(TimeSpan.FromMilliseconds(300), RxSchedulers.MainThreadScheduler)
             .Select(BuildSearchFilter);
 
         var categoryFilter = this.WhenAnyValue(x => x.State.SelectedCategory)

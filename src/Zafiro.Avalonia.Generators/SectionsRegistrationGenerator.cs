@@ -102,7 +102,7 @@ public sealed class SectionsRegistrationGenerator : IIncrementalGenerator
             }
 
             sb.AppendLine(
-                "        }, logger: logger, scheduler: scheduler ?? global::ReactiveUI.RxApp.MainThreadScheduler);");
+                "        }, logger: logger, scheduler: scheduler ?? global::ReactiveUI.RxSchedulers.MainThreadScheduler);");
             sb.AppendLine("        return services;");
             sb.AppendLine("    }");
             sb.AppendLine();
