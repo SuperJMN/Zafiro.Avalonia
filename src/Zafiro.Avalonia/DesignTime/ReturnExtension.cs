@@ -1,7 +1,6 @@
 using System.ComponentModel;
 using System.Globalization;
 using System.Reflection;
-using Avalonia.Data.Core;
 using Avalonia.Markup.Xaml;
 using JetBrains.Annotations;
 
@@ -29,7 +28,16 @@ public class ReturnExtension : MarkupExtension
         }
 
         var service = (IProvideValueTarget)serviceProvider.GetService(typeof(IProvideValueTarget))!;
-        var type = ((ClrPropertyInfo) service.TargetProperty).PropertyType.GenericTypeArguments[0];
+
+        Type propertyType = service.TargetProperty switch
+        {
+            AvaloniaProperty ap => ap.PropertyType,
+            PropertyInfo pi => pi.PropertyType,
+            _ => throw new InvalidOperationException(
+                $"Cannot determine property type from {service.TargetProperty?.GetType()}")
+        };
+
+        var type = propertyType.GenericTypeArguments[0];
         Type observableType = typeof(System.Reactive.Linq.Observable);
         MethodInfo returnMethodInfo = observableType.GetMethods().First(x => x.Name == "Return" && x.GetParameters().Length == 1);
         var method = returnMethodInfo.MakeGenericMethod(type);

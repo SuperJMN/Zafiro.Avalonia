@@ -5,7 +5,6 @@
 
 using Avalonia.Input;
 using Avalonia.Layout;
-using Avalonia.Utilities;
 using static System.Math;
 
 namespace Zafiro.Avalonia.Controls.Panels;
@@ -149,13 +148,13 @@ public class SmartWrapPanel : Panel, INavigableContainer
                 itemWidthSet ? itemWidth : child.DesiredSize.Width,
                 itemHeightSet ? itemHeight : child.DesiredSize.Height);
 
-            if (MathUtilities.GreaterThan(curLineSize.U + sz.U, uvConstraint.U)) // Need to switch to another line
+            if (GreaterThan(curLineSize.U + sz.U, uvConstraint.U)) // Need to switch to another line
             {
                 panelSize.U = Max(curLineSize.U, panelSize.U);
                 panelSize.V += curLineSize.V;
                 curLineSize = sz;
 
-                if (MathUtilities.GreaterThan(sz.U, uvConstraint.U)) // The element is wider then the constraint - give it a separate line
+                if (GreaterThan(sz.U, uvConstraint.U)) // The element is wider then the constraint - give it a separate line
                 {
                     panelSize.U = Max(sz.U, panelSize.U);
                     panelSize.V += sz.V;
@@ -200,14 +199,14 @@ public class SmartWrapPanel : Panel, INavigableContainer
                 itemWidthSet ? itemWidth : child.DesiredSize.Width,
                 itemHeightSet ? itemHeight : child.DesiredSize.Height);
 
-            if (MathUtilities.GreaterThan(curLineSize.U + sz.U, uvFinalSize.U)) // Needs to move to another line
+            if (GreaterThan(curLineSize.U + sz.U, uvFinalSize.U)) // Needs to move to another line
             {
                 ArrangeLine(accumulatedV, curLineSize.V, firstInLine, i, useItemU, itemU);
 
                 accumulatedV += curLineSize.V;
                 curLineSize = sz;
 
-                if (MathUtilities.GreaterThan(sz.U, uvFinalSize.U)) // The element is wider than the available space
+                if (GreaterThan(sz.U, uvFinalSize.U)) // The element is wider than the available space
                 {
                     // Move to the next line that only contains one element
                     ArrangeLine(accumulatedV, sz.V, i, i + 1, useItemU, itemU);
@@ -256,6 +255,11 @@ public class SmartWrapPanel : Panel, INavigableContainer
                 isHorizontal ? lineV : layoutSlotU));
             u += layoutSlotU;
         }
+    }
+
+    private static bool GreaterThan(double value1, double value2)
+    {
+        return value1 > value2 && Abs(value1 - value2) > double.Epsilon;
     }
 
     private struct UVSize

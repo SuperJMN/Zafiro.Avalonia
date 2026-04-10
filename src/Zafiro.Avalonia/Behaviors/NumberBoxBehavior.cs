@@ -1,6 +1,7 @@
 using System.Globalization;
 using System.Reactive.Disposables;
 using Avalonia.Input;
+using Avalonia.Input.Platform;
 using Avalonia.Interactivity;
 using Avalonia.Xaml.Interactivity;
 using CSharpFunctionalExtensions;
@@ -47,7 +48,7 @@ public class NumberBoxBehavior : Behavior<TextBox>
     private static Task<string> GetClipboardText()
     {
         return ApplicationUtils.GetClipboard()
-            .Map(clipboard => clipboard.GetTextAsync())
+            .Map(clipboard => clipboard.TryGetTextAsync())
             .GetValueOrDefault(_ => "")!;
     }
 

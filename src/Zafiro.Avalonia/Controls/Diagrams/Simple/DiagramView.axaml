@@ -32,8 +32,8 @@
                                     <BehaviorCollectionTemplate>
                                         <BehaviorCollection>
                                             <behaviors:DragDeltaBehavior
-                                                Left="{Binding Left}"
-                                                Top="{Binding Top}" />
+                                                Left="{ReflectionBinding Left}"
+                                                Top="{ReflectionBinding Top}" />
                                         </BehaviorCollection>
                                     </BehaviorCollectionTemplate>
                                 </Setter>

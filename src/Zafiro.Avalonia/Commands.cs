@@ -1,3 +1,4 @@
+using Avalonia.Input.Platform;
 using CSharpFunctionalExtensions;
 using Zafiro.Avalonia.Misc;
 using Zafiro.Avalonia.Services;
