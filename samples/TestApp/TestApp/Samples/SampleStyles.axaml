@@ -14,4 +14,18 @@
         <Setter Property="TextWrapping" Value="Wrap" />
     </Style>
 
+    <!-- PillSelector: chrome-less horizontal ListBox with pill-shaped items -->
+    <Style Selector="ListBox.PillSelector">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Padding" Value="0" />
+    </Style>
+
+    <Style Selector="ListBox.PillSelector ListBoxItem">
+        <Setter Property="Padding" Value="12,6" />
+        <Setter Property="MinHeight" Value="0" />
+        <Setter Property="CornerRadius" Value="16" />
+        <Setter Property="Margin" Value="2,0" />
+    </Style>
+
 </Styles>

@@ -11,7 +11,7 @@ public partial class HomeViewState : ReactiveObject
 {
     [Reactive] private bool isDarkTheme;
     [Reactive] private string? searchText;
-    [Reactive] private string? selectedCategory;
+    [Reactive] private string? selectedCategory = "All";
 
     public HomeViewState()
     {
