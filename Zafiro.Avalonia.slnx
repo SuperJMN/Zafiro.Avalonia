@@ -11,12 +11,8 @@
   </Folder>
   <Folder Name="/samples/">
     <Project Path="samples/MinimalShell/MinimalShell.csproj" />
-    <Project Path="samples/FileExplorer/SampleFileExplorer/SampleFileExplorer.csproj" />
     <Project Path="samples/TestApp/TestApp/TestApp.csproj" />
     <Project Path="samples/TestApp/TestApp.Desktop/TestApp.Desktop.csproj" />
-    <Project Path="samples/TestApp/TestApp.Browser/TestApp.Browser.csproj" />
-    <Project Path="samples/TestApp/TestApp.Android/TestApp.Android.csproj" />
-    <Project Path="samples/TestApp/TestApp.iOS/TestApp.iOS.csproj" />
   </Folder>
   <Folder Name="/Other files/">
     <File Path="azure-pipelines.yml" />
