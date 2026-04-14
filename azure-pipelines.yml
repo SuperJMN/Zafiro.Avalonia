@@ -27,13 +27,19 @@ steps:
   - pwsh: dotnet tool install -g DotnetDeployer.Tool
     displayName: Install DotnetDeployer
 
+  # Configure git identity for GitHub Pages deployment
+  - pwsh: |
+      git config --global user.email "deploy@zafiro.dev"
+      git config --global user.name "DotnetDeployer"
+    displayName: Configure git identity
+
   # Dry run: Create NuGet packages only (for PRs and non-master/main branches)
   - pwsh: dotnetdeployer --dry-run
     displayName: Create NuGet packages only (dry run)
     condition: and(succeeded(), not(or(eq(variables['Build.SourceBranch'], 'refs/heads/master'), eq(variables['Build.SourceBranch'], 'refs/heads/main'))))
     env:
       NUGET_API_KEY: $(NugetApiKey)
-      GITHUB_TOKEN: $(GitHubToken)
+      GITHUB_TOKEN: $(GitHubApiKey)
 
   # Create and Publish NuGet packages + deploy GitHub Pages (for master/main branch only)
   - pwsh: dotnetdeployer
@@ -41,4 +47,4 @@ steps:
     condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/master'), eq(variables['Build.SourceBranch'], 'refs/heads/main')))
     env:
       NUGET_API_KEY: $(NugetApiKey)
-      GITHUB_TOKEN: $(GitHubToken)
+      GITHUB_TOKEN: $(GitHubApiKey)
