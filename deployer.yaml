@@ -2,3 +2,12 @@ nuget:
   enabled: true
   source: https://api.nuget.org/v3/index.json
   apiKeyEnvVar: NUGET_API_KEY
+
+githubPages:
+  enabled: true
+  owner: SuperJMN
+  repo: Zafiro.Avalonia.github.io
+  tokenEnvVar: GITHUB_TOKEN
+  branch: master
+  projects:
+    - project: samples/TestApp/TestApp.Browser/TestApp.Browser.csproj
