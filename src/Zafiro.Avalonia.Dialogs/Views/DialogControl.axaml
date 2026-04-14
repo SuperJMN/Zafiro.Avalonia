@@ -23,6 +23,11 @@
         <Setter Property="Template">
             <ControlTemplate>
                 <DockPanel VerticalSpacing="8">
+                    <DockPanel.DataTemplates>
+                        <DataTemplate DataType="MessageDialogViewModel">
+                            <MessageDialogView />
+                        </DataTemplate>
+                    </DockPanel.DataTemplates>
                     <ItemsControl ItemsSource="{TemplateBinding Options}" DockPanel.Dock="Bottom" IsVisible="{TemplateBinding Options, Converter={x:Static Enumerable.NotEmpty}}">
                         <ItemsControl.ItemContainerTheme>
                             <ControlTheme TargetType="ContentPresenter">
