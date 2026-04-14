@@ -33,10 +33,12 @@ steps:
     condition: and(succeeded(), not(or(eq(variables['Build.SourceBranch'], 'refs/heads/master'), eq(variables['Build.SourceBranch'], 'refs/heads/main'))))
     env:
       NUGET_API_KEY: $(NugetApiKey)
+      GITHUB_TOKEN: $(GitHubToken)
 
-  # Create and Publish NuGet packages (for master/main branch only)
+  # Create and Publish NuGet packages + deploy GitHub Pages (for master/main branch only)
   - pwsh: dotnetdeployer
-    displayName: Create and Publish NuGet packages
+    displayName: Create and Publish NuGet packages + deploy GitHub Pages
     condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/master'), eq(variables['Build.SourceBranch'], 'refs/heads/main')))
     env:
       NUGET_API_KEY: $(NugetApiKey)
+      GITHUB_TOKEN: $(GitHubToken)
