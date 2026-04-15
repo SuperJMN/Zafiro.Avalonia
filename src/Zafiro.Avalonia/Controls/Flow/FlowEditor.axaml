@@ -1,0 +1,79 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:flow="clr-namespace:Zafiro.Avalonia.Controls.Flow"
+                    xmlns:diagrams="clr-namespace:Zafiro.Avalonia.Controls.Diagrams"
+                    xmlns:superCanvas="clr-namespace:Zafiro.Avalonia.Controls.Panels.SuperCanvas"
+                    xmlns:behaviors="clr-namespace:Zafiro.Avalonia.Behaviors">
+
+    <ControlTheme x:Key="FlowListBoxItem" TargetType="ListBoxItem" BasedOn="{StaticResource {x:Type ListBoxItem}}">
+        <Setter Property="Canvas.Left" Value="{Binding Left}" x:DataType="diagrams:IHaveLocation" />
+        <Setter Property="Canvas.Top" Value="{Binding Top}" x:DataType="diagrams:IHaveLocation" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Interaction.Behaviors">
+            <BehaviorCollectionTemplate>
+                <BehaviorCollection>
+                    <behaviors:DragDeltaBehavior Left="{Binding Left}" Top="{Binding Top}" x:DataType="diagrams:IHaveLocation" />
+                </BehaviorCollection>
+            </BehaviorCollectionTemplate>
+        </Setter>
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Panel>
+                    <ContentPresenter Name="PART_ContentPresenter"
+                                      Background="{TemplateBinding Background}"
+                                      BorderBrush="{TemplateBinding BorderBrush}"
+                                      BorderThickness="{TemplateBinding BorderThickness}"
+                                      CornerRadius="{TemplateBinding CornerRadius}"
+                                      ContentTemplate="{TemplateBinding ContentTemplate}"
+                                      Content="{TemplateBinding Content}"
+                                      Padding="{TemplateBinding Padding}"
+                                      VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                      HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" />
+
+                    <CheckBox Name="SelectionCheckBox"
+                              IsChecked="{TemplateBinding IsSelected, Mode=TwoWay}"
+                              HorizontalAlignment="Right"
+                              VerticalAlignment="Top"
+                              Margin="4"
+                              IsVisible="False" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^:pointerover /template/ CheckBox#SelectionCheckBox">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:selected /template/ CheckBox#SelectionCheckBox">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type flow:FlowEditor}" TargetType="flow:FlowEditor">
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Panel>
+                    <diagrams:Connectors Host="{Binding #NodesList}"
+                                         Edges="{TemplateBinding Edges}"
+                                         Stroke="{DynamicResource SystemBaseHighColor}"
+                                         StrokeThickness="2" />
+
+                    <ListBox x:Name="NodesList"
+                             ItemsSource="{TemplateBinding Nodes}"
+                             ItemTemplate="{TemplateBinding NodeTemplate}"
+                             SelectedItems="{TemplateBinding SelectedNodes}"
+                             SelectionMode="Multiple"
+                             ItemContainerTheme="{StaticResource FlowListBoxItem}"
+                             Background="Transparent">
+                        <ListBox.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <superCanvas:MidpointCanvas />
+                            </ItemsPanelTemplate>
+                        </ListBox.ItemsPanel>
+                    </ListBox>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+</ResourceDictionary>
