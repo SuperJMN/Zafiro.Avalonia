@@ -33,6 +33,9 @@
                 <DataTemplate x:Key="System.Double" DataType="viewModels:IPropertyItem">
                     <NumericUpDown Value="{Binding Value}" />
                 </DataTemplate>
+                <DataTemplate x:Key="Avalonia.Media.Color" DataType="viewModels:IPropertyItem">
+                    <ColorPicker Color="{Binding Value}" HorizontalAlignment="Stretch" />
+                </DataTemplate>
             </propertyGrid:PropertyEditorSelector.Editors>
         </propertyGrid:PropertyEditorSelector>
     </UserControl.Resources>

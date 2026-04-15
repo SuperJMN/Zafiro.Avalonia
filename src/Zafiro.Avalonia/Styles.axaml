@@ -69,4 +69,6 @@
     <StyleInclude Source="Controls/ProgressControl.axaml" />
     <StyleInclude Source="GraphWizard/View/GraphWizardView.axaml" />
 
+    <StyleInclude Source="avares://Avalonia.Controls.ColorPicker/Themes/Fluent/Fluent.xaml" />
+
 </Styles>
