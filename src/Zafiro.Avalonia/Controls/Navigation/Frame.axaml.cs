@@ -1,7 +1,6 @@
 using System.Windows.Input;
 using Avalonia.Controls.Metadata;
 using Avalonia.Controls.Presenters;
-using Avalonia.Controls.Primitives;
 using Avalonia.Interactivity;
 using Avalonia.Media;
 
@@ -11,20 +10,12 @@ namespace Zafiro.Avalonia.Controls.Navigation;
 [TemplatePart("Content", typeof(ContentPresenter))]
 [TemplatePart("Header", typeof(ContentPresenter))]
 [TemplatePart("Footer", typeof(ContentPresenter))]
-public class Frame : TemplatedControl
+public class Frame : ContentControl
 {
-    public new static readonly StyledProperty<IBrush?> BackgroundProperty = Border.BackgroundProperty.AddOwner<Frame>();
-    public new static readonly StyledProperty<IBrush?> BorderBrushProperty = Border.BorderBrushProperty.AddOwner<Frame>();
-    public new static readonly StyledProperty<Thickness> BorderThicknessProperty = Border.BorderThicknessProperty.AddOwner<Frame>();
-    public new static readonly StyledProperty<CornerRadius> CornerRadiusProperty = Border.CornerRadiusProperty.AddOwner<Frame>();
-    public new static readonly StyledProperty<Thickness> PaddingProperty = Decorator.PaddingProperty.AddOwner<Frame>();
     public static readonly StyledProperty<BoxShadows> BoxShadowProperty = Border.BoxShadowProperty.AddOwner<Frame>();
 
     public static readonly StyledProperty<ICommand> BackCommandProperty = AvaloniaProperty.Register<Frame, ICommand>(
         nameof(BackCommand));
-
-    public static readonly StyledProperty<object> ContentProperty = AvaloniaProperty.Register<Frame, object>(
-        nameof(Content));
 
     public static readonly StyledProperty<object?> HeaderProperty = AvaloniaProperty.Register<Frame, object?>(
         nameof(Header));
@@ -68,12 +59,6 @@ public class Frame : TemplatedControl
         set => SetValue(BackCommandProperty, value);
     }
 
-    public object Content
-    {
-        get => GetValue(ContentProperty);
-        set => SetValue(ContentProperty, value);
-    }
-
     public object? Header
     {
         get => GetValue(HeaderProperty);
@@ -90,36 +75,6 @@ public class Frame : TemplatedControl
     {
         get => GetValue(HeaderDisplayModeProperty);
         set => SetValue(HeaderDisplayModeProperty, value);
-    }
-
-    public new IBrush? Background
-    {
-        get => GetValue(BackgroundProperty);
-        set => SetValue(BackgroundProperty, value);
-    }
-
-    public new IBrush? BorderBrush
-    {
-        get => GetValue(BorderBrushProperty);
-        set => SetValue(BorderBrushProperty, value);
-    }
-
-    public new Thickness BorderThickness
-    {
-        get => GetValue(BorderThicknessProperty);
-        set => SetValue(BorderThicknessProperty, value);
-    }
-
-    public new CornerRadius CornerRadius
-    {
-        get => GetValue(CornerRadiusProperty);
-        set => SetValue(CornerRadiusProperty, value);
-    }
-
-    public new Thickness Padding
-    {
-        get => GetValue(PaddingProperty);
-        set => SetValue(PaddingProperty, value);
     }
 
     public BoxShadows BoxShadow
