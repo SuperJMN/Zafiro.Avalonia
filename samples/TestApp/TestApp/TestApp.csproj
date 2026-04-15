@@ -15,7 +15,6 @@
         <PackageReference Include="Avalonia"/>
         <PackageReference Include="Avalonia.Themes.Fluent"/>
         <PackageReference Include="Avalonia.Fonts.Inter"/>
-        <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="AvaloniaUI.DiagnosticsSupport"/>
         <PackageReference Include="Optris.Icons.Avalonia.FontAwesome"/>
         <PackageReference Include="Optris.Icons.Avalonia.MaterialDesign"/>
         <PackageReference Include="Serilog.Sinks.Console"/>

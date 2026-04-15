@@ -37,9 +37,9 @@
         </propertyGrid:PropertyEditorSelector>
     </UserControl.Resources>
 
-    <ItemsControl x:Name="Items" ItemsSource="{Binding Properties}">
+    <ItemsControl x:Name="Items" x:DataType="viewModels:PropertyGridViewModel" ItemsSource="{Binding Properties}">
         <ItemsControl.ItemTemplate>
-            <DataTemplate>
+            <DataTemplate x:DataType="viewModels:IPropertyItem">
                 <DockPanel Margin="4">
                     <TextBlock Text="{Binding Name}" Width="120" VerticalAlignment="Center" DockPanel.Dock="Left" />
                     <ContentControl Content="{Binding}" ContentTemplate="{StaticResource EditorSelector}" />
