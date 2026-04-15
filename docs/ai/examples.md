@@ -572,3 +572,89 @@ Three patterns that cover 90% of adaptive UI needs. Combine them for full-page r
 
 </panels:BootstrapGridPanel>
 ```
+
+---
+
+## 12. FlowEditor + PropertyGrid (Node Inspector)
+
+Build a node-based visual editor with an inspector side panel. The `FlowEditor` handles node rendering, dragging, edge drawing, and multi-selection. The `PropertyGrid` auto-discovers common writable properties from selected nodes and provides type-appropriate editors.
+
+**Source**: `samples/TestApp/TestApp/Samples/Flow/`
+
+### ViewModel
+
+```csharp
+[Section(icon: "fa-diagram-project", sortIndex: 10)]
+public class FlowViewModel : ViewModelBase
+{
+    public FlowViewModel()
+    {
+        var n1 = new FlowNode("Source") { Left = 50, Top = 100, IsActive = true, ProcessingPower = 100 };
+        var n2 = new FlowNode("Process") { Left = 250, Top = 100, IsActive = true, ProcessingPower = 50 };
+        var n3 = new FlowNode("Sink") { Left = 450, Top = 100, IsActive = false, ProcessingPower = 0 };
+
+        Nodes = new List<FlowNode> { n1, n2, n3 };
+        Edges = new List<FlowEdge> { new(n1, n2), new(n2, n3) };
+        SelectedNodes = new AvaloniaList<object>();
+    }
+
+    public List<FlowNode> Nodes { get; }
+    public List<FlowEdge> Edges { get; }
+    public AvaloniaList<object> SelectedNodes { get; }
+}
+
+// Node must implement IHaveLocation for positioning
+public class FlowNode : ReactiveObject, IHaveLocation
+{
+    [Reactive] public double Left { get; set; }
+    [Reactive] public double Top { get; set; }
+    [Reactive] public string Name { get; set; }
+    [Reactive] public bool IsActive { get; set; }
+    [Reactive] public int ProcessingPower { get; set; }
+}
+
+// Edge must implement IHaveFromTo (and optionally IEdge<object>)
+public class FlowEdge : IEdge<object>, IHaveFromTo
+{
+    public FlowEdge(FlowNode from, FlowNode to) { From = from; To = to; }
+    public object From { get; }
+    public object To { get; }
+}
+```
+
+### View (FlowEditor + PropertyGrid split)
+
+```xml
+<UserControl x:Class="TestApp.Samples.Flow.FlowView"
+             x:DataType="flow:FlowViewModel"
+             xmlns:controls="clr-namespace:Zafiro.Avalonia.Controls.Flow;assembly=Zafiro.Avalonia"
+             xmlns:propertyGrid="clr-namespace:Zafiro.Avalonia.Controls.PropertyGrid;assembly=Zafiro.Avalonia">
+    <Grid ColumnDefinitions="*, 4, 300">
+        <controls:FlowEditor Nodes="{Binding Nodes}"
+                             Edges="{Binding Edges}"
+                             SelectedNodes="{Binding SelectedNodes}">
+            <controls:FlowEditor.NodeTemplate>
+                <DataTemplate DataType="flow:FlowNode">
+                    <Border Background="{DynamicResource SystemControlBackgroundAltHighBrush}"
+                            BorderBrush="{DynamicResource SystemControlForegroundBaseMediumBrush}"
+                            BorderThickness="1" CornerRadius="5" Padding="10"
+                            MinWidth="100" MinHeight="60">
+                        <StackPanel>
+                            <TextBlock Text="{Binding Name}" FontWeight="Bold" HorizontalAlignment="Center" />
+                            <TextBlock Text="{Binding ProcessingPower, StringFormat='Power: {0}'}"
+                                       HorizontalAlignment="Center" FontSize="10" />
+                            <CheckBox IsChecked="{Binding IsActive}" HorizontalAlignment="Center"
+                                      Content="Active" FontSize="10" />
+                        </StackPanel>
+                    </Border>
+                </DataTemplate>
+            </controls:FlowEditor.NodeTemplate>
+        </controls:FlowEditor>
+
+        <GridSplitter Grid.Column="1" />
+
+        <propertyGrid:PropertyGrid Grid.Column="2"
+                                   SelectedObjects="{Binding SelectedNodes}" />
+    </Grid>
+</UserControl>
+```

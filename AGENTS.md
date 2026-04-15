@@ -65,6 +65,9 @@ this.Connect(() => new ShellView(), _ => shell, () => new Window());
 | `BootstrapGridPanel` | 12-col responsive grid: `Col`/`ColSm`/`ColMd`/`ColLg`/`ColXl`/`ColXxl` per child |
 | `FlexPanel` | CSS Flexbox: `Grow`/`Shrink`/`Basis`/`Wrap`/`JustifyContent`/`AlignItems`/`Gap` |
 | `SemanticPanel` | App structure: Primary/Secondary/Sidebar/Actions with 3 responsive size classes |
+| `FlowEditor` | Node-based visual editor: `Nodes`/`Edges`/`NodeTemplate`/`SelectedNodes` with drag support |
+| `PropertyGrid` | Inspector-style property editor: auto-discovers common properties from `SelectedObjects` |
+| `DragDeltaBehavior` | Drag-to-move behavior with configurable threshold, used by `FlowEditor` |
 
 ## Canonical Files to Reference
 
@@ -84,6 +87,8 @@ this.Connect(() => new ShellView(), _ => shell, () => new Window());
 | AdaptivePanel | `samples/TestApp/TestApp/Samples/Layout/AdaptivePanelView.axaml` |
 | ResponsivePresenter | `samples/TestApp/TestApp/Samples/Layout/ResponsivePresenter/ResponsivePresenterView.axaml` |
 | Responsive design (ContainerQuery + FlexPanel) | `samples/TestApp/TestApp/Samples/Layout/ResponsiveLayoutsView.axaml` |
+| FlowEditor (node graph) | `samples/TestApp/TestApp/Samples/Flow/FlowView.axaml` |
+| PropertyGrid (inspector) | `samples/TestApp/TestApp/Samples/PropertyGrid/PropertyGridView.axaml` |
 
 ## GitVersion Pull Request Workflow
 

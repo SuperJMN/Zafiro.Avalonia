@@ -390,6 +390,8 @@ Icons are referenced by string keys: `"fa-home"` (FontAwesome), `"mdi-settings"`
 | `Loading` | `IsLoading`, `Content`, `PageTransition` | Loading state with content transition |
 | `SlimDataGrid` | `Columns`, `DataRows` | Lightweight data grid |
 | `StepIndicator` | `Steps`, `CurrentStep` | Wizard step progress |
+| `FlowEditor` | `Nodes`, `Edges`, `NodeTemplate`, `SelectedNodes` | Node-based visual graph editor with drag support |
+| `PropertyGrid` | `SelectedObjects` | Inspector-style property editor, auto-discovers common properties |
 
 ### Role Classes for EnhancedButton
 
