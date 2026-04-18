@@ -98,58 +98,35 @@ public class DataTypeViewLocatorGenerator : IIncrementalGenerator
             var vmSymbol = compilation.GetTypeByMetadataName(vmFullNameFromXaml);
             var chosenVmFullName = vmFullNameFromXaml;
 
+            // When x:DataType is an interface, register the interface itself as the key.
+            // DataTypeViewLocator.TryFromRegistry already resolves interface-keyed entries at
+            // runtime (step 2: "match by any implemented interface"), so all concrete
+            // implementations of the interface will be served by the same view without
+            // needing individual registrations.
+            //
+            // The old approach resolved to ONE concrete implementation by naming convention,
+            // which left other implementations (e.g. AdventureTeamPickerViewModel) unregistered,
+            // causing DataTypeViewLocator.Match() to return false and Avalonia to fall back to
+            // ToString().
             if (vmSymbol is INamedTypeSymbol named && named.TypeKind == TypeKind.Interface)
             {
-                var viewId = GetViewIdentifier(classAttr);
-
-                var impls = EnumerateAllTypes(compilation.GlobalNamespace)
+                var hasImpls = EnumerateAllTypes(compilation.GlobalNamespace)
                     .OfType<INamedTypeSymbol>()
-                    .Where(t => t.TypeKind == TypeKind.Class && !t.IsAbstract && Implements(t, named))
-                    .OrderBy(t => t.ToDisplayString())
-                    .ToList();
+                    .Any(t => t.TypeKind == TypeKind.Class && !t.IsAbstract && Implements(t, named));
 
-                if (impls.Count > 0)
-                {
-                    var matching = impls.FirstOrDefault(t => GetViewModelIdentifier(t.Name).Equals(viewId, StringComparison.Ordinal));
-
-                    var chosen = matching ?? impls.First();
-                    chosenVmFullName = ToQualifiedName(chosen);
-
-                    if (impls.Count > 1)
-                    {
-                        var descriptor = new DiagnosticDescriptor(
-                            id: "ZAV0002",
-                            title: "Multiple implementations for interface",
-                            messageFormat: $"Multiple implementations found for interface {named.ToDisplayString()}. Using {chosenVmFullName} for view {classAttr}",
-                            category: "ViewLocation",
-                            DiagnosticSeverity.Warning,
-                            isEnabledByDefault: true);
-                        context.ReportDiagnostic(Diagnostic.Create(descriptor, Location.None));
-                    }
-
-                    if (matching is null && impls.Count >= 1)
-                    {
-                        var descriptorNoMatch = new DiagnosticDescriptor(
-                            id: "ZAV0003",
-                            title: "No identifier match for interface implementations",
-                            messageFormat: $"No implementation matching identifier '{viewId}' for interface {named.ToDisplayString()} and view {classAttr}. Using {chosenVmFullName}",
-                            category: "ViewLocation",
-                            DiagnosticSeverity.Warning,
-                            isEnabledByDefault: true);
-                        context.ReportDiagnostic(Diagnostic.Create(descriptorNoMatch, Location.None));
-                    }
-                }
-                else
+                if (!hasImpls)
                 {
                     var descriptorNone = new DiagnosticDescriptor(
                         id: "ZAV0004",
                         title: "No implementations found for interface",
-                        messageFormat: $"No implementations found for interface {named.ToDisplayString()} referenced by view {classAttr}. Keeping interface mapping.",
+                        messageFormat: $"No implementations found for interface {named.ToDisplayString()} referenced by view {classAttr}. The interface mapping will be registered but may never match.",
                         category: "ViewLocation",
                         DiagnosticSeverity.Warning,
                         isEnabledByDefault: true);
                     context.ReportDiagnostic(Diagnostic.Create(descriptorNone, Location.None));
                 }
+
+                // chosenVmFullName stays as vmFullNameFromXaml (the interface type)
             }
 
             rawPairs.Add((chosenVmFullName, classAttr));
@@ -194,34 +171,6 @@ public class DataTypeViewLocatorGenerator : IIncrementalGenerator
     private static bool Implements(INamedTypeSymbol type, INamedTypeSymbol @interface)
     {
         return type.AllInterfaces.Any(i => SymbolEqualityComparer.Default.Equals(i, @interface));
-    }
-
-    private static string GetViewIdentifier(string viewFullName)
-    {
-        var simple = viewFullName.Split('.').Last();
-        return simple.EndsWith("View", StringComparison.Ordinal)
-            ? simple.Substring(0, simple.Length - "View".Length)
-            : simple;
-    }
-
-    private static string GetViewModelIdentifier(string vmSimpleName)
-    {
-        return vmSimpleName.EndsWith("ViewModel", StringComparison.Ordinal)
-            ? vmSimpleName.Substring(0, vmSimpleName.Length - "ViewModel".Length)
-            : vmSimpleName;
-    }
-
-    private static string ToQualifiedName(INamedTypeSymbol type)
-    {
-        var parts = new Stack<string>();
-        for (var t = type; t is not null; t = t.ContainingType)
-        {
-            parts.Push(t.Name);
-        }
-
-        var ns = type.ContainingNamespace?.ToDisplayString();
-        var name = string.Join(".", parts);
-        return string.IsNullOrEmpty(ns) ? name : ns + "." + name;
     }
 
     private static IEnumerable<INamedTypeSymbol> EnumerateAllTypes(INamespaceSymbol ns)
