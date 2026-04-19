@@ -16,6 +16,9 @@ public class DialogControl : ContentControl
     public static readonly StyledProperty<DialogTone> ToneProperty = AvaloniaProperty.Register<DialogControl, DialogTone>(
         nameof(Tone), DialogTone.Neutral);
 
+    public static readonly StyledProperty<DialogSize> SizeHintProperty = AvaloniaProperty.Register<DialogControl, DialogSize>(
+        nameof(SizeHint), DialogSize.Auto);
+
     public static readonly StyledProperty<IEnumerable<IOption>?> OptionsProperty = AvaloniaProperty.Register<DialogControl, IEnumerable<IOption>?>(
         nameof(Options),
         []);
@@ -106,6 +109,12 @@ public class DialogControl : ContentControl
     {
         get => GetValue(ToneProperty);
         set => SetValue(ToneProperty, value);
+    }
+
+    public DialogSize SizeHint
+    {
+        get => GetValue(SizeHintProperty);
+        set => SetValue(SizeHintProperty, value);
     }
 
     public IEnumerable<IOption>? Options

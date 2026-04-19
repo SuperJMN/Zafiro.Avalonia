@@ -48,7 +48,7 @@ public class AdornerDialog : IDialog, ICloseable
         });
     }
 
-    public async Task<bool> Show<TViewModel>(Maybe<TViewModel> viewModel, Maybe<IObservable<string>> title, Func<Maybe<TViewModel>, ICloseable, IEnumerable<IOption>> optionsFactory, Maybe<object> icon = default, DialogTone tone = DialogTone.Neutral)
+    public async Task<bool> Show<TViewModel>(Maybe<TViewModel> viewModel, Maybe<IObservable<string>> title, Func<Maybe<TViewModel>, ICloseable, IEnumerable<IOption>> optionsFactory, Maybe<object> icon = default, DialogTone tone = DialogTone.Neutral, DialogSize size = DialogSize.Auto)
     {
         if (optionsFactory == null) throw new ArgumentNullException(nameof(optionsFactory));
 
@@ -57,6 +57,8 @@ public class AdornerDialog : IDialog, ICloseable
             var completion = new TaskCompletionSource<bool>();
             var options = optionsFactory(viewModel, this);
 
+            var sizeHint = DialogSizeCalculator.Resolve(size);
+
             var dialog = new DialogViewContainer
             {
                 Content = new DialogControl()
@@ -64,7 +66,8 @@ public class AdornerDialog : IDialog, ICloseable
                     Content = viewModel.GetValueOrDefault(),
                     Options = options,
                     Icon = icon.GetValueOrDefault(),
-                    Tone = tone
+                    Tone = tone,
+                    SizeHint = sizeHint
                 },
                 Close = ReactiveCommand.Create(() => Dismiss()),
             };
@@ -83,6 +86,17 @@ public class AdornerDialog : IDialog, ICloseable
             dialog[!Layoutable.WidthProperty] = adornerLayer.Parent!
                 .GetObservable(Visual.BoundsProperty)
                 .Select(rect => rect.Width)
+                .ToBinding();
+
+            // Apply proportional constraints to inner content via ContentMaxWidth/ContentMaxHeight
+            var parentBoundsObs = adornerLayer.Parent!.GetObservable(Visual.BoundsProperty);
+
+            dialog[!DialogViewContainer.ContentMaxWidthProperty] = parentBoundsObs
+                .Select(rect => DialogSizeCalculator.Calculate(sizeHint, rect.Width, rect.Height).MaxWidth)
+                .ToBinding();
+
+            dialog[!DialogViewContainer.ContentMaxHeightProperty] = parentBoundsObs
+                .Select(rect => DialogSizeCalculator.Calculate(sizeHint, rect.Width, rect.Height).MaxHeight)
                 .ToBinding();
 
             adornerLayer.Children.Add(dialog);
