@@ -48,6 +48,6 @@
     <PackageVersion Include="Xamarin.AndroidX.Core.SplashScreen" Version="1.0.1.17"/>
     <PackageVersion Include="xunit.v3" Version="3.2.2"/>
     <PackageVersion Include="xunit.runner.visualstudio" Version="3.1.0"/>
-    <PackageVersion Include="Zafiro.UI" Version="47.0.2"/>
+    <PackageVersion Include="Zafiro.UI" Version="47.0.4"/>
   </ItemGroup>
 </Project>
