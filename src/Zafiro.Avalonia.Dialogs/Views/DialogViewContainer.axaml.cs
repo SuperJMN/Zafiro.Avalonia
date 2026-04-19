@@ -12,6 +12,12 @@ public class DialogViewContainer : ContentControl
     public static readonly StyledProperty<ICommand> CloseProperty = AvaloniaProperty.Register<DialogViewContainer, ICommand>(
         nameof(Close));
 
+    public static readonly StyledProperty<double> ContentMaxWidthProperty = AvaloniaProperty.Register<DialogViewContainer, double>(
+        nameof(ContentMaxWidth), double.PositiveInfinity);
+
+    public static readonly StyledProperty<double> ContentMaxHeightProperty = AvaloniaProperty.Register<DialogViewContainer, double>(
+        nameof(ContentMaxHeight), double.PositiveInfinity);
+
     public string Title
     {
         get => GetValue(TitleProperty);
@@ -22,5 +28,17 @@ public class DialogViewContainer : ContentControl
     {
         get => GetValue(CloseProperty);
         set => SetValue(CloseProperty, value);
+    }
+
+    public double ContentMaxWidth
+    {
+        get => GetValue(ContentMaxWidthProperty);
+        set => SetValue(ContentMaxWidthProperty, value);
+    }
+
+    public double ContentMaxHeight
+    {
+        get => GetValue(ContentMaxHeightProperty);
+        set => SetValue(ContentMaxHeightProperty, value);
     }
 }

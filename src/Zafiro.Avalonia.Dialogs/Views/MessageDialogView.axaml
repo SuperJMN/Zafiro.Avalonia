@@ -9,7 +9,6 @@
              x:CompileBindings="True">
   <TextBlock TextAlignment="Center" 
              VerticalAlignment="Center" 
-             MaxWidth="400" 
              TextWrapping="Wrap" 
              Text="{Binding Message}" />
 </UserControl>

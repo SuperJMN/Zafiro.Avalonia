@@ -13,7 +13,7 @@ public class StackedDesktopDialog : IDialog
     private static readonly Stack<DialogContext> DialogStack = new();
     private static IDisposable? titleSubscription;
 
-    public async Task<bool> Show<TViewModel>(Maybe<TViewModel> viewModel, Maybe<IObservable<string>> title, Func<Maybe<TViewModel>, ICloseable, IEnumerable<IOption>> optionsFactory, Maybe<object> icon = default, DialogTone tone = DialogTone.Neutral)
+    public async Task<bool> Show<TViewModel>(Maybe<TViewModel> viewModel, Maybe<IObservable<string>> title, Func<Maybe<TViewModel>, ICloseable, IEnumerable<IOption>> optionsFactory, Maybe<object> icon = default, DialogTone tone = DialogTone.Neutral, DialogSize size = DialogSize.Auto)
     {
         if (optionsFactory == null) throw new ArgumentNullException(nameof(optionsFactory));
 
@@ -26,7 +26,7 @@ public class StackedDesktopDialog : IDialog
             var options = optionsFactory(viewModel, closeable).ToList();
 
             // Create a context instance for the current dialog
-            var dialogContext = new DialogContext(viewModel.GetValueOrDefault(), title, options, completionSource, icon.GetValueOrDefault(), tone);
+            var dialogContext = new DialogContext(viewModel.GetValueOrDefault(), title, options, completionSource, icon.GetValueOrDefault(), tone, size);
 
             // Add the dialog to the stack
             DialogStack.Push(dialogContext);
@@ -39,10 +39,6 @@ public class StackedDesktopDialog : IDialog
                     WindowStartupLocation = WindowStartupLocation.CenterOwner,
                     Icon = mainWindow.Icon,
                     SizeToContent = SizeToContent.WidthAndHeight,
-                    MaxWidth = 800,
-                    MaxHeight = 700,
-                    MinWidth = 400,
-                    MinHeight = 300
                 };
 
                 // Handle the window closing event to complete every pending dialog
@@ -97,14 +93,29 @@ public class StackedDesktopDialog : IDialog
                 Content = dialogContext.ViewModel,
                 Options = dialogContext.Options,
                 Icon = dialogContext.Icon,
-                Tone = dialogContext.Tone
+                Tone = dialogContext.Tone,
+                SizeHint = DialogSizeCalculator.Resolve(dialogContext.Size)
             };
+
+            var screen = dialogWindow.Screens.Primary ?? dialogWindow.Screens.All.FirstOrDefault();
+            double availW = 1280, availH = 720;
+            if (screen != null)
+            {
+                var scaling = screen.Scaling;
+                availW = screen.WorkingArea.Width / scaling;
+                availH = screen.WorkingArea.Height / scaling;
+            }
+
+            var (minW, maxW, maxH) = DialogSizeCalculator.Calculate(DialogSizeCalculator.Resolve(dialogContext.Size), availW, availH);
+            dialogWindow.MinWidth = minW;
+            dialogWindow.MaxWidth = maxW;
+            dialogWindow.MaxHeight = maxH;
         }
     }
 
     private class DialogContext
     {
-        public DialogContext(object? viewModel, Maybe<IObservable<string>> title, IEnumerable<IOption> options, TaskCompletionSource<bool> completionSource, object? icon, DialogTone tone)
+        public DialogContext(object? viewModel, Maybe<IObservable<string>> title, IEnumerable<IOption> options, TaskCompletionSource<bool> completionSource, object? icon, DialogTone tone, DialogSize size)
         {
             ViewModel = viewModel;
             Title = title;
@@ -112,11 +123,13 @@ public class StackedDesktopDialog : IDialog
             CompletionSource = completionSource;
             Icon = icon;
             Tone = tone;
+            Size = size;
         }
 
         public object? ViewModel { get; }
         public object? Icon { get; }
         public DialogTone Tone { get; }
+        public DialogSize Size { get; }
         public Maybe<IObservable<string>> Title { get; }
         public IEnumerable<IOption> Options { get; }
         public TaskCompletionSource<bool> CompletionSource { get; }

@@ -18,8 +18,9 @@
     </Design.PreviewWith>
 
     <Style Selector="DialogControl">
-        <Setter Property="Width" Value="448" />
-        <Setter Property="MaxHeight" Value="700" /> 
+        <Setter Property="MinWidth" Value="320" />
+        <Setter Property="MaxWidth" Value="500" />
+        <Setter Property="MaxHeight" Value="700" />
         <Setter Property="Template">
             <ControlTemplate>
                 <DockPanel VerticalSpacing="8">
@@ -97,5 +98,23 @@
                 </DockPanel>
             </ControlTemplate>
         </Setter>
+    </Style>
+
+    <!-- Size-class overrides -->
+    <Style Selector="DialogControl[SizeHint=Compact]">
+        <Setter Property="MinWidth" Value="280" />
+        <Setter Property="MaxWidth" Value="360" />
+    </Style>
+    <Style Selector="DialogControl[SizeHint=Standard]">
+        <Setter Property="MinWidth" Value="320" />
+        <Setter Property="MaxWidth" Value="500" />
+    </Style>
+    <Style Selector="DialogControl[SizeHint=Wide]">
+        <Setter Property="MinWidth" Value="400" />
+        <Setter Property="MaxWidth" Value="720" />
+    </Style>
+    <Style Selector="DialogControl[SizeHint=Full]">
+        <Setter Property="MinWidth" Value="400" />
+        <Setter Property="MaxWidth" Value="960" />
     </Style>
 </Styles>
