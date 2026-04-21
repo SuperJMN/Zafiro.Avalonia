@@ -13,5 +13,4 @@ githubPages:
     from: env
     name: GITHUB_TOKEN
   branch: master
-  projects:
-    - project: samples/TestApp/TestApp.Browser/TestApp.Browser.csproj
+  project: samples/TestApp/TestApp.Browser/TestApp.Browser.csproj
