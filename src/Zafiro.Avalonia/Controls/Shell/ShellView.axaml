@@ -5,6 +5,7 @@
              xmlns:shell="clr-namespace:Zafiro.UI.Shell;assembly=Zafiro.UI"
              xmlns:nav="clr-namespace:Zafiro.Avalonia.Controls.Navigation"
              xmlns:local="clr-namespace:Zafiro.Avalonia.Controls.Shell"
+             xmlns:zac="clr-namespace:Zafiro.Avalonia.Controls"
              mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="600"
              x:Class="Zafiro.Avalonia.Controls.Shell.ShellView" x:DataType="shell:IShell">
 
@@ -12,19 +13,48 @@
         <local:ShellDesign />
     </Design.DataContext>
 
-    <Grid ColumnDefinitions="Auto *">
-        <!-- Sidebar -->
-        <SectionStrip Grid.Column="0"
-                      Sections="{Binding Sections}"
-                      SelectedSection="{Binding SelectedSection.Value, Mode=TwoWay}" />
+    <UserControl.Styles>
+        <!-- Mobile-first defaults -->
+        <Style Selector="FlexPanel#ShellLayout">
+            <Setter Property="Direction" Value="ColumnReverse" />
+        </Style>
+        <Style Selector="zac|SectionStrip#ShellSectionStrip">
+            <Setter Property="Orientation" Value="Horizontal" />
+        </Style>
+    </UserControl.Styles>
 
-        <!-- Content -->
-        <Frame Grid.Column="1"
-               Content="{Binding SelectedSection.Value.Navigator.Content^}"
-               BackCommand="{Binding SelectedSection.Value.Navigator.Back}">
-            <Interaction.Behaviors>
-                <nav:AutoHeaderFooterBehavior />
-            </Interaction.Behaviors>
-        </Frame>
-    </Grid>
+    <!--
+        Responsive shell:
+        - Wide (>= 700): vertical SectionStrip on the left + content on the right.
+        - Narrow (< 700): content on top + horizontal SectionStrip at the bottom (mobile-style bar).
+    -->
+    <Border Container.Name="shell" Container.Sizing="Width">
+        <Border.Styles>
+            <ContainerQuery Name="shell" Query="min-width:700">
+                <Style Selector="FlexPanel#ShellLayout">
+                    <Setter Property="Direction" Value="Row" />
+                </Style>
+                <Style Selector="zac|SectionStrip#ShellSectionStrip">
+                    <Setter Property="Orientation" Value="Vertical" />
+                </Style>
+            </ContainerQuery>
+        </Border.Styles>
+
+        <FlexPanel x:Name="ShellLayout" AlignItems="Stretch">
+            <!-- Section navigation: bottom bar on mobile, sidebar on desktop -->
+            <zac:SectionStrip x:Name="ShellSectionStrip"
+                              FlexPanel.Shrink="0"
+                              Sections="{Binding Sections}"
+                              SelectedSection="{Binding SelectedSection.Value, Mode=TwoWay}" />
+
+            <!-- Content -->
+            <Frame FlexPanel.Grow="1"
+                   Content="{Binding SelectedSection.Value.Navigator.Content^}"
+                   BackCommand="{Binding SelectedSection.Value.Navigator.Back}">
+                <Interaction.Behaviors>
+                    <nav:AutoHeaderFooterBehavior />
+                </Interaction.Behaviors>
+            </Frame>
+        </FlexPanel>
+    </Border>
 </UserControl>

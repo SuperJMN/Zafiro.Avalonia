@@ -49,5 +49,7 @@
     <PackageVersion Include="xunit.v3" Version="3.2.2"/>
     <PackageVersion Include="xunit.runner.visualstudio" Version="3.1.0"/>
     <PackageVersion Include="Zafiro.UI" Version="47.0.4"/>
+    <PackageVersion Include="Zafiro.Avalonia.Mcp.AppHost" Version="0.0.20"/>
+    <PackageVersion Include="AvaloniaUI.DiagnosticsSupport" Version="2.2.1"/>
   </ItemGroup>
 </Project>

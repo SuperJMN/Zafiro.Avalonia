@@ -17,6 +17,7 @@
         <PackageReference Include="Optris.Icons.Avalonia.FontAwesome" />
         <PackageReference Include="Serilog.Sinks.Console" />
         <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="AvaloniaUI.DiagnosticsSupport" />
+        <PackageReference Include="Zafiro.Avalonia.Mcp.AppHost" />
     </ItemGroup>
 
     <ItemGroup>
