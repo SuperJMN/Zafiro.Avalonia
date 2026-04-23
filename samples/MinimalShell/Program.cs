@@ -1,6 +1,7 @@
 using System;
 using Avalonia;
 using ReactiveUI.Avalonia;
+using Zafiro.Avalonia.Mcp.AppHost;
 
 namespace MinimalShell;
 
@@ -13,6 +14,7 @@ class Program
     public static AppBuilder BuildAvaloniaApp()
         => AppBuilder.Configure<App>()
             .UsePlatformDetect()
+            .UseMcpDiagnostics()
             .WithInterFont()
 #if DEBUG
             .WithDeveloperTools()
