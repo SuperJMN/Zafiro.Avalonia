@@ -17,6 +17,8 @@
                 </EnhancedButton>
                 <EnhancedButton Icon="{Icon fa-wallet}" />
                 <EnhancedButton Icon="{Icon mdi-close}" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch">Button with icon</EnhancedButton>
+                <EnhancedButton Icon="{Icon text:😘}">Emoji glyph</EnhancedButton>
+                <EnhancedButton Icon="{Icon text:★}">Star glyph</EnhancedButton>
                 <EnhancedButton Classes="Primary">Primary</EnhancedButton>
                 <EnhancedButton Classes="Secondary">Secondary</EnhancedButton>
                 <EnhancedButton Classes="Cancel">Cancel</EnhancedButton>

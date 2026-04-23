@@ -365,6 +365,21 @@ IconControlProviderRegistry.Register(new OptrisIconControlProvider(), asDefault:
 
 Icons are referenced by string keys: `"fa-home"` (FontAwesome), `"mdi-settings"` (Material Design).
 
+**Built-in providers**:
+
+| Prefix | Provider | Source assembly |
+|---|---|---|
+| `svg:` | `SvgIconControlProvider` — renders an SVG asset (`svg:/Assets/foo.svg` or `svg:OtherAsm/Assets/foo.svg`) | `Zafiro.Avalonia.Icons.Svg` |
+| `optris:` | `OptrisIconControlProvider` — Optris.Icons.Avalonia (FontAwesome, MaterialDesign, …) | `Zafiro.Avalonia.Icons.Optris` |
+| `text:` | `TextIconControlProvider` — renders any glyph/emoji/Unicode/ligature in a `TextBlock`. Honors `IconOptions.Fill` (→ Foreground) and `IconOptions.Size` (→ FontSize) | `Zafiro.Avalonia` (auto-registered) |
+
+```xml
+<!-- Glyph / emoji / monogram via the text: provider -->
+<EnhancedButton Icon="{Icon text:😘}" Content="Send" />
+<EnhancedButton Icon="{Icon text:★}"  Content="Star" />
+<EnhancedButton Icon="{Icon text:JS}" Content="Initials" />
+```
+
 **Evidence**: `TestApp/App.axaml.cs`, `HomeView.axaml`, `MinimalShell/Sections/*.axaml`.
 
 ---
