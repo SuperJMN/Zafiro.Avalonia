@@ -54,7 +54,7 @@
                             <SmartDockPanel HorizontalSpacing="{Binding $parent[EnhancedButton].Spacing}"
                                             HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                                             VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
-                                <ContentPresenter IsVisible="{Binding !!$self.Content}"
+                                <ContentPresenter IsVisible="{Binding !!$self.Icon}"
                                                   VerticalAlignment="Center"
                                                   x:Name="IconPresenter"
                                                   Content="{TemplateBinding Icon}" />
