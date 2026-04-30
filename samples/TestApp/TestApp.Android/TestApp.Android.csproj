@@ -3,9 +3,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <OutputType>Exe</OutputType>
-        <TargetFramework>net9.0-android</TargetFramework>
-        <SupportedOSPlatformVersion>21</SupportedOSPlatformVersion>
-        <AndroidMinSdkVersion>21</AndroidMinSdkVersion>
+        <TargetFramework>net10.0-android</TargetFramework>
+        <SupportedOSPlatformVersion>23</SupportedOSPlatformVersion>
+        <AndroidMinSdkVersion>23</AndroidMinSdkVersion>
         <Nullable>enable</Nullable>
         <ApplicationId>com.SuperJMN.Zafiro.Avalonia</ApplicationId>
         <ApplicationVersion>1</ApplicationVersion>
@@ -33,6 +33,7 @@
     <ItemGroup>
         <PackageReference Include="Avalonia.Android"/>
         <PackageReference Include="Xamarin.AndroidX.Core.SplashScreen"/>
+        <PackageReference Include="Zafiro.Avalonia.Mcp.AppHost"/>
         <!-- Use the meta package that provides Xaml.Behaviors.dll with XmlnsDefinitions -->
         <PackageReference Include="Xaml.Behaviors.Avalonia"/>
         <!-- Consolidate on Xaml.Behaviors packages to avoid duplicate behavior assemblies -->
