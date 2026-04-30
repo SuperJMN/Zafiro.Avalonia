@@ -193,7 +193,7 @@
                                 <Button.Flyout>
                                     <Flyout>
                                         <SectionStripListBox x:Name="OtherSections"
-                                                             SelectedItem="{TemplateBinding SelectedSection, Mode=TwoWay}"
+                                                             SelectedItem="{Binding SelectedSection, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}"
                                                              ItemContainerTheme="{Binding ItemContainerTheme, RelativeSource={RelativeSource TemplatedParent}, TargetNullValue={StaticResource {x:Type SectionStripItem}}}"
                                                              ItemTemplate="{Binding ItemTemplate, RelativeSource={RelativeSource TemplatedParent}, TargetNullValue={StaticResource VerticalItem}}"
                                                              ItemsSource="{Binding #VisibilityExposerBehavior.InvisibleItems}" />
@@ -209,7 +209,7 @@
                                                  Background="{TemplateBinding Background}"
                                                  ItemContainerTheme="{Binding ItemContainerTheme, RelativeSource={RelativeSource TemplatedParent}, TargetNullValue={StaticResource {x:Type SectionStripItem}}}"
                                                  ItemTemplate="{Binding ItemTemplate, RelativeSource={RelativeSource TemplatedParent}, TargetNullValue={StaticResource VerticalItem}}"
-                                                 SelectedItem="{TemplateBinding SelectedSection, Mode=TwoWay}"
+                                                 SelectedItem="{Binding SelectedSection, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}"
                                                  ItemsSource="{TemplateBinding FilteredSections}">
                                 <SectionStripListBox.ItemsPanel>
                                     <ItemsPanelTemplate>
