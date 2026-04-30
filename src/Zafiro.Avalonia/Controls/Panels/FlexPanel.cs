@@ -451,9 +451,12 @@ public class FlexPanel : Panel
         {
             foreach (var item in line.Items)
             {
-                if (Math.Abs(item.MainSize - item.OriginalMainSize) < 0.5)
-                    continue;
-
+                // Always re-measure with the actual main-axis allocation so children
+                // that wrap internally (their own FlexPanel/WrapPanel) report a
+                // DesiredSize that reflects the wrapped layout at the constraint
+                // they will receive during Arrange. Without this, a child measured
+                // at the parent's full availableSize may report a single-line size
+                // and then overflow when arranged at a narrower per-line allocation.
                 var constraintSize = IsRow
                     ? new Size(item.MainSize, availableSize.Height)
                     : new Size(availableSize.Width, item.MainSize);
