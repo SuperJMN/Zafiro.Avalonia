@@ -1,0 +1,38 @@
+<Project>
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+    <CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
+    <AvaloniaVersion>12.0.0</AvaloniaVersion>
+    <ZafiroAvaloniaVersion>51.9.6</ZafiroAvaloniaVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Avalonia -->
+    <PackageVersion Include="Avalonia" Version="$(AvaloniaVersion)" />
+    <PackageVersion Include="Avalonia.Themes.Fluent" Version="$(AvaloniaVersion)" />
+    <PackageVersion Include="Avalonia.Fonts.Inter" Version="$(AvaloniaVersion)" />
+    <PackageVersion Include="Zafiro.Avalonia.Mcp.AppHost" Version="0.0.44" />
+    <PackageVersion Include="ReactiveUI.Avalonia" Version="11.4.12" />
+    <PackageVersion Include="Avalonia.Desktop" Version="$(AvaloniaVersion)" />
+    <PackageVersion Include="Avalonia.Browser" Version="$(AvaloniaVersion)" />
+    <PackageVersion Include="Avalonia.Android" Version="$(AvaloniaVersion)" />
+    <PackageVersion Include="Avalonia.iOS" Version="$(AvaloniaVersion)" />
+
+    <!-- Zafiro toolkit -->
+    <PackageVersion Include="Zafiro.Avalonia" Version="$(ZafiroAvaloniaVersion)" />
+    <PackageVersion Include="Zafiro.Avalonia.Generators" Version="$(ZafiroAvaloniaVersion)" />
+    <PackageVersion Include="Zafiro.Avalonia.Icons.Optris" Version="$(ZafiroAvaloniaVersion)" />
+    <PackageVersion Include="Zafiro.UI" Version="47.0.5" />
+
+    <!-- Logging -->
+    <PackageVersion Include="Serilog" Version="4.3.0" />
+    <PackageVersion Include="Serilog.Sinks.Console" Version="6.0.0" />
+    <PackageVersion Include="Serilog.Extensions.Logging" Version="9.0.0" />
+
+    <!-- Icons -->
+    <PackageVersion Include="Optris.Icons.Avalonia.FontAwesome" Version="12.0.4" />
+
+    <!-- Android -->
+    <PackageVersion Include="Xamarin.AndroidX.Core.SplashScreen" Version="1.0.1.17" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk.WebAssembly">
+    <PropertyGroup>
+        <TargetFramework>net10.0-browser</TargetFramework>
+        <OutputType>Exe</OutputType>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <WasmBuildNative>true</WasmBuildNative>
+        <PublishTrimmed>false</PublishTrimmed>
+        <EnableTrimAnalyzer>false</EnableTrimAnalyzer>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Avalonia.Browser" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\ZafiroShellTemplate\ZafiroShellTemplate.csproj" />
+    </ItemGroup>
+</Project>

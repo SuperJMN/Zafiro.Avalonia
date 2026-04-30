@@ -1,0 +1,10 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:sections="clr-namespace:ZafiroShellTemplate.Sections"
+             x:Class="ZafiroShellTemplate.Sections.AboutView" x:DataType="sections:AboutViewModel">
+    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="8">
+        <TextBlock Text="Version" FontSize="12" Opacity="0.5" HorizontalAlignment="Center" />
+        <TextBlock Text="{Binding Version}" FontSize="28" FontWeight="Bold" HorizontalAlignment="Center" />
+        <TextBlock Text="{Binding Framework}" FontSize="14" Opacity="0.6" HorizontalAlignment="Center" />
+    </StackPanel>
+</UserControl>

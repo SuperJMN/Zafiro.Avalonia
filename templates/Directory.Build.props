@@ -1,0 +1,8 @@
+<!--
+  Empty Directory.Build.props that intentionally breaks the inheritance chain
+  from the repository root, so that template content folders below do NOT
+  inherit repo-wide MSBuild conventions (e.g. UseLocalZafiroReferences,
+  global usings). Each generated template comes with its own Directory.Build.props.
+-->
+<Project>
+</Project>

@@ -1,0 +1,17 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:misc="clr-namespace:Zafiro.Avalonia.Misc;assembly=Zafiro.Avalonia"
+             x:Class="ZafiroShellTemplate.App"
+             RequestedThemeVariant="Default">
+
+    <Application.Styles>
+        <FluentTheme />
+        <StyleInclude Source="avares://Zafiro.Avalonia/Styles.axaml" />
+    </Application.Styles>
+
+    <Application.DataTemplates>
+        <misc:DataTemplateInclude Source="avares://Zafiro.Avalonia/DataTemplates.axaml" />
+        <NamingConventionGeneratedViewLocator />
+    </Application.DataTemplates>
+
+</Application>
