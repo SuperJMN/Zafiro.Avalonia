@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="ZafiroShellTemplate/ZafiroShellTemplate.csproj" />
+  <Project Path="ZafiroShellTemplate.Desktop/ZafiroShellTemplate.Desktop.csproj" />
+  <Project Path="ZafiroShellTemplate.Browser/ZafiroShellTemplate.Browser.csproj" />
+  <Project Path="ZafiroShellTemplate.Android/ZafiroShellTemplate.Android.csproj" />
+  <Project Path="ZafiroShellTemplate.iOS/ZafiroShellTemplate.iOS.csproj" />
+</Solution>

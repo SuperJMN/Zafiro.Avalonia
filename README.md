@@ -16,8 +16,23 @@ A UI components library for **Avalonia 11.3.x** that provides controls, dialogs,
 | **Zafiro.Avalonia.Generators** | [![NuGet](https://img.shields.io/nuget/v/Zafiro.Avalonia.Generators?logo=nuget)](https://www.nuget.org/packages/Zafiro.Avalonia.Generators) | Source generator for view locators and section registration |
 | **Zafiro.Avalonia.Icons.Optris** | [![NuGet](https://img.shields.io/nuget/v/Zafiro.Avalonia.Icons.Optris?logo=nuget)](https://www.nuget.org/packages/Zafiro.Avalonia.Icons.Optris) | Icon provider using Optris (FontAwesome, Material Design) |
 | **Zafiro.Avalonia.Icons.Svg** | [![NuGet](https://img.shields.io/nuget/v/Zafiro.Avalonia.Icons.Svg?logo=nuget)](https://www.nuget.org/packages/Zafiro.Avalonia.Icons.Svg) | SVG-based icon provider |
+| **Zafiro.Avalonia.Templates** | [![NuGet](https://img.shields.io/nuget/v/Zafiro.Avalonia.Templates?logo=nuget)](https://www.nuget.org/packages/Zafiro.Avalonia.Templates) | `dotnet new` templates for cross-platform Zafiro Shell apps |
 
 ## Getting Started
+
+### Scaffolding a new app
+
+The fastest way to start a new cross-platform Avalonia app on top of Zafiro is the `dotnet new` template:
+
+```bash
+dotnet new install Zafiro.Avalonia.Templates
+dotnet new zafiro-shell -n MyApp
+cd MyApp && dotnet run --project MyApp.Desktop
+```
+
+You get a multi-project solution (Desktop + Browser + Android + iOS) with the Zafiro Shell, `[Section]` auto-discovery, ReactiveUI, compiled bindings and `Zafiro.Avalonia.Mcp.AppHost` wired in. See [`templates/Zafiro.Avalonia.Templates/README.md`](templates/Zafiro.Avalonia.Templates/README.md) for details.
+
+### Adding to an existing project
 
 ```bash
 dotnet add package Zafiro.Avalonia

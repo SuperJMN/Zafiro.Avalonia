@@ -1,0 +1,10 @@
+{
+  "$schema": "http://json.schemastore.org/ide.host",
+  "symbolInfo": [
+    {
+      "id": "ApplicationId",
+      "name": { "text": "Android Application Id" },
+      "isVisible": true
+    }
+  ]
+}

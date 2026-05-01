@@ -1,0 +1,48 @@
+{
+  "$schema": "http://json.schemastore.org/template",
+  "author": "SuperJMN",
+  "classifications": [ "Avalonia", "Zafiro", "Desktop", "Mobile", "Browser", "Xaml", "MVVM" ],
+  "name": "Zafiro Avalonia Shell App (Cross-platform)",
+  "description": "A cross-platform Avalonia application using the Zafiro toolkit: Shell with auto-discovered sections via [Section], MVVM with ReactiveUI, targeting Desktop, Android, iOS and Browser (WebAssembly).",
+  "identity": "Zafiro.Avalonia.ShellApp.CrossPlatform",
+  "groupIdentity": "Zafiro.Avalonia.ShellApp",
+  "shortName": "zafiro-shell",
+  "tags": {
+    "language": "C#",
+    "type": "solution",
+    "editorTreatAs": "solution"
+  },
+  "sourceName": "ZafiroShellTemplate",
+  "preferNameDirectory": true,
+  "defaultName": "ZafiroShellTemplate",
+  "symbols": {
+    "ApplicationId": {
+      "type": "parameter",
+      "datatype": "text",
+      "description": "Android application id (reverse DNS).",
+      "replaces": "com.example.zafiroshelltemplate",
+      "defaultValue": "com.example.zafiroshelltemplate"
+    },
+    "HostIdentifier": {
+      "type": "bind",
+      "binding": "HostIdentifier"
+    }
+  },
+  "primaryOutputs": [
+    { "path": "ZafiroShellTemplate/ZafiroShellTemplate.csproj" },
+    { "path": "ZafiroShellTemplate.Desktop/ZafiroShellTemplate.Desktop.csproj" },
+    { "path": "ZafiroShellTemplate.Browser/ZafiroShellTemplate.Browser.csproj" },
+    { "path": "ZafiroShellTemplate.Android/ZafiroShellTemplate.Android.csproj" },
+    { "path": "ZafiroShellTemplate.iOS/ZafiroShellTemplate.iOS.csproj" }
+  ],
+  "postActions": [
+    {
+      "id": "restore",
+      "condition": "(HostIdentifier != \"dotnetcli\" && HostIdentifier != \"dotnetcli-preview\")",
+      "description": "Restore NuGet packages required by this project.",
+      "manualInstructions": [ { "text": "Run 'dotnet restore'" } ],
+      "actionId": "210D431B-A78B-4D2F-B762-4ED3E3EA9025",
+      "continueOnError": true
+    }
+  ]
+}

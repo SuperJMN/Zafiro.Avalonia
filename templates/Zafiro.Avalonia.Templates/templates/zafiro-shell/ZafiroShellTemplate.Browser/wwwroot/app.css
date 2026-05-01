@@ -1,0 +1,23 @@
+.app-splash {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    background: white;
+    font-family: 'Inter', sans-serif;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    pointer-events: none;
+}
+
+@media (prefers-color-scheme: dark) {
+    .app-splash {
+        background: #1b2a4e;
+        color: white;
+    }
+}
+
+.app-splash h2 {
+    font-weight: 400;
+    font-size: 1.5rem;
+}

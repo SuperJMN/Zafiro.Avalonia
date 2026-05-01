@@ -6,6 +6,9 @@
     <Project Path="src/Zafiro.Avalonia.Icons.Svg/Zafiro.Avalonia.Icons.Svg.csproj" />
     <Project Path="src/Zafiro.Avalonia.Icons.Optris/Zafiro.Avalonia.Icons.Optris.csproj" />
   </Folder>
+  <Folder Name="/templates/">
+    <Project Path="templates/Zafiro.Avalonia.Templates/Zafiro.Avalonia.Templates.csproj" />
+  </Folder>
   <Folder Name="/test/">
     <Project Path="test/Zafiro.Avalonia.Tests/Zafiro.Avalonia.Tests.csproj" />
   </Folder>
