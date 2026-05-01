@@ -35,7 +35,7 @@
                                     <!-- Back button hidden on mobile; system back gesture handles navigation -->
                                     <Panel DockPanel.Dock="Left"
                                            IsVisible="{OnFormFactor Desktop=True, Mobile=False}">
-                                        <EnhancedButton Command="{TemplateBinding BackCommand}"
+                                        <EnhancedButton Command="{TemplateBinding EffectiveBackCommand}"
                                                         x:Name="BackButton"
                                                         VerticalAlignment="Center">
                                             <Button.IsVisible>

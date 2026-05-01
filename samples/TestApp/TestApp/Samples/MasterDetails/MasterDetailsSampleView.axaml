@@ -1,25 +1,154 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="clr-namespace:Zafiro.Avalonia.Controls;assembly=Zafiro.Avalonia"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:controls="clr-namespace:Zafiro.Avalonia.Controls;assembly=Zafiro.Avalonia"
              xmlns:masterDetails="clr-namespace:TestApp.Samples.MasterDetails"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="TestApp.Samples.MasterDetails.MasterDetailsSampleView"
              x:DataType="masterDetails:MasterDetailsSampleViewModel">
-	<DockPanel>
-		<controls:MasterDetailsView SelectedItem="{Binding SelectedSection, Mode=TwoWay}"
-                                    ItemsSource="{Binding Sections}" CompactWidth="500">
-			<controls:MasterDetailsView.DetailsTemplate>
-				<DataTemplate DataType="masterDetails:SampleSection">
-					<TextBox Text="{Binding Content}" />
-				</DataTemplate>
-			</controls:MasterDetailsView.DetailsTemplate>
-			<controls:MasterDetailsView.ItemTemplate>
-				<DataTemplate DataType="masterDetails:SampleSection">
-					<TextBlock Text="{Binding Content}" />
-				</DataTemplate>
-			</controls:MasterDetailsView.ItemTemplate>
-		</controls:MasterDetailsView>
-	</DockPanel>
+
+    <Design.DataContext>
+        <masterDetails:MasterDetailsSampleViewModel />
+    </Design.DataContext>
+
+    <UserControl.Styles>
+        <StyleInclude Source="/Samples/SampleStyles.axaml" />
+    </UserControl.Styles>
+
+    <DockPanel>
+        <FlexPanel DockPanel.Dock="Top"
+                   Wrap="Wrap"
+                   Gap="8"
+                   AlignItems="Center">
+            <TextBlock Text="MasterDetailsView" />
+            <ComboBox ItemsSource="{Binding Workspaces}"
+                      SelectedItem="{Binding SelectedWorkspace, Mode=TwoWay}" />
+        </FlexPanel>
+
+        <MasterDetailsView SelectedItem="{Binding SelectedSection, Mode=TwoWay}"
+                           ItemsSource="{Binding VisibleSections}"
+                           Header="{Binding MasterHeader}"
+                           Footer="{Binding FooterText}"
+                           NavigationKey="{Binding SelectedWorkspace}"
+                           CompactWidth="640"
+                           MasterPaneWidth="360">
+            <MasterDetailsView.WideMasterTemplate>
+                <DataTemplate DataType="controls:MasterDetailsViewContext">
+                    <DataGrid Width="{Binding MasterPaneWidth}"
+                              ItemsSource="{Binding ItemsSource}"
+                              SelectedItem="{Binding SelectedItem, Mode=TwoWay}"
+                              AutoGenerateColumns="False">
+                        <DataGrid.Columns>
+                            <DataGridTemplateColumn Header="Title">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate DataType="masterDetails:SampleSection">
+                                        <TextBlock Text="{Binding Title}" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn Header="Status">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate DataType="masterDetails:SampleSection">
+                                        <TextBlock Text="{Binding Status}" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn Header="Owner">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate DataType="masterDetails:SampleSection">
+                                        <TextBlock Text="{Binding Owner}" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </DataTemplate>
+            </MasterDetailsView.WideMasterTemplate>
+
+            <MasterDetailsView.CompactItemTemplate>
+                <DataTemplate DataType="masterDetails:SampleSection">
+                    <Grid RowDefinitions="Auto Auto Auto"
+                          ColumnDefinitions="*,Auto">
+                        <TextBlock Grid.Column="0"
+                                   Text="{Binding Title}" />
+                        <TextBlock Grid.Column="1"
+                                   Text="{Binding Status}" />
+                        <TextBlock Grid.Row="1"
+                                   Grid.ColumnSpan="2"
+                                   Text="{Binding Summary}" />
+                        <ProgressBar Grid.Row="2"
+                                     Grid.ColumnSpan="2"
+                                     Maximum="100"
+                                     Value="{Binding Progress}" />
+                    </Grid>
+                </DataTemplate>
+            </MasterDetailsView.CompactItemTemplate>
+
+            <MasterDetailsView.DetailsTemplate>
+                <DataTemplate DataType="masterDetails:SampleSection">
+                    <DockPanel>
+                        <FlexPanel DockPanel.Dock="Top"
+                                   Wrap="Wrap"
+                                   Gap="8"
+                                   AlignItems="Center">
+                            <TextBlock Text="{Binding Title}" />
+                            <TextBlock Text="{Binding Status}" />
+                            <TextBlock Text="{Binding Owner}" />
+                        </FlexPanel>
+
+                        <BootstrapGridPanel MaxColumns="12"
+                                            FluidContainer="True"
+                                            Gutter="12">
+                            <TextBox BootstrapGridPanel.Col="12"
+                                     BootstrapGridPanel.ColMd="6"
+                                     Text="{Binding Title, Mode=TwoWay}"
+                                     PlaceholderText="Title" />
+                            <TextBox BootstrapGridPanel.Col="12"
+                                     BootstrapGridPanel.ColMd="6"
+                                     Text="{Binding Owner, Mode=TwoWay}"
+                                     PlaceholderText="Owner" />
+                            <TextBox BootstrapGridPanel.Col="12"
+                                     BootstrapGridPanel.ColMd="4"
+                                     Text="{Binding Category, Mode=TwoWay}"
+                                     PlaceholderText="Category" />
+                            <TextBox BootstrapGridPanel.Col="12"
+                                     BootstrapGridPanel.ColMd="4"
+                                     Text="{Binding Status, Mode=TwoWay}"
+                                     PlaceholderText="Status" />
+                            <TextBox BootstrapGridPanel.Col="12"
+                                     BootstrapGridPanel.ColMd="4"
+                                     Text="{Binding Priority, Mode=TwoWay}"
+                                     PlaceholderText="Priority" />
+                            <TextBox BootstrapGridPanel.Col="12"
+                                     Text="{Binding Summary, Mode=TwoWay}"
+                                     PlaceholderText="Summary" />
+                            <ProgressBar BootstrapGridPanel.Col="12"
+                                         Maximum="100"
+                                         Value="{Binding Progress}" />
+                            <TextBox BootstrapGridPanel.Col="12"
+                                     MinHeight="120"
+                                     AcceptsReturn="True"
+                                     TextWrapping="Wrap"
+                                     Text="{Binding Notes, Mode=TwoWay}"
+                                     PlaceholderText="Notes" />
+                        </BootstrapGridPanel>
+                    </DockPanel>
+                </DataTemplate>
+            </MasterDetailsView.DetailsTemplate>
+
+            <MasterDetailsView.EmptyTemplate>
+                <DataTemplate DataType="controls:MasterDetailsViewContext">
+                    <TextBlock Classes="Text-Muted"
+                               Text="No section selected" />
+                </DataTemplate>
+            </MasterDetailsView.EmptyTemplate>
+
+            <MasterDetailsView.ItemTemplate>
+                <DataTemplate DataType="masterDetails:SampleSection">
+                    <TextBlock Text="{Binding Title}" />
+                </DataTemplate>
+            </MasterDetailsView.ItemTemplate>
+        </MasterDetailsView>
+    </DockPanel>
 </UserControl>

@@ -331,6 +331,8 @@ await dialogService.ShowAndGetResult(new SubmitterViewModel(), "Title", model =>
 
 **Source**: `samples/TestApp/TestApp/Samples/MasterDetails/`
 
+For full consumer guidance, including custom master templates, `Frame` back behavior, and migration notes, see `docs/ai/master-details-view.md`.
+
 ### ViewModel
 ```csharp
 public partial class MasterDetailsSampleViewModel : ReactiveObject
@@ -348,6 +350,31 @@ public partial class MasterDetailsSampleViewModel : ReactiveObject
 
     public IEnumerable<SampleSection> Sections { get; }
 }
+```
+
+### View
+```xml
+<MasterDetailsView ItemsSource="{Binding Sections}"
+                   SelectedItem="{Binding SelectedSection, Mode=TwoWay}"
+                   CompactWidth="640">
+    <MasterDetailsView.ItemTemplate>
+        <DataTemplate DataType="local:SampleSection">
+            <TextBlock Text="{Binding Title}" />
+        </DataTemplate>
+    </MasterDetailsView.ItemTemplate>
+
+    <MasterDetailsView.CompactItemTemplate>
+        <DataTemplate DataType="local:SampleSection">
+            <TextBlock Text="{Binding Summary}" />
+        </DataTemplate>
+    </MasterDetailsView.CompactItemTemplate>
+
+    <MasterDetailsView.DetailsTemplate>
+        <DataTemplate DataType="local:SampleSection">
+            <TextBox Text="{Binding Content, Mode=TwoWay}" />
+        </DataTemplate>
+    </MasterDetailsView.DetailsTemplate>
+</MasterDetailsView>
 ```
 
 ---

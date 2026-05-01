@@ -90,6 +90,12 @@ public override void OnFrameworkInitializationCompleted()
 | `SlimWizard<T>` | Wizard (linear) | Fluent builder: `WizardBuilder.StartWith().Then().Build()` |
 | `GraphWizard<T>` | Wizard (branching) | Graph-based: `GraphWizard.For<T>().Step().Next().Build()` |
 
+## Consumer Guides
+
+| Guide | Purpose |
+|---|---|
+| `docs/ai/master-details-view.md` | Responsive master/detail screens with compact route and `Frame` back integration |
+
 ## View Resolution Order
 
 Views are resolved in this priority chain (first match wins):
