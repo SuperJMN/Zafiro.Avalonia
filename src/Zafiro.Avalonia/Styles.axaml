@@ -6,7 +6,6 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceInclude Source="Controls/Flow/FlowEditor.axaml" />
                 <ResourceInclude Source="Controls/StringEditor/StringEditorControl.axaml" />
-                <ResourceInclude Source="Controls/MasterDetailsNavigator.axaml" />
                 <ResourceInclude Source="Controls/Info.axaml" />
                 <ResourceInclude Source="Controls/StringEditor/EditControl.axaml" />
                 <ResourceInclude Source="Controls/ListBox.axaml" />

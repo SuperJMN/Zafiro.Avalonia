@@ -16,6 +16,7 @@
     <ItemGroup>
         <PackageReference Include="Avalonia.Desktop"/>
         <PackageReference Include="ReactiveUI.Avalonia"/>
+        <PackageReference Include="Zafiro.Avalonia.Mcp.AppHost"/>
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="../TestApp/TestApp.csproj"/>

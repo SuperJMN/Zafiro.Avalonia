@@ -1,113 +1,171 @@
 using System.Collections;
+using System.Collections.Specialized;
+using System.Reactive.Disposables;
 using System.Windows.Input;
 using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Templates;
 using Avalonia.Metadata;
+using Avalonia.VisualTree;
 using JetBrains.Annotations;
+using Zafiro.Avalonia.Controls.Navigation;
 
 namespace Zafiro.Avalonia.Controls;
 
 [PublicAPI]
-public class MasterDetailsView : TemplatedControl
+public class MasterDetailsView : TemplatedControl, IFrameBackParticipant
 {
     public static readonly StyledProperty<IEnumerable?> ItemsSourceProperty =
         AvaloniaProperty.Register<MasterDetailsView, IEnumerable?>(nameof(ItemsSource));
 
-    public static readonly StyledProperty<object> SelectedItemProperty =
-        AvaloniaProperty.Register<MasterDetailsView, object>(nameof(SelectedItem));
+    public static readonly StyledProperty<object?> SelectedItemProperty =
+        AvaloniaProperty.Register<MasterDetailsView, object?>(nameof(SelectedItem));
 
-    public static readonly DirectProperty<MasterDetailsView, ICommand> GoToDetailsProperty =
-        AvaloniaProperty.RegisterDirect<MasterDetailsView, ICommand>(nameof(GoToDetails), o => o.GoToDetails,
-            (o, v) => o.GoToDetails = v);
+    public static readonly DirectProperty<MasterDetailsView, ICommand> OpenDetailsCommandProperty =
+        AvaloniaProperty.RegisterDirect<MasterDetailsView, ICommand>(nameof(OpenDetailsCommand), o => o.OpenDetailsCommand,
+            (o, v) => o.OpenDetailsCommand = v);
 
     public static readonly DirectProperty<MasterDetailsView, ICommand> BackCommandProperty =
         AvaloniaProperty.RegisterDirect<MasterDetailsView, ICommand>(nameof(BackCommand), o => o.BackCommand,
             (o, v) => o.BackCommand = v);
 
-    public static readonly StyledProperty<bool> IsBackButtonEnabledProperty =
-        AvaloniaProperty.Register<MasterDetailsView, bool>(nameof(IsBackButtonDisplayed), true);
+    public static readonly DirectProperty<MasterDetailsView, ICommand> CloseDetailsCommandProperty =
+        AvaloniaProperty.RegisterDirect<MasterDetailsView, ICommand>(nameof(CloseDetailsCommand), o => o.CloseDetailsCommand,
+            (o, v) => o.CloseDetailsCommand = v);
 
     public static readonly StyledProperty<IDataTemplate?> ItemTemplateProperty =
         AvaloniaProperty.Register<MasterDetailsView, IDataTemplate?>(nameof(ItemTemplate));
 
+    public static readonly StyledProperty<IDataTemplate?> CompactItemTemplateProperty =
+        AvaloniaProperty.Register<MasterDetailsView, IDataTemplate?>(nameof(CompactItemTemplate));
+
     public static readonly StyledProperty<IDataTemplate?> DetailsTemplateProperty =
         AvaloniaProperty.Register<MasterDetailsView, IDataTemplate?>(nameof(DetailsTemplate));
+
+    public static readonly StyledProperty<IDataTemplate?> EmptyTemplateProperty =
+        AvaloniaProperty.Register<MasterDetailsView, IDataTemplate?>(nameof(EmptyTemplate));
+
+    public static readonly StyledProperty<IDataTemplate?> WideMasterTemplateProperty =
+        AvaloniaProperty.Register<MasterDetailsView, IDataTemplate?>(nameof(WideMasterTemplate));
+
+    public static readonly StyledProperty<IDataTemplate?> CompactMasterTemplateProperty =
+        AvaloniaProperty.Register<MasterDetailsView, IDataTemplate?>(nameof(CompactMasterTemplate));
 
     public static readonly StyledProperty<double> CompactWidthProperty =
         AvaloniaProperty.Register<MasterDetailsView, double>(nameof(CompactWidth), 400);
 
-    public static readonly StyledProperty<object> ItemsProperty =
-        AvaloniaProperty.Register<MasterDetailsView, object>(nameof(Items));
-
     public static readonly StyledProperty<double> MasterPaneWidthProperty =
         AvaloniaProperty.Register<MasterDetailsView, double>(nameof(MasterPaneWidth), 200);
 
-    public static readonly StyledProperty<object> HeaderProperty =
-        AvaloniaProperty.Register<MasterDetailsView, object>(nameof(Header));
+    public static readonly StyledProperty<object?> HeaderProperty =
+        AvaloniaProperty.Register<MasterDetailsView, object?>(nameof(Header));
 
-    public static readonly StyledProperty<object> FooterProperty =
-        AvaloniaProperty.Register<MasterDetailsView, object>(nameof(Footer));
+    public static readonly StyledProperty<object?> FooterProperty =
+        AvaloniaProperty.Register<MasterDetailsView, object?>(nameof(Footer));
 
-    public static readonly StyledProperty<IControlTemplate?> FooterTemplateProperty =
-        AvaloniaProperty.Register<MasterDetailsView, IControlTemplate?>(nameof(FooterTemplate));
+    public static readonly StyledProperty<IDataTemplate?> FooterTemplateProperty =
+        AvaloniaProperty.Register<MasterDetailsView, IDataTemplate?>(nameof(FooterTemplate));
 
-    public static readonly StyledProperty<IControlTemplate?> HeaderTemplateProperty =
-        AvaloniaProperty.Register<MasterDetailsView, IControlTemplate?>(nameof(HeaderTemplate));
+    public static readonly StyledProperty<IDataTemplate?> HeaderTemplateProperty =
+        AvaloniaProperty.Register<MasterDetailsView, IDataTemplate?>(nameof(HeaderTemplate));
 
-    public static readonly StyledProperty<bool> IsCollapsedProperty =
-        AvaloniaProperty.Register<MasterDetailsView, bool>(nameof(IsCollapsed));
+    public static readonly StyledProperty<bool> IsCompactProperty =
+        AvaloniaProperty.Register<MasterDetailsView, bool>(nameof(IsCompact));
 
     public static readonly StyledProperty<bool> AreDetailsShownProperty =
         AvaloniaProperty.Register<MasterDetailsView, bool>(nameof(AreDetailsShown));
 
-    private ICommand backCommand = null!;
+    public static readonly StyledProperty<object?> NavigationKeyProperty =
+        AvaloniaProperty.Register<MasterDetailsView, object?>(nameof(NavigationKey));
 
-    private ICommand goToDetails = null!;
+    public static readonly DirectProperty<MasterDetailsView, MasterDetailsViewContext> TemplateContextProperty =
+        AvaloniaProperty.RegisterDirect<MasterDetailsView, MasterDetailsViewContext>(nameof(TemplateContext), o => o.TemplateContext);
+
+    public static readonly DirectProperty<MasterDetailsView, bool> HasWideMasterTemplateProperty =
+        AvaloniaProperty.RegisterDirect<MasterDetailsView, bool>(nameof(HasWideMasterTemplate), o => o.HasWideMasterTemplate);
+
+    public static readonly DirectProperty<MasterDetailsView, bool> HasCompactMasterTemplateProperty =
+        AvaloniaProperty.RegisterDirect<MasterDetailsView, bool>(nameof(HasCompactMasterTemplate), o => o.HasCompactMasterTemplate);
+
+    public static readonly DirectProperty<MasterDetailsView, bool> HasEmptyTemplateProperty =
+        AvaloniaProperty.RegisterDirect<MasterDetailsView, bool>(nameof(HasEmptyTemplate), o => o.HasEmptyTemplate);
+
+    public static readonly DirectProperty<MasterDetailsView, IDataTemplate?> EffectiveCompactItemTemplateProperty =
+        AvaloniaProperty.RegisterDirect<MasterDetailsView, IDataTemplate?>(nameof(EffectiveCompactItemTemplate), o => o.EffectiveCompactItemTemplate);
+
+    public static readonly DirectProperty<MasterDetailsView, bool> HasSelectedItemProperty =
+        AvaloniaProperty.RegisterDirect<MasterDetailsView, bool>(nameof(HasSelectedItem), o => o.HasSelectedItem);
+
+    public static readonly DirectProperty<MasterDetailsView, bool> HasItemsProperty =
+        AvaloniaProperty.RegisterDirect<MasterDetailsView, bool>(nameof(HasItems), o => o.HasItems);
+
+    private readonly MasterDetailsViewContext templateContext;
+    private CompositeDisposable? visualTreeSubscriptions;
+    private SerialDisposable? itemsSourceSubscription;
+    private ICommand backCommand = null!;
+    private ICommand closeDetailsCommand = null!;
+    private bool hasItems;
+    private ICommand openDetailsCommand = null!;
+    private bool navigationKeyInitialized;
 
     public MasterDetailsView()
     {
-        this.WhenAnyValue(x => x.SelectedItem)
-            .WhereNotNull()
-            .Do(_ => AreDetailsShown = true)
-            .Subscribe();
+        templateContext = new MasterDetailsViewContext(this);
 
-        this.WhenAnyValue(x => x.Bounds, x => x.CompactWidth,
-                (bounds, compactWidth) => bounds.Width > 0 && bounds.Width < compactWidth)
-            .DistinctUntilChanged()
-            .Do(collapsed => IsCollapsed = collapsed)
-            .Subscribe();
+        CanHandleBack = Observable.Defer(() => this.GetObservable(IsCompactProperty)
+            .StartWith(IsCompact)
+            .CombineLatest(this.GetObservable(AreDetailsShownProperty).StartWith(AreDetailsShown), (isCompact, areDetailsShown) => isCompact && areDetailsShown)
+            .DistinctUntilChanged());
 
-        MessageBus.Current.SendMessage(new RegisterNavigation(this));
-
-        BackCommand = ReactiveCommand.Create(() => AreDetailsShown = false);
-        GoToDetails = ReactiveCommand.Create(() => AreDetailsShown = true);
+        CloseDetailsCommand = new DelegateCommand(_ => CloseDetails());
+        BackCommand = CloseDetailsCommand;
+        OpenDetailsCommand = new DelegateCommand(OpenDetails);
     }
 
-    public bool IsCollapsed
+    public IObservable<bool> CanHandleBack { get; }
+
+    public MasterDetailsViewContext TemplateContext => templateContext;
+
+    public bool HasWideMasterTemplate => WideMasterTemplate is not null;
+
+    public bool HasCompactMasterTemplate => CompactMasterTemplate is not null;
+
+    public bool HasEmptyTemplate => EmptyTemplate is not null;
+
+    public IDataTemplate? EffectiveCompactItemTemplate => CompactItemTemplate ?? ItemTemplate;
+
+    public bool HasSelectedItem => SelectedItem is not null;
+
+    public bool HasItems
     {
-        get => GetValue(IsCollapsedProperty);
-        set => SetValue(IsCollapsedProperty, value);
+        get => hasItems;
+        private set => SetAndRaise(HasItemsProperty, ref hasItems, value);
     }
 
-    public IControlTemplate? FooterTemplate
+    public bool IsCompact
+    {
+        get => GetValue(IsCompactProperty);
+        set => SetValue(IsCompactProperty, value);
+    }
+
+    public IDataTemplate? FooterTemplate
     {
         get => GetValue(FooterTemplateProperty);
         set => SetValue(FooterTemplateProperty, value);
     }
 
-    public IControlTemplate? HeaderTemplate
+    public IDataTemplate? HeaderTemplate
     {
         get => GetValue(HeaderTemplateProperty);
         set => SetValue(HeaderTemplateProperty, value);
     }
 
-    public object Header
+    public object? Header
     {
         get => GetValue(HeaderProperty);
         set => SetValue(HeaderProperty, value);
     }
 
-    public object Footer
+    public object? Footer
     {
         get => GetValue(FooterProperty);
         set => SetValue(FooterProperty, value);
@@ -125,13 +183,6 @@ public class MasterDetailsView : TemplatedControl
         set => SetValue(CompactWidthProperty, value);
     }
 
-    [Content]
-    public object Items
-    {
-        get => GetValue(ItemsProperty);
-        set => SetValue(ItemsProperty, value);
-    }
-
     [InheritDataTypeFromItems(nameof(ItemsSource))]
     public IDataTemplate? DetailsTemplate
     {
@@ -139,10 +190,29 @@ public class MasterDetailsView : TemplatedControl
         set => SetValue(DetailsTemplateProperty, value);
     }
 
-    public bool IsBackButtonDisplayed
+    [InheritDataTypeFromItems(nameof(ItemsSource))]
+    public IDataTemplate? CompactItemTemplate
     {
-        get => GetValue(IsBackButtonEnabledProperty);
-        set => SetValue(IsBackButtonEnabledProperty, value);
+        get => GetValue(CompactItemTemplateProperty);
+        set => SetValue(CompactItemTemplateProperty, value);
+    }
+
+    public IDataTemplate? EmptyTemplate
+    {
+        get => GetValue(EmptyTemplateProperty);
+        set => SetValue(EmptyTemplateProperty, value);
+    }
+
+    public IDataTemplate? WideMasterTemplate
+    {
+        get => GetValue(WideMasterTemplateProperty);
+        set => SetValue(WideMasterTemplateProperty, value);
+    }
+
+    public IDataTemplate? CompactMasterTemplate
+    {
+        get => GetValue(CompactMasterTemplateProperty);
+        set => SetValue(CompactMasterTemplateProperty, value);
     }
 
     public IEnumerable? ItemsSource
@@ -151,7 +221,7 @@ public class MasterDetailsView : TemplatedControl
         set => SetValue(ItemsSourceProperty, value);
     }
 
-    public object SelectedItem
+    public object? SelectedItem
     {
         get => GetValue(SelectedItemProperty);
         set => SetValue(SelectedItemProperty, value);
@@ -163,16 +233,28 @@ public class MasterDetailsView : TemplatedControl
         set => SetValue(AreDetailsShownProperty, value);
     }
 
-    public ICommand GoToDetails
+    public object? NavigationKey
     {
-        get => goToDetails;
-        private set => SetAndRaise(GoToDetailsProperty, ref goToDetails, value);
+        get => GetValue(NavigationKeyProperty);
+        set => SetValue(NavigationKeyProperty, value);
+    }
+
+    public ICommand OpenDetailsCommand
+    {
+        get => openDetailsCommand;
+        private set => SetAndRaise(OpenDetailsCommandProperty, ref openDetailsCommand, value);
     }
 
     public ICommand BackCommand
     {
         get => backCommand;
         private set => SetAndRaise(BackCommandProperty, ref backCommand, value);
+    }
+
+    public ICommand CloseDetailsCommand
+    {
+        get => closeDetailsCommand;
+        private set => SetAndRaise(CloseDetailsCommandProperty, ref closeDetailsCommand, value);
     }
 
     [InheritDataTypeFromItems(nameof(ItemsSource))]
@@ -182,18 +264,157 @@ public class MasterDetailsView : TemplatedControl
         set => SetValue(ItemTemplateProperty, value);
     }
 
-    public void HideDetails()
+    protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnAttachedToVisualTree(e);
+
+        visualTreeSubscriptions = new CompositeDisposable();
+        itemsSourceSubscription = new SerialDisposable().DisposeWith(visualTreeSubscriptions);
+
+        (this.FindAncestorOfType<Frame>()?.RegisterBackParticipant(this) ?? Disposable.Empty)
+            .DisposeWith(visualTreeSubscriptions);
+
+        this.GetObservable(BoundsProperty)
+            .StartWith(Bounds)
+            .CombineLatest(this.GetObservable(CompactWidthProperty).StartWith(CompactWidth), (bounds, compactWidth) => bounds.Width > 0 && bounds.Width < compactWidth)
+            .DistinctUntilChanged()
+            .Do(isCompact => IsCompact = isCompact)
+            .Subscribe()
+            .DisposeWith(visualTreeSubscriptions);
+
+        TrackItemsSourceChanges();
+    }
+
+    protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        visualTreeSubscriptions?.Dispose();
+        visualTreeSubscriptions = null;
+        itemsSourceSubscription = null;
+        base.OnDetachedFromVisualTree(e);
+    }
+
+    protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
+    {
+        base.OnPropertyChanged(change);
+
+        if (change.Property == NavigationKeyProperty)
+        {
+            if (navigationKeyInitialized && !Equals(change.OldValue, change.NewValue))
+            {
+                CloseDetails();
+            }
+
+            navigationKeyInitialized = true;
+        }
+
+        if (change.Property == ItemsSourceProperty)
+        {
+            TrackItemsSourceChanges();
+        }
+
+        if (change.Property == SelectedItemProperty)
+        {
+            RaisePropertyChanged(HasSelectedItemProperty, change.OldValue is not null, HasSelectedItem);
+
+            if (SelectedItem is null)
+            {
+                CloseDetails();
+            }
+        }
+
+        if (change.Property == ItemTemplateProperty || change.Property == CompactItemTemplateProperty)
+        {
+            RaisePropertyChanged(EffectiveCompactItemTemplateProperty, (IDataTemplate?)change.OldValue, EffectiveCompactItemTemplate);
+        }
+
+        if (change.Property == WideMasterTemplateProperty)
+        {
+            RaisePropertyChanged(HasWideMasterTemplateProperty, change.OldValue is not null, HasWideMasterTemplate);
+        }
+
+        if (change.Property == CompactMasterTemplateProperty)
+        {
+            RaisePropertyChanged(HasCompactMasterTemplateProperty, change.OldValue is not null, HasCompactMasterTemplate);
+        }
+
+        if (change.Property == EmptyTemplateProperty)
+        {
+            RaisePropertyChanged(HasEmptyTemplateProperty, change.OldValue is not null, HasEmptyTemplate);
+        }
+    }
+
+    private void OpenDetails(object? item)
+    {
+        var itemToOpen = item ?? SelectedItem;
+
+        if (itemToOpen is null)
+        {
+            return;
+        }
+
+        SelectedItem = itemToOpen;
+        AreDetailsShown = true;
+    }
+
+    private void CloseDetails()
     {
         AreDetailsShown = false;
     }
-}
 
-public class RegisterNavigation
-{
-    public RegisterNavigation(MasterDetailsView masterDetailsView)
+    private void TrackItemsSourceChanges()
     {
-        MasterDetailsView = masterDetailsView;
+        if (itemsSourceSubscription is null)
+        {
+            RefreshItemsState();
+            return;
+        }
+
+        itemsSourceSubscription.Disposable = ItemsSource is INotifyCollectionChanged collectionChanged
+            ? Observable.FromEventPattern<NotifyCollectionChangedEventHandler, NotifyCollectionChangedEventArgs>(
+                    handler => collectionChanged.CollectionChanged += handler,
+                    handler => collectionChanged.CollectionChanged -= handler)
+                .Do(_ => RefreshItemsState())
+                .Subscribe()
+            : Disposable.Empty;
+
+        RefreshItemsState();
     }
 
-    public MasterDetailsView MasterDetailsView { get; }
+    private void RefreshItemsState()
+    {
+        HasItems = ItemsSource?.Cast<object?>().Any() == true;
+        ClearSelectionIfItemLeftSource();
+    }
+
+    private void ClearSelectionIfItemLeftSource()
+    {
+        if (SelectedItem is null || ItemsSource is null)
+        {
+            return;
+        }
+
+        if (ItemsSource.Cast<object?>().Contains(SelectedItem))
+        {
+            return;
+        }
+
+        SelectedItem = null;
+        CloseDetails();
+    }
+
+    private sealed class DelegateCommand(Action<object?> execute) : ICommand
+    {
+        public bool CanExecute(object? parameter) => true;
+
+        public void Execute(object? parameter)
+        {
+            execute(parameter);
+        }
+
+        public event EventHandler? CanExecuteChanged
+        {
+            add { }
+            remove { }
+        }
+    }
 }

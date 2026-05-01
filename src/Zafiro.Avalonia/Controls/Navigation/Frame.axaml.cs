@@ -1,3 +1,4 @@
+using System.Reactive.Disposables;
 using System.Windows.Input;
 using Avalonia.Controls.Metadata;
 using Avalonia.Controls.Presenters;
@@ -12,10 +13,20 @@ namespace Zafiro.Avalonia.Controls.Navigation;
 [TemplatePart("Footer", typeof(ContentPresenter))]
 public class Frame : ContentControl
 {
+    private readonly FrameBackCommand effectiveBackCommand;
+    private readonly List<BackParticipantRegistration> backParticipants = [];
+    private IDisposable contentParticipantRegistration = Disposable.Empty;
+    private ICommand? observedBackCommand;
+    private long nextActivationOrder;
+    private long nextRegistrationOrder;
+
     public static readonly StyledProperty<BoxShadows> BoxShadowProperty = Border.BoxShadowProperty.AddOwner<Frame>();
 
     public static readonly StyledProperty<ICommand> BackCommandProperty = AvaloniaProperty.Register<Frame, ICommand>(
         nameof(BackCommand));
+
+    public static readonly DirectProperty<Frame, ICommand> EffectiveBackCommandProperty = AvaloniaProperty.RegisterDirect<Frame, ICommand>(
+        nameof(EffectiveBackCommand), frame => frame.EffectiveBackCommand);
 
     public static readonly StyledProperty<object?> HeaderProperty = AvaloniaProperty.Register<Frame, object?>(
         nameof(Header));
@@ -53,11 +64,18 @@ public class Frame : ContentControl
     public static readonly DirectProperty<Frame, Thickness> EffectiveFooterPaddingProperty = AvaloniaProperty.RegisterDirect<Frame, Thickness>(
         nameof(EffectiveFooterPadding), o => o.EffectiveFooterPadding);
 
+    public Frame()
+    {
+        effectiveBackCommand = new FrameBackCommand(this);
+    }
+
     public ICommand BackCommand
     {
         get => GetValue(BackCommandProperty);
         set => SetValue(BackCommandProperty, value);
     }
+
+    public ICommand EffectiveBackCommand => effectiveBackCommand;
 
     public object? Header
     {
@@ -123,6 +141,47 @@ public class Frame : ContentControl
     public Thickness EffectiveContentPadding => ContentPadding ?? Padding;
     public Thickness EffectiveFooterPadding => FooterPadding ?? Padding;
 
+    public IDisposable RegisterBackParticipant(IFrameBackParticipant participant)
+    {
+        if (backParticipants.Any(registration => ReferenceEquals(registration.Participant, participant)))
+        {
+            return Disposable.Empty;
+        }
+
+        var registration = new BackParticipantRegistration(participant, nextRegistrationOrder++);
+        backParticipants.Add(registration);
+
+        EventHandler canExecuteChanged = (_, _) => effectiveBackCommand.RaiseCanExecuteChanged();
+        participant.BackCommand.CanExecuteChanged += canExecuteChanged;
+
+        registration.Subscription = new CompositeDisposable
+        {
+            participant.CanHandleBack
+                .DistinctUntilChanged()
+                .Subscribe(canHandle =>
+                {
+                    registration.CanHandleBack = canHandle;
+
+                    if (canHandle)
+                    {
+                        registration.ActivationOrder = nextActivationOrder++;
+                    }
+
+                    effectiveBackCommand.RaiseCanExecuteChanged();
+                }),
+            Disposable.Create(() => participant.BackCommand.CanExecuteChanged -= canExecuteChanged),
+        };
+
+        effectiveBackCommand.RaiseCanExecuteChanged();
+
+        return Disposable.Create(() =>
+        {
+            registration.Dispose();
+            backParticipants.Remove(registration);
+            effectiveBackCommand.RaiseCanExecuteChanged();
+        });
+    }
+
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
         base.OnPropertyChanged(change);
@@ -141,11 +200,24 @@ public class Frame : ContentControl
         {
             RaisePropertyChanged(EffectiveFooterPaddingProperty, default, EffectiveFooterPadding);
         }
+
+        if (change.Property == BackCommandProperty)
+        {
+            ObserveExternalBackCommand(BackCommand);
+            effectiveBackCommand.RaiseCanExecuteChanged();
+        }
+
+        if (change.Property == ContentProperty)
+        {
+            RegisterContentParticipant(Content as IFrameBackParticipant);
+        }
     }
 
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
     {
         base.OnAttachedToVisualTree(e);
+        ObserveExternalBackCommand(BackCommand);
+        RegisterContentParticipant(Content as IFrameBackParticipant);
         var topLevel = TopLevel.GetTopLevel(this);
         topLevel?.AddHandler(TopLevel.BackRequestedEvent, OnSystemBackRequested);
     }
@@ -154,15 +226,120 @@ public class Frame : ContentControl
     {
         var topLevel = TopLevel.GetTopLevel(this);
         topLevel?.RemoveHandler(TopLevel.BackRequestedEvent, OnSystemBackRequested);
+        ObserveExternalBackCommand(null);
+        contentParticipantRegistration.Dispose();
+        contentParticipantRegistration = Disposable.Empty;
         base.OnDetachedFromVisualTree(e);
     }
 
     private void OnSystemBackRequested(object? sender, RoutedEventArgs e)
     {
-        if (BackCommand?.CanExecute(null) == true)
+        if (EffectiveBackCommand.CanExecute(null))
         {
-            BackCommand.Execute(null);
+            EffectiveBackCommand.Execute(null);
             e.Handled = true;
+        }
+    }
+
+    private bool CanExecuteEffectiveBack(object? parameter)
+    {
+        if (ActiveParticipant(parameter) is not null)
+        {
+            return true;
+        }
+
+        return BackCommand?.CanExecute(parameter) == true;
+    }
+
+    private void ExecuteEffectiveBack(object? parameter)
+    {
+        if (ActiveParticipant(parameter) is { } participant)
+        {
+            participant.BackCommand.Execute(parameter);
+            effectiveBackCommand.RaiseCanExecuteChanged();
+            return;
+        }
+
+        if (BackCommand?.CanExecute(parameter) == true)
+        {
+            BackCommand.Execute(parameter);
+            effectiveBackCommand.RaiseCanExecuteChanged();
+        }
+    }
+
+    private IFrameBackParticipant? ActiveParticipant(object? parameter)
+    {
+        return backParticipants
+            .Where(registration => registration.CanHandleBack && registration.Participant.BackCommand.CanExecute(parameter))
+            .OrderByDescending(registration => registration.ActivationOrder)
+            .ThenByDescending(registration => registration.RegistrationOrder)
+            .Select(registration => registration.Participant)
+            .FirstOrDefault();
+    }
+
+    private void ObserveExternalBackCommand(ICommand? command)
+    {
+        if (ReferenceEquals(observedBackCommand, command))
+        {
+            return;
+        }
+
+        if (observedBackCommand is not null)
+        {
+            observedBackCommand.CanExecuteChanged -= OnExternalBackCanExecuteChanged;
+        }
+
+        observedBackCommand = command;
+
+        if (observedBackCommand is not null)
+        {
+            observedBackCommand.CanExecuteChanged += OnExternalBackCanExecuteChanged;
+        }
+    }
+
+    private void OnExternalBackCanExecuteChanged(object? sender, EventArgs e)
+    {
+        effectiveBackCommand.RaiseCanExecuteChanged();
+    }
+
+    private void RegisterContentParticipant(IFrameBackParticipant? participant)
+    {
+        contentParticipantRegistration.Dispose();
+        contentParticipantRegistration = participant is null ? Disposable.Empty : RegisterBackParticipant(participant);
+    }
+
+    private sealed class FrameBackCommand(Frame frame) : ICommand
+    {
+        public bool CanExecute(object? parameter) => frame.CanExecuteEffectiveBack(parameter);
+
+        public void Execute(object? parameter)
+        {
+            frame.ExecuteEffectiveBack(parameter);
+        }
+
+        public event EventHandler? CanExecuteChanged;
+
+        public void RaiseCanExecuteChanged()
+        {
+            CanExecuteChanged?.Invoke(this, EventArgs.Empty);
+        }
+    }
+
+    private sealed class BackParticipantRegistration(IFrameBackParticipant participant, long registrationOrder) : IDisposable
+    {
+        public IFrameBackParticipant Participant { get; } = participant;
+
+        public long RegistrationOrder { get; } = registrationOrder;
+
+        public bool CanHandleBack { get; set; }
+
+        public long ActivationOrder { get; set; } = registrationOrder;
+
+        public IDisposable Subscription { get; set; } = Disposable.Empty;
+
+        public void Dispose()
+        {
+            Subscription.Dispose();
         }
     }
 }

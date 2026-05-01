@@ -392,7 +392,7 @@ Icons are referenced by string keys: `"fa-home"` (FontAwesome), `"mdi-settings"`
 |---|---|---|
 | `EdgePanel` | `StartContent`, `Content`, `EndContent`, `Spacing` | Three-region horizontal layout |
 | `HeaderedContainer` | `Header`, `Content`, `Footer`, `Spacing`, `HeaderClasses`, `ContentClasses` | Content with header/footer |
-| `MasterDetailsView` | `Items`, `SelectedItem`, `DetailTemplate` | Side list + detail pane |
+| `MasterDetailsView` | `ItemsSource`, `SelectedItem`, `ItemTemplate`, `DetailsTemplate` | Responsive master/detail with compact activation and Frame back integration |
 | `Frame` | `Content`, `BackCommand`, `Header`, `Footer` | Navigation container |
 | `ResponsivePresenter` | `Narrow`, `Wide`, `Breakpoint` | Width-based content swap |
 

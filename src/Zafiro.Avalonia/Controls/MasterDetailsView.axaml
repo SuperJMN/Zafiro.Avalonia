@@ -32,16 +32,34 @@
                                             Content="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=controls:MasterDetailsView}, Path=Header}"
                                             ContentTemplate="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=controls:MasterDetailsView}, Path=HeaderTemplate}" />
                             <ListBox Grid.Row="1" Grid.Column="0" x:DataType="controls:MasterDetailsView"
+                                     IsVisible="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=controls:MasterDetailsView}, Path=!HasWideMasterTemplate}"
                                      ItemTemplate="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=controls:MasterDetailsView}, Path=ItemTemplate}"
-                                     SelectedItem="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=controls:MasterDetailsView}, Path=SelectedItem}"
+                                     SelectedItem="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=controls:MasterDetailsView}, Path=SelectedItem, Mode=TwoWay}"
                                      ItemsSource="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=controls:MasterDetailsView}, Path=ItemsSource}"
                                      Background="Transparent"
                                      Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=controls:MasterDetailsView}, Path=MasterPaneWidth}"
                                      DockPanel.Dock="Left" />
 
-                            <ContentControl Grid.Row="0" Grid.RowSpan="3" Grid.Column="1"
-                                            ContentTemplate="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=controls:MasterDetailsView}, Path=DetailsTemplate}"
-                                            Content="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=controls:MasterDetailsView}, Path=SelectedItem}" />
+                            <ContentControl Grid.Row="1" Grid.Column="0"
+                                            IsVisible="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=controls:MasterDetailsView}, Path=HasWideMasterTemplate}"
+                                            Content="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=controls:MasterDetailsView}, Path=TemplateContext}"
+                                            ContentTemplate="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=controls:MasterDetailsView}, Path=WideMasterTemplate}" />
+
+                            <ScrollViewer Grid.Row="0" Grid.RowSpan="3" Grid.Column="1">
+                                <Grid>
+                                    <ContentControl
+                                        IsVisible="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=controls:MasterDetailsView}, Path=HasSelectedItem}"
+                                        ContentTemplate="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=controls:MasterDetailsView}, Path=DetailsTemplate}"
+                                        Content="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=controls:MasterDetailsView}, Path=SelectedItem}" />
+
+                                    <Panel IsVisible="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=controls:MasterDetailsView}, Path=!HasSelectedItem}">
+                                        <ContentControl
+                                            IsVisible="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=controls:MasterDetailsView}, Path=HasEmptyTemplate}"
+                                            Content="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=controls:MasterDetailsView}, Path=TemplateContext}"
+                                            ContentTemplate="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=controls:MasterDetailsView}, Path=EmptyTemplate}" />
+                                    </Panel>
+                                </Grid>
+                            </ScrollViewer>
 
                             <ContentControl Grid.Row="2" Grid.Column="0"
                                             Content="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=controls:MasterDetailsView}, Path=Footer}"
@@ -63,34 +81,55 @@
                                                 Content="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=controls:MasterDetailsView}, Path=Footer}"
                                                 ContentTemplate="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=controls:MasterDetailsView}, Path=FooterTemplate}" />
 
-                                <ListBox x:DataType="controls:MasterDetailsView"
-                                         ItemTemplate="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=controls:MasterDetailsView}, Path=ItemTemplate}"
-                                         SelectedItem="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=controls:MasterDetailsView}, Path=SelectedItem,Mode=TwoWay}"
-                                         ItemsSource="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=controls:MasterDetailsView}, Path=ItemsSource}"
-                                         Background="Transparent">
-                                    <ListBox.Styles>
-                                        <Style Selector="ListBoxItem">
-                                            <Setter Property="Interaction.Behaviors">
-                                                <BehaviorCollectionTemplate>
-                                                    <BehaviorCollection>
-                                                        <RoutedEventTriggerBehavior
-                                                            RoutedEvent="{x:Static InputElement.PointerPressedEvent}"
-                                                            RoutingStrategies="Tunnel">
-                                                            <InvokeCommandAction
-                                                                Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=controls:MasterDetailsView}, Path=GoToDetails}" />
-                                                        </RoutedEventTriggerBehavior>
-                                                    </BehaviorCollection>
-                                                </BehaviorCollectionTemplate>
-                                            </Setter>
-                                        </Style>
-                                    </ListBox.Styles>
-                                </ListBox>
+                                <Grid IsVisible="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=controls:MasterDetailsView}, Path=!HasCompactMasterTemplate}">
+                                    <ListBox x:DataType="controls:MasterDetailsView"
+                                             IsVisible="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=controls:MasterDetailsView}, Path=HasItems}"
+                                             SelectedItem="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=controls:MasterDetailsView}, Path=SelectedItem,Mode=TwoWay}"
+                                             ItemsSource="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=controls:MasterDetailsView}, Path=ItemsSource}"
+                                             Background="Transparent">
+                                        <ListBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <EnhancedButton Classes="Expand"
+                                                                Theme="{StaticResource FullTransparentButton}"
+                                                                Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=controls:MasterDetailsView}, Path=OpenDetailsCommand}"
+                                                                CommandParameter="{Binding}">
+                                                    <ContentControl Content="{Binding}"
+                                                                    ContentTemplate="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=controls:MasterDetailsView}, Path=EffectiveCompactItemTemplate}" />
+                                                </EnhancedButton>
+                                            </DataTemplate>
+                                        </ListBox.ItemTemplate>
+                                    </ListBox>
+
+                                    <Panel IsVisible="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=controls:MasterDetailsView}, Path=!HasItems}">
+                                        <ContentControl
+                                            IsVisible="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=controls:MasterDetailsView}, Path=HasEmptyTemplate}"
+                                            Content="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=controls:MasterDetailsView}, Path=TemplateContext}"
+                                            ContentTemplate="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=controls:MasterDetailsView}, Path=EmptyTemplate}" />
+                                    </Panel>
+                                </Grid>
+
+                                <ContentControl
+                                    IsVisible="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=controls:MasterDetailsView}, Path=HasCompactMasterTemplate}"
+                                    Content="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=controls:MasterDetailsView}, Path=TemplateContext}"
+                                    ContentTemplate="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=controls:MasterDetailsView}, Path=CompactMasterTemplate}" />
                             </DockPanel>
 
-                            <ContentControl
-                                IsVisible="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=controls:MasterDetailsView}, Path=AreDetailsShown}"
-                                ContentTemplate="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=controls:MasterDetailsView}, Path=DetailsTemplate}"
-                                Content="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=controls:MasterDetailsView}, Path=SelectedItem}" />
+                            <ScrollViewer
+                                IsVisible="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=controls:MasterDetailsView}, Path=AreDetailsShown}">
+                                <Grid>
+                                    <ContentControl
+                                        IsVisible="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=controls:MasterDetailsView}, Path=HasSelectedItem}"
+                                        ContentTemplate="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=controls:MasterDetailsView}, Path=DetailsTemplate}"
+                                        Content="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=controls:MasterDetailsView}, Path=SelectedItem}" />
+
+                                    <Panel IsVisible="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=controls:MasterDetailsView}, Path=!HasSelectedItem}">
+                                        <ContentControl
+                                            IsVisible="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=controls:MasterDetailsView}, Path=HasEmptyTemplate}"
+                                            Content="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=controls:MasterDetailsView}, Path=TemplateContext}"
+                                            ContentTemplate="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=controls:MasterDetailsView}, Path=EmptyTemplate}" />
+                                    </Panel>
+                                </Grid>
+                            </ScrollViewer>
                         </Panel>
                     </controls:ResponsivePresenter.Narrow>
                 </controls:ResponsivePresenter>

@@ -1,0 +1,51 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="clr-namespace:Zafiro.Avalonia.Controls;assembly=Zafiro.Avalonia"
+             xmlns:sections="clr-namespace:MinimalShell.Sections"
+             x:Class="MinimalShell.Sections.MasterDetailsView"
+             x:DataType="sections:MasterDetailsViewModel">
+    <controls:MasterDetailsView ItemsSource="{Binding Items}"
+                                SelectedItem="{Binding SelectedItem, Mode=TwoWay}"
+                                Header="MasterDetails"
+                                CompactWidth="640"
+                                MasterPaneWidth="260">
+        <controls:MasterDetailsView.ItemTemplate>
+            <DataTemplate DataType="sections:MasterDetailsItem">
+                <TextBlock Text="{Binding Title}" />
+            </DataTemplate>
+        </controls:MasterDetailsView.ItemTemplate>
+
+        <controls:MasterDetailsView.CompactItemTemplate>
+            <DataTemplate DataType="sections:MasterDetailsItem">
+                <Grid RowDefinitions="Auto Auto"
+                      ColumnDefinitions="*,Auto">
+                    <TextBlock Grid.Column="0"
+                               Text="{Binding Title}" />
+                    <TextBlock Grid.Column="1"
+                               Text="{Binding Status}" />
+                    <TextBlock Grid.Row="1"
+                               Grid.ColumnSpan="2"
+                               Text="{Binding Description}" />
+                </Grid>
+            </DataTemplate>
+        </controls:MasterDetailsView.CompactItemTemplate>
+
+        <controls:MasterDetailsView.DetailsTemplate>
+            <DataTemplate DataType="sections:MasterDetailsItem">
+                <BootstrapGridPanel MaxColumns="12"
+                                    FluidContainer="True"
+                                    Gutter="12">
+                    <TextBlock BootstrapGridPanel.Col="12"
+                               Text="{Binding Title}" />
+                    <TextBlock BootstrapGridPanel.Col="12"
+                               BootstrapGridPanel.ColMd="4"
+                               Text="{Binding Status}" />
+                    <TextBlock BootstrapGridPanel.Col="12"
+                               BootstrapGridPanel.ColMd="8"
+                               Text="{Binding Description}"
+                               TextWrapping="Wrap" />
+                </BootstrapGridPanel>
+            </DataTemplate>
+        </controls:MasterDetailsView.DetailsTemplate>
+    </controls:MasterDetailsView>
+</UserControl>
