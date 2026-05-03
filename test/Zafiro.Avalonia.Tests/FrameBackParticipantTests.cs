@@ -5,6 +5,8 @@ using System.Windows.Input;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Headless.XUnit;
+using Avalonia.Markup.Xaml.Styling;
+using Avalonia.Themes.Fluent;
 using Avalonia.VisualTree;
 using Zafiro.Avalonia.Controls;
 using Zafiro.Avalonia.Controls.Navigation;
@@ -13,6 +15,8 @@ namespace Zafiro.Avalonia.Tests;
 
 public class FrameBackParticipantTests
 {
+    private static readonly object stylesLock = new();
+
     [AvaloniaFact]
     public void Frame_uses_nested_back_before_external_back()
     {
@@ -72,6 +76,29 @@ public class FrameBackParticipantTests
 
         Assert.False(masterDetails.AreDetailsShown);
         Assert.Equal(0, externalBack.ExecuteCount);
+    }
+
+    [AvaloniaFact]
+    public void Frame_shows_back_button_when_master_details_can_handle_back()
+    {
+        EnsureZafiroStyles();
+
+        var masterDetails = new MasterDetailsView
+        {
+            CompactWidth = 500,
+            ItemsSource = new[] { "One" },
+            SelectedItem = "One",
+            AreDetailsShown = true,
+        };
+        var frame = Attach(new Frame
+        {
+            Content = masterDetails,
+        });
+
+        var backButton = Assert.Single(frame.GetVisualDescendants().OfType<EnhancedButton>().Where(button => button.Name == "BackButton"));
+
+        Assert.True(backButton.IsEffectivelyVisible);
+        Assert.True(backButton.IsEffectivelyEnabled);
     }
 
     [AvaloniaFact]
@@ -141,6 +168,30 @@ public class FrameBackParticipantTests
         control.Arrange(new Rect(0, 0, 400, 400));
 
         return control;
+    }
+
+    private static void EnsureZafiroStyles()
+    {
+        lock (stylesLock)
+        {
+            var styles = Application.Current!.Styles;
+            var source = new Uri("avares://Zafiro.Avalonia/Styles.axaml");
+
+            if (!styles.OfType<FluentTheme>().Any())
+            {
+                styles.Insert(0, new FluentTheme());
+            }
+
+            if (styles.OfType<StyleInclude>().Any(style => style.Source == source))
+            {
+                return;
+            }
+
+            styles.Add(new StyleInclude(new Uri("avares://Zafiro.Avalonia/"))
+            {
+                Source = source,
+            });
+        }
     }
 
     private sealed class TestBackParticipant : ContentControl, IFrameBackParticipant
