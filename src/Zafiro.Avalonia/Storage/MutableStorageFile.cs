@@ -1,10 +1,8 @@
 ﻿using System.Reactive.Concurrency;
-using System.Runtime.InteropServices;
 using Avalonia.Platform.Storage;
 using CSharpFunctionalExtensions;
 using Zafiro.DivineBytes;
 using Zafiro.FileSystem.Mutable;
-using Zafiro.Reactive;
 using Path = Zafiro.DivineBytes.Path;
 
 namespace Zafiro.Avalonia.Storage;
@@ -22,39 +20,42 @@ public class MutableStorageFile : IMutableFile
 
     public string Name => StorageFile.Name;
 
-
-    public Task<Result<IByteSource>> GetContents()
-    {
-        if (RuntimeInformation.ProcessArchitecture == Architecture.Wasm)
-        {
-            return GetDataWasm();
-        }
-
-        return GetDataNoWasm();
-    }
+    public Task<Result<IByteSource>> GetContents() => GetData();
 
     public bool IsHidden { get; }
 
-    public async Task<Result> SetContents(IByteSource data, IScheduler? scheduler = null, CancellationToken cancellationToken = new CancellationToken())
+    public async Task<Result> SetContents(IByteSource data, IScheduler? scheduler = null, CancellationToken cancellationToken = default)
     {
         var stream = await StorageFile.OpenWriteAsync().ConfigureAwait(false);
         await using var stream1 = stream.ConfigureAwait(false);
         return await data.WriteTo(stream, cancellationToken: cancellationToken).ConfigureAwait(false);
     }
 
-    private Task<Result<IByteSource>> GetDataWasm()
+    private Task<Result<IByteSource>> GetData()
     {
         return Result.Try(async () =>
         {
-            var readAsync = await StorageFile.OpenReadAsync().ConfigureAwait(false);
-            var bytes = await readAsync.ReadBytesToEnd().ConfigureAwait(false);
-            return ByteSource.FromBytes(bytes);
+            var length = await GetLength().ConfigureAwait(false);
+            return ByteSource.FromAsyncStreamFactory(() => StorageFile.OpenReadAsync(), length);
         });
     }
 
-    private async Task<Result<IByteSource>> GetDataNoWasm()
+    private async Task<Maybe<long>> GetLength()
     {
-        return Result.Success(ByteSource.FromAsyncStreamFactory(() => StorageFile.OpenReadAsync()));
+        var properties = await Result.Try(() => StorageFile.GetBasicPropertiesAsync()).ConfigureAwait(false);
+        return properties
+            .Map(x => ToLength(x.Size))
+            .GetValueOrDefault(Maybe<long>.None);
+    }
+
+    private static Maybe<long> ToLength(ulong? size)
+    {
+        if (size is null || size.Value > long.MaxValue)
+        {
+            return Maybe<long>.None;
+        }
+
+        return Maybe.From((long)size.Value);
     }
 
     public Task<Result> Delete()
