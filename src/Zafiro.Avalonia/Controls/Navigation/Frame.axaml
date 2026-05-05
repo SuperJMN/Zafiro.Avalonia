@@ -32,9 +32,7 @@
                                     Background="{TemplateBinding HeaderBackground}"
                                     Padding="{TemplateBinding EffectiveHeaderPadding}">
                                 <DockPanel LastChildFill="True">
-                                    <!-- Back button hidden on mobile; system back gesture handles navigation -->
-                                    <Panel DockPanel.Dock="Left"
-                                           IsVisible="{OnFormFactor Desktop=True, Mobile=False}">
+                                    <Panel DockPanel.Dock="Left">
                                         <EnhancedButton Command="{TemplateBinding EffectiveBackCommand}"
                                                         x:Name="BackButton"
                                                         VerticalAlignment="Center">

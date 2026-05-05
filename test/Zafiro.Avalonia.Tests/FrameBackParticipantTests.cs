@@ -101,6 +101,15 @@ public class FrameBackParticipantTests
         Assert.True(backButton.IsEffectivelyEnabled);
     }
 
+    [Fact]
+    public void Frame_back_button_visibility_does_not_depend_on_form_factor()
+    {
+        var frameTemplate = ReadFrameTemplate();
+
+        Assert.DoesNotContain("OnFormFactor", frameTemplate);
+        Assert.DoesNotContain("Mobile=False", frameTemplate);
+    }
+
     [AvaloniaFact]
     public void Direct_visual_tree_participant_is_not_registered_twice()
     {
@@ -168,6 +177,20 @@ public class FrameBackParticipantTests
         control.Arrange(new Rect(0, 0, 400, 400));
 
         return control;
+    }
+
+    private static string ReadFrameTemplate()
+    {
+        for (var directory = new DirectoryInfo(AppContext.BaseDirectory); directory is not null; directory = directory.Parent)
+        {
+            var frameTemplatePath = Path.Combine(directory.FullName, "src", "Zafiro.Avalonia", "Controls", "Navigation", "Frame.axaml");
+            if (File.Exists(frameTemplatePath))
+            {
+                return File.ReadAllText(frameTemplatePath);
+            }
+        }
+
+        throw new FileNotFoundException("Could not find Frame.axaml from the test output directory.");
     }
 
     private static void EnsureZafiroStyles()
