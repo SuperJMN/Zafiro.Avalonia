@@ -27,7 +27,8 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\src\Zafiro.Avalonia\Zafiro.Avalonia.csproj" />
+        <ProjectReference Include="..\..\src\Zafiro.Avalonia\Zafiro.Avalonia.csproj" />
+        <ProjectReference Include="..\..\src\Zafiro.Avalonia.Dialogs\Zafiro.Avalonia.Dialogs.csproj" />
         <ProjectReference Include="..\..\src\Zafiro.Avalonia.Generators\Zafiro.Avalonia.Generators.csproj"/>
     </ItemGroup>
 

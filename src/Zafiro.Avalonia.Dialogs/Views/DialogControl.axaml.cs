@@ -51,6 +51,11 @@ public class DialogControl : ContentControl
             nameof(InfoOptions),
             o => o.InfoOptions);
 
+    public static readonly DirectProperty<DialogControl, IEnumerable<IOption>> OrderedOptionsProperty =
+        AvaloniaProperty.RegisterDirect<DialogControl, IEnumerable<IOption>>(
+            nameof(OrderedOptions),
+            o => o.OrderedOptions);
+
     public static readonly DirectProperty<DialogControl, bool> HasCustomFooterProperty = AvaloniaProperty.RegisterDirect<DialogControl, bool>(
         nameof(HasCustomFooter), o => o.HasCustomFooter);
 
@@ -70,6 +75,8 @@ public class DialogControl : ContentControl
     private IEnumerable<IOption> primaryOptions = [];
 
     private IEnumerable<IOption> secondaryOptions = Enumerable.Empty<IOption>();
+
+    private IEnumerable<IOption> orderedOptions = [];
 
     public DialogControl()
     {
@@ -153,6 +160,12 @@ public class DialogControl : ContentControl
         private set => SetAndRaise(InfoOptionsProperty, ref infoOptions, value);
     }
 
+    public IEnumerable<IOption> OrderedOptions
+    {
+        get => orderedOptions;
+        private set => SetAndRaise(OrderedOptionsProperty, ref orderedOptions, value);
+    }
+
     public bool HasCustomFooter
     {
         get => hasCustomFooter;
@@ -176,5 +189,9 @@ public class DialogControl : ContentControl
         DestructiveOptions = opts.Where(o => o.Role == OptionRole.Destructive).ToList();
         SecondaryOptions = opts.Where(o => o.Role == OptionRole.Secondary).ToList();
         InfoOptions = opts.Where(o => o.Role == OptionRole.Info).ToList();
+        OrderedOptions = opts
+            .Where(o => o.Role != OptionRole.Cancel)
+            .Concat(opts.Where(o => o.Role == OptionRole.Cancel))
+            .ToList();
     }
 }

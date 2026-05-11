@@ -29,33 +29,28 @@
                             <MessageDialogView />
                         </DataTemplate>
                     </DockPanel.DataTemplates>
-                    <ItemsControl ItemsSource="{TemplateBinding Options}" DockPanel.Dock="Bottom" IsVisible="{TemplateBinding Options, Converter={x:Static Enumerable.NotEmpty}}">
+                    <ItemsControl ItemsSource="{TemplateBinding OrderedOptions}" DockPanel.Dock="Bottom" IsVisible="{TemplateBinding Options, Converter={x:Static Enumerable.NotEmpty}}">
                         <ItemsControl.ItemContainerTheme>
                             <ControlTheme TargetType="ContentPresenter">
                                 <Setter Property="IsVisible" Value="{Binding IsVisible^, DataType=dialogs:IOption}" />
                             </ControlTheme>
                         </ItemsControl.ItemContainerTheme>
-                        <ItemsControl.Styles>
-                            <Style Selector="ItemsControl UniformGrid.OptionsPanel">
-                                <Setter Property="Columns" Value="1" />
-                            </Style>
-                            <Style Selector="ItemsControl[ItemCount=1] UniformGrid.OptionsPanel">
-                                <Setter Property="Rows" Value="1" />
-                                <Setter Property="Columns" Value="0" />
-                            </Style>
-                            <Style Selector="ItemsControl[ItemCount=2] UniformGrid.OptionsPanel">
-                                <Setter Property="Rows" Value="1" />
-                                <Setter Property="Columns" Value="0" />
-                            </Style>
-                        </ItemsControl.Styles>
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
-                                <UniformGrid Classes="OptionsPanel" ColumnSpacing="10" RowSpacing="10" />
+                                <FlexPanel Classes="OptionsPanel"
+                                           Gap="8"
+                                           Wrap="Wrap"
+                                           JustifyContent="End"
+                                           AlignItems="Start"
+                                           AlignContent="Start" />
                             </ItemsPanelTemplate>
                         </ItemsControl.ItemsPanel>
                         <ItemsControl.ItemTemplate>
                             <DataTemplate DataType="dialogs:IOption">
-                                <EnhancedButton Height="52" HorizontalAlignment="Stretch"
+                                <EnhancedButton MinWidth="96"
+                                                MinHeight="40"
+                                                Padding="14 8"
+                                                HorizontalAlignment="Stretch"
                                                 IsCancel="{Binding IsCancel}"
                                                 IsDefault="{Binding IsDefault}"
                                                 Role="{Binding Role, Converter={x:Static dialogs:OptionRoleToButtonRoleConverter.Instance}}"
