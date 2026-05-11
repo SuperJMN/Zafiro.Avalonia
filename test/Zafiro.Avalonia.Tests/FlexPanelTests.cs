@@ -196,6 +196,32 @@ public class FlexPanelTests
     }
 
     [AvaloniaFact]
+    public void Should_not_wrap_exact_fit_items_because_of_subpixel_rounding()
+    {
+        var deploy = SubpixelItem(width: 133.33333333333334, height: 35);
+        var build = SubpixelItem(width: 120, height: 35);
+        var clear = SubpixelItem(width: 32, height: 32);
+        var refresh = SubpixelItem(width: 32, height: 32);
+        var secrets = SubpixelItem(width: 32, height: 32);
+        var edit = SubpixelItem(width: 32, height: 32);
+
+        var panel = TestPanel(FlexDirection.Row, FlexWrap.Wrap, FlexJustify.Start, FlexAlign.Start, 8, deploy, build, clear, refresh, secrets, edit);
+        panel.UseLayoutRounding = false;
+        panel.AlignContent = FlexAlignContent.Start;
+
+        var desiredSize = panel.MeasureForTest(new Size(261.3333333333333, 120));
+        panel.ArrangeForTest(new Size(261.3333333333333, 120));
+
+        Assert.Equal(75, desiredSize.Height, 5);
+        AssertBounds(deploy, x: 0, y: 0, width: 133.33333333333334, height: 35);
+        AssertBounds(build, x: 141.33333333333334, y: 0, width: 120, height: 35);
+        AssertBounds(clear, x: 0, y: 43, width: 32, height: 32);
+        AssertBounds(refresh, x: 40, y: 43, width: 32, height: 32);
+        AssertBounds(secrets, x: 80, y: 43, width: 32, height: 32);
+        AssertBounds(edit, x: 120, y: 43, width: 32, height: 32);
+    }
+
+    [AvaloniaFact]
     public void Should_apply_justify_content_independently_on_each_wrapped_line_in_common_navigation_layout()
     {
         var first = Item(width: 40, height: 20);
@@ -588,7 +614,37 @@ public class FlexPanelTests
         return panel;
     }
 
+    private static TestFlexPanel TestPanel(
+        FlexDirection direction,
+        FlexWrap wrap = FlexWrap.NoWrap,
+        FlexJustify justifyContent = FlexJustify.Start,
+        FlexAlign alignItems = FlexAlign.Start,
+        double gap = 0,
+        params Control[] children)
+    {
+        var panel = new TestFlexPanel
+        {
+            Direction = direction,
+            Wrap = wrap,
+            JustifyContent = justifyContent,
+            AlignItems = alignItems,
+            Gap = gap
+        };
+
+        foreach (var child in children)
+        {
+            panel.Children.Add(child);
+        }
+
+        return panel;
+    }
+
     private static Control Item(double width, double height) => new FixedSizeControl(width, height);
+
+    private static Control SubpixelItem(double width, double height) => new FixedSizeControl(width, height)
+    {
+        UseLayoutRounding = false
+    };
 
     private static void ShowAndLayout(Control panel, double width, double height)
     {
@@ -771,6 +827,13 @@ public class FlexPanelTests
     private sealed class FixedSizeControl(double width, double height) : Control
     {
         protected override Size MeasureOverride(Size availableSize) => new(width, height);
+    }
+
+    private sealed class TestFlexPanel : FlexPanel
+    {
+        public Size MeasureForTest(Size availableSize) => MeasureOverride(availableSize);
+
+        public Size ArrangeForTest(Size finalSize) => ArrangeOverride(finalSize);
     }
 
     /// <summary>

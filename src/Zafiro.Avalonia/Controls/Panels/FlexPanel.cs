@@ -106,6 +106,8 @@ public struct FlexValue
 
 public class FlexPanel : Panel
 {
+    private const double LayoutEpsilon = 1e-6;
+
     // Main properties
     public static readonly StyledProperty<FlexDirection> DirectionProperty =
         AvaloniaProperty.Register<FlexPanel, FlexDirection>(nameof(Direction), FlexDirection.Row);
@@ -486,7 +488,7 @@ public class FlexPanel : Panel
             // Check wrapping - CSS faithful
             if (Wrap != FlexWrap.NoWrap && currentLine.Items.Any())
             {
-                var wouldOverflow = currentLine.MainSize + gap + item.MainSize > containerMain;
+                var wouldOverflow = currentLine.MainSize + gap + item.MainSize - containerMain > LayoutEpsilon;
                 if (wouldOverflow)
                 {
                     lines.Add(currentLine);
