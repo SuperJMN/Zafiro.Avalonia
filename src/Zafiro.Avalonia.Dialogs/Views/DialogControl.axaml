@@ -29,7 +29,10 @@
                             <MessageDialogView />
                         </DataTemplate>
                     </DockPanel.DataTemplates>
-                    <ItemsControl ItemsSource="{TemplateBinding OrderedOptions}" DockPanel.Dock="Bottom" IsVisible="{TemplateBinding Options, Converter={x:Static Enumerable.NotEmpty}}">
+                    <ItemsControl Margin="20 0 20 20"
+                                  ItemsSource="{TemplateBinding OrderedOptions}"
+                                  DockPanel.Dock="Bottom"
+                                  IsVisible="{TemplateBinding Options, Converter={x:Static Enumerable.NotEmpty}}">
                         <ItemsControl.ItemContainerTheme>
                             <ControlTheme TargetType="ContentPresenter">
                                 <Setter Property="IsVisible" Value="{Binding IsVisible^, DataType=dialogs:IOption}" />

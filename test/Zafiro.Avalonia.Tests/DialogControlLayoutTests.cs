@@ -46,6 +46,21 @@ public class DialogControlLayoutTests
         Assert.Single(buttons.Select(button => Math.Round(button.Bounds.Y, 1)).Distinct());
         Assert.All(buttons, button => Assert.InRange(button.Bounds.Width, 80, 160));
         Assert.All(buttons, button => Assert.True(button.Bounds.Height <= 44));
+
+        var buttonBounds = buttons.Select(button => BoundsRelativeTo(button, dialog)).ToList();
+        var rightEdge = buttonBounds.Max(bounds => bounds.Right);
+        var bottomEdge = buttonBounds.Max(bounds => bounds.Bottom);
+
+        Assert.True(rightEdge <= dialog.Bounds.Width - 20 + 0.5);
+        Assert.InRange(bottomEdge, dialog.Bounds.Height - 20 - 0.5, dialog.Bounds.Height - 20 + 0.5);
+    }
+
+    private static Rect BoundsRelativeTo(Control control, Visual ancestor)
+    {
+        var origin = control.TranslatePoint(new Point(), ancestor);
+        Assert.NotNull(origin);
+
+        return new Rect(origin.Value, control.Bounds.Size);
     }
 
     private static void ShowAndLayout(Control control, double width, double height)
