@@ -33,6 +33,7 @@
             <Setter Property="Spacing" Value="8" />
             <Setter Property="HorizontalAlignment" Value="Left" />
             <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
             <Setter Property="VerticalAlignment" Value="Top" />
             <Setter Property="Padding" Value="8" />
             <Setter Property="BorderThickness" Value="1" />
@@ -51,19 +52,29 @@
                                        BorderBrush="{TemplateBinding BorderBrush}"
                                        CornerRadius="{TemplateBinding CornerRadius}"
                                        BoxShadow="{TemplateBinding BoxShadow}">
-                            <SmartDockPanel HorizontalSpacing="{Binding $parent[EnhancedButton].Spacing}"
-                                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
-                                <ContentPresenter IsVisible="{Binding !!$self.Content}"
-                                                  VerticalAlignment="Center"
-                                                  x:Name="IconPresenter"
-                                                  Content="{TemplateBinding Icon}" />
+                            <Grid HorizontalAlignment="Stretch"
+                                  VerticalAlignment="Stretch">
                                 <ContentPresenter x:Name="ContentPresenter"
-                                                  IsVisible="{Binding !!$self.Content}"
-                                                  VerticalAlignment="Center"
+                                                  IsVisible="{Binding $parent[EnhancedButton].Icon, Converter={x:Static ObjectConverters.IsNull}}"
+                                                  HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                  VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
                                                   Content="{TemplateBinding Content}"
                                                   ContentTemplate="{TemplateBinding ContentTemplate}" />
-                            </SmartDockPanel>
+                                <StackPanel Orientation="Horizontal"
+                                            IsVisible="{Binding $parent[EnhancedButton].Icon, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                            Spacing="{Binding $parent[EnhancedButton].Spacing}"
+                                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
+                                    <ContentPresenter VerticalAlignment="Center"
+                                                      x:Name="IconPresenter"
+                                                      Content="{TemplateBinding Icon}" />
+                                    <ContentPresenter x:Name="IconContentPresenter"
+                                                      IsVisible="{Binding $parent[EnhancedButton].Content, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                                      VerticalAlignment="Center"
+                                                      Content="{TemplateBinding Content}"
+                                                      ContentTemplate="{TemplateBinding ContentTemplate}" />
+                                </StackPanel>
+                            </Grid>
                         </OverlayBorder>
                         <ProgressBar x:Name="CommandRunningProgressBar"
                                      MinWidth="0"

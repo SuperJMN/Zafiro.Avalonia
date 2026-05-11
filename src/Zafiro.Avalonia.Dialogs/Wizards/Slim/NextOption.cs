@@ -11,7 +11,7 @@ public partial class NextOption : ReactiveObject, IOption, IDisposable
 {
     private readonly CompositeDisposable disposables = new();
     private readonly ISlimWizard wizard;
-    [Reactive] private IEnhancedCommand command;
+    [Reactive] private IEnhancedCommand command = null!;
 
     public NextOption(ISlimWizard wizard)
     {
@@ -24,7 +24,8 @@ public partial class NextOption : ReactiveObject, IOption, IDisposable
         disposables.Dispose();
     }
 
-    public IObservable<string> Title => this.WhenAnyValue(x => x.wizard.Next.Text).Select(x => x ?? "");
+    public IObservable<string> Title => this.WhenAnyValue(x => x.wizard.Next.Text)
+        .Select(text => string.IsNullOrWhiteSpace(text) ? "Next" : text);
 
     public bool IsDefault { get; } = true;
     public bool IsCancel { get; } = false;

@@ -1,4 +1,3 @@
-using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Reactive.Threading.Tasks;
@@ -24,16 +23,11 @@ public static class WizardExtensions
             var cancel = ReactiveCommand.Create(closeable.Dismiss, canCancel).Enhance();
             wizard.Finished.Subscribe(_ => closeable.Close()).DisposeWith(disposables);
 
-            var next = ReactiveCommand.CreateFromObservable(
-                    () => ((IReactiveCommand<Unit, Unit>)wizard.Next).Execute(Unit.Default),
-                    wizard.WhenAnyValue(x => x.Next).SelectMany(cmd => cmd.CanExecuteObservable))
-                .Enhance("Next");
-
             return
             [
                 new Option("Cancel", cancel, new Settings { IsCancel = true, Role = OptionRole.Cancel, IsVisible = canCancel }),
                 new Option("Back", wizard.Back, new Settings { Role = OptionRole.Secondary, IsVisible = wizard.Back.CanExecuteObservable }),
-                new Option("Next", next, new Settings { Role = OptionRole.Primary, IsDefault = true }),
+                new NextOption(wizard),
             ];
         };
 
