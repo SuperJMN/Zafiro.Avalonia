@@ -3,7 +3,7 @@ using Zafiro.UI.Shell.Utils;
 
 namespace MinimalShell.Sections;
 
-[Section(name: "MasterDetails", icon: "fa-circle-info", sortIndex: 4)]
+[Section(name: "MasterDetails", icon: "fa-circle-info", sortIndex: 0, ParentId = "Profile")]
 public class MasterDetailsViewModel : ReactiveObject
 {
     private MasterDetailsItem? selectedItem;

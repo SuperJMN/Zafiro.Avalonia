@@ -4,7 +4,7 @@ using Zafiro.UI.Shell.Utils;
 
 namespace MinimalShell.Sections;
 
-[Section(icon: "fa-circle-info", sortIndex: 3)]
+[Section(icon: "fa-circle-info", sortIndex: 1, ParentId = "Settings")]
 public class AboutViewModel : IHaveHeader
 {
     public IObservable<object> Header => Observable.Return<object>("About This App");

@@ -8,7 +8,7 @@ Tech stack
 
 - .NET 8 for libraries and samples; Android head targets net9.0-android
 - Avalonia 11.3.x, ReactiveUI
-- Submodule: libs/Zafiro points to the core Zafiro library repo (managed as a git submodule)
+- Zafiro core is developed in the sibling repo `../Zafiro`; CI and package builds consume published NuGet packages.
 
 Common commands
 
@@ -76,7 +76,7 @@ Azure Pipelines (CI/CD)
 - Triggers: push to master, PRs to master or any branch
 - Agent: ubuntu-latest
 - Steps summary
-  - Full checkout with submodules (fetchDepth: 0)
+  - Full checkout (fetchDepth: 0)
   - Install .NET 9 SDK (UseDotNet@2)
   - Install Android workload (dotnet workload install android)
     - Note: not strictly required for NuGet-only publishing, but kept for optional app release tasks
@@ -118,17 +118,16 @@ Source generators: Zafiro.Avalonia.Generators
                           ReferenceOutputAssembly="false" />
       </ItemGroup>
       ```
-    - The repo uses the UseLocalZafiroReferences switch to toggle between local ProjectReference (true) and NuGet PackageReference (false). This is already configured in Zafiro.Avalonia.Dialogs and samples/TestApp/TestApp.
+    - The repo uses the UseLocalZafiroReferences switch to toggle between a local ProjectReference to `$(ZafiroSourceRoot)` (true) and NuGet PackageReference (false). The default is false so CI and package builds use published packages.
 - Migration note
   - Zafiro.Avalonia no longer includes the generator in its package and no longer references it as an Analyzer. Any project that requires the generated registrations must explicitly reference Zafiro.Avalonia.Generators as shown above.
 
-Submodule: libs/Zafiro
+Local Zafiro development
 
-- This repo includes Zafiro as a git submodule in libs/Zafiro
-- To fetch and update:
-  - git submodule update --init --recursive
-  - To pull latest in submodule: (cd libs/Zafiro && git pull)
-  - After updating the submodule, commit the submodule pointer in this repository
+- This repo should not include Zafiro as a git submodule.
+- For local cross-repo iteration, keep Zafiro checked out next to this repo at `../Zafiro`, or set `ZafiroSourceRoot` explicitly.
+- Enable local references with `UseLocalZafiroReferences=true`, preferably from an ignored `Directory.Build.local.props`.
+- Use `Directory.Build.local.props.example` as the template for that ignored local file.
 
 Coding guidelines (high level)
 
@@ -199,11 +198,11 @@ When implementing new features
 - Model user intents as commands; derive canExecute from observable state with WhenAnyValue/WhenAnyChanged.
 - Return Result/Maybe and avoid throwing for non-exceptional control flow.
 - Keep UI glue reactive: avoid imperative handlers and "Subscribe" logic for business decisions.
-- If changes affect the Zafiro submodule, align with libs/Zafiro/WARP.md and prefer contributing upstream when appropriate.
+- If changes affect Zafiro core, make them in the sibling Zafiro repository and publish that package before publishing Zafiro.Avalonia.
 
 See also
 
-- libs/Zafiro/WARP.md for lower-level rules and architecture that apply to the Zafiro core submodule used by this repository.
+- ../Zafiro/WARP.md for lower-level rules and architecture that apply to the Zafiro core repository used during local development.
 
 Code examples
 
@@ -257,7 +256,7 @@ private static SlimWizard<(int result, string)> CreateWizard()
 
 - EnhancedCommand helpers (wrap ReactiveCommand with UX metadata)
 
-```cs path=/mnt/fast/Repos/SuperJMN-Zafiro/Zafiro.Avalonia/libs/Zafiro/src/Zafiro.UI/Commands/EnhancedCommand.cs start=7
+```cs path=/mnt/fast/Repos/Zafiro/src/Zafiro.UI/Commands/EnhancedCommand.cs start=7
 public static EnhancedCommand<T> Enhance<T>(this IEnhancedCommand<T> enhancedCommand, string? text = null, string? name = null, IObservable<bool>? canExecute = null)
 {
     return new EnhancedCommand<T>(ReactiveCommand.CreateFromObservable(enhancedCommand.Execute, canExecute ?? ((IReactiveCommand)enhancedCommand).CanExecute), text ?? enhancedCommand.Text, name ?? enhancedCommand.Name);
@@ -271,7 +270,7 @@ public static IEnhancedCommand<T, Q> Enhance<T, Q>(this ReactiveCommandBase<T, Q
 
 - Reactive adapters for Result pipelines
 
-```cs path=/mnt/fast/Repos/SuperJMN-Zafiro/Zafiro.Avalonia/libs/Zafiro/src/Zafiro/CSharpFunctionalExtensions/ReactiveResultMixin.cs start=25
+```cs path=/mnt/fast/Repos/Zafiro/src/Zafiro/CSharpFunctionalExtensions/ReactiveResultMixin.cs start=25
 public static IObservable<Result<K>> Map<T, K>(this IObservable<Result<T>> observable, Func<T, K> function)
 {
     return observable.Select(t => t.Map(function));
@@ -285,7 +284,7 @@ public static IObservable<Result<K>> Map<T, K>(this IObservable<Result<T>> obser
 
 - Jobs/Execution with cancellation and progress
 
-```cs path=/mnt/fast/Repos/SuperJMN-Zafiro/Zafiro.Avalonia/libs/Zafiro/src/Zafiro.UI/Jobs/Execution/StoppableExecution.cs start=6
+```cs path=/mnt/fast/Repos/Zafiro/src/Zafiro.UI/Jobs/Execution/StoppableExecution.cs start=6
 public class StoppableExecution : IExecution
 {
     public StoppableExecution(IObservable<Unit> observable, IObservable<IProgress> progress, Maybe<IObservable<bool>> canStart)
@@ -304,7 +303,7 @@ public class StoppableExecution : IExecution
 
 - Filesystem action with progress reporting
 
-```cs path=/mnt/fast/Repos/SuperJMN-Zafiro/Zafiro.Avalonia/libs/Zafiro/src/Zafiro.FileSystem.Actions/CopyFileAction.cs start=18
+```cs path=/mnt/fast/Repos/Zafiro/src/Zafiro.FileSystem.Actions/CopyFileAction.cs start=18
 public CopyFileAction(IData source, IMutableFile destination)
 {
     Source = source;

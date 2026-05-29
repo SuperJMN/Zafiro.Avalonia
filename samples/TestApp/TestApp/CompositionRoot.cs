@@ -1,4 +1,3 @@
-using ReactiveUI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +9,7 @@ using ReactiveUI;
 using Serilog;
 using TestApp.Samples;
 using TestApp.Samples.Navigation;
+using TestApp.Samples.Shell.Hierarchy;
 using TestApp.Shell;
 using Zafiro.Avalonia;
 using Zafiro.Avalonia.Dialogs;
@@ -88,6 +88,11 @@ public static class CompositionRoot
             var icon = sectionAttr.Icon ?? "fa-window-maximize";
 
             var groupAttr = type.GetCustomAttribute<SectionGroupAttribute>();
+            if (groupAttr?.Key == HierarchicalShellSampleViewModel.DemoGroupKey)
+            {
+                continue;
+            }
+
             var category = groupAttr?.FriendlyName ?? groupAttr?.Key ?? "General";
 
             var contractType = sectionAttr.ContractType ?? type;

@@ -1,0 +1,6 @@
+<Project>
+  <PropertyGroup>
+    <UseLocalZafiroReferences>true</UseLocalZafiroReferences>
+    <ZafiroSourceRoot>../Zafiro</ZafiroSourceRoot>
+  </PropertyGroup>
+</Project>

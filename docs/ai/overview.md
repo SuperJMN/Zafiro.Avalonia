@@ -56,7 +56,7 @@ public override void OnFrameworkInitializationCompleted()
     services.AddAllSectionsFromAttributes(logger);          // source-generated
 
     var provider = services.BuildServiceProvider();
-    var shell = provider.GetRequiredService<IShell>();
+    var shell = provider.GetRequiredService<IHierarchicalShell>();
 
     this.Connect(() => new ShellView(), _ => shell, () => new Window { Title = "App" });
     base.OnFrameworkInitializationCompleted();
@@ -80,7 +80,7 @@ public override void OnFrameworkInitializationCompleted()
 | Abstraction | Type | Purpose |
 |---|---|---|
 | `INavigator` | Service | Page navigation: `Go<T>()`, `GoBack()`, `SetInitialPage()` |
-| `IShell` | Service | Section-based app shell with sidebar |
+| `IShell` / `IHierarchicalShell` | Service | Section-based app shell; hierarchical shell adds section levels for `ShellView` |
 | `IDialog` | Service | Modal dialogs returning `Maybe<T>` |
 | `INotificationService` | Service | Push notifications from ViewModels |
 | `IEnhancedCommand<T>` | Command wrapper | `ReactiveCommand` + label + icon + IsBusy tracking |

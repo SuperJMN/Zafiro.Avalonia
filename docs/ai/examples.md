@@ -41,7 +41,7 @@ public class App : Application
         services.AddZafiroShell(logger: logger);
         services.AddAllSectionsFromAttributes(logger);
         var provider = services.BuildServiceProvider();
-        var shell = provider.GetRequiredService<IShell>();
+        var shell = provider.GetRequiredService<IHierarchicalShell>();
         this.Connect(() => new ShellView(), _ => shell, () => new Window { Title = "App", Width = 900, Height = 600 });
         base.OnFrameworkInitializationCompleted();
     }

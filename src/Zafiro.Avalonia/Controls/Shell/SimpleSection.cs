@@ -5,7 +5,7 @@ using Zafiro.UI.Navigation.Sections;
 
 namespace Zafiro.Avalonia.Controls.Shell;
 
-public partial class SimpleSection : ReactiveObject, ISection
+public partial class SimpleSection : ReactiveObject, IHierarchicalSection
 {
     private readonly CompositeDisposable disposable = new();
     [Reactive] private object? content;
@@ -25,6 +25,7 @@ public partial class SimpleSection : ReactiveObject, ISection
     }
 
     public string Id { get; set; } = string.Empty;
+    public string? ParentId { get; set; }
     public string? ShortName { get; set; }
     public string FriendlyName { get; set; } = string.Empty;
     public SectionGroup Group { get; set; } = new();

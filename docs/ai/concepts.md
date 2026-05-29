@@ -50,7 +50,7 @@ var enhanced = save.Enhance("Save", name: "save-action");
 // enhanced.Text     → "Save"
 ```
 
-**Evidence**: `EnhancedCommand.cs` in libs/Zafiro, `Page1ViewModel.cs`, `DialogSampleViewModel.cs`, `WizardViewModel.cs`.
+**Evidence**: `EnhancedCommand.cs` in the sibling Zafiro repository, `Page1ViewModel.cs`, `DialogSampleViewModel.cs`, `WizardViewModel.cs`.
 
 ### Property Observation
 
@@ -158,9 +158,13 @@ public class HomeViewModel
 [Section(icon: "fa-gear", sortIndex: 1)]
 [SectionGroup("settings", "Settings")]
 public class SettingsViewModel { }
+
+[Section(icon: "fa-user", sortIndex: 0, ParentId = "Settings")]
+public class ProfileViewModel { }
 ```
 
 The source generator (`Zafiro.Avalonia.Generators`) discovers `[Section]`-decorated types and generates `AddAllSectionsFromAttributes()` extension method on `IServiceCollection`.
+`ParentId` creates hierarchical sections. Root sections are shown by the shell's primary `SectionStrip`; child levels are rendered automatically inside `ShellView`, and each section keeps its own scoped `INavigator`.
 
 ```csharp
 services.AddZafiroShell(logger: logger);

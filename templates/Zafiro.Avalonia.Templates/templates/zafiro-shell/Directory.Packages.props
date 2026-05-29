@@ -22,7 +22,7 @@
     <PackageVersion Include="Zafiro.Avalonia" Version="$(ZafiroAvaloniaVersion)" />
     <PackageVersion Include="Zafiro.Avalonia.Generators" Version="$(ZafiroAvaloniaVersion)" />
     <PackageVersion Include="Zafiro.Avalonia.Icons.Optris" Version="$(ZafiroAvaloniaVersion)" />
-    <PackageVersion Include="Zafiro.UI" Version="47.0.5" />
+    <PackageVersion Include="Zafiro.UI" Version="47.1.0" />
 
     <!-- Logging -->
     <PackageVersion Include="Serilog" Version="4.3.0" />
