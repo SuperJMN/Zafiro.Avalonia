@@ -26,6 +26,7 @@
 
         <AdditionalFiles Include="**/*.axaml"/>
 
-        <PackageReference Include="Zafiro.UI"/>
+        <ProjectReference Include="$(ZafiroSourceRoot)/src/Zafiro.UI/Zafiro.UI.csproj" Condition="'$(UseLocalZafiroReferences)' == 'true'" />
+        <PackageReference Include="Zafiro.UI" Condition="'$(UseLocalZafiroReferences)' != 'true'" />
     </ItemGroup>
 </Project>

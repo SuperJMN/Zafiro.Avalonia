@@ -7,7 +7,7 @@
              xmlns:local="clr-namespace:Zafiro.Avalonia.Controls.Shell"
              xmlns:zac="clr-namespace:Zafiro.Avalonia.Controls"
              mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="600"
-             x:Class="Zafiro.Avalonia.Controls.Shell.ShellView" x:DataType="shell:IShell">
+             x:Class="Zafiro.Avalonia.Controls.Shell.ShellView" x:DataType="shell:IHierarchicalShell">
 
     <Design.DataContext>
         <local:ShellDesign />
@@ -44,17 +44,34 @@
             <!-- Section navigation: bottom bar on mobile, sidebar on desktop -->
             <zac:SectionStrip x:Name="ShellSectionStrip"
                               FlexPanel.Shrink="0"
-                              Sections="{Binding Sections}"
-                              SelectedSection="{Binding SelectedSection.Value, Mode=TwoWay}" />
+                              Sections="{Binding RootLevel.Sections}"
+                              SelectedSection="{Binding RootLevel.SelectedSection.Value, Mode=TwoWay}" />
 
             <!-- Content -->
-            <Frame FlexPanel.Grow="1"
-                   Content="{Binding SelectedSection.Value.Navigator.Content^}"
-                   BackCommand="{Binding SelectedSection.Value.Navigator.Back}">
-                <Interaction.Behaviors>
-                    <nav:AutoHeaderFooterBehavior />
-                </Interaction.Behaviors>
-            </Frame>
+            <FlexPanel FlexPanel.Grow="1" Direction="Column" AlignItems="Stretch">
+                <ItemsControl FlexPanel.Shrink="0" ItemsSource="{Binding ChildLevels.Value}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <FlexPanel Direction="Column" AlignItems="Stretch" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate DataType="shell:SectionLevel">
+                            <zac:SectionStrip Orientation="Horizontal"
+                                              Sections="{Binding Sections}"
+                                              SelectedSection="{Binding SelectedSection.Value, Mode=TwoWay}" />
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+
+                <Frame FlexPanel.Grow="1"
+                       Content="{Binding SelectedSection.Value.Navigator.Content^}"
+                       BackCommand="{Binding SelectedSection.Value.Navigator.Back}">
+                    <Interaction.Behaviors>
+                        <nav:AutoHeaderFooterBehavior />
+                    </Interaction.Behaviors>
+                </Frame>
+            </FlexPanel>
         </FlexPanel>
     </Border>
 </UserControl>

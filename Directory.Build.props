@@ -1,10 +1,14 @@
 <Project>
+  <Import Project="$(MSBuildThisFileDirectory)Directory.Build.local.props" Condition="Exists('$(MSBuildThisFileDirectory)Directory.Build.local.props')" />
   <PropertyGroup>
     <Nullable>enable</Nullable>
-    <UseLocalZafiroReferences Condition="'$(UseLocalZafiroReferences)' == ''">true</UseLocalZafiroReferences>
-    <UseLocalZafiroReferences Condition="'$(Configuration)' == 'Release'">false</UseLocalZafiroReferences>
+    <UseLocalZafiroReferences Condition="'$(UseLocalZafiroReferences)' == ''">false</UseLocalZafiroReferences>
+    <ZafiroSourceRoot Condition="'$(ZafiroSourceRoot)' == ''">$(MSBuildThisFileDirectory)../Zafiro</ZafiroSourceRoot>
   </PropertyGroup>
   <ItemGroup Condition="'$(MSBuildProjectName)' != 'Zafiro.Avalonia.Generators'">
     <Using Include="System.Reactive.Disposables.Fluent" />
   </ItemGroup>
+  <Target Name="ValidateLocalZafiroReferences" BeforeTargets="ResolveReferences" Condition="'$(UseLocalZafiroReferences)' == 'true' and !Exists('$(ZafiroSourceRoot)/src/Zafiro.UI/Zafiro.UI.csproj')">
+    <Error Text="UseLocalZafiroReferences=true but ZafiroSourceRoot '$(ZafiroSourceRoot)' does not contain src/Zafiro.UI/Zafiro.UI.csproj." />
+  </Target>
 </Project>

@@ -33,7 +33,8 @@
         <ProjectReference Include="..\..\..\src\Zafiro.Avalonia.Icons.Optris\Zafiro.Avalonia.Icons.Optris.csproj"/>
         <ProjectReference Include="..\..\..\src\Zafiro.Avalonia.Icons.Svg\Zafiro.Avalonia.Icons.Svg.csproj"/>
 
-        <PackageReference Include="Zafiro.UI"/>
+        <ProjectReference Include="$(ZafiroSourceRoot)/src/Zafiro.UI/Zafiro.UI.csproj" Condition="'$(UseLocalZafiroReferences)' == 'true'" />
+        <PackageReference Include="Zafiro.UI" Condition="'$(UseLocalZafiroReferences)' != 'true'" />
     </ItemGroup>
 
     <ItemGroup>

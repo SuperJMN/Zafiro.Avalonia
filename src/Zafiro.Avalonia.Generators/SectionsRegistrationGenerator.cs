@@ -96,6 +96,17 @@ public sealed class SectionsRegistrationGenerator : IIncrementalGenerator
                     sb.Append(Escape(s.shortName));
                     sb.Append("\"");
                 }
+                else if (s.parentId is not null)
+                {
+                    sb.Append(", shortName: null");
+                }
+
+                if (s.parentId is not null)
+                {
+                    sb.Append(", parentId: \"");
+                    sb.Append(Escape(s.parentId));
+                    sb.Append("\"");
+                }
 
                 sb.Append(");");
                 sb.AppendLine();
@@ -134,7 +145,7 @@ public sealed class SectionsRegistrationGenerator : IIncrementalGenerator
 
     private static
         IEnumerable<(string implFqn, string contractFqn, int sortIndex, string name, string friendlyName, string?
-            shortName, string? icon, string? groupKey, string? groupFriendlyName)> FindAnnotatedSections(
+            shortName, string? parentId, string? icon, string? groupKey, string? groupFriendlyName)> FindAnnotatedSections(
             Compilation compilation, SourceProductionContext context)
     {
         var attr = compilation.GetTypeByMetadataName("Zafiro.UI.Shell.Utils.SectionAttribute");
@@ -178,6 +189,7 @@ public sealed class SectionsRegistrationGenerator : IIncrementalGenerator
             string? explicitName = null;
             string? explicitFriendlyName = null;
             string? shortName = null;
+            string? parentId = null;
             var sortIndex = 0;
             ITypeSymbol? contract = null;
 
@@ -189,6 +201,7 @@ public sealed class SectionsRegistrationGenerator : IIncrementalGenerator
 
             explicitFriendlyName = GetNamedString(sectionAttr, "FriendlyName");
             shortName = GetNamedString(sectionAttr, "ShortName");
+            parentId = GetNamedString(sectionAttr, "ParentId");
 
             if (sectionCtorArgs.Length >= 2 && sectionCtorArgs[1].Value is string iconStr)
             {
@@ -216,7 +229,7 @@ public sealed class SectionsRegistrationGenerator : IIncrementalGenerator
             var name = explicitName ?? defaultName;
             var friendlyName = explicitFriendlyName ?? explicitName ?? defaultName;
 
-            yield return (implFqn, contractFqn, sortIndex, name, friendlyName, shortName, icon, groupKey,
+            yield return (implFqn, contractFqn, sortIndex, name, friendlyName, shortName, parentId, icon, groupKey,
                 groupFriendlyName);
         }
     }

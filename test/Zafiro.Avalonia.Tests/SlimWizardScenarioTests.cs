@@ -148,8 +148,10 @@ public class SlimWizardScenarioTests
 
         var completion = wizard.Navigate(navigator);
 
-        await WaitUntilAsync(() => current is ISlimWizard, TimeSpan.FromSeconds(2));
-        Assert.IsType<SlimWizard<string>>(current);
+        await WaitUntilAsync(
+            () => current is NavigationWizardHost host && ReferenceEquals(host.Wizard, wizard),
+            TimeSpan.FromSeconds(2));
+        Assert.IsType<NavigationWizardHost>(current);
 
         ((ICommand)wizard.Next).Execute(null);
 
@@ -201,21 +203,21 @@ public class SlimWizardScenarioTests
         var completion = parentWizard.Navigate(navigator);
 
         await WaitUntilAsync(
-            () => current is ISlimWizard w && ReferenceEquals(w, parentWizard),
+            () => current is NavigationWizardHost host && ReferenceEquals(host.Wizard, parentWizard),
             TimeSpan.FromSeconds(2));
 
         var parentNextExecution = parentWizard.TypedNext.Execute().ToTask();
 
         await WaitUntilAsync(
             () => childWizard is not null
-                  && current is ISlimWizard w
-                  && ReferenceEquals(w, childWizard),
+                  && current is NavigationWizardHost childHost
+                  && ReferenceEquals(childHost.Wizard, childWizard),
             TimeSpan.FromSeconds(2));
 
         ((ICommand)childWizard!.Next).Execute(null);
 
         await WaitUntilAsync(
-            () => current is ISlimWizard w && ReferenceEquals(w, parentWizard),
+            () => current is NavigationWizardHost host && ReferenceEquals(host.Wizard, parentWizard),
             TimeSpan.FromSeconds(2));
 
         var parentNextResult = await parentNextExecution;
