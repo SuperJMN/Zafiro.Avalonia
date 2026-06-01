@@ -1,9 +1,8 @@
 using System;
+using System.Diagnostics;
 using Avalonia;
 using ReactiveUI.Avalonia;
-#if DEBUG
 using Zafiro.Avalonia.Mcp.AppHost;
-#endif
 
 namespace ZafiroShellTemplate.Desktop;
 
@@ -22,8 +21,15 @@ internal class Program
             .UsePlatformDetect()
             .WithInterFont()
             .LogToTrace()
-#if DEBUG
-            .UseMcpDiagnostics()
-#endif
+            .UseMcpDiagnosticsIfDebug()
             .UseReactiveUI(_ => { });
+}
+
+internal static class AppBuilderMcpExtensions
+{
+    public static AppBuilder UseMcpDiagnosticsIfDebug(this AppBuilder builder)
+    {
+        var debugAttribute = (DebuggableAttribute?)Attribute.GetCustomAttribute(typeof(Program).Assembly, typeof(DebuggableAttribute));
+        return debugAttribute?.IsJITTrackingEnabled is true ? builder.UseMcpDiagnostics() : builder;
+    }
 }

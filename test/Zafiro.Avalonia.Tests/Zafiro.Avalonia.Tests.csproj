@@ -30,6 +30,7 @@
         <ProjectReference Include="..\..\src\Zafiro.Avalonia\Zafiro.Avalonia.csproj" />
         <ProjectReference Include="..\..\src\Zafiro.Avalonia.Dialogs\Zafiro.Avalonia.Dialogs.csproj" />
         <ProjectReference Include="..\..\src\Zafiro.Avalonia.Generators\Zafiro.Avalonia.Generators.csproj"/>
+        <ProjectReference Include="..\..\samples\MinimalShell\MinimalShell.csproj" />
         <ProjectReference Include="..\..\samples\TestApp\TestApp\TestApp.csproj" />
     </ItemGroup>
 

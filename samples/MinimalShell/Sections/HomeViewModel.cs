@@ -2,8 +2,8 @@ using Zafiro.UI.Shell.Utils;
 
 namespace MinimalShell.Sections;
 
-[Section(icon: "fa-home", sortIndex: 0)]
+[Section("home", "fa-home", 0, FriendlyName = "Home")]
 public class HomeViewModel
 {
-    public string Greeting => "Welcome to the Zafiro Shell!";
+    public string Greeting => "Welcome to the investment workspace.";
 }

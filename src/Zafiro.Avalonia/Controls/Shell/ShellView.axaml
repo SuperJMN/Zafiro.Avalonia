@@ -3,11 +3,109 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:shell="clr-namespace:Zafiro.UI.Shell;assembly=Zafiro.UI"
+             xmlns:sections="clr-namespace:Zafiro.UI.Navigation.Sections;assembly=Zafiro.UI"
              xmlns:nav="clr-namespace:Zafiro.Avalonia.Controls.Navigation"
              xmlns:local="clr-namespace:Zafiro.Avalonia.Controls.Shell"
+             xmlns:primitives="clr-namespace:Avalonia.Controls.Primitives;assembly=Avalonia.Controls"
              xmlns:zac="clr-namespace:Zafiro.Avalonia.Controls"
              mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="600"
-             x:Class="Zafiro.Avalonia.Controls.Shell.ShellView" x:DataType="shell:IHierarchicalShell">
+             x:Class="Zafiro.Avalonia.Controls.Shell.ShellView"
+             x:Name="ShellViewRoot"
+             x:DataType="shell:IHierarchicalShell">
+
+    <UserControl.Resources>
+        <ControlTheme x:Key="DesktopRootSectionItemTheme"
+                      TargetType="zac:SectionStripItem"
+                      BasedOn="{StaticResource {x:Type zac:SectionStripItem}}">
+            <Style Selector="^:pointerover">
+                <Setter Property="Background" Value="Transparent" />
+            </Style>
+
+            <Style Selector="^:selected">
+                <Setter Property="Background" Value="Transparent" />
+            </Style>
+
+            <Style Selector="^:selected:pointerover">
+                <Setter Property="Background" Value="Transparent" />
+            </Style>
+        </ControlTheme>
+
+        <DataTemplate x:Key="DesktopChildLevelTemplate" DataType="shell:SectionLevel">
+            <zac:SectionStrip Orientation="Vertical"
+                              Padding="0,0,0,6"
+                              IconSize="24"
+                              ItemPadding="8,6"
+                              Sections="{Binding Sections}"
+                              SelectedSection="{Binding SelectedSection.Value, Mode=TwoWay}" />
+        </DataTemplate>
+
+        <DataTemplate x:Key="MobileChildLevelTemplate" DataType="shell:SectionLevel">
+            <primitives:TabStrip IsVisible="{Binding Sections, Converter={x:Static local:ShellConverters.HasMultipleSections}}"
+                                 ItemsSource="{Binding Sections}"
+                                 SelectedItem="{Binding SelectedSection.Value, Mode=TwoWay}">
+                <primitives:TabStrip.ItemTemplate>
+                    <DataTemplate DataType="sections:ISection" x:CompileBindings="False">
+                        <TextBlock Text="{Binding FriendlyName}"
+                                   TextTrimming="CharacterEllipsis" />
+                    </DataTemplate>
+                </primitives:TabStrip.ItemTemplate>
+            </primitives:TabStrip>
+        </DataTemplate>
+
+        <DataTemplate x:Key="DesktopRootItemTemplate" DataType="sections:ISection" x:CompileBindings="False">
+            <FlexPanel Direction="Column" AlignItems="Stretch">
+                <Border Classes="DesktopRootHeader"
+                        CornerRadius="{Binding CornerRadius, RelativeSource={RelativeSource AncestorType=zac:SectionStripItem}}">
+                    <Grid>
+                        <Border Classes="DesktopRootHeaderLeafSelection"
+                                Background="{DynamicResource SystemControlHighlightListAccentLowBrush}"
+                                CornerRadius="{Binding CornerRadius, RelativeSource={RelativeSource AncestorType=zac:SectionStripItem}}">
+                            <Border.IsVisible>
+                                <MultiBinding Converter="{x:Static local:ShellConverters.ShouldShowSelectedRootWithoutChildLevel}">
+                                    <Binding />
+                                    <Binding Path="#ShellViewRoot.DataContext.RootLevel.SelectedSection.Value" />
+                                    <Binding Path="#ShellViewRoot.DataContext.ChildLevels.Value" />
+                                </MultiBinding>
+                            </Border.IsVisible>
+                        </Border>
+
+                        <Border Classes="DesktopRootHeaderGroupSelection"
+                                Background="{DynamicResource SystemControlHighlightListLowBrush}"
+                                CornerRadius="{Binding CornerRadius, RelativeSource={RelativeSource AncestorType=zac:SectionStripItem}}">
+                            <Border.IsVisible>
+                                <MultiBinding Converter="{x:Static local:ShellConverters.ShouldShowSelectedChildLevel}">
+                                    <Binding />
+                                    <Binding Path="#ShellViewRoot.DataContext.RootLevel.SelectedSection.Value" />
+                                    <Binding Path="#ShellViewRoot.DataContext.ChildLevels.Value" />
+                                </MultiBinding>
+                            </Border.IsVisible>
+                        </Border>
+
+                        <DockPanel Margin="5"
+                                   HorizontalSpacing="10">
+                            <Viewbox Height="28" Width="28">
+                                <ContentControl Content="{Binding Icon}" />
+                            </Viewbox>
+                            <TextBlock VerticalAlignment="Center"
+                                       TextTrimming="CharacterEllipsis"
+                                       Text="{Binding FriendlyName}" />
+                        </DockPanel>
+                    </Grid>
+                </Border>
+
+                <ContentControl Content="{Binding #ShellViewRoot.DataContext.ChildLevels.Value, Converter={x:Static local:ShellConverters.FirstChildLevel}}"
+                                ContentTemplate="{StaticResource DesktopChildLevelTemplate}">
+                    <ContentControl.IsVisible>
+                        <MultiBinding Converter="{x:Static local:ShellConverters.ShouldShowSelectedChildLevel}">
+                            <Binding />
+                            <Binding Path="#ShellViewRoot.DataContext.RootLevel.SelectedSection.Value" />
+                            <Binding Path="#ShellViewRoot.DataContext.ChildLevels.Value" />
+                        </MultiBinding>
+                    </ContentControl.IsVisible>
+                </ContentControl>
+            </FlexPanel>
+        </DataTemplate>
+    </UserControl.Resources>
 
     <Design.DataContext>
         <local:ShellDesign />
@@ -18,15 +116,21 @@
         <Style Selector="FlexPanel#ShellLayout">
             <Setter Property="Direction" Value="ColumnReverse" />
         </Style>
+        <Style Selector="Border#DesktopSidebar">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
         <Style Selector="zac|SectionStrip#ShellSectionStrip">
             <Setter Property="Orientation" Value="Horizontal" />
+        </Style>
+        <Style Selector="ContentControl#MobileChildTabs">
+            <Setter Property="IsVisible" Value="True" />
         </Style>
     </UserControl.Styles>
 
     <!--
         Responsive shell:
         - Wide (>= 700): vertical SectionStrip on the left + content on the right.
-        - Narrow (< 700): content on top + horizontal SectionStrip at the bottom (mobile-style bar).
+        - Narrow (< 700): content on top, active child tabs above it, and root sections at the bottom.
     -->
     <Border Container.Name="shell" Container.Sizing="Width">
         <Border.Styles>
@@ -34,14 +138,33 @@
                 <Style Selector="FlexPanel#ShellLayout">
                     <Setter Property="Direction" Value="Row" />
                 </Style>
+                <Style Selector="Border#DesktopSidebar">
+                    <Setter Property="IsVisible" Value="True" />
+                </Style>
                 <Style Selector="zac|SectionStrip#ShellSectionStrip">
                     <Setter Property="Orientation" Value="Vertical" />
+                    <Setter Property="IsVisible" Value="False" />
+                </Style>
+                <Style Selector="ContentControl#MobileChildTabs">
+                    <Setter Property="IsVisible" Value="False" />
                 </Style>
             </ContainerQuery>
         </Border.Styles>
 
         <FlexPanel x:Name="ShellLayout" AlignItems="Stretch">
-            <!-- Section navigation: bottom bar on mobile, sidebar on desktop -->
+            <!-- Desktop section navigation: first level with active second level nested in the sidebar -->
+            <Border x:Name="DesktopSidebar"
+                    Width="220"
+                    FlexPanel.Shrink="0">
+                <zac:SectionStrip Orientation="Vertical"
+                                  Padding="0"
+                                  Sections="{Binding RootLevel.Sections}"
+                                  SelectedSection="{Binding RootLevel.SelectedSection.Value, Mode=TwoWay}"
+                                  ItemContainerTheme="{StaticResource DesktopRootSectionItemTheme}"
+                                  ItemTemplate="{StaticResource DesktopRootItemTemplate}" />
+            </Border>
+
+            <!-- Mobile section navigation: bottom bar contains only the first level -->
             <zac:SectionStrip x:Name="ShellSectionStrip"
                               FlexPanel.Shrink="0"
                               Sections="{Binding RootLevel.Sections}"
@@ -49,20 +172,10 @@
 
             <!-- Content -->
             <FlexPanel FlexPanel.Grow="1" Direction="Column" AlignItems="Stretch">
-                <ItemsControl FlexPanel.Shrink="0" ItemsSource="{Binding ChildLevels.Value}">
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <FlexPanel Direction="Column" AlignItems="Stretch" />
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate DataType="shell:SectionLevel">
-                            <zac:SectionStrip Orientation="Horizontal"
-                                              Sections="{Binding Sections}"
-                                              SelectedSection="{Binding SelectedSection.Value, Mode=TwoWay}" />
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
+                <ContentControl x:Name="MobileChildTabs"
+                                FlexPanel.Shrink="0"
+                                Content="{Binding ChildLevels.Value, Converter={x:Static local:ShellConverters.FirstChildLevel}}"
+                                ContentTemplate="{StaticResource MobileChildLevelTemplate}" />
 
                 <Frame FlexPanel.Grow="1"
                        Content="{Binding SelectedSection.Value.Navigator.Content^}"

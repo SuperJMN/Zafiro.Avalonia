@@ -149,22 +149,24 @@ Key `Maybe<T>` combinators: `Map`, `Bind`, `Match`, `Execute`, `ExecuteNoValue`,
 ```csharp
 using Zafiro.UI.Shell.Utils;
 
-[Section(icon: "fa-home", sortIndex: 0)]
+[Section("home", "fa-home", 0, FriendlyName = "Home")]
 public class HomeViewModel
 {
     public string Greeting => "Welcome!";
 }
 
-[Section(icon: "fa-gear", sortIndex: 1)]
-[SectionGroup("settings", "Settings")]
-public class SettingsViewModel { }
+[Section("investor", "fa-user", 2, FriendlyName = "Investor")]
+public class InvestorViewModel { }
 
-[Section(icon: "fa-user", sortIndex: 0, ParentId = "Settings")]
-public class ProfileViewModel { }
+[Section("find-projects", "fa-search", 0, FriendlyName = "Find Projects", ParentId = "investor")]
+public class FindProjectsViewModel { }
+
+[Section("funded", "fa-circle-check", 1, FriendlyName = "Funded", ParentId = "investor")]
+public class FundedViewModel { }
 ```
 
 The source generator (`Zafiro.Avalonia.Generators`) discovers `[Section]`-decorated types and generates `AddAllSectionsFromAttributes()` extension method on `IServiceCollection`.
-`ParentId` creates hierarchical sections. Root sections are shown by the shell's primary `SectionStrip`; child levels are rendered automatically inside `ShellView`, and each section keeps its own scoped `INavigator`.
+`ParentId` creates hierarchical sections. On wide layouts, `ShellView` shows the first level in the sidebar and nests the active second level below its selected parent. On compact layouts, the bottom bar shows only first-level sections and the active second level moves to the content header as tabs. Deeper levels remain part of the navigation model, but the default shell UI currently represents only the first two levels. Each section keeps its own scoped `INavigator`.
 
 ```csharp
 services.AddZafiroShell(logger: logger);

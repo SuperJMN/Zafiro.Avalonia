@@ -34,6 +34,6 @@ public sealed class HierarchicalShellSampleViewModel : IDisposable
 
     private static bool IsDemoSection(Type type)
     {
-        return type.Namespace == typeof(WorkspaceViewModel).Namespace;
+        return type.Namespace == typeof(HierarchicalDemoPage).Namespace;
     }
 }

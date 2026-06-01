@@ -52,20 +52,19 @@ public class App : Application
 ```csharp
 using Zafiro.UI.Shell.Utils;
 
-[Section(icon: "fa-home", sortIndex: 0)]
+[Section("home", "fa-home", 0, FriendlyName = "Home")]
 public class HomeViewModel
 {
-    public string Greeting => "Welcome to the Zafiro Shell!";
+    public string Greeting => "Welcome to the investment workspace.";
 }
 ```
 
-### Section with IHaveHeader
+### Child Section
 ```csharp
-[Section(icon: "fa-circle-info", sortIndex: 3)]
-public class AboutViewModel : IHaveHeader
+[Section("find-projects", "fa-search", 0, FriendlyName = "Find Projects", ParentId = "investor")]
+public class FindProjectsViewModel
 {
-    public IObservable<object> Header => Observable.Return<object>("About This App");
-    public string Version => "1.0.0";
+    public string Description => "Search investment opportunities by stage, sector, and traction.";
 }
 ```
 

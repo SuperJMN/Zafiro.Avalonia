@@ -2,8 +2,8 @@
   <PropertyGroup>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
     <CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
-    <AvaloniaVersion>12.0.0</AvaloniaVersion>
-    <ZafiroAvaloniaVersion>51.9.6</ZafiroAvaloniaVersion>
+    <AvaloniaVersion>12.0.4</AvaloniaVersion>
+    <ZafiroAvaloniaVersion>52.2.0</ZafiroAvaloniaVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -11,7 +11,7 @@
     <PackageVersion Include="Avalonia" Version="$(AvaloniaVersion)" />
     <PackageVersion Include="Avalonia.Themes.Fluent" Version="$(AvaloniaVersion)" />
     <PackageVersion Include="Avalonia.Fonts.Inter" Version="$(AvaloniaVersion)" />
-    <PackageVersion Include="Zafiro.Avalonia.Mcp.AppHost" Version="0.0.44" />
+    <PackageVersion Include="Zafiro.Avalonia.Mcp.AppHost" Version="0.0.61" />
     <PackageVersion Include="ReactiveUI.Avalonia" Version="11.4.12" />
     <PackageVersion Include="Avalonia.Desktop" Version="$(AvaloniaVersion)" />
     <PackageVersion Include="Avalonia.Browser" Version="$(AvaloniaVersion)" />

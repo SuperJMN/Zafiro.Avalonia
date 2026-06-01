@@ -12,7 +12,7 @@ dotnet new install Zafiro.Avalonia.Templates
 
 | Short name      | Description                                                                  |
 |-----------------|------------------------------------------------------------------------------|
-| `zafiro-shell`  | Cross-platform Avalonia app (Desktop, Browser, Android, iOS) with the Zafiro Shell, section auto-discovery via `[Section]`, MVVM via ReactiveUI. |
+| `zafiro-shell`  | Cross-platform Avalonia app (Desktop, Browser, Android, iOS) with the hierarchical Zafiro Shell, section auto-discovery via `[Section]`, MVVM via ReactiveUI. |
 
 ## Usage
 
@@ -32,7 +32,7 @@ dotnet run --project MyApp.Desktop
 ## What you get
 
 - Multi-project solution (`.slnx`):
-  - **Shared head** (`MyApp/`) — `App.axaml`, `App.axaml.cs` bootstrap with `AddZafiroShell` + `AddAllSectionsFromAttributes`, plus `Sections/` (Home / Settings / About) — each section is a ViewModel + View pair tagged with `[Section]` so it is auto-discovered and added to the shell.
+  - **Shared head** (`MyApp/`) — `App.axaml`, `App.axaml.cs` bootstrap with `AddZafiroShell` + `AddAllSectionsFromAttributes`, plus `Sections/` with a two-level default tree (`Home`, `Funds`, `Investor > Find Projects/Funded`, `Founder > My Projects/Funders`) — each section is a ViewModel + View pair tagged with `[Section]` so it is auto-discovered and added to the shell.
   - **MyApp.Desktop** — Windows / Linux / macOS via `Avalonia.Desktop`.
   - **MyApp.Browser** — WebAssembly via `Avalonia.Browser`.
   - **MyApp.Android** — `Avalonia.Android`.
@@ -40,15 +40,15 @@ dotnet run --project MyApp.Desktop
 - Central Package Management (`Directory.Packages.props`) with pinned Avalonia 12 + Zafiro versions.
 - Compiled bindings on by default.
 - `ReactiveUI.Avalonia` as the MVVM integration.
-- `Zafiro.Avalonia.Mcp.AppHost` wired into Desktop in **Debug** builds (via `.UseMcpDiagnostics()` under `#if DEBUG`) so AI agents and other MCP clients can inspect/drive the running UI.
+- `Zafiro.Avalonia.Mcp.AppHost` wired into Desktop through `.UseMcpDiagnosticsIfDebug()` so Debug builds expose MCP diagnostics while Release builds stay clean.
 
 ## Adding a new section
 
-Create a ViewModel + View pair anywhere under the shared head and decorate the ViewModel with `[Section]`:
+Create a ViewModel + View pair anywhere under the shared head and decorate the ViewModel with `[Section]`. Use an explicit id as the first argument; child sections point to that id through `ParentId`.
 
 ```csharp
-[Section("Profile", "fa-solid fa-user", sortIndex: 3)]
-public partial class ProfileViewModel : ReactiveObject { /* ... */ }
+[Section("funded", "fa-circle-check", sortIndex: 1, FriendlyName = "Funded", ParentId = "investor")]
+public partial class FundedViewModel : ReactiveObject { /* ... */ }
 ```
 
 The Zafiro source generator will register it automatically — no DI plumbing required.

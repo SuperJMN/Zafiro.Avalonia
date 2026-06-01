@@ -4,6 +4,6 @@
              x:Class="ZafiroShellTemplate.Sections.HomeView" x:DataType="sections:HomeViewModel">
     <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="8">
         <PathIcon Data="{StaticResource fa-home}" Height="48" Width="48" />
-        <TextBlock Text="{Binding Greeting}" FontSize="24" FontWeight="Light" HorizontalAlignment="Center" />
+        <TextBlock Text="{Binding Greeting}" FontSize="24" FontWeight="Light" HorizontalAlignment="Center" TextWrapping="Wrap" />
     </StackPanel>
 </UserControl>

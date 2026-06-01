@@ -9,82 +9,82 @@ public abstract class HierarchicalDemoPage(string title, string summary)
     public string Summary { get; } = summary;
 }
 
-[Section("workspace", "mdi-view-dashboard", 0, FriendlyName = "Workspace")]
+[Section("home", "mdi-home", 0, FriendlyName = "Home")]
 [SectionGroup(HierarchicalShellSampleViewModel.DemoGroupKey, "Hierarchical Shell Demo")]
-public class WorkspaceViewModel : HierarchicalDemoPage
+public class HomeViewModel : HierarchicalDemoPage
 {
-    public WorkspaceViewModel()
-        : base("Workspace", "Operational area for day-to-day work.")
+    public HomeViewModel()
+        : base("Home", "Landing section for the investment workspace.")
     {
     }
 }
 
-[Section("reports", "mdi-chart-box-outline", 1, FriendlyName = "Reports")]
+[Section("funds", "mdi-wallet", 1, FriendlyName = "Funds")]
 [SectionGroup(HierarchicalShellSampleViewModel.DemoGroupKey, "Hierarchical Shell Demo")]
-public class ReportsViewModel : HierarchicalDemoPage
+public class FundsViewModel : HierarchicalDemoPage
 {
-    public ReportsViewModel()
-        : base("Reports", "Reporting area with its own navigation scope.")
+    public FundsViewModel()
+        : base("Funds", "Browse funds and investment pools.")
     {
     }
 }
 
-[Section("customers", "mdi-account-group", 0, FriendlyName = "Customers", ParentId = "workspace")]
+[Section("investor", "mdi-account-tie", 2, FriendlyName = "Investor")]
 [SectionGroup(HierarchicalShellSampleViewModel.DemoGroupKey, "Hierarchical Shell Demo")]
-public class CustomersViewModel : HierarchicalDemoPage
+public class InvestorViewModel : HierarchicalDemoPage
 {
-    public CustomersViewModel()
-        : base("Customers", "Customer operations within the workspace area.")
+    public InvestorViewModel()
+        : base("Investor", "Investor area with project discovery and funded work.")
     {
     }
 }
 
-[Section("security", "mdi-shield-key", 1, FriendlyName = "Security", ParentId = "workspace")]
+[Section("find-projects", "mdi-magnify", 0, FriendlyName = "Find Projects", ParentId = "investor")]
 [SectionGroup(HierarchicalShellSampleViewModel.DemoGroupKey, "Hierarchical Shell Demo")]
-public class SecurityViewModel : HierarchicalDemoPage
+public class FindProjectsViewModel : HierarchicalDemoPage
 {
-    public SecurityViewModel()
-        : base("Security", "Access control section under workspace.")
+    public FindProjectsViewModel()
+        : base("Find Projects", "Search opportunities from the investor branch.")
     {
     }
 }
 
-[Section("active-customers", "mdi-account-check", 0, FriendlyName = "Active", ParentId = "customers")]
+[Section("funded", "mdi-check-circle", 1, FriendlyName = "Funded", ParentId = "investor")]
 [SectionGroup(HierarchicalShellSampleViewModel.DemoGroupKey, "Hierarchical Shell Demo")]
-public class ActiveCustomersViewModel : HierarchicalDemoPage
+public class FundedViewModel : HierarchicalDemoPage
 {
-    public ActiveCustomersViewModel()
-        : base("Active customers", "Leaf section with an independent navigator.")
+    public FundedViewModel()
+        : base("Funded", "Investor branch section with an independent navigator.")
     {
     }
 }
 
-[Section("segments", "mdi-chart-donut", 1, FriendlyName = "Segments", ParentId = "customers")]
+[Section("founder", "mdi-lightbulb-on-outline", 3, FriendlyName = "Founder")]
 [SectionGroup(HierarchicalShellSampleViewModel.DemoGroupKey, "Hierarchical Shell Demo")]
-public class SegmentsViewModel : HierarchicalDemoPage
+public class FounderViewModel : HierarchicalDemoPage
 {
-    public SegmentsViewModel()
-        : base("Segments", "Sibling leaf section under customers.")
+    public FounderViewModel()
+        : base("Founder", "Founder area for project and funder management.")
     {
     }
 }
 
-[Section("sales", "mdi-chart-line", 0, FriendlyName = "Sales", ParentId = "reports")]
+[Section("my-projects", "mdi-folder-open", 0, FriendlyName = "My Projects", ParentId = "founder")]
 [SectionGroup(HierarchicalShellSampleViewModel.DemoGroupKey, "Hierarchical Shell Demo")]
-public class SalesViewModel : HierarchicalDemoPage
+public class MyProjectsViewModel : HierarchicalDemoPage
 {
-    public SalesViewModel()
-        : base("Sales", "Reports branch leaf section.")
+    public MyProjectsViewModel()
+        : base("My Projects", "Founder branch section with an independent navigator.")
     {
     }
 }
 
-[Section("forecast", "mdi-calendar-clock", 1, FriendlyName = "Forecast", ParentId = "reports")]
+[Section("funders", "mdi-handshake", 1, FriendlyName = "Funders", ParentId = "founder")]
 [SectionGroup(HierarchicalShellSampleViewModel.DemoGroupKey, "Hierarchical Shell Demo")]
-public class ForecastViewModel : HierarchicalDemoPage
+public class FundersViewModel : HierarchicalDemoPage
 {
-    public ForecastViewModel()
-        : base("Forecast", "Another reports branch leaf section.")
+    public FundersViewModel()
+        : base("Funders", "Founder branch sibling section.")
     {
     }
 }

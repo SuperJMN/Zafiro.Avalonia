@@ -1,0 +1,10 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:sections="clr-namespace:ZafiroShellTemplate.Sections"
+             x:Class="ZafiroShellTemplate.Sections.FundersView" x:DataType="sections:FundersViewModel">
+    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="8">
+        <PathIcon Data="{StaticResource fa-handshake}" Height="48" Width="48" />
+        <TextBlock Text="{Binding Title}" FontSize="24" FontWeight="Light" HorizontalAlignment="Center" />
+        <TextBlock Text="{Binding Description}" FontSize="14" Opacity="0.7" TextWrapping="Wrap" TextAlignment="Center" MaxWidth="420" />
+    </StackPanel>
+</UserControl>

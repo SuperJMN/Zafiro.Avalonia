@@ -30,7 +30,7 @@ public class App : Application
         services.AddAllSectionsFromAttributes(logger);
 
         var provider = services.BuildServiceProvider();
-        var shell = provider.GetRequiredService<IShell>();
+        var shell = provider.GetRequiredService<IHierarchicalShell>();
 
         this.Connect(() => new ShellView(), _ => shell, () => new Window { Title = "ZafiroShellTemplate", Width = 900, Height = 600 });
 
