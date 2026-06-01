@@ -6,5 +6,5 @@ namespace MinimalShell.Sections;
 public class FounderViewModel
 {
     public string Title => "Founder";
-    public string Description => "Manage projects and investor relationships.";
+    public string Description => "Navigation group for founder workflows. Selecting it opens My Projects by default.";
 }

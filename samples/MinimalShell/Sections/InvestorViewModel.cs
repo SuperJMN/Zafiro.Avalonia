@@ -6,5 +6,5 @@ namespace MinimalShell.Sections;
 public class InvestorViewModel
 {
     public string Title => "Investor";
-    public string Description => "Find projects and keep track of funded opportunities.";
+    public string Description => "Navigation group for investor workflows. Selecting it opens Find Projects by default.";
 }

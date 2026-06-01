@@ -41,6 +41,7 @@ public class DefaultShellStructureTests
     [Fact]
     public void ZafiroShellTemplate_defines_a_two_level_investment_app_section_tree()
     {
+        var readme = ReadTemplateFile("README.md");
         var app = ReadTemplateFile("ZafiroShellTemplate", "App.axaml.cs");
         var desktopProgram = ReadTemplateFile("ZafiroShellTemplate.Desktop", "Program.cs");
         var desktopProject = ReadTemplateFile("ZafiroShellTemplate.Desktop", "ZafiroShellTemplate.Desktop.csproj");
@@ -53,6 +54,10 @@ public class DefaultShellStructureTests
         var myProjects = ReadTemplateFile("ZafiroShellTemplate", "Sections", "MyProjectsViewModel.cs");
         var funders = ReadTemplateFile("ZafiroShellTemplate", "Sections", "FundersViewModel.cs");
 
+        Assert.Contains("Home\nFunds\nInvestor\n  Find Projects\n  Funded\nFounder\n  My Projects\n  Funders", readme);
+        Assert.Contains("ParentId = \"investor\"", readme);
+        Assert.Contains("two navigation levels", readme);
+        Assert.Contains("Each section owns its own `INavigator`", readme);
         Assert.Contains("GetRequiredService<IHierarchicalShell>()", app);
         Assert.Contains(".UseMcpDiagnosticsIfDebug()", desktopProgram);
         Assert.DoesNotContain("#if DEBUG", desktopProgram);
@@ -68,6 +73,19 @@ public class DefaultShellStructureTests
     }
 
     [Fact]
+    public void MinimalShell_readme_explains_the_default_section_tree()
+    {
+        var readme = ReadMinimalShellFile("README.md");
+
+        Assert.Contains("Home\nFunds\nInvestor\n  Find Projects\n  Funded\nFounder\n  My Projects\n  Funders", readme);
+        Assert.Contains("Root sections are the ViewModels with `[Section]` and no `ParentId`", readme);
+        Assert.Contains("ParentId = \"investor\"", readme);
+        Assert.Contains("two navigation levels", readme);
+        Assert.Contains("Each section owns its own `INavigator`", readme);
+        Assert.Contains("ParentId` must match another section id, not a class name", readme);
+    }
+
+    [Fact]
     public void Shell_child_level_selector_is_visible_only_when_it_has_multiple_sections()
     {
         var converter = ShellConverters.HasMultipleSections;
@@ -78,21 +96,15 @@ public class DefaultShellStructureTests
     }
 
     [Fact]
-    public void Shell_sidebar_only_nests_the_active_first_child_level()
+    public void Shell_mobile_child_tabs_use_the_active_first_child_level()
     {
-        var home = new TestSection("home");
-        var investor = new TestSection("investor");
         var findProjects = new TestSection("find-projects");
         var funded = new TestSection("funded");
         var childLevel = new SectionLevel([findProjects, funded], findProjects, _ => { });
 
         var firstChildLevel = ShellConverters.FirstChildLevel.Convert(new[] { childLevel }, typeof(SectionLevel), null, CultureInfo.InvariantCulture);
-        var showInvestorChildren = ShellConverters.ShouldShowSelectedChildLevel.Convert(new object?[] { investor, investor, new[] { childLevel } }, typeof(bool), null, CultureInfo.InvariantCulture);
-        var showHomeChildren = ShellConverters.ShouldShowSelectedChildLevel.Convert(new object?[] { home, investor, new[] { childLevel } }, typeof(bool), null, CultureInfo.InvariantCulture);
 
         Assert.Same(childLevel, firstChildLevel);
-        Assert.True((bool)showInvestorChildren!);
-        Assert.False((bool)showHomeChildren!);
     }
 
     private static string ReadTemplateFile(params string[] segments)
@@ -116,6 +128,27 @@ public class DefaultShellStructureTests
         }
 
         throw new FileNotFoundException($"Could not find template file '{Path.Combine(segments)}'.");
+    }
+
+    private static string ReadMinimalShellFile(params string[] segments)
+    {
+        for (var directory = new DirectoryInfo(AppContext.BaseDirectory); directory is not null; directory = directory.Parent)
+        {
+            var samplePath = Path.Combine(
+                [
+                    directory.FullName,
+                    "samples",
+                    "MinimalShell",
+                    .. segments,
+                ]);
+
+            if (File.Exists(samplePath))
+            {
+                return File.ReadAllText(samplePath);
+            }
+        }
+
+        throw new FileNotFoundException($"Could not find MinimalShell file '{Path.Combine(segments)}'.");
     }
 
     private sealed class TestSection(string id) : ISection

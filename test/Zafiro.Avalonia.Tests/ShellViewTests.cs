@@ -2,7 +2,6 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Headless.XUnit;
 using Avalonia.Markup.Xaml.Styling;
-using Avalonia.Media;
 using Avalonia.Themes.Fluent;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
@@ -52,7 +51,76 @@ public class ShellViewTests
     }
 
     [AvaloniaFact]
-    public void Desktop_sidebar_parent_with_children_does_not_paint_selection_behind_children()
+    public void Desktop_sidebar_shows_all_second_level_sections()
+    {
+        EnsureStyles();
+
+        var home = new SimpleSection
+        {
+            Id = "home",
+            FriendlyName = "Home",
+            Content = "Home content",
+        };
+
+        var investor = new SimpleSection
+        {
+            Id = "investor",
+            FriendlyName = "Investor",
+            Content = "Investor content",
+        };
+
+        var findProjects = new SimpleSection
+        {
+            Id = "find-projects",
+            ParentId = "investor",
+            FriendlyName = "Find Projects",
+            Content = "Find Projects content",
+        };
+
+        var funded = new SimpleSection
+        {
+            Id = "funded",
+            ParentId = "investor",
+            FriendlyName = "Funded",
+            Content = "Funded content",
+        };
+
+        var founder = new SimpleSection
+        {
+            Id = "founder",
+            FriendlyName = "Founder",
+            Content = "Founder content",
+        };
+
+        var myProjects = new SimpleSection
+        {
+            Id = "my-projects",
+            ParentId = "founder",
+            FriendlyName = "My Projects",
+            Content = "My Projects content",
+        };
+
+        var funders = new SimpleSection
+        {
+            Id = "funders",
+            ParentId = "founder",
+            FriendlyName = "Funders",
+            Content = "Funders content",
+        };
+
+        var shell = new TestShell([home, investor, findProjects, funded, founder, myProjects, funders], findProjects);
+        var view = Layout(new ShellView { DataContext = shell }, 900, 600);
+
+        var text = VisibleText(view);
+
+        Assert.Contains("Find Projects", text);
+        Assert.Contains("Funded", text);
+        Assert.Contains("My Projects", text);
+        Assert.Contains("Funders", text);
+    }
+
+    [AvaloniaFact]
+    public void Shell_content_tracks_selected_child_section_when_toggled_again()
     {
         EnsureStyles();
 
@@ -66,6 +134,7 @@ public class ShellViewTests
         var findProjects = new SimpleSection
         {
             Id = "find-projects",
+            ParentId = "investor",
             FriendlyName = "Find Projects",
             Content = "Find Projects content",
         };
@@ -73,29 +142,67 @@ public class ShellViewTests
         var funded = new SimpleSection
         {
             Id = "funded",
+            ParentId = "investor",
             FriendlyName = "Funded",
             Content = "Funded content",
         };
 
-        var childLevel = new SectionLevel([findProjects, funded], findProjects, _ => { });
-        var shell = new TestShell([investor], investor, [childLevel]);
+        var shell = new TestShell([investor, findProjects, funded], findProjects);
         var view = Layout(new ShellView { DataContext = shell }, 900, 600);
 
-        var parentItem = Assert.Single(view.GetVisualDescendants().OfType<SectionStripItem>().Where(item => ReferenceEquals(item.DataContext, investor)));
-        var parentHeader = Assert.Single(parentItem.GetVisualDescendants().OfType<Border>().Where(border => border.Classes.Contains("DesktopRootHeader")));
-        var groupSelection = Assert.Single(parentHeader.GetVisualDescendants().OfType<Border>().Where(border => border.Classes.Contains("DesktopRootHeaderGroupSelection")));
-        var leafSelection = Assert.Single(parentHeader.GetVisualDescendants().OfType<Border>().Where(border => border.Classes.Contains("DesktopRootHeaderLeafSelection")));
-        var selectedChildItem = Assert.Single(view.GetVisualDescendants().OfType<SectionStripItem>().Where(item => ReferenceEquals(item.DataContext, findProjects)));
+        shell.GoToSection("funded");
+        Dispatcher.UIThread.RunJobs();
+        Assert.Contains("Funded content", VisibleText(view));
 
-        Assert.Equal(Brushes.Transparent, parentItem.Background);
-        Assert.True(groupSelection.IsVisible);
-        Assert.False(leafSelection.IsVisible);
-        Assert.NotEqual(Brushes.Transparent, groupSelection.Background);
-        Assert.NotEqual(groupSelection.Background, selectedChildItem.Background);
+        shell.GoToSection("find-projects");
+        Dispatcher.UIThread.RunJobs();
+        Assert.Contains("Find Projects content", VisibleText(view));
+
+        shell.GoToSection("funded");
+        Dispatcher.UIThread.RunJobs();
+        Assert.Contains("Funded content", VisibleText(view));
     }
 
     [AvaloniaFact]
-    public void Desktop_sidebar_root_without_children_keeps_accent_selection()
+    public void Desktop_sidebar_parent_with_children_selects_child_node_only()
+    {
+        EnsureStyles();
+
+        var investor = new SimpleSection
+        {
+            Id = "investor",
+            FriendlyName = "Investor",
+            Content = "Investor content",
+        };
+
+        var findProjects = new SimpleSection
+        {
+            Id = "find-projects",
+            ParentId = "investor",
+            FriendlyName = "Find Projects",
+            Content = "Find Projects content",
+        };
+
+        var funded = new SimpleSection
+        {
+            Id = "funded",
+            ParentId = "investor",
+            FriendlyName = "Funded",
+            Content = "Funded content",
+        };
+
+        var shell = new TestShell([investor, findProjects, funded], findProjects);
+        var view = Layout(new ShellView { DataContext = shell }, 900, 600);
+
+        var parentItem = TreeItemFor(view, "investor");
+        var selectedChildItem = TreeItemFor(view, "find-projects");
+
+        Assert.False(parentItem.IsSelected);
+        Assert.True(selectedChildItem.IsSelected);
+    }
+
+    [AvaloniaFact]
+    public void Desktop_sidebar_root_without_children_selects_root_node()
     {
         EnsureStyles();
 
@@ -109,15 +216,52 @@ public class ShellViewTests
         var shell = new TestShell([home], home);
         var view = Layout(new ShellView { DataContext = shell }, 900, 600);
 
-        var rootItem = Assert.Single(view.GetVisualDescendants().OfType<SectionStripItem>().Where(item => ReferenceEquals(item.DataContext, home)));
-        var rootHeader = Assert.Single(rootItem.GetVisualDescendants().OfType<Border>().Where(border => border.Classes.Contains("DesktopRootHeader")));
-        var groupSelection = Assert.Single(rootHeader.GetVisualDescendants().OfType<Border>().Where(border => border.Classes.Contains("DesktopRootHeaderGroupSelection")));
-        var leafSelection = Assert.Single(rootHeader.GetVisualDescendants().OfType<Border>().Where(border => border.Classes.Contains("DesktopRootHeaderLeafSelection")));
+        var rootItem = TreeItemFor(view, "home");
 
-        Assert.Equal(Brushes.Transparent, rootItem.Background);
-        Assert.False(groupSelection.IsVisible);
-        Assert.True(leafSelection.IsVisible);
-        Assert.NotEqual(Brushes.Transparent, leafSelection.Background);
+        Assert.True(rootItem.IsSelected);
+    }
+
+    [AvaloniaFact]
+    public void Desktop_sidebar_child_selection_navigates_and_refreshes_content()
+    {
+        EnsureStyles();
+
+        var investor = new SimpleSection
+        {
+            Id = "investor",
+            FriendlyName = "Investor",
+            Content = "Investor content",
+        };
+
+        var findProjects = new SimpleSection
+        {
+            Id = "find-projects",
+            ParentId = "investor",
+            FriendlyName = "Find Projects",
+            Content = "Find Projects content",
+        };
+
+        var funded = new SimpleSection
+        {
+            Id = "funded",
+            ParentId = "investor",
+            FriendlyName = "Funded",
+            Content = "Funded content",
+        };
+
+        var shell = new TestShell([investor, findProjects, funded], findProjects);
+        var view = Layout(new ShellView { DataContext = shell }, 900, 600);
+        var tree = Assert.Single(view.GetVisualDescendants().OfType<SectionTreeView>());
+
+        tree.SelectedItem = TreeNodeFor(view, "funded");
+        Dispatcher.UIThread.RunJobs();
+        Assert.Same(funded, shell.SelectedSection.Value);
+        Assert.Contains("Funded content", VisibleText(view));
+
+        tree.SelectedItem = TreeNodeFor(view, "find-projects");
+        Dispatcher.UIThread.RunJobs();
+        Assert.Same(findProjects, shell.SelectedSection.Value);
+        Assert.Contains("Find Projects content", VisibleText(view));
     }
 
     private static ShellView Layout(ShellView view, double width, double height)
@@ -137,6 +281,28 @@ public class ShellViewTests
         Dispatcher.UIThread.RunJobs();
 
         return view;
+    }
+
+    private static IReadOnlyList<string?> VisibleText(Visual visual)
+    {
+        return visual.GetVisualDescendants()
+            .OfType<TextBlock>()
+            .Where(textBlock => textBlock is { IsVisible: true, Bounds.Width: > 0 })
+            .Select(textBlock => textBlock.Text)
+            .ToList();
+    }
+
+    private static TreeViewItem TreeItemFor(Visual visual, string sectionId)
+    {
+        return Assert.Single(visual.GetVisualDescendants()
+            .OfType<TreeViewItem>()
+            .Where(item => item.DataContext is SectionTreeNode node && node.Id == sectionId));
+    }
+
+    private static SectionTreeNode TreeNodeFor(Visual visual, string sectionId)
+    {
+        var item = TreeItemFor(visual, sectionId);
+        return Assert.IsType<SectionTreeNode>(item.DataContext);
     }
 
     private static void EnsureStyles()
@@ -166,8 +332,8 @@ public class ShellViewTests
         {
             Sections = sections;
             SelectedSection = new ReactiveProperty<ISection>(selectedSection);
-            SelectedPath = new ReactiveProperty<IReadOnlyList<ISection>>([selectedSection]);
-            RootLevel = new SectionLevel(sections, selectedSection, Select);
+            SelectedPath = new ReactiveProperty<IReadOnlyList<ISection>>(BuildPath(selectedSection));
+            RootLevel = new SectionLevel(sections.Where(section => section is not IHierarchicalSection hierarchicalSection || string.IsNullOrWhiteSpace(hierarchicalSection.ParentId)).ToList(), selectedSection, Select);
             ChildLevels = new ReactiveProperty<IReadOnlyList<SectionLevel>>(childLevels ?? []);
         }
 
@@ -179,12 +345,32 @@ public class ShellViewTests
 
         public void GoToSection(string sectionId)
         {
+            Select(Sections.Single(section => section.Id == sectionId));
         }
 
         private void Select(ISection section)
         {
             SelectedSection.Value = section;
-            SelectedPath.Value = [section];
+            SelectedPath.Value = BuildPath(section);
+        }
+
+        private IReadOnlyList<ISection> BuildPath(ISection section)
+        {
+            var sectionsById = Sections.ToDictionary(candidate => candidate.Id);
+            var path = new Stack<ISection>();
+            var current = section;
+
+            while (true)
+            {
+                path.Push(current);
+
+                if (current is not IHierarchicalSection { ParentId: { } parentId } || string.IsNullOrWhiteSpace(parentId) || !sectionsById.TryGetValue(parentId, out var parent))
+                {
+                    return path.ToList();
+                }
+
+                current = parent;
+            }
         }
     }
 }

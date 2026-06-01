@@ -14,30 +14,13 @@
              x:DataType="shell:IHierarchicalShell">
 
     <UserControl.Resources>
-        <ControlTheme x:Key="DesktopRootSectionItemTheme"
-                      TargetType="zac:SectionStripItem"
-                      BasedOn="{StaticResource {x:Type zac:SectionStripItem}}">
-            <Style Selector="^:pointerover">
-                <Setter Property="Background" Value="Transparent" />
-            </Style>
+        <ControlTheme x:Key="{x:Type local:SectionTreeView}"
+                      TargetType="local:SectionTreeView"
+                      BasedOn="{StaticResource {x:Type TreeView}}" />
 
-            <Style Selector="^:selected">
-                <Setter Property="Background" Value="Transparent" />
-            </Style>
-
-            <Style Selector="^:selected:pointerover">
-                <Setter Property="Background" Value="Transparent" />
-            </Style>
-        </ControlTheme>
-
-        <DataTemplate x:Key="DesktopChildLevelTemplate" DataType="shell:SectionLevel">
-            <zac:SectionStrip Orientation="Vertical"
-                              Padding="0,0,0,6"
-                              IconSize="24"
-                              ItemPadding="8,6"
-                              Sections="{Binding Sections}"
-                              SelectedSection="{Binding SelectedSection.Value, Mode=TwoWay}" />
-        </DataTemplate>
+        <ControlTheme x:Key="{x:Type local:ShellFrame}"
+                      TargetType="local:ShellFrame"
+                      BasedOn="{StaticResource {x:Type nav:Frame}}" />
 
         <DataTemplate x:Key="MobileChildLevelTemplate" DataType="shell:SectionLevel">
             <primitives:TabStrip IsVisible="{Binding Sections, Converter={x:Static local:ShellConverters.HasMultipleSections}}"
@@ -52,59 +35,20 @@
             </primitives:TabStrip>
         </DataTemplate>
 
-        <DataTemplate x:Key="DesktopRootItemTemplate" DataType="sections:ISection" x:CompileBindings="False">
-            <FlexPanel Direction="Column" AlignItems="Stretch">
-                <Border Classes="DesktopRootHeader"
-                        CornerRadius="{Binding CornerRadius, RelativeSource={RelativeSource AncestorType=zac:SectionStripItem}}">
-                    <Grid>
-                        <Border Classes="DesktopRootHeaderLeafSelection"
-                                Background="{DynamicResource SystemControlHighlightListAccentLowBrush}"
-                                CornerRadius="{Binding CornerRadius, RelativeSource={RelativeSource AncestorType=zac:SectionStripItem}}">
-                            <Border.IsVisible>
-                                <MultiBinding Converter="{x:Static local:ShellConverters.ShouldShowSelectedRootWithoutChildLevel}">
-                                    <Binding />
-                                    <Binding Path="#ShellViewRoot.DataContext.RootLevel.SelectedSection.Value" />
-                                    <Binding Path="#ShellViewRoot.DataContext.ChildLevels.Value" />
-                                </MultiBinding>
-                            </Border.IsVisible>
-                        </Border>
-
-                        <Border Classes="DesktopRootHeaderGroupSelection"
-                                Background="{DynamicResource SystemControlHighlightListLowBrush}"
-                                CornerRadius="{Binding CornerRadius, RelativeSource={RelativeSource AncestorType=zac:SectionStripItem}}">
-                            <Border.IsVisible>
-                                <MultiBinding Converter="{x:Static local:ShellConverters.ShouldShowSelectedChildLevel}">
-                                    <Binding />
-                                    <Binding Path="#ShellViewRoot.DataContext.RootLevel.SelectedSection.Value" />
-                                    <Binding Path="#ShellViewRoot.DataContext.ChildLevels.Value" />
-                                </MultiBinding>
-                            </Border.IsVisible>
-                        </Border>
-
-                        <DockPanel Margin="5"
-                                   HorizontalSpacing="10">
-                            <Viewbox Height="28" Width="28">
-                                <ContentControl Content="{Binding Icon}" />
-                            </Viewbox>
-                            <TextBlock VerticalAlignment="Center"
-                                       TextTrimming="CharacterEllipsis"
-                                       Text="{Binding FriendlyName}" />
-                        </DockPanel>
-                    </Grid>
-                </Border>
-
-                <ContentControl Content="{Binding #ShellViewRoot.DataContext.ChildLevels.Value, Converter={x:Static local:ShellConverters.FirstChildLevel}}"
-                                ContentTemplate="{StaticResource DesktopChildLevelTemplate}">
-                    <ContentControl.IsVisible>
-                        <MultiBinding Converter="{x:Static local:ShellConverters.ShouldShowSelectedChildLevel}">
-                            <Binding />
-                            <Binding Path="#ShellViewRoot.DataContext.RootLevel.SelectedSection.Value" />
-                            <Binding Path="#ShellViewRoot.DataContext.ChildLevels.Value" />
-                        </MultiBinding>
-                    </ContentControl.IsVisible>
-                </ContentControl>
-            </FlexPanel>
-        </DataTemplate>
+        <TreeDataTemplate x:Key="DesktopSectionTreeNodeTemplate"
+                          DataType="local:SectionTreeNode"
+                          ItemsSource="{Binding Children}"
+                          x:CompileBindings="False">
+            <DockPanel Margin="5"
+                       HorizontalSpacing="10">
+                <Viewbox Height="28" Width="28">
+                    <ContentControl Content="{Binding Icon}" />
+                </Viewbox>
+                <TextBlock VerticalAlignment="Center"
+                           TextTrimming="CharacterEllipsis"
+                           Text="{Binding FriendlyName}" />
+            </DockPanel>
+        </TreeDataTemplate>
     </UserControl.Resources>
 
     <Design.DataContext>
@@ -152,16 +96,13 @@
         </Border.Styles>
 
         <FlexPanel x:Name="ShellLayout" AlignItems="Stretch">
-            <!-- Desktop section navigation: first level with active second level nested in the sidebar -->
+            <!-- Desktop section navigation: first level with all second-level children visible -->
             <Border x:Name="DesktopSidebar"
                     Width="220"
                     FlexPanel.Shrink="0">
-                <zac:SectionStrip Orientation="Vertical"
-                                  Padding="0"
-                                  Sections="{Binding RootLevel.Sections}"
-                                  SelectedSection="{Binding RootLevel.SelectedSection.Value, Mode=TwoWay}"
-                                  ItemContainerTheme="{StaticResource DesktopRootSectionItemTheme}"
-                                  ItemTemplate="{StaticResource DesktopRootItemTemplate}" />
+                <local:SectionTreeView Shell="{Binding}"
+                                       AutoScrollToSelectedItem="True"
+                                       ItemTemplate="{StaticResource DesktopSectionTreeNodeTemplate}" />
             </Border>
 
             <!-- Mobile section navigation: bottom bar contains only the first level -->
@@ -177,13 +118,12 @@
                                 Content="{Binding ChildLevels.Value, Converter={x:Static local:ShellConverters.FirstChildLevel}}"
                                 ContentTemplate="{StaticResource MobileChildLevelTemplate}" />
 
-                <Frame FlexPanel.Grow="1"
-                       Content="{Binding SelectedSection.Value.Navigator.Content^}"
-                       BackCommand="{Binding SelectedSection.Value.Navigator.Back}">
+                <local:ShellFrame FlexPanel.Grow="1"
+                                  Shell="{Binding}">
                     <Interaction.Behaviors>
                         <nav:AutoHeaderFooterBehavior />
                     </Interaction.Behaviors>
-                </Frame>
+                </local:ShellFrame>
             </FlexPanel>
         </FlexPanel>
     </Border>

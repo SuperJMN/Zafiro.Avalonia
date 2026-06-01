@@ -32,6 +32,7 @@ dotnet run --project MyApp.Desktop
 ## What you get
 
 - Multi-project solution (`.slnx`):
+  - **README.md** — concise guide to the generated section tree, `ParentId`, two-level shell rendering, and per-section navigation scopes.
   - **Shared head** (`MyApp/`) — `App.axaml`, `App.axaml.cs` bootstrap with `AddZafiroShell` + `AddAllSectionsFromAttributes`, plus `Sections/` with a two-level default tree (`Home`, `Funds`, `Investor > Find Projects/Funded`, `Founder > My Projects/Funders`) — each section is a ViewModel + View pair tagged with `[Section]` so it is auto-discovered and added to the shell.
   - **MyApp.Desktop** — Windows / Linux / macOS via `Avalonia.Desktop`.
   - **MyApp.Browser** — WebAssembly via `Avalonia.Browser`.
