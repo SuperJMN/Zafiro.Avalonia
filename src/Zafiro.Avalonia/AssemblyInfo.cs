@@ -1,5 +1,7 @@
+using System.Runtime.CompilerServices;
 using Avalonia.Metadata;
 
+[assembly: InternalsVisibleTo("Zafiro.Avalonia.Tests")]
 [assembly: XmlnsDefinition("https://github.com/avaloniaui", "Zafiro.Avalonia.Controls")]
 [assembly: XmlnsDefinition("https://github.com/avaloniaui", "Zafiro.Avalonia.Converters")]
 [assembly: XmlnsDefinition("https://github.com/avaloniaui", "Zafiro.Avalonia.Behaviors")]

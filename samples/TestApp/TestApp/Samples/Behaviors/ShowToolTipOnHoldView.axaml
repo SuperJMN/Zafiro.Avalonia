@@ -1,0 +1,44 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:behaviors="clr-namespace:TestApp.Samples.Behaviors"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="TestApp.Samples.Behaviors.ShowToolTipOnHoldView"
+             x:DataType="behaviors:ShowToolTipOnHoldViewModel">
+
+    <UserControl.Styles>
+        <StyleInclude Source="/Samples/SampleStyles.axaml" />
+    </UserControl.Styles>
+
+    <ScrollViewer>
+        <FlexPanel Direction="Column" Gap="16" Margin="24" AlignItems="Stretch">
+            <HeaderedContainer Header="ShowToolTipOnHoldBehavior">
+                <FlexPanel Direction="Column" Gap="12" AlignItems="Start">
+                    <TextBlock Text="{Binding Activations, StringFormat='Activations: {0}'}"
+                               Classes="Size-L Weight-Bold" />
+
+                    <FlexPanel Direction="Row" Wrap="Wrap" Gap="12" AlignItems="Center">
+                        <EnhancedButton x:Name="MouseHoldButton"
+                                        Content="Mouse hold"
+                                        Command="{Binding Activate}"
+                                        ToolTip.Tip="Hold opens this tooltip and cancels the pending activation.">
+                            <Interaction.Behaviors>
+                                <ShowToolTipOnHoldBehavior EnableMouseHold="True" />
+                            </Interaction.Behaviors>
+                        </EnhancedButton>
+
+                        <EnhancedButton x:Name="TouchHoldButton"
+                                        Content="Touch hold"
+                                        Command="{Binding Activate}"
+                                        ToolTip.Tip="Touch hold opens this tooltip and cancels the pending activation.">
+                            <Interaction.Behaviors>
+                                <ShowToolTipOnHoldBehavior />
+                            </Interaction.Behaviors>
+                        </EnhancedButton>
+                    </FlexPanel>
+                </FlexPanel>
+            </HeaderedContainer>
+        </FlexPanel>
+    </ScrollViewer>
+</UserControl>
