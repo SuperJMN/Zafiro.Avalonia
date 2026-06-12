@@ -54,33 +54,28 @@ public class GraphWizardGenericSampleViewModel : ReactiveObject
     private GraphWizard<string> CreateGenericWizard()
     {
         var graph = WizardGraph.For<string>();
-        var step1 = new Step1ViewModel();
-        var step2A = new GenericStepViewModel("You selected Option A. Click Finish to return 'A'.");
-        var step2B = new GenericStepViewModel("You selected Option B. Click Finish to return 'B'.");
 
         var node2A = graph
-            .Step(step2A, "Option A")
+            .Step(() => new GenericStepViewModel("You selected Option A. Click Finish to return 'A'."), "Option A")
             .Finish(vm => "A", nextLabel: "Finish (Return A)")
             .Build();
 
         var node2B = graph
-            .Step(step2B, "Option B")
+            .Step(() => new GenericStepViewModel("You selected Option B. Click Finish to return 'B'."), "Option B")
             .Finish(vm => "B", nextLabel: "Finish (Return B)")
             .Build();
 
-        var dynamicLabel = step1.WhenAnyValue(x => x.Choice)
-            .Select(c => c switch
-            {
-                "A" => "Proceed with A",
-                "B" => "Proceed with B",
-                _ => "Select an option"
-            });
-
         var node1 = graph
-            .Step(step1, "Selection")
+            .Step(() => new Step1ViewModel(), "Selection")
             .Next(vm => vm.Choice == "A" ? node2A : node2B,
-                canExecute: step1.WhenAnyValue(x => x.Choice).NotNull(),
-                nextLabel: dynamicLabel)
+                canExecute: vm => vm.WhenAnyValue(x => x.Choice).NotNull(),
+                nextLabel: vm => vm.WhenAnyValue(x => x.Choice)
+                    .Select(c => c switch
+                    {
+                        "A" => "Proceed with A",
+                        "B" => "Proceed with B",
+                        _ => "Select an option"
+                    }))
             .Build();
 
         return new GraphWizard<string>(node1);
