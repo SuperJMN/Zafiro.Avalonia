@@ -18,7 +18,7 @@
     <PackageVersion Include="Avalonia.Skia" Version="$(AvaloniaVersion)"/>
     <PackageVersion Include="Avalonia.Themes.Fluent" Version="$(AvaloniaVersion)"/>
     <!-- Avalonia 12 ecosystem -->
-    <PackageVersion Include="ReactiveUI.Avalonia" Version="11.4.12"/>
+    <PackageVersion Include="ReactiveUI.Avalonia" Version="11.4.13"/>
     <PackageVersion Include="Svg.Controls.Skia.Avalonia" Version="12.0.0"/>
     <PackageVersion Include="Xaml.Behaviors.Avalonia" Version="12.0.0"/>
     <PackageVersion Include="Xaml.Behaviors.Interactions.DragAndDrop" Version="12.0.0"/>
@@ -31,9 +31,9 @@
     <PackageVersion Include="Optris.Icons.Avalonia.MaterialDesign" Version="12.0.4"/>
     <!-- ReactiveUI -->
     <PackageVersion Include="ReactiveProperty" Version="9.8.0"/>
-    <PackageVersion Include="ReactiveUI" Version="23.1.8"/>
+    <PackageVersion Include="ReactiveUI" Version="23.2.28"/>
     <PackageVersion Include="ReactiveUI.SourceGenerators" Version="2.6.1"/>
-    <PackageVersion Include="ReactiveUI.Validation" Version="7.0.5"/>
+    <PackageVersion Include="ReactiveUI.Validation" Version="7.1.0"/>
     <!-- Infrastructure -->
     <PackageVersion Include="coverlet.collector" Version="6.0.4"/>
     <PackageVersion Include="CSharpFunctionalExtensions" Version="3.6.0"/>
@@ -48,7 +48,7 @@
     <PackageVersion Include="Xamarin.AndroidX.Core.SplashScreen" Version="1.0.1.17"/>
     <PackageVersion Include="xunit.v3" Version="3.2.2"/>
     <PackageVersion Include="xunit.runner.visualstudio" Version="3.1.0"/>
-    <PackageVersion Include="Zafiro.UI" Version="47.1.0"/>
+    <PackageVersion Include="Zafiro.UI" Version="47.1.1"/>
     <PackageVersion Include="Zafiro.Avalonia.Mcp.AppHost" Version="0.0.68"/>
     <PackageVersion Include="AvaloniaUI.DiagnosticsSupport" Version="2.2.1"/>
   </ItemGroup>
