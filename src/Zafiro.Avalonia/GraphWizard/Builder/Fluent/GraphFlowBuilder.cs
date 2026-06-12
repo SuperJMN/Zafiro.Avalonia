@@ -5,15 +5,15 @@ namespace Zafiro.Avalonia.Wizards.Graph.Builder.Fluent;
 
 public class GraphFlowBuilder<TResult> : IGraphFlowBuilder<TResult>
 {
-    public IFlowStepBuilder<TModel, TResult> StartWith<TModel>(TModel model, string title)
+    public IFlowStepBuilder<TModel, TResult> StartWith<TModel>(Func<TModel> modelFactory, string title)
     {
-        var root = new FlowNodeBuilder<TModel, TResult>(model, Observable.Return(title));
+        var root = new FlowNodeBuilder<TModel, TResult>(modelFactory, Observable.Return(title));
         return new FlowChain<TModel, TResult>(root, root);
     }
 
-    public IFlowStepBuilder<TModel, TResult> StartWith<TModel>(TModel model, IObservable<string> title)
+    public IFlowStepBuilder<TModel, TResult> StartWith<TModel>(Func<TModel> modelFactory, IObservable<string> title)
     {
-        var root = new FlowNodeBuilder<TModel, TResult>(model, title);
+        var root = new FlowNodeBuilder<TModel, TResult>(modelFactory, title);
         return new FlowChain<TModel, TResult>(root, root);
     }
 
@@ -31,36 +31,36 @@ internal class FlowChain<TModel, TResult> : IFlowStepBuilder<TModel, TResult>
         this.current = current;
     }
 
-    public IFlowStepBuilder<TNextModel, TResult> Step<TNextModel>(TNextModel model, string title,
-        IObservable<bool>? canExecute = null, string? nextLabel = null)
+    public IFlowStepBuilder<TNextModel, TResult> Step<TNextModel>(Func<TNextModel> modelFactory, string title,
+        Func<TModel, IObservable<bool>>? canExecute = null, string? nextLabel = null)
     {
-        return Step(model, Observable.Return(title), canExecute, nextLabel);
+        return Step(modelFactory, Observable.Return(title), canExecute, nextLabel);
     }
 
-    public IFlowStepBuilder<TNextModel, TResult> Step<TNextModel>(TNextModel model, IObservable<string> title,
-        IObservable<bool>? canExecute = null, string? nextLabel = null)
+    public IFlowStepBuilder<TNextModel, TResult> Step<TNextModel>(Func<TNextModel> modelFactory, IObservable<string> title,
+        Func<TModel, IObservable<bool>>? canExecute = null, string? nextLabel = null)
     {
-        var nextNodeBuilder = current.Step(model, title, canExecute, nextLabel);
+        var nextNodeBuilder = current.Step(modelFactory, title, canExecute, nextLabel);
         return new FlowChain<TNextModel, TResult>(root, nextNodeBuilder);
     }
 
     public IFlowStepBuilder<TResult> Branch<TProp>(Func<TModel, TProp> selector,
-        Action<IBranchBuilder<TProp, TResult>> config, IObservable<bool>? canExecute = null, string? nextLabel = null)
+        Action<IBranchBuilder<TProp, TResult>> config, Func<TModel, IObservable<bool>>? canExecute = null, string? nextLabel = null)
         where TProp : notnull
     {
         current.Branch(selector, config, canExecute, nextLabel);
         return new FlowChainTerminal<TResult>(root);
     }
 
-    public IWizardNode<TResult> Finish(Func<TModel, TResult> resultSelector, IObservable<bool>? canExecute = null,
+    public IWizardStep<TResult> Finish(Func<TModel, TResult> resultSelector, Func<TModel, IObservable<bool>>? canExecute = null,
         string? nextLabel = null)
     {
         current.Finish(resultSelector, canExecute, nextLabel);
         return root.Build();
     }
 
-    public IWizardNode<TResult> Finish(Func<TModel, Task<Result<TResult>>> resultSelector,
-        IObservable<bool>? canExecute = null, string? nextLabel = null)
+    public IWizardStep<TResult> Finish(Func<TModel, Task<Result<TResult>>> resultSelector,
+        Func<TModel, IObservable<bool>>? canExecute = null, string? nextLabel = null)
     {
         current.Finish(resultSelector, canExecute, nextLabel);
         return root.Build();
@@ -76,7 +76,7 @@ internal class FlowChainTerminal<TResult> : IFlowStepBuilder<TResult>
         this.root = root;
     }
 
-    public IWizardNode<TResult> Build()
+    public IWizardStep<TResult> Build()
     {
         return root.Build();
     }
@@ -84,38 +84,38 @@ internal class FlowChainTerminal<TResult> : IFlowStepBuilder<TResult>
 
 internal class FlowNodeBuilder<TModel, TResult> : IBuilder<TResult>
 {
-    private readonly TModel model;
+    private readonly Func<TModel> modelFactory;
     private readonly IObservable<string> title;
-    private Func<IWizardNode<TResult>>? nextNodeFactory;
+    private Func<IWizardStep<TResult>>? nextStepFactory;
 
-    public FlowNodeBuilder(TModel model, IObservable<string> title)
+    public FlowNodeBuilder(Func<TModel> modelFactory, IObservable<string> title)
     {
-        this.model = model;
+        this.modelFactory = modelFactory;
         this.title = title;
     }
 
-    public IWizardNode<TResult> Build()
+    public IWizardStep<TResult> Build()
     {
-        if (nextNodeFactory == null)
+        if (nextStepFactory == null)
         {
             throw new InvalidOperationException(
-                $"Flow ending at {model?.GetType().Name} is incomplete. You must call Finish() or point to another Step().");
+                $"Flow ending at {typeof(TModel).Name} is incomplete. You must call Finish() or point to another Step().");
         }
 
-        return nextNodeFactory();
+        return nextStepFactory();
     }
 
-    public FlowNodeBuilder<TNextModel, TResult> Step<TNextModel>(TNextModel nextModel, IObservable<string> nextTitle,
-        IObservable<bool>? canExecute = null, string? nextLabel = null)
+    public FlowNodeBuilder<TNextModel, TResult> Step<TNextModel>(Func<TNextModel> nextModelFactory, IObservable<string> nextTitle,
+        Func<TModel, IObservable<bool>>? canExecute = null, string? nextLabel = null)
     {
-        var nextStepBuilder = new FlowNodeBuilder<TNextModel, TResult>(nextModel, nextTitle);
+        var nextStepBuilder = new FlowNodeBuilder<TNextModel, TResult>(nextModelFactory, nextTitle);
 
-        this.nextNodeFactory = () =>
+        this.nextStepFactory = () =>
         {
-            var nextNode = nextStepBuilder.Build();
+            var nextStep = nextStepBuilder.Build();
             return TypedWizardStepBuilder
-                .Step<TModel, TResult>(model, title)
-                .Next(_ => nextNode, GetValidationCanExecute(canExecute), nextLabel)
+                .Step<TModel, TResult>(modelFactory, title)
+                .Next(_ => nextStep, GetValidationCanExecute(canExecute), nextLabel)
                 .Build();
         };
 
@@ -123,15 +123,15 @@ internal class FlowNodeBuilder<TModel, TResult> : IBuilder<TResult>
     }
 
     public void Branch<TProp>(Func<TModel, TProp> selector, Action<IBranchBuilder<TProp, TResult>> config,
-        IObservable<bool>? canExecute = null, string? nextLabel = null) where TProp : notnull
+        Func<TModel, IObservable<bool>>? canExecute = null, string? nextLabel = null) where TProp : notnull
     {
         var branchBuilder = new BranchBuilder<TProp, TResult>();
         config(branchBuilder);
 
-        this.nextNodeFactory = () =>
+        this.nextStepFactory = () =>
         {
             return TypedWizardStepBuilder
-                .Step<TModel, TResult>(model, title)
+                .Step<TModel, TResult>(modelFactory, title)
                 .Next(m =>
                 {
                     var prop = selector(m);
@@ -141,67 +141,69 @@ internal class FlowNodeBuilder<TModel, TResult> : IBuilder<TResult>
         };
     }
 
-    public void Finish(Func<TModel, TResult> resultSelector, IObservable<bool>? canExecute = null,
+    public void Finish(Func<TModel, TResult> resultSelector, Func<TModel, IObservable<bool>>? canExecute = null,
         string? nextLabel = null)
     {
-        this.nextNodeFactory = () =>
+        this.nextStepFactory = () =>
         {
             return TypedWizardStepBuilder
-                .Step<TModel, TResult>(model, title)
+                .Step<TModel, TResult>(modelFactory, title)
                 .Finish(resultSelector, GetValidationCanExecute(canExecute), nextLabel)
                 .Build();
         };
     }
 
-    public void Finish(Func<TModel, Task<Result<TResult>>> resultSelector, IObservable<bool>? canExecute = null,
+    public void Finish(Func<TModel, Task<Result<TResult>>> resultSelector, Func<TModel, IObservable<bool>>? canExecute = null,
         string? nextLabel = null)
     {
-        this.nextNodeFactory = () =>
+        this.nextStepFactory = () =>
         {
             return TypedWizardStepBuilder
-                .Step<TModel, TResult>(model, title)
+                .Step<TModel, TResult>(modelFactory, title)
                 .Finish(resultSelector, GetValidationCanExecute(canExecute), nextLabel)
                 .Build();
         };
     }
 
-    private IObservable<bool> GetValidationCanExecute(IObservable<bool>? explicitCanExecute)
+    private static Func<TModel, IObservable<bool>> GetValidationCanExecute(Func<TModel, IObservable<bool>>? explicitCanExecute)
     {
-        var validationCanExecute = Observable.Return(true);
-        if (model != null)
+        return model =>
         {
-            var isValidProp = model.GetType().GetProperty("IsValid");
-            if (isValidProp != null && typeof(IObservable<bool>).IsAssignableFrom(isValidProp.PropertyType))
+            var validationCanExecute = Observable.Return(true);
+            if (model != null)
             {
-                var val = isValidProp.GetValue(model) as IObservable<bool>;
-                if (val != null)
+                var isValidProp = model.GetType().GetProperty("IsValid");
+                if (isValidProp != null && typeof(IObservable<bool>).IsAssignableFrom(isValidProp.PropertyType))
                 {
-                    validationCanExecute = val;
+                    if (isValidProp.GetValue(model) is IObservable<bool> val)
+                    {
+                        validationCanExecute = val;
+                    }
                 }
             }
-        }
 
-        return explicitCanExecute != null
-            ? explicitCanExecute.CombineLatest(validationCanExecute, (a, b) => a && b)
-            : validationCanExecute;
+            return explicitCanExecute != null
+                ? explicitCanExecute(model).CombineLatest(validationCanExecute, (a, b) => a && b)
+                : validationCanExecute;
+        };
     }
 }
 
 internal interface IBuilder<TResult>
 {
-    IWizardNode<TResult> Build();
+    IWizardStep<TResult> Build();
 }
 
 public class BranchBuilder<TProp, TResult> : IBranchBuilder<TProp, TResult> where TProp : notnull
 {
-    private readonly Dictionary<TProp, Func<IWizardNode<TResult>>> branches = new();
+    private readonly Dictionary<TProp, Func<IWizardStep<TResult>>> branches = new();
 
-    public void Case(TProp value, Func<IGraphFlowBuilder<TResult>, IWizardNode<TResult>> flowConfig)
+    public void Case(TProp value, Func<IGraphFlowBuilder<TResult>, IWizardStep<TResult>> flowConfig)
     {
         branches[value] = () => flowConfig(GraphFlowBuilder<TResult>.New());
     }
 
-    public IWizardNode<TResult>? GetNode(TProp value)
+    public IWizardStep<TResult>? GetNode(TProp value)
     {
         if (branches.TryGetValue(value, out var factory))
         {

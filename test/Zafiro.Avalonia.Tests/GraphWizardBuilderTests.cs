@@ -13,11 +13,11 @@ public class GraphWizardBuilderTests
     {
         var graph = WizardGraph.For<string>();
 
-        var finalNode = graph.Step(new object(), "Finish")
+        var finalNode = graph.Step(() => new StepModel("finish"), "Finish")
             .Finish(_ => "done")
             .Build();
 
-        var startNode = graph.Step(new object(), "Start")
+        var startNode = graph.Step(() => new StepModel("start"), "Start")
             .Next(_ => finalNode)
             .Build();
 
@@ -36,8 +36,8 @@ public class GraphWizardBuilderTests
     public async Task Typed_builder_context_can_start_a_typed_flow()
     {
         var graph = WizardGraph.For<string>();
-        var node = graph.StartWith(new StepModel("start"), "Start")
-            .Step(new StepModel("finish"), "Finish")
+        var node = graph.StartWith(() => new StepModel("start"), "Start")
+            .Step(() => new StepModel("finish"), "Finish")
             .Finish(model => model.Value);
 
         var wizard = new GraphWizard<string>(node);
@@ -57,21 +57,21 @@ public class GraphWizardBuilderTests
         var start = new BranchModel();
         var graph = WizardGraph.For<string>();
 
-        var endNode = graph.Step(new object(), "End")
+        var endNode = graph.Step(() => new StepModel("end"), "End")
             .Finish(_ => "done")
             .Build();
 
-        var nodeA = graph.Step(new object(), "Path A")
+        var nodeA = graph.Step(() => new StepModel("A"), "Path A")
             .Next(_ => endNode)
             .Build();
 
-        var nodeB = graph.Step(new object(), "Path B")
+        var nodeB = graph.Step(() => new StepModel("B"), "Path B")
             .Next(_ => endNode)
             .Build();
 
-        var startNode = graph.Step(start, "Start")
+        var startNode = graph.Step(() => start, "Start")
             .Next(vm => vm.Choice == "A" ? nodeA : nodeB,
-                canExecute: start.WhenAnyValue(x => x.Choice).Select(x => x is not null))
+                canExecute: vm => vm.WhenAnyValue(x => x.Choice).Select(x => x is not null))
             .Build();
 
         var wizard = new GraphWizard<string>(startNode);
@@ -83,10 +83,10 @@ public class GraphWizardBuilderTests
         await wizard.Next.CanExecute.FirstAsync(x => x).ToTask();
 
         await wizard.Next.Execute();
-        Assert.Same(nodeA, wizard.CurrentStep);
+        Assert.Equal("A", ((StepModel)wizard.CurrentStep!.Content).Value);
 
         await wizard.Next.Execute();
-        Assert.Same(endNode, wizard.CurrentStep);
+        Assert.Equal("end", ((StepModel)wizard.CurrentStep!.Content).Value);
 
         await wizard.Next.Execute();
         Assert.Equal("done", await completion);
@@ -98,21 +98,21 @@ public class GraphWizardBuilderTests
         var start = new BranchModel();
         var graph = WizardGraph.For<string>();
 
-        var endNode = graph.Step(new object(), "End")
+        var endNode = graph.Step(() => new StepModel("end"), "End")
             .Finish(_ => "done")
             .Build();
 
-        var nodeA = graph.Step(new object(), "Path A")
+        var nodeA = graph.Step(() => new StepModel("A"), "Path A")
             .Next(_ => endNode)
             .Build();
 
-        var nodeB = graph.Step(new object(), "Path B")
+        var nodeB = graph.Step(() => new StepModel("B"), "Path B")
             .Next(_ => endNode)
             .Build();
 
-        var startNode = graph.Step(start, "Start")
+        var startNode = graph.Step(() => start, "Start")
             .Next(vm => vm.Choice == "A" ? nodeA : nodeB,
-                canExecute: start.WhenAnyValue(x => x.Choice).Select(x => x is not null))
+                canExecute: vm => vm.WhenAnyValue(x => x.Choice).Select(x => x is not null))
             .Build();
 
         var wizard = new GraphWizard<string>(startNode);
@@ -122,16 +122,52 @@ public class GraphWizardBuilderTests
         await wizard.Next.CanExecute.FirstAsync(x => x).ToTask();
 
         await wizard.Next.Execute();
-        Assert.Same(nodeB, wizard.CurrentStep);
+        Assert.Equal("B", ((StepModel)wizard.CurrentStep!.Content).Value);
 
         await wizard.Next.Execute();
-        Assert.Same(endNode, wizard.CurrentStep);
+        Assert.Equal("end", ((StepModel)wizard.CurrentStep!.Content).Value);
 
         await wizard.Next.Execute();
         Assert.Equal("done", await completion);
     }
 
+    [Fact]
+    public async Task Each_entry_creates_a_fresh_content_instance()
+    {
+        var graph = WizardGraph.For<string>();
+        var created = new List<CountingModel>();
+        CountingModel Make()
+        {
+            var model = new CountingModel();
+            created.Add(model);
+            return model;
+        }
+
+        var thirdNode = graph.Step(Make, "Third").Finish(_ => "done").Build();
+        var secondNode = graph.Step(Make, "Second").Next(_ => thirdNode).Build();
+        var firstNode = graph.Step(Make, "First").Next(_ => secondNode).Build();
+
+        var wizard = new GraphWizard<string>(firstNode);
+
+        // Initial activation creates exactly one instance for the first step.
+        Assert.Single(created);
+        var firstActivation = wizard.CurrentStep!.Content;
+
+        // Forward navigation activates the second step with a brand-new instance.
+        await wizard.Next.Execute();
+        Assert.Equal(2, created.Count);
+        Assert.NotSame(firstActivation, wizard.CurrentStep!.Content);
+
+        // Back navigation re-activates the first step with yet another fresh instance,
+        // never restoring the original (which has been discarded).
+        wizard.GoBack();
+        Assert.Equal(3, created.Count);
+        Assert.NotSame(firstActivation, wizard.CurrentStep!.Content);
+    }
+
     private sealed record StepModel(string Value);
+
+    private sealed class CountingModel;
 
     private sealed class BranchModel : ReactiveObject
     {

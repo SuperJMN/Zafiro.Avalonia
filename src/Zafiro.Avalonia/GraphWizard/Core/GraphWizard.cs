@@ -27,9 +27,9 @@ public class GraphWizard : ReactiveObject, IHaveHeader, IHaveFooter, IGraphWizar
     {
         CurrentStep = initialNode;
         var canGoBack = this.WhenAnyValue(x => x.CurrentStep)
-            .Select(_ => stack.Count > 0);
+            .Select(_ => CanGoBack);
 
-        Back = ReactiveCommand.Create(GoBack, canGoBack);
+        Back = ReactiveCommand.Create(GoBackCore, canGoBack);
         Cancel = ReactiveCommand.Create(OnCancel);
 
         Next = CreateNextCommand();
@@ -132,7 +132,19 @@ public class GraphWizard : ReactiveObject, IHaveHeader, IHaveFooter, IGraphWizar
     /// Navigates back to the previous step in the wizard.
     /// Called internally by the <see cref="Back"/> command.
     /// </summary>
-    public void GoBack()
+    public void GoBack() => GoBackCore();
+
+    /// <summary>
+    /// Whether back navigation is currently possible. Derived wizards override this to
+    /// report against their own back-stack.
+    /// </summary>
+    protected virtual bool CanGoBack => stack.Count > 0;
+
+    /// <summary>
+    /// Performs the back navigation. Derived wizards override this to re-activate the
+    /// previous step (creating a fresh node) instead of restoring a reused instance.
+    /// </summary>
+    protected virtual void GoBackCore()
     {
         if (stack.TryPop(out var previous))
         {

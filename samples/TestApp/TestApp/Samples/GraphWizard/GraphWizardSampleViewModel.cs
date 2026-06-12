@@ -46,40 +46,34 @@ public class GraphWizardSampleViewModel : ReactiveObject
     {
         var graph = WizardGraph.For<string>();
 
-        // 1. Define End Nodes (typed)
-        var end = new GenericStepViewModel("Finished!");
-        var endNode = graph.Step(end, "End")
+        // Steps are declared with content factories: a fresh view model is created on every entry.
+
+        // 1. Define End step (typed)
+        var endNode = graph.Step(() => new GenericStepViewModel("Finished!"), "End")
             .Finish(vm => "Done", nextLabel: "Finish!")
             .Build();
 
         // 2. Define Branch B (typed)
-        var stepB = new GenericStepViewModel("You chose path B");
-        var nodeB = graph.Step(stepB, "Path B")
+        var nodeB = graph.Step(() => new GenericStepViewModel("You chose path B"), "Path B")
             .Next(vm => endNode, nextLabel: "Complete B")
             .Build();
 
         // 3. Define Branch A (typed)
-        var stepA = new GenericStepViewModel("You chose path A");
-        var nodeA = graph.Step(stepA, "Path A")
+        var nodeA = graph.Step(() => new GenericStepViewModel("You chose path A"), "Path A")
             .Next(vm => endNode, nextLabel: "Complete A")
             .Build();
 
-        // 4. Define Start Node with typed result
-        var start = new Step1ViewModel();
-
-        // Define dynamic label observable
-        var dynamicLabel = start.WhenAnyValue(x => x.Choice)
-            .Select(choice => choice switch
-            {
-                "A" => "Choose A",
-                "B" => "Choose B",
-                _ => "Choose (Select logic)"
-            });
-
-        var startNode = graph.Step(start, "Start")
+        // 4. Define Start step with typed result; guard and dynamic label bind to the fresh content.
+        var startNode = graph.Step(() => new Step1ViewModel(), "Start")
             .Next(vm => vm.Choice == "A" ? nodeA : nodeB,
-                canExecute: start.WhenAnyValue(x => x.Choice).NotNull(),
-                nextLabel: dynamicLabel)
+                canExecute: vm => vm.WhenAnyValue(x => x.Choice).NotNull(),
+                nextLabel: vm => vm.WhenAnyValue(x => x.Choice)
+                    .Select(choice => choice switch
+                    {
+                        "A" => "Choose A",
+                        "B" => "Choose B",
+                        _ => "Choose (Select logic)"
+                    }))
             .Build();
 
         return new GraphWizard<string>(startNode);
