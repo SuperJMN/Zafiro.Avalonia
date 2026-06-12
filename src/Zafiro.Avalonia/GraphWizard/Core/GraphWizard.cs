@@ -6,19 +6,20 @@ using Zafiro.UI.Navigation;
 namespace Zafiro.Avalonia.Wizards.Graph.Core;
 
 /// <summary>
-/// A graph-based wizard that allows multi-step workflows with conditional branching.
-/// Unlike linear wizards, each step can lead to different subsequent steps based on user choices.
+/// Base for graph-based wizards. Holds the shared shell (current step, Next/Back/Cancel
+/// commands, finish/title observables) while the concrete, typed <see cref="GraphWizard{TResult}"/>
+/// owns navigation: it activates a fresh node on every entry and keeps its own back-stack of
+/// step definitions.
 /// </summary>
 public class GraphWizard : ReactiveObject, IHaveHeader, IHaveFooter, IGraphWizard
 {
     protected readonly Subject<Unit> FinishedBase = new();
-    private readonly Stack<IBaseWizardNode> stack = new();
     private IBaseWizardNode? currentStep;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="GraphWizard"/> class.
     /// </summary>
-    /// <param name="initialNode">The starting node of the wizard flow.</param>
+    /// <param name="initialNode">The starting (already activated) node of the wizard flow.</param>
     /// <param name="nextTitle">
     /// Optional custom title for the Next button. Can be a static title or a dynamic observable.
     /// Defaults to "Next" if not specified.
@@ -92,8 +93,8 @@ public class GraphWizard : ReactiveObject, IHaveHeader, IHaveFooter, IGraphWizar
     /// <example>
     /// <code>
     /// var flow = GraphWizard.For&lt;string&gt;();
-    /// var start = flow.Step(stepVm, "Start")
-    ///     .Next(_ => nextNode)
+    /// var start = flow.Step(() => new StepViewModel(state), "Start")
+    ///     .Next(_ => nextStep)
     ///     .Build();
     /// </code>
     /// </example>
@@ -104,28 +105,13 @@ public class GraphWizard : ReactiveObject, IHaveHeader, IHaveFooter, IGraphWizar
 
     protected virtual void OnCancel() => FinishedBase.OnNext(Unit.Default);
 
+    /// <summary>
+    /// Creates the Next command. The base wizard cannot navigate on its own (it has no
+    /// notion of step definitions); the typed wizard overrides this with real navigation.
+    /// </summary>
     protected virtual ReactiveCommand<Unit, Unit> CreateNextCommand()
     {
-        return ReactiveCommand.CreateFromTask(async () =>
-            {
-                if (CurrentStep is not IWizardNode step) return;
-
-                var result = await step.Next.Execute();
-                if (result.IsSuccess)
-                {
-                    if (result.Value != null)
-                    {
-                        stack.Push(CurrentStep);
-                        CurrentStep = result.Value;
-                    }
-                    else
-                    {
-                        FinishedBase.OnNext(Unit.Default);
-                    }
-                }
-            },
-            this.WhenAnyValue(x => x.CurrentStep)
-                .SelectMany(x => (x as IWizardNode)?.Next.CanExecute ?? Observable.Return(false)));
+        return ReactiveCommand.Create(() => { }, Observable.Return(false));
     }
 
     /// <summary>
@@ -135,34 +121,16 @@ public class GraphWizard : ReactiveObject, IHaveHeader, IHaveFooter, IGraphWizar
     public void GoBack() => GoBackCore();
 
     /// <summary>
-    /// Whether back navigation is currently possible. Derived wizards override this to
-    /// report against their own back-stack.
+    /// Whether back navigation is currently possible. The typed wizard overrides this to
+    /// report against its own back-stack of step definitions.
     /// </summary>
-    protected virtual bool CanGoBack => stack.Count > 0;
+    protected virtual bool CanGoBack => false;
 
     /// <summary>
-    /// Performs the back navigation. Derived wizards override this to re-activate the
-    /// previous step (creating a fresh node) instead of restoring a reused instance.
+    /// Performs the back navigation. The typed wizard overrides this to re-activate the
+    /// previous step (creating a fresh node).
     /// </summary>
     protected virtual void GoBackCore()
     {
-        if (stack.TryPop(out var previous))
-        {
-            CurrentStep = previous;
-        }
-    }
-
-    protected void NavigateTo(IBaseWizardNode nextNode)
-    {
-        PushCurrent();
-        CurrentStep = nextNode;
-    }
-
-    protected void PushCurrent()
-    {
-        if (CurrentStep != null)
-        {
-            stack.Push(CurrentStep);
-        }
     }
 }
