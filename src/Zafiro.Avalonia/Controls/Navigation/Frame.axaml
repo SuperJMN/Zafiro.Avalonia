@@ -18,11 +18,14 @@
                                    BoxShadow="{TemplateBinding BoxShadow}"
                                    ClipToBounds="{TemplateBinding ClipToBounds}">
                         <Grid RowDefinitions="Auto,*,Auto">
-                            <ContentPresenter x:Name="Content"
-                                              Grid.Row="1"
-                                              Background="{TemplateBinding ContentBackground}"
-                                              Padding="{TemplateBinding EffectiveContentPadding}"
-                                              Content="{TemplateBinding Content}" />
+                            <Border Grid.Row="1"
+                                    Background="{TemplateBinding ContentBackground}"
+                                    Padding="{TemplateBinding EffectiveContentPadding}">
+                                <TransitioningContentControl x:Name="Content"
+                                                             Content="{TemplateBinding Content}"
+                                                             ContentTemplate="{TemplateBinding ContentTemplate}"
+                                                             PageTransition="{TemplateBinding ContentTransition}" />
+                            </Border>
 
                             <Border x:Name="HeaderHost"
                                     Grid.Row="0"

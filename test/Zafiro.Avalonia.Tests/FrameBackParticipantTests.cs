@@ -3,6 +3,7 @@ using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Windows.Input;
 using Avalonia;
+using Avalonia.Animation;
 using Avalonia.Controls;
 using Avalonia.Headless.XUnit;
 using Avalonia.Markup.Xaml.Styling;
@@ -108,6 +109,28 @@ public class FrameBackParticipantTests
 
         Assert.DoesNotContain("OnFormFactor", frameTemplate);
         Assert.DoesNotContain("Mobile=False", frameTemplate);
+    }
+
+    [AvaloniaFact]
+    public void Frame_applies_content_transition_to_content_host()
+    {
+        EnsureZafiroStyles();
+        var transition = new CrossFade(TimeSpan.Zero);
+        var frame = Attach(new Frame
+        {
+            ContentTransition = transition,
+            Content = new TextBlock
+            {
+                Text = "Page",
+            },
+        });
+
+        var contentHost = Assert.Single(frame.GetVisualDescendants()
+            .OfType<TransitioningContentControl>()
+            .Where(control => control.Name == "Content"));
+
+        Assert.Same(transition, frame.ContentTransition);
+        Assert.Same(transition, contentHost.PageTransition);
     }
 
     [AvaloniaFact]

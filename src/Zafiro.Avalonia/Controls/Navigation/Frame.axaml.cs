@@ -1,5 +1,6 @@
 using System.Reactive.Disposables;
 using System.Windows.Input;
+using Avalonia.Animation;
 using Avalonia.Controls.Metadata;
 using Avalonia.Controls.Presenters;
 using Avalonia.Interactivity;
@@ -8,7 +9,7 @@ using Avalonia.Media;
 namespace Zafiro.Avalonia.Controls.Navigation;
 
 [TemplatePart("BackButton", typeof(EnhancedButton))]
-[TemplatePart("Content", typeof(ContentPresenter))]
+[TemplatePart("Content", typeof(TransitioningContentControl))]
 [TemplatePart("Header", typeof(ContentPresenter))]
 [TemplatePart("Footer", typeof(ContentPresenter))]
 public class Frame : ContentControl
@@ -42,6 +43,9 @@ public class Frame : ContentControl
 
     public static readonly StyledProperty<IBrush?> ContentBackgroundProperty = AvaloniaProperty.Register<Frame, IBrush?>(
         nameof(ContentBackground));
+
+    public static readonly StyledProperty<IPageTransition?> ContentTransitionProperty = AvaloniaProperty.Register<Frame, IPageTransition?>(
+        nameof(ContentTransition));
 
     public static readonly StyledProperty<IBrush?> FooterBackgroundProperty = AvaloniaProperty.Register<Frame, IBrush?>(
         nameof(FooterBackground));
@@ -111,6 +115,12 @@ public class Frame : ContentControl
     {
         get => GetValue(ContentBackgroundProperty);
         set => SetValue(ContentBackgroundProperty, value);
+    }
+
+    public IPageTransition? ContentTransition
+    {
+        get => GetValue(ContentTransitionProperty);
+        set => SetValue(ContentTransitionProperty, value);
     }
 
     public IBrush? FooterBackground
