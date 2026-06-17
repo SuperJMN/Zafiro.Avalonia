@@ -99,7 +99,8 @@
                                         BorderThickness="{TemplateBinding HeaderBorderThickness}"
                                         BorderBrush="{TemplateBinding HeaderBorderBrush}"
                                         Padding="{TemplateBinding HeaderPadding}"
-                                        Background="{TemplateBinding HeaderBackground}">
+                                        Background="{TemplateBinding HeaderBackground}"
+                                        IsVisible="{TemplateBinding ShowHeaders}">
                                     <ItemsControl TextElement.FontWeight="Bold" ItemsSource="{TemplateBinding Headers}">
                                         <ItemsControl.ItemContainerTheme>
                                             <ControlTheme TargetType="Header" x:DataType="Header" BasedOn="{StaticResource {x:Type Header}}">

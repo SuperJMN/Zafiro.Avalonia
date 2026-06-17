@@ -21,6 +21,9 @@ public class SlimDataGrid : TemplatedControl
     public static readonly DirectProperty<SlimDataGrid, IEnumerable<Header>?> HeadersProperty = AvaloniaProperty.RegisterDirect<SlimDataGrid, IEnumerable<Header>?>(
         nameof(Headers), o => o.Headers, (o, v) => o.Headers = v);
 
+    public static readonly StyledProperty<bool> ShowHeadersProperty = AvaloniaProperty.Register<SlimDataGrid, bool>(
+        nameof(ShowHeaders), true);
+
     public static readonly StyledProperty<Thickness> HeaderBorderThicknessProperty = AvaloniaProperty.Register<SlimDataGrid, Thickness>(
         nameof(HeaderBorderThickness));
 
@@ -85,6 +88,12 @@ public class SlimDataGrid : TemplatedControl
     {
         get => headers;
         private set => SetAndRaise(HeadersProperty, ref headers, value);
+    }
+
+    public bool ShowHeaders
+    {
+        get => GetValue(ShowHeadersProperty);
+        set => SetValue(ShowHeadersProperty, value);
     }
 
     public Thickness HeaderBorderThickness
