@@ -24,13 +24,21 @@ public class GraphWizard : ReactiveObject, IHaveHeader, IHaveFooter, IGraphWizar
     /// Optional custom title for the Next button. Can be a static title or a dynamic observable.
     /// Defaults to "Next" if not specified.
     /// </param>
-    public GraphWizard(IBaseWizardNode initialNode, IObservable<string>? nextTitle = null)
+    /// <param name="canGoBack">
+    /// Optional domain-level gate for the Back command. It is combined with the wizard's own
+    /// back-stack state, so Back remains disabled when there is no previous step.
+    /// </param>
+    public GraphWizard(IBaseWizardNode initialNode, IObservable<string>? nextTitle = null, IObservable<bool>? canGoBack = null)
     {
         CurrentStep = initialNode;
-        var canGoBack = this.WhenAnyValue(x => x.CurrentStep)
+        var hasPreviousStep = this.WhenAnyValue(x => x.CurrentStep)
             .Select(_ => CanGoBack);
+        var domainCanGoBack = canGoBack ?? Observable.Return(true);
+        var effectiveCanGoBack = hasPreviousStep
+            .CombineLatest(domainCanGoBack, (hasPrevious, allowedByDomain) => hasPrevious && allowedByDomain)
+            .DistinctUntilChanged();
 
-        Back = ReactiveCommand.Create(GoBackCore, canGoBack);
+        Back = ReactiveCommand.Create(GoBackCore, effectiveCanGoBack);
         Cancel = ReactiveCommand.Create(OnCancel);
 
         Next = CreateNextCommand();
