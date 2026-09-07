@@ -1,5 +1,7 @@
 using System.Reactive.Linq;
+using System.Reactive.Subjects;
 using System.Reactive.Threading.Tasks;
+using System.Windows.Input;
 using ReactiveUI;
 using Zafiro.Avalonia.Wizards.Graph.Core;
 using WizardGraph = Zafiro.Avalonia.Wizards.Graph.Core.GraphWizard;
@@ -129,6 +131,36 @@ public class GraphWizardBuilderTests
 
         await wizard.Next.Execute();
         Assert.Equal("done", await completion);
+    }
+
+    [Fact]
+    public async Task Next_command_uses_only_the_current_step_gate()
+    {
+        var firstCanExecute = new BehaviorSubject<bool>(true);
+        var secondCanExecute = new BehaviorSubject<bool>(false);
+        var graph = WizardGraph.For<string>();
+
+        var second = graph.Step(() => new StepModel("second"), "Second")
+            .Finish(model => model.Value, _ => secondCanExecute)
+            .Build();
+        var first = graph.Step(() => new StepModel("first"), "First")
+            .Next(_ => second, _ => firstCanExecute)
+            .Build();
+        var wizard = new GraphWizard<string>(first);
+
+        await wizard.Next.Execute();
+
+        Assert.Equal("second", ((StepModel)wizard.CurrentStep!.Content).Value);
+        Assert.False(((ICommand)wizard.Next).CanExecute(null));
+
+        secondCanExecute.OnNext(true);
+        Assert.True(((ICommand)wizard.Next).CanExecute(null));
+
+        secondCanExecute.OnNext(false);
+        firstCanExecute.OnNext(false);
+        firstCanExecute.OnNext(true);
+
+        Assert.False(((ICommand)wizard.Next).CanExecute(null));
     }
 
     [Fact]
