@@ -91,7 +91,8 @@ public class GraphWizard<TResult> : GraphWizard
                 }
             },
             this.WhenAnyValue(x => x.CurrentStep)
-                .SelectMany(x => (x as IWizardNode<TResult>)?.Next.CanExecute ?? Observable.Return(false)));
+                .Select(x => (x as IWizardNode<TResult>)?.Next.CanExecute ?? Observable.Return(false))
+                .Switch());
     }
 }
 
