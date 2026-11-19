@@ -19,7 +19,6 @@
     <Project Path="samples/TestApp/TestApp.Browser/TestApp.Browser.csproj" />
   </Folder>
   <Folder Name="/Other files/">
-    <File Path="azure-pipelines.yml" />
     <File Path="src/Common.props" />
     <File Path="Directory.Packages.props" />
   </Folder>
