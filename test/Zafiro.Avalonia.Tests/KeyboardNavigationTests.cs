@@ -132,6 +132,49 @@ public class KeyboardNavigationTests
     }
 
     [AvaloniaFact]
+    public void Releasing_space_after_it_opened_a_page_does_not_press_the_button_that_got_focus()
+    {
+        var clicks = 0;
+        var action = new Button { Content = "Queue build" };
+        action.Click += (_, _) => clicks++;
+        var item = new Button { Content = "Project" };
+        var frame = new Frame { Content = new StackPanel { Children = { item } } };
+        // Like a list row, the item opens its page as soon as the key goes down.
+        item.AddHandler(InputElement.KeyDownEvent, (_, e) =>
+        {
+            if (e.Key == Key.Space)
+            {
+                frame.Content = new StackPanel { Children = { action } };
+            }
+        }, handledEventsToo: true);
+        var window = Show(frame);
+        Press(window, Key.Tab);
+        Assert.Same(item, FocusedElement(window));
+
+        window.KeyPress(Key.Space, RawInputModifiers.None, PhysicalKey.Space, " ");
+        Dispatcher.UIThread.RunJobs();
+        Assert.Same(action, FocusedElement(window));
+        window.KeyRelease(Key.Space, RawInputModifiers.None, PhysicalKey.Space, " ");
+        Dispatcher.UIThread.RunJobs();
+
+        Assert.Equal(0, clicks);
+    }
+
+    [AvaloniaFact]
+    public void Space_still_presses_the_focused_button()
+    {
+        var clicks = 0;
+        var button = new Button { Content = "Save" };
+        button.Click += (_, _) => clicks++;
+        var window = Show(new StackPanel { Children = { button } });
+        Press(window, Key.Tab);
+
+        Press(window, Key.Space);
+
+        Assert.Equal(1, clicks);
+    }
+
+    [AvaloniaFact]
     public void Section_strip_items_can_be_reached_from_the_keyboard()
     {
         var page = new Button { Content = "Page" };
