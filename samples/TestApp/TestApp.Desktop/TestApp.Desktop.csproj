@@ -5,6 +5,8 @@
         One for Windows with net7.0-windows TFM, one for MacOS with net7.0-macos and one with net7.0 TFM for Linux.-->
         <TargetFramework>net10.0</TargetFramework>
         <RollForward>LatestMajor</RollForward>
+        <!-- A sample app, not a library: keep it out of the NuGet release. -->
+        <IsPackable>false</IsPackable>
     </PropertyGroup>
     <PropertyGroup>
         <ApplicationManifest>app.manifest</ApplicationManifest>
