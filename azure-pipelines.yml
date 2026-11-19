@@ -23,6 +23,11 @@ steps:
     inputs:
       version: '10.x'
 
+  # GitVersion 7 changed its command line and DotnetDeployer still calls it the 6.x way.
+  # DotnetDeployer installs the latest GitVersion only when none is installed, so install 6.x first.
+  - pwsh: dotnet tool install -g GitVersion.Tool --version 6.*
+    displayName: Install GitVersion 6
+
   # Install DotnetDeployer tool
   - pwsh: dotnet tool install -g DotnetDeployer.Tool
     displayName: Install DotnetDeployer

@@ -27,8 +27,10 @@
                             MaxHeight="{TemplateBinding ContentMaxHeight}"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center">
-                        <StackPanel Spacing="20">
-                            <Panel>
+                        <!-- A dock panel, not a stack panel, so a dialog taller than the screen gets the space that is
+                             left and scrolls its content instead of pushing its actions out of sight. -->
+                        <DockPanel VerticalSpacing="20">
+                            <Panel DockPanel.Dock="Top">
                                 <TextBlock IsVisible="{TemplateBinding Title, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" VerticalAlignment="Center" FontSize="20" HorizontalAlignment="Center" FontWeight="Bold"
                                            Classes="Size-XL Weight-Bold Center" Text="{TemplateBinding Title}" />
                                 <EnhancedButton Command="{TemplateBinding Close}"
@@ -42,7 +44,7 @@
                                                 Icon="{Icon mdi-close}" />
                             </Panel>
                             <ContentPresenter Content="{TemplateBinding Content}" />
-                        </StackPanel>
+                        </DockPanel>
                     </Border>
                 </Panel>
             </ControlTemplate>

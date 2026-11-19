@@ -3,6 +3,8 @@ using System.Windows.Input;
 using Avalonia.Animation;
 using Avalonia.Controls.Metadata;
 using Avalonia.Controls.Presenters;
+using Avalonia.Controls.Primitives;
+using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media;
 
@@ -20,6 +22,9 @@ public class Frame : ContentControl
     private ICommand? observedBackCommand;
     private long nextActivationOrder;
     private long nextRegistrationOrder;
+    private readonly FrameKeyboardFocus keyboardFocus;
+    private Control? contentHost;
+    private Control? headerPresenter;
 
     public static readonly StyledProperty<BoxShadows> BoxShadowProperty = Border.BoxShadowProperty.AddOwner<Frame>();
 
@@ -71,6 +76,8 @@ public class Frame : ContentControl
     public Frame()
     {
         effectiveBackCommand = new FrameBackCommand(this);
+        keyboardFocus = new FrameKeyboardFocus(this, () => contentHost, () => headerPresenter);
+        AddHandler(GotFocusEvent, (_, e) => keyboardFocus.OnDescendantGotFocus(e));
     }
 
     public ICommand BackCommand
@@ -220,7 +227,15 @@ public class Frame : ContentControl
         if (change.Property == ContentProperty)
         {
             RegisterContentParticipant(Content as IFrameBackParticipant);
+            keyboardFocus.OnContentChanged(change.NewValue);
         }
+    }
+
+    protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
+    {
+        base.OnApplyTemplate(e);
+        contentHost = e.NameScope.Find<Control>("Content");
+        headerPresenter = e.NameScope.Find<Control>("Header");
     }
 
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
@@ -230,12 +245,14 @@ public class Frame : ContentControl
         RegisterContentParticipant(Content as IFrameBackParticipant);
         var topLevel = TopLevel.GetTopLevel(this);
         topLevel?.AddHandler(TopLevel.BackRequestedEvent, OnSystemBackRequested);
+        topLevel?.AddHandler(KeyDownEvent, OnTopLevelKeyDown, RoutingStrategies.Tunnel);
     }
 
     protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
     {
         var topLevel = TopLevel.GetTopLevel(this);
         topLevel?.RemoveHandler(TopLevel.BackRequestedEvent, OnSystemBackRequested);
+        topLevel?.RemoveHandler(KeyDownEvent, OnTopLevelKeyDown);
         ObserveExternalBackCommand(null);
         contentParticipantRegistration.Dispose();
         contentParticipantRegistration = Disposable.Empty;
@@ -249,6 +266,11 @@ public class Frame : ContentControl
             EffectiveBackCommand.Execute(null);
             e.Handled = true;
         }
+    }
+
+    private void OnTopLevelKeyDown(object? sender, KeyEventArgs e)
+    {
+        keyboardFocus.OnTopLevelKeyDown(e);
     }
 
     private bool CanExecuteEffectiveBack(object? parameter)
