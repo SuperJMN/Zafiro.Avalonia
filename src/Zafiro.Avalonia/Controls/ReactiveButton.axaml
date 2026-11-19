@@ -64,7 +64,8 @@
                                                   Content="{Binding $parent[controls:ReactiveButton].Content}" />
                                 <ProgressBar x:Name="ProgressBar"
                                              IsVisible="{Binding $parent[controls:ReactiveButton].Command.IsExecuting^}"
-                                             VerticalAlignment="Bottom" HorizontalAlignment="Center" IsIndeterminate="True" />
+                                             IsIndeterminate="{Binding $parent[controls:ReactiveButton].Command.IsExecuting^}"
+                                             VerticalAlignment="Bottom" HorizontalAlignment="Center" />
                             </Panel>
                         </Button.Content>
                     </Button>

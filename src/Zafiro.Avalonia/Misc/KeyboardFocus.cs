@@ -1,6 +1,7 @@
 using System.Reactive.Linq;
 using Avalonia.Controls.Primitives;
 using Avalonia.Input;
+using Avalonia.Interactivity;
 using Avalonia.LogicalTree;
 using Avalonia.VisualTree;
 
@@ -16,6 +17,8 @@ namespace Zafiro.Avalonia.Misc;
 public static class KeyboardFocus
 {
     private static bool keyboardInUse;
+    private static Key? pressedKey;
+    private static WeakReference<IInputElement>? pressedOn;
 
     static KeyboardFocus()
     {
@@ -23,6 +26,33 @@ public static class KeyboardFocus
             .Merge(InputElement.PointerPressedEvent.Raised.Select(_ => false))
             .Do(fromKeyboard => keyboardInUse = fromKeyboard)
             .Subscribe();
+
+        InputElement.KeyDownEvent.AddClassHandler<TopLevel>(OnKeyDown, RoutingStrategies.Tunnel, handledEventsToo: true);
+        InputElement.KeyUpEvent.AddClassHandler<TopLevel>(OnKeyUp, RoutingStrategies.Tunnel);
+    }
+
+    // Pressing a key often moves focus: Space opens an item and focus goes into the page or dialog it shows. Buttons
+    // click when Space is released, so the release would press whatever got focus in between, such as an action on the
+    // new page. A release only reaches the element that saw the key go down.
+    private static void OnKeyDown(TopLevel topLevel, KeyEventArgs e)
+    {
+        pressedKey = e.Key;
+        pressedOn = topLevel.FocusManager?.GetFocusedElement() is { } focused ? new WeakReference<IInputElement>(focused) : null;
+    }
+
+    private static void OnKeyUp(TopLevel topLevel, KeyEventArgs e)
+    {
+        if (e.Key != Key.Space)
+        {
+            return;
+        }
+
+        var focused = topLevel.FocusManager?.GetFocusedElement();
+        var pressedOnFocused = pressedKey == Key.Space && pressedOn is not null && pressedOn.TryGetTarget(out var target) && ReferenceEquals(target, focused);
+        if (!pressedOnFocused)
+        {
+            e.Handled = true;
+        }
     }
 
     /// <summary>

@@ -76,6 +76,8 @@
                                 </StackPanel>
                             </Grid>
                         </OverlayBorder>
+                        <!-- A hidden indeterminate bar keeps animating once it has been shown, which keeps the UI
+                             thread busy for good. Animate it only while it is shown. -->
                         <ProgressBar x:Name="CommandRunningProgressBar"
                                      MinWidth="0"
                                      IsVisible="{TemplateBinding IsCommandRunning}"
@@ -83,7 +85,7 @@
                                      Foreground="White"
                                      Opacity="0.2"
                                      Value="10"
-                                     IsIndeterminate="True" />
+                                     IsIndeterminate="{TemplateBinding IsCommandRunning}" />
                     </Panel>
                 </ControlTemplate>
             </Setter>
