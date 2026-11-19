@@ -13,11 +13,11 @@ Tech stack
 Common commands
 
 - Restore
-  - dotnet restore Zafiro.Avalonia.sln
+  - dotnet restore Zafiro.Avalonia.slnx
 
 - Build
-  - Debug: dotnet build Zafiro.Avalonia.sln -c Debug
-  - Release: dotnet build Zafiro.Avalonia.sln -c Release
+  - Debug: dotnet build Zafiro.Avalonia.slnx -c Debug
+  - Release: dotnet build Zafiro.Avalonia.slnx -c Release
 
 - Run desktop sample(s)
   - dotnet run --project samples/TestApp/TestApp.Desktop/TestApp.Desktop.csproj -c Debug
@@ -70,24 +70,11 @@ Publishing (DotnetDeployer)
   - Add `+semver:patch` to the commit message for a patch version bump (bug fixes, default)
   - Example: `git commit -m "Add adaptive dialog sizing +semver:minor"`
 
-Azure Pipelines (CI/CD)
+Releases (CI/CD)
 
-- Location: azure-pipelines.yml
-- Triggers: push to master, PRs to master or any branch
-- Agent: ubuntu-latest
-- Steps summary
-  - Full checkout (fetchDepth: 0)
-  - Install .NET 9 SDK (UseDotNet@2)
-  - Install Android workload (dotnet workload install android)
-    - Note: not strictly required for NuGet-only publishing, but kept for optional app release tasks
-  - Install DotnetDeployer.Tool globally and print version
-  - Package and publish with DotnetDeployer
-    - On master: dotnetdeployer nuget --api-key '$(NuGetApiKey)'
-    - On other branches: dotnetdeployer nuget --api-key '$(NuGetApiKey)' --no-push (dry run)
-- Secrets/variables
-  - Variable group: api-keys
-  - Variables used: NuGetApiKey (consumed by DotnetDeployer)
-- Optional (commented in YAML): release flow using dotnetdeployer release with GitHub token and Android signing inputs
+- DotnetDeployer.Fleet tracks master: every merge builds and tests Zafiro.Avalonia.slnx in Release and, if the tests pass, runs deployer.yaml.
+- deployer.yaml publishes the NuGet packages and the TestApp.Browser sample to GitHub Pages (SuperJMN/Zafiro.Avalonia.github.io).
+- Secrets come from Fleet as environment variables: NUGET_API_KEY and GITHUB_TOKEN.
 
 Source generators: Zafiro.Avalonia.Generators
 

@@ -96,7 +96,7 @@ this.Connect(() => new ShellView(), _ => shell, () => new Window());
 2. Implement the feature.
 3. Push changes.
 4. Create a PR with an explanatory message excluding boilerplate, focusing on the global idea and important future details.
-5. Wait for CI to pass.
+5. Run the release gate locally: `dotnet build Zafiro.Avalonia.slnx -c Release` and `dotnet test Zafiro.Avalonia.slnx -c Release --no-build`. DotnetDeployer.Fleet runs the same gate on master before publishing.
 6. Squash merge the PR using GitVersion semver: The squash merge commit message MUST end with the suffix `+semver:[major|minor|fix]` so GitVersion correctly bumps the version.
 
 ## Detailed Documentation

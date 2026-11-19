@@ -14,4 +14,4 @@ Getting started:
 
 Links:
 - Samples: samples/TestApp
-- CI: Azure Pipelines (publishing via DotnetDeployer)
+- CI: DotnetDeployer.Fleet (publishing via DotnetDeployer)

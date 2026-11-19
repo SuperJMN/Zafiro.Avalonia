@@ -149,6 +149,8 @@ public class GraphWizardBuilderTests
         var wizard = new GraphWizard<string>(first);
 
         await wizard.Next.Execute();
+        // The command reports that it stopped executing on its output scheduler, which may lag behind the await.
+        await wizard.Next.IsExecuting.FirstAsync(executing => !executing).ToTask();
 
         Assert.Equal("second", ((StepModel)wizard.CurrentStep!.Content).Value);
         Assert.False(((ICommand)wizard.Next).CanExecute(null));
